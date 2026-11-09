@@ -116,25 +116,138 @@ const KEYWORDS = {
   },
 
   // CORE
-  { id: 'adept', name: 'Adept', role: 'Core', tags: ['Biological', 'Light', 'Ground'],
-    stats: { shield: 2, speed: '5/8', evade: '5+', armour: '5+', hp: 3, size: 2 },
-    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 160, models: '3-4', supply: 1 }, { tier: 'T1', cost: null, models: '1-2', supply: 0 }],
-    weapons: [
-      { name: 'Glaive Cannon', phase: 'Assault', range: '8', target: 'All', roa: 2, hit: '3+', surge: 'Light', sDie: 'D3+1', damage: 1, keywords: ['ANTI-EVADE (1)'] },
-      { name: 'Strike', phase: 'Combat', range: 'E', target: 'Ground', roa: 1, hit: '4+', surge: '-', sDie: '-', damage: 1, keywords: [] }
-    ],
-    abilities: [{ phase: 'Any Phase', name: 'Psionic Presence', type: 'Passive', description: "All Weapons of Friendly Units targeting an Enemy Unit Within 4\" of this Unit's Shade token gain PRECISION (1)." }],
-    phaseAbilities: {
-      'Movement Phase': [{ name: 'Psionic Transfer', type: 'Active (1 Psionic Energy)', description: 'Set a Shade token Wholly Within 12" of any model in this Unit. At the End of the Round, the controlling player may set all models of this Unit in Coherency, treating the Shade token as the Leading Model. The Shade token has DISPLACEMENT.' }]
-    },
-    upgrades: {
-      'Assault Phase': [
-        { name: 'Resonating Glaives', cost: 20, type: 'Active (1 Psionic Energy)', description: "This Unit's Glaive Cannon gains BUFF RoA (1)." },
-        { name: 'Guidance', cost: 10, type: 'Passive', description: "This Unit's Glaive Cannon Ranged weapon gains ANTI-EVADE (2).", modifies: { weapon: 'Glaive Cannon', changes: { keywords: ['ANTI-EVADE (2)'] } } }
-      ],
-      'Combat Phase': [{ name: 'Glaive Strike', cost: 20, type: 'Weapon', description: 'Replaces Strike. RNG E, TGT Ground, RoA 1, Hit 4+, Surge Light, S.Die D3, Dmg 1. Keywords: PIERCE Light (2).', modifies: { weapon: 'Strike' } }]
-    }
+  {
+  "id": "adept",
+  "name": "Adept",
+  "role": "Core",
+  "tags": [
+    "Biological",
+    "Light",
+    "Ground"
+  ],
+  "stats": {
+    "shield": 2,
+    "speed": "5/8",
+    "evade": "5+",
+    "armour": "5+",
+    "hp": 3,
+    "size": 2
   },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    },
+    {
+      "tier": "T2",
+      "cost": 160,
+      "models": "3-4",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "1-2",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Glaive Cannon",
+      "phase": "Assault",
+      "range": "8",
+      "target": "All",
+      "roa": 2,
+      "hit": "3+",
+      "surge": "Light",
+      "sDie": "D3+1",
+      "damage": 1,
+      "keywords": [
+        "ANTI-EVADE (1)"
+      ]
+    },
+    {
+      "name": "Strike",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 1,
+      "hit": "4+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Psionic Presence",
+      "type": "Passive",
+      "description": "All Weapons of Friendly Units targeting an Enemy Unit Within 4\" of this Unit's Shade token gain PRECISION (1)."
+    }
+  ],
+  "phaseAbilities": {
+    "Movement Phase": [
+      {
+        "name": "Psionic Transfer",
+        "type": "Active (1 Psionic Energy)",
+        "description": "Set a Shade token Wholly Within 12\" of any model in this Unit. At the End of the Round, the controlling player may set all models of this Unit in Coherency, treating the Shade token as the Leading Model. The Shade token has DISPLACEMENT."
+      }
+    ]
+  },
+  "upgrades": {
+    "Assault Phase": [
+      {
+        "name": "Resonating Glaives",
+        "cost": 20,
+        "type": "Active (1 Psionic Energy)",
+        "description": "This Unit's Glaive Cannon gains BUFF RoA (1)."
+      },
+      {
+        "name": "Guidance",
+        "cost": 10,
+        "type": "Passive",
+        "description": "This Unit's Glaive Cannon Ranged weapon gains ANTI-EVADE (2).",
+        "modifies": {
+          "weapon": "Glaive Cannon",
+          "changes": {
+            "keywords": [
+              "ANTI-EVADE (2)"
+            ]
+          }
+        }
+      }
+    ],
+    "Combat Phase": [
+      {
+        "name": "Glaive Strike",
+        "cost": 20,
+        "type": "Weapon",
+        "description": "Replaces Strike. RNG E, TGT Ground, RoA 1, Hit 4+, Surge Light, S.Die D3, Dmg 1. Keywords: PIERCE Light (2).",
+        "modifies": {
+          "weapon": "Strike"
+        },
+        "weaponProfile": {
+          "name": "Glaive Strike",
+          "phase": "Combat",
+          "range": "E",
+          "target": "Ground",
+          "roa": 1,
+          "hit": "4+",
+          "surge": "Light",
+          "sDie": "D3",
+          "damage": 1,
+          "keywords": [
+            "PIERCE Light (2)"
+          ]
+        }
+      }
+    ]
+  }
+},
   { id: 'zealot', name: 'Zealot', role: 'Core', tags: ['Biological', 'Light', 'Ground'],
     stats: { shield: 3, speed: '4/7', evade: '5+', armour: '5+', hp: 4, size: 2 },
     tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 170, models: '2-3', supply: 2 }, { tier: 'T1', cost: null, models: '1', supply: 1 }],
@@ -296,6 +409,20 @@ const KEYWORDS = {
         "description": "Replaces Left Photon Disruptor. 12 Ground, RoA4, Hit3+, Surge Armoured, S Die D3, Damage1, PIERCE Armoured (3).",
         "modifies": {
           "weapon": "Left Photon Disruptor"
+        },
+        "weaponProfile": {
+          "name": "Left Phase Disruptor",
+          "phase": "Assault",
+          "range": "12",
+          "target": "Ground",
+          "roa": 4,
+          "hit": "3+",
+          "surge": "Armoured",
+          "sDie": "D3",
+          "damage": 1,
+          "keywords": [
+            "PIERCE Armoured (3)"
+          ]
         }
       },
       {
@@ -305,6 +432,21 @@ const KEYWORDS = {
         "description": "Replaces Right Photon Disruptor. 12 Ground, RoA4, Hit3+, Surge Armoured, S Die D3, Damage1, PIERCE Armoured (3), SIDEARM.",
         "modifies": {
           "weapon": "Right Photon Disruptor"
+        },
+        "weaponProfile": {
+          "name": "Right Phase Disruptor",
+          "phase": "Assault",
+          "range": "12",
+          "target": "Ground",
+          "roa": 4,
+          "hit": "3+",
+          "surge": "Armoured",
+          "sDie": "D3",
+          "damage": 1,
+          "keywords": [
+            "PIERCE Armoured (3)",
+            "SIDEARM"
+          ]
         }
       },
       {
