@@ -427,7 +427,8 @@ const extra = {
               "phase": "Any Phase",
               "name": "Corvid Reactor",
               "type": "Passive",
-              "description": "First special ability can cost 1 less CP if it targets the closest enemy."
+              "description": "First special ability can cost 1 less CP if it targets the closest enemy.",
+              "cost": 30
             }
           ],
           "Movement Phase": [
@@ -435,13 +436,15 @@ const extra = {
               "phase": "Movement Phase",
               "name": "Internal Tech Module",
               "type": "Passive",
-              "description": "May deploy from a non-Entry table edge more than 8 inches from enemies."
+              "description": "May deploy from a non-Entry table edge more than 8 inches from enemies.",
+              "cost": 20
             },
             {
               "phase": "Movement Phase",
               "name": "Seeker Missile",
               "type": "Active (1 CP)",
-              "description": "Mark an Enemy within 12 inches; at End of Assault, resolve HITS 4 (2) if stationary or within 8 inches. Engaged target may Evade."
+              "description": "Mark an Enemy within 12 inches; at End of Assault, resolve HITS 4 (2) if stationary or within 8 inches. Engaged target may Evade.",
+              "cost": 20
             }
           ],
           "Assault Phase": [
@@ -449,7 +452,8 @@ const extra = {
               "phase": "Assault Phase",
               "name": "Explosive Shrapnel Shells",
               "type": "Passive",
-              "description": "Auto-Turret Gauss Cannon gains Surge Light and S.Die D3+1."
+              "description": "Auto-Turret Gauss Cannon gains Surge Light and S.Die D3+1.",
+              "cost": 10
             }
           ]
         },
