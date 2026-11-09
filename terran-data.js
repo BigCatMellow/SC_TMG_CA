@@ -687,7 +687,7 @@ const KEYWORDS = {
       "roa": "BT+4",
       "hit": "4+",
       "surge": "Light, Armoured",
-      "sDie": "D6",
+      "sDie": "BT",
       "damage": 1,
       "keywords": [
         "SIEGE MODE"
