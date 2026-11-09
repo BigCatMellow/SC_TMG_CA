@@ -30,17 +30,17 @@ for(const dict of [terran,zerg,protoss]) assert.match(dict.INSTANT.description, 
 assert.match(terran['NON-LETHAL DAMAGE'].description, /Subsequent standard Damage/);
 assert.match(protoss['PSIONIC ENERGY'].description, /PE to pay ability costs/);
 const rawProtoss = read('protoss-data.js');
-assert.doesNotMatch(rawProtoss, /\\bEN\\b/);
-assert.match(rawProtoss, /\\bPE\\b/);
+assert.doesNotMatch(rawProtoss, /\bEN\b/);
+assert.match(rawProtoss, /\bPE\b/);
 
 const html = read('Rules.dc.html');
-assert.match(html,/battle-rules-data\\.js/);
+assert.match(html,/battle-rules-data\.js/);
 assert.match(html,/factionTabs/);
 assert.match(html,/sourceLabel/);
-const inline = html.match(/<script type="text\\/x-dc"[^>]*>([\\s\\S]*?)<\\/script>/);
+const inline = html.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/);
 assert.ok(inline, 'DC script exists');
 const DCLogic = class { setState(next){ this.state = {...this.state,...next}; } };
-const Component = new Function('DCLogic','window',inline[1]+'\\nreturn Component;')(DCLogic,w);
+const Component = new Function('DCLogic','window',inline[1]+'\nreturn Component;')(DCLogic,w);
 const c = new Component();
 c._secEls = {};
 c.state = {ready:true,scope:'core',exp:{},q:'',sheet:null,play:{round:1,phase:0,vpYou:0,vpFoe:0}};
