@@ -1,0 +1,158 @@
+{
+  "schema_version": 1,
+  "source": {
+    "filename": "StarCraft-TMG_EN.pdf",
+    "sha256": "27639c562e6db9777dd9ba984d0c9f9b581841ec30166848e021f893cd00ea54",
+    "printed_to_pdf_page_offset": 2,
+    "note": "User-supplied 2026 Core Rules Book. PDF must be supplied locally; it is not committed here."
+  },
+  "shared_section_ids": [
+    "2.4.1",
+    "2.6",
+    "2.7",
+    "5.1",
+    "5.2",
+    "5.3",
+    "5.4",
+    "8.3",
+    "8.5",
+    "8.7",
+    "8.8",
+    "8.9",
+    "9.1",
+    "9.1.2",
+    "9.1.5",
+    "9.1.6",
+    "9.1.7",
+    "9.1.9",
+    "10.1",
+    "10.2",
+    "10.3",
+    "10.4",
+    "10.5",
+    "10.5.1",
+    "10.5.2",
+    "part-11",
+    "12.10",
+    "12.11",
+    "12.12"
+  ],
+  "factions": {
+    "terran": {
+      "repo_dataset": "terran-data.js",
+      "repo_army_page": "Terran Army.dc.html",
+      "focus_keywords": [
+        "SIDEARM",
+        "SPECIALIST",
+        "BULKY",
+        "BURST FIRE",
+        "INDIRECT FIRE",
+        "CRITICAL HIT",
+        "PINPOINT"
+      ],
+      "unit_table_pages": {
+        "printed": [
+          96,
+          97,
+          98
+        ],
+        "pdf": [
+          98,
+          99,
+          100
+        ],
+        "needs_visual_verification": true
+      },
+      "example_army_pages": {
+        "printed": [
+          108,
+          109
+        ],
+        "pdf": [
+          110,
+          111
+        ],
+        "illustrative": true
+      }
+    },
+    "zerg": {
+      "repo_dataset": "zerg-data.js",
+      "repo_army_page": "Zerg Army.dc.html",
+      "focus_keywords": [
+        "ON CREEP",
+        "BURROWED",
+        "RESPAWN",
+        "SUMMON",
+        "HIDDEN"
+      ],
+      "unit_table_pages": {
+        "printed": [
+          99,
+          100,
+          101,
+          102,
+          103
+        ],
+        "pdf": [
+          101,
+          102,
+          103,
+          104,
+          105
+        ],
+        "needs_visual_verification": true
+      },
+      "example_army_pages": {
+        "printed": [
+          110,
+          111
+        ],
+        "pdf": [
+          112,
+          113
+        ],
+        "illustrative": true
+      }
+    },
+    "protoss": {
+      "repo_dataset": "protoss-data.js",
+      "repo_army_page": "Protoss Army.dc.html",
+      "focus_keywords": [
+        "PSIONIC ENERGY",
+        "SHIELDED",
+        "DODGE",
+        "HITS",
+        "PLACE"
+      ],
+      "unit_table_pages": {
+        "printed": [
+          104,
+          105,
+          106
+        ],
+        "pdf": [
+          106,
+          107,
+          108
+        ],
+        "needs_visual_verification": true
+      },
+      "example_army_pages": {
+        "printed": [
+          112,
+          113
+        ],
+        "pdf": [
+          114,
+          115
+        ],
+        "illustrative": true
+      }
+    }
+  },
+  "shared_tactical_card_point_table": {
+    "printed_page": 107,
+    "pdf_page": 109,
+    "needs_visual_verification": true
+  }
+}
