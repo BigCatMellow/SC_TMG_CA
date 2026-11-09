@@ -377,6 +377,22 @@ class Component extends DCLogic {
       };
     });
 
+    const tabs = [
+      { id: 'core', name: 'Core', color: '#38d3e8' },
+      { id: 'terran', name: 'Terran', color: '#4f8df9' },
+      { id: 'zerg', name: 'Zerg', color: '#ec5f99' },
+      { id: 'protoss', name: 'Protoss', color: '#b06ef7' }
+    ];
+    const factionTabs = tabs.map(t => {
+      const active = scope === t.id;
+      return { name: t.name, active,
+        bg: active ? '#20283a' : '#12151f',
+        bd: active ? t.color : 'var(--sc-border-neutral)',
+        fg: active ? '#e9ecf2' : '#8a91a5',
+        onSelect: () => this.setState({ scope: t.id, exp: {} })
+      };
+    });
+
     const bump = (field, d) => (ev) => {
       ev.stopPropagation();
       this.setState(s => ({ play: { ...s.play, [field]: Math.max(field === 'round' ? 1 : 0, s.play[field] + d) } }), () => this.savePlay());
@@ -410,7 +426,10 @@ class Component extends DCLogic {
       q: st.q, hasQ: st.q.length > 0,
       onInput: (ev) => this.setState({ q: ev.target.value }),
       clearQ: () => this.setState({ q: '' }),
-      chips, sections,
+      chips, sections, factionTabs,
+      sourceBanner: window.SCTMG_BATTLE_RULES
+        ? 'Compact, paraphrased 2026 PDF reference. Exact card wording and diagram-heavy rules take priority. Unit / upgrade point tables still need a numeric audit.'
+        : 'Legacy HTML summary loaded. The 2026 battle reference is unavailable — do not rely on this as fully updated.',
       noHits: searching && sections.length === 0,
       sheetOpen: !!(st.sheet && st.sheet.type !== 'play'),
       sheetPlay: !!(st.sheet && st.sheet.type === 'play'),
