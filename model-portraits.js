@@ -1,8 +1,8 @@
-// Source-attributed reference to official model photographs; no copies of external images checked in.
+// Wave 1 locally verified publisher miniature JPEGs; later waves use source-attributed galleries.
 window.SCTMG_MODEL_PORTRAITS = {
   "version": 1,
   "updated": "2026-11-09",
-  "notes": "Official publisher photo URLs are hotlinked; image ownership remains with Archon Studio/Blizzard. Existing locally stored images are fallback. Shared-sculpt aliases are clearly distinguished from exact model photographs; no image files are republished.",
+  "notes": "Wave 1 uses 22 exact locally stored, PDF-extracted painted miniature JPEGs with checksum/page attribution in portraits/pdf/source-manifest.json. Wave 2/3 use official external galleries; previous local portraits remain as fallbacks. Publisher retains all image rights.",
   "factions": {
     "terran": {
       "siege-tank": {
@@ -46,17 +46,72 @@ window.SCTMG_MODEL_PORTRAITS = {
         "note": "Official painted Raven miniature"
       },
       "jim-raynor": {
-        "src": "https://cdn1.philibertnet.com/840810/starcraft-terran-jim-raynor-raynors-raiders-hero-expansion-set-5901397106120.jpg",
-        "source": "https://www.philibertnet.com/",
+        "src": "portraits/pdf/terran/jim-raynor.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
         "kind": "exact-miniature",
-        "size": "auto 310px",
+        "size": "auto 289px",
         "pos": "right center",
-        "note": "Published painted mini photo replacing a card art crop; local crop retained as offline fallback"
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 100. All rights remain with the publisher.",
+        "sourcePdfPage": 100,
+        "printedPage": 98,
+        "fallbackSrc": "https://cdn1.philibertnet.com/840810/starcraft-terran-jim-raynor-raynors-raiders-hero-expansion-set-5901397106120.jpg",
+        "fallbackSize": "auto 310px",
+        "fallbackPos": "right center"
       },
       "spec-ops-marauder": {
         "fallbackId": "marauder",
         "kind": "shared-sculpt",
         "note": "Uses existing Marauder miniature portrait until a distinct Spec Ops pose is verified"
+      },
+      "marine": {
+        "src": "portraits/pdf/terran/marine.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 98,
+        "printedPage": 96,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 98. All rights remain with the publisher."
+      },
+      "raynors-raider": {
+        "src": "portraits/pdf/terran/raynors-raider.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 98,
+        "printedPage": 96,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 98. All rights remain with the publisher."
+      },
+      "marauder": {
+        "src": "portraits/pdf/terran/marauder.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 99,
+        "printedPage": 97,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 99. All rights remain with the publisher."
+      },
+      "medic": {
+        "src": "portraits/pdf/terran/medic.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 99,
+        "printedPage": 97,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 99. All rights remain with the publisher."
+      },
+      "goliath": {
+        "src": "portraits/pdf/terran/goliath.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 100,
+        "printedPage": 98,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 100. All rights remain with the publisher."
       }
     },
     "zerg": {
@@ -101,27 +156,50 @@ window.SCTMG_MODEL_PORTRAITS = {
         "note": "Official Omega Worm model photograph"
       },
       "queen": {
-        "src": "https://starcraft-tmg.com/files/thumbs/products/StarCraft%C2%AE%20Queen/Queen%20-%207.jpg/auto_auto_crop.webp?pn=auto-webp&ts=1772806613",
-        "source": "https://starcraft-tmg.com/shop/products/starcraft-queen",
+        "src": "portraits/pdf/zerg/queen.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
         "kind": "exact-miniature",
-        "size": "auto 285px",
+        "size": "auto 289px",
         "pos": "right center",
-        "note": "Publisher's painted miniature photography replaces older image; retains local portrait fallback"
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 105. All rights remain with the publisher.",
+        "sourcePdfPage": 105,
+        "printedPage": 103,
+        "fallbackSrc": "https://starcraft-tmg.com/files/thumbs/products/StarCraft%C2%AE%20Queen/Queen%20-%207.jpg/auto_auto_crop.webp?pn=auto-webp&ts=1772806613",
+        "fallbackSize": "auto 285px",
+        "fallbackPos": "right center"
       },
       "raptor": {
         "fallbackId": "zergling",
-        "kind": "shared-sculpt",
-        "note": "Zergling base sculpt placeholder, not a verified dedicated Raptor portrait"
+        "kind": "exact-miniature",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 101. All rights remain with the publisher.",
+        "src": "portraits/pdf/zerg/raptor.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 101,
+        "printedPage": 99,
+        "size": "auto 289px",
+        "pos": "right center"
       },
       "kerrigan-raptor": {
         "fallbackId": "zergling",
-        "kind": "shared-sculpt",
-        "note": "Zergling base sculpt placeholder, not a verified dedicated Kerrigan's Raptor portrait"
+        "kind": "exact-miniature",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 102. All rights remain with the publisher.",
+        "src": "portraits/pdf/zerg/kerrigan-raptor.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 102,
+        "printedPage": 100,
+        "size": "auto 289px",
+        "pos": "right center"
       },
       "swarmling": {
         "fallbackId": "zergling",
-        "kind": "shared-sculpt",
-        "note": "Zergling base miniature used for this variant"
+        "kind": "exact-miniature",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 102. All rights remain with the publisher.",
+        "src": "portraits/pdf/zerg/swarmling.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 102,
+        "printedPage": 100,
+        "size": "auto 289px",
+        "pos": "right center"
       },
       "vileling": {
         "fallbackId": "zergling",
@@ -130,13 +208,69 @@ window.SCTMG_MODEL_PORTRAITS = {
       },
       "vile": {
         "fallbackId": "roach",
-        "kind": "shared-sculpt",
-        "note": "Roach base miniature used until separate Vile sculpt photo verified"
+        "kind": "exact-miniature",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 103. All rights remain with the publisher.",
+        "src": "portraits/pdf/zerg/vile.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 103,
+        "printedPage": 101,
+        "size": "auto 289px",
+        "pos": "right center"
       },
       "roachling": {
         "fallbackId": "roach",
         "kind": "shared-sculpt",
         "note": "Roach base miniature fallback for summoned Roachling"
+      },
+      "zergling": {
+        "src": "portraits/pdf/zerg/zergling.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 101,
+        "printedPage": 99,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 101. All rights remain with the publisher."
+      },
+      "roach": {
+        "src": "portraits/pdf/zerg/roach.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 103,
+        "printedPage": 101,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 103. All rights remain with the publisher."
+      },
+      "corpser": {
+        "src": "portraits/pdf/zerg/corpser.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 104,
+        "printedPage": 102,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 104. All rights remain with the publisher."
+      },
+      "hydralisk": {
+        "src": "portraits/pdf/zerg/hydralisk.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 104,
+        "printedPage": 102,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 104. All rights remain with the publisher."
+      },
+      "kerrigan": {
+        "src": "portraits/pdf/zerg/kerrigan.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 105,
+        "printedPage": 103,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 105. All rights remain with the publisher."
       }
     },
     "protoss": {
@@ -171,6 +305,66 @@ window.SCTMG_MODEL_PORTRAITS = {
         "size": "auto 290px",
         "pos": "center center",
         "note": "Same High Templar sculpt shown for Twilight Templar variant; not a separate verified photo"
+      },
+      "zealot": {
+        "src": "portraits/pdf/protoss/zealot.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 106,
+        "printedPage": 104,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 106. All rights remain with the publisher."
+      },
+      "praetor-guard": {
+        "src": "portraits/pdf/protoss/praetor-guard.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 106,
+        "printedPage": 104,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 106. All rights remain with the publisher."
+      },
+      "adept": {
+        "src": "portraits/pdf/protoss/adept.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 107,
+        "printedPage": 105,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 107. All rights remain with the publisher."
+      },
+      "sentry": {
+        "src": "portraits/pdf/protoss/sentry.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 107,
+        "printedPage": 105,
+        "kind": "exact-miniature",
+        "size": "auto 265px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 107. All rights remain with the publisher."
+      },
+      "stalker": {
+        "src": "portraits/pdf/protoss/stalker.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 108,
+        "printedPage": 106,
+        "kind": "exact-miniature",
+        "size": "auto 289px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 108. All rights remain with the publisher."
+      },
+      "artanis": {
+        "src": "portraits/pdf/protoss/artanis.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+        "sourcePdfPage": 108,
+        "printedPage": 106,
+        "kind": "exact-miniature",
+        "size": "auto 300px",
+        "pos": "right center",
+        "note": "Original, distinct painted miniature photograph embedded in 2026 Core Rules PDF page 108. All rights remain with the publisher."
       }
     }
   }
