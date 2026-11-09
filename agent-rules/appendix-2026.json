@@ -1,5 +1,5 @@
 {
-  "schema_version": 2,
+  "schema_version": 3,
   "source": {
     "file": "StarCraft-TMG_EN.pdf",
     "sha256": "27639c562e6db9777dd9ba984d0c9f9b581841ec30166848e021f893cd00ea54",
@@ -147,6 +147,32 @@
               0
             ]
           }
+        },
+        "siege-tank": {
+          "page": 3,
+          "wave": 2,
+          "cardSource": "https://starcraft-tmg.com/files/downloads/StarCraft-Terran-P2P-W2-Card-Sheets-A4_EN.pdf",
+          "compositions": [
+            [
+              1,
+              220,
+              2
+            ]
+          ],
+          "upgrades": {
+            "Mode Transformation": [
+              20
+            ],
+            "Coordinated Strike": [
+              20
+            ],
+            "Shaped Blast": [
+              10
+            ],
+            "Smart Shells": [
+              10
+            ]
+          }
         }
       },
       "tactical": {
@@ -159,7 +185,8 @@
         "armory": 30,
         "academy": 40,
         "orbital-command": 25,
-        "dropship": 35
+        "dropship": 35,
+        "factory-tech-lab": 40
       }
     },
     "zerg": {
@@ -381,6 +408,37 @@
             ]
           ],
           "upgrades": {}
+        },
+        "ravager": {
+          "page": 5,
+          "wave": 2,
+          "cardSource": "https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-W2-Card-Sheets-A4_EN.pdf",
+          "compositions": [
+            [
+              1,
+              160,
+              1
+            ],
+            [
+              2,
+              270,
+              2
+            ]
+          ],
+          "upgrades": {
+            "Bloated Bile Ducts": [
+              20,
+              40
+            ],
+            "Burrow Ambush": [
+              20,
+              40
+            ],
+            "Potent Bile": [
+              20,
+              40
+            ]
+          }
         }
       },
       "tactical": {
@@ -394,7 +452,8 @@
         "overseer": 25,
         "overlord": 35,
         "accelerating-creep": 0,
-        "malignant-creep": 10
+        "malignant-creep": 10,
+        "cocoon": 30
       }
     },
     "protoss": {
@@ -508,6 +567,35 @@
             ]
           ],
           "upgrades": {}
+        },
+        "immortal": {
+          "page": 8,
+          "wave": 2,
+          "cardSource": "https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-W2-Card-Sheets-A4_EN.pdf",
+          "compositions": [
+            [
+              1,
+              280,
+              2
+            ]
+          ],
+          "upgrades": {
+            "Shield Overcharge": [
+              20
+            ],
+            "Left Phase Disruptor": [
+              20
+            ],
+            "Right Phase Disruptor": [
+              20
+            ],
+            "Fury Unyielding": [
+              20
+            ],
+            "For the Ancients": [
+              20
+            ]
+          }
         }
       },
       "tactical": {
@@ -520,7 +608,8 @@
         "power-field": 40,
         "forge": 30,
         "warp-prism": 35,
-        "twilight-council": 40
+        "twilight-council": 40,
+        "robotics-facility": 35
       }
     }
   },
@@ -542,8 +631,7 @@
     "Cards and unit-specific abilities are not fully specified by cost tables; verify against physical/official Unit and Faction Cards.",
     "Swarmling and Vile (Roach) profiles have been added from the publisher's official Wave 1 Zerg card sheets.",
     "Latest official 2026-10-09 balance table controls costs, not older base PDF printed pages 96-107.",
-    "New Wave 2/3 units in updated publisher sheets are not automatically present in this companion; track coverage separately.",
-    "The companion implements the original Wave 1 units with prices rebalanced to 2026-10-09. Newer-wave units/cards listed on the balance PDF are not all supported."
+    "Three Wave 2 Units (Siege Tank, Ravager, Immortal) and their associated Tactical Cards are implemented, with 2026-10-09 prices; later Wave 2/3 content remains incomplete."
   ],
   "balance_source": {
     "name": "StarCraft-TMG-Cost-Table-10.2026_EN.pdf",
@@ -571,5 +659,11 @@
     "terran": "https://starcraft-tmg.com/files/downloads/StarCraft-Terran-P2P-Card-Sheets-A4_EN.pdf",
     "zerg": "https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-Card-Sheets-A4_EN.pdf",
     "protoss": "https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-Card-Sheets-A4_EN.pdf"
+  },
+  "faq_source": {
+    "url": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG-FAQ_EN.pdf",
+    "version": "1.1",
+    "published": "2026-09-25",
+    "authority": "FAQ clarifications supersede ambiguous summaries; printed core mechanics and official card wording remain authoritative for their respective scope."
   }
 }

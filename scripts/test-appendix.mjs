@@ -38,6 +38,22 @@ for (const faction of ['terran','zerg','protoss']){
  }
 }
 assert.deepEqual(missing,[],'All currently listed Wave 1 faction units should be available');
+// Three Wave 2 unit/card profiles must agree with publisher cost+card exports.
+const wave2 = [
+  ['terran','siege-tank',220,2,'factory-tech-lab',40],
+  ['zerg','ravager',160,1,'cocoon',30],
+  ['protoss','immortal',280,2,'robotics-facility',35]
+];
+for(const [f,id,cost,supply,card,gas] of wave2){
+ const d=window['SCTMG_'+f.toUpperCase()];
+ const u=d.UNITS.find(u=>u.id===id);
+ const t=d.TACTICAL_CARDS.find(t=>t.id===card);
+ assert.ok(u && t,f+' Wave 2 content');
+ assert.equal(u.wave,2);
+ assert.ok(u.tiers.some(x=>x.cost===cost&&x.supply===supply));
+ assert.equal(t.cost,gas);
+ assert.ok(u.weapons.length>=2 && (u.abilities.length + Object.values(u.phaseAbilities).flat().length)>=2);
+}
 // Battle tracker model counts and upgrade costs use the same tier selection as the roster.
 for(const faction of ['Terran','Zerg','Protoss']){
  const html=load(faction+' Army.dc.html');
@@ -46,7 +62,7 @@ for(const faction of ['Terran','Zerg','Protoss']){
  assert.match(html,/unit\.role === 'Other'/);
  assert.match(html,/unit\.unique \&\& this\.state\.army\.some/);
 }
-assert.ok(checks.units>=22 && checks.compositions>=26 && checks.upgrades>=40 && checks.tactical>=31);
+assert.ok(checks.units>=25 && checks.compositions>=30 && checks.upgrades>=50 && checks.tactical>=34);
 // Instantiate all three Army components without DOM to test copies, timing state and legality.
 for(const faction of ['terran','zerg','protoss']){
  const pretty=faction[0].toUpperCase()+faction.slice(1);
@@ -85,4 +101,39 @@ for(const faction of ['terran','zerg','protoss']){
  one.onAdd({stopPropagation(){}});
  assert.equal(obj.state.tactical.filter(x=>x===unique.id).length,1);
 }
+
+// Verify current loadout changes the visible weapon rows rather than only a checkbox.
+const expectedWeapons = [
+ ['terran','goliath',['Scatter Missiles'],['Scatter Missiles'],['Hellfire Missiles']],
+ ['terran','marine',['AGG-12','Rocket Launcher'],['C-14 Rifle','AGG-12','Rocket Launcher'],[]],
+ ['terran','jim-raynor',['C-14 Rifle'],['C-14 Rifle'],['Commando Rifle']],
+ ['zerg','raptor',['Shredding Claws'],['Shredding Claws'],['Claws']],
+ ['protoss','immortal',['Right Phase Disruptor'],['Right Phase Disruptor','Left Photon Disruptor'],['Right Photon Disruptor']],
+ ['protoss','adept',['Glaive Strike','Guidance'],['Glaive Strike'],['Strike']]
+];
+const controllers={};
+for(const f of ['terran','zerg','protoss']){
+ const html=load(f[0].toUpperCase()+f.slice(1)+' Army.dc.html');
+ const script=html.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)?.[1];
+ assert.ok(script);
+ class Stub {setState(up,cb){const v=typeof up==='function'?up(this.state):up;this.state={...this.state,...v};if(cb)cb();}}
+ const Component=new Function('DCLogic','window',script+'\nreturn Component;')(Stub,window);
+ const obj=new Component();obj.save=()=>{};
+ obj.state={...obj.state,ready:true,army:[],tactical:[],play:{round:1,phase:0,vpYou:0,vpFoe:0}};
+ controllers[f]=obj;
+}
+for(const [f,id,selected,shown,hidden] of expectedWeapons){
+ const c=controllers[f],unit=c.D().UNITS.find(u=>u.id===id);
+ assert.ok(unit);
+ const weapons=c.buildDetail(unit,{unitId:id,key:'test',tierIdx:1,upgs:selected}).weapons.map(w=>w.name);
+ for(const name of shown)assert.ok(weapons.includes(name),f+'/'+id+' missing '+name);
+ for(const name of hidden)assert.ok(!weapons.includes(name),f+'/'+id+' did not replace '+name);
+}
+const terran=controllers.terran;
+terran.state.army=[{key:'g',unitId:'goliath',tierIdx:1,upgs:['Scatter Missiles']}];
+terran.toggleUpgrade('g','Haywire Missiles');
+assert.deepEqual(terran.state.army[0].upgs,['Haywire Missiles'],'mutually exclusive replacements');
+assert.equal(terran.upgCostNum('20/40',0),40,'large composition uses higher upgrade price');
+assert.equal(terran.upgCostNum('20/40',1),20,'small composition uses lower upgrade price');
+
 console.log('October 2026 source validation passed:',checks);

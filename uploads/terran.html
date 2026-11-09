@@ -1256,11 +1256,11 @@
   'IMPACT': { type: 'Combat', description: 'After a successful Charge, each eligible model generates X extra dice. Rolls of Y or higher become automatic hits placed in the Armour Pool.' },
   'INDIRECT FIRE': { type: 'Weapon', description: 'This weapon ignores Line of Sight requirements. The target still benefits from Cover.' },
   'INSTANT': { type: 'Weapon', description: "Enemy Units cannot declare or resolve Reaction abilities in response to attacks made with this weapon." },
-  'LOCKED IN': { type: 'Weapon', description: 'This weapon can only target enemies Within X inches of the aimed point.' },
+  'LOCKED IN': { type: 'Weapon', description: "When making a Ranged Attack with this weapon, add X to the weapon's Rate of Attack if the TARGET Unit has Stationary Status. See Core Rules p. 86 and FAQ v1.1 p. 5." },
   'LONG RANGE': { type: 'Weapon', description: 'The weapon\'s maximum range extends to X inches, but shots beyond the normal listed range suffer a -1 Hit penalty.' },
   'NON-LETHAL DAMAGE': { type: 'Effect', description: "Add X points of Damage to the Unit without removing models, even if Total Damage exceeds a model's HP. Subsequent standard Damage triggers casualty removal using combined Total Damage." },
   'PIERCE': { type: 'Combat', description: "When attacking a Unit with the specified Combat Tag, treat this weapon's Damage characteristic as X." },
-  'PINPOINT': { type: 'Weapon', description: 'This weapon can target individual models within a unit rather than the unit as a whole.' },
+  'PINPOINT': { type: 'Weapon', description: "Ranged Attacks with this weapon may target Engaged Enemy Units, ignoring the normal restriction on targeting an Engaged enemy. It does not allow an Engaged attacker to shoot outside its Engagement. See Core Rules p. 88 and official FAQ v1.1 p. 4." },
   'PLACE': { type: 'Movement', description: "Remove and set a Leading Model Wholly Within X inches, then rebuild the Unit in Coherency. PLACE ignores movement path, Gap Clearance and elevation requirements; the placement must otherwise be legal. Normally do not end within enemy Engagement Range; during Assault a PLACE effect may set models in Engagement. See PDF p. 88." },
   'PRECISION': { type: 'Combat', description: 'After rolling to hit, move up to X missed dice into the Armour Pool. They still need to survive armour.' },
   'SIDEARM': { type: 'Weapon', description: "May be used in addition to the model's normal weapon during a Ranged Attack or Close Combat Attack. Multiple SIDEARMs may all be used, each as a separate Batch; each may select a different eligible target. See PDF p. 89." },
@@ -1451,31 +1451,186 @@
 },
 
   // ELITE
-  { id: 'goliath', name: 'Goliath', role: 'Elite', tags: ['Armoured', 'Mechanical', 'Ground'],
-    stats: { shield: null, speed: '7', evade: '-', armour: '4+', hp: 10, size: 3 },
-    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 180, models: '1', supply: 2 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
-    weapons: [
-      { name: 'Autocannon', phase: 'Assault', range: '12', target: 'Ground', roa: 9, hit: '4+', surge: '-', sDie: '-', damage: 1, keywords: ['LONG RANGE (18")'] },
-      { name: 'Underbelly Machine Gun', phase: 'Assault', range: '8', target: 'Ground', roa: 6, hit: '3+', surge: 'Light', sDie: 'D3', damage: 1, keywords: ['PINPOINT', 'SIDEARM'] },
-      { name: 'Hellfire Missiles', phase: 'Assault', range: '16', target: 'Flying', roa: 6, hit: '3+', surge: 'Light', sDie: 'D3', damage: 1, keywords: ['ANTI-EVADE (1)', 'SIDEARM'] },
-      { name: 'Stomp', phase: 'Combat', range: 'E', target: 'Ground', roa: 4, hit: '5+', surge: '-', sDie: '-', damage: 1, keywords: [] }
-    ],
-    abilities: [],
-    phaseAbilities: {
-      'Movement Phase': [{ name: 'Target Lock', type: 'Active (1 Command Point)', description: 'Select one Enemy Unit Within 12". Whenever a Friendly Goliath Unit targets that enemy with an Autocannon, that weapon gains Surge Type: Light, Armoured, and S Dice: D3+1.' }],
-      'Assault Phase': [
-        { name: 'Indomitable', type: 'Passive', description: 'While Engaged, this Unit may target and be targeted by Unengaged Enemy Units. In both cases, the defending Unit gains an Evade Roll against those attacks.' },
-        { name: 'Devastating Charge', type: 'Passive', description: 'Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 3+ effect.' }
+  {
+  "id": "goliath",
+  "name": "Goliath",
+  "role": "Elite",
+  "tags": [
+    "Armoured",
+    "Mechanical",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "7",
+    "evade": "-",
+    "armour": "4+",
+    "hp": 10,
+    "size": 3
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    },
+    {
+      "tier": "T2",
+      "cost": 180,
+      "models": "1",
+      "supply": 2
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Autocannon",
+      "phase": "Assault",
+      "range": "12",
+      "target": "Ground",
+      "roa": 9,
+      "hit": "4+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": [
+        "LONG RANGE (18\")"
       ]
     },
-    upgrades: {
-      'Any Phase': [{ name: 'Ares-Class Targeting System', cost: 20, type: 'Passive', description: "This Unit's Autocannon and Underbelly Machine Gun weapons gain PRECISION (1)." }],
-      'Assault Phase': [
-        { name: 'Scatter Missiles', cost: 30, type: 'Weapon', description: 'Replaces Hellfire Missiles. RNG 18, TGT Ground, RoA 6, Hit 5+, Surge Light, S.Die D3, Dmg 1. Keywords: INDIRECT FIRE, LOCKED IN (6), LONG RANGE (24"), SIDEARM.', modifies: { weapon: 'Hellfire Missiles' } },
-        { name: 'Haywire Missiles', cost: 40, type: 'Weapon', description: 'Replaces Hellfire Missiles. RNG 12, TGT Ground, RoA 3, Hit 3+, Surge Armoured, S.Die D3, Dmg 1. Keywords: PIERCE Armoured (3), SIDEARM.', modifies: { weapon: 'Hellfire Missiles' } }
+    {
+      "name": "Underbelly Machine Gun",
+      "phase": "Assault",
+      "range": "8",
+      "target": "Ground",
+      "roa": 6,
+      "hit": "3+",
+      "surge": "Light",
+      "sDie": "D3",
+      "damage": 1,
+      "keywords": [
+        "PINPOINT",
+        "SIDEARM"
       ]
+    },
+    {
+      "name": "Hellfire Missiles",
+      "phase": "Assault",
+      "range": "16",
+      "target": "Flying",
+      "roa": 6,
+      "hit": "3+",
+      "surge": "Light",
+      "sDie": "D3",
+      "damage": 1,
+      "keywords": [
+        "ANTI-EVADE (1)",
+        "SIDEARM"
+      ]
+    },
+    {
+      "name": "Stomp",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 4,
+      "hit": "5+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
     }
+  ],
+  "abilities": [],
+  "phaseAbilities": {
+    "Movement Phase": [
+      {
+        "name": "Target Lock",
+        "type": "Active (1 Command Point)",
+        "description": "Select one Enemy Unit Within 12\". Whenever a Friendly Goliath Unit targets that enemy with an Autocannon, that weapon gains Surge Type: Light, Armoured, and S Dice: D3+1."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Indomitable",
+        "type": "Passive",
+        "description": "While Engaged, this Unit may target and be targeted by Unengaged Enemy Units. In both cases, the defending Unit gains an Evade Roll against those attacks."
+      },
+      {
+        "name": "Devastating Charge",
+        "type": "Passive",
+        "description": "Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 3+ effect."
+      }
+    ]
   },
+  "upgrades": {
+    "Any Phase": [
+      {
+        "name": "Ares-Class Targeting System",
+        "cost": 20,
+        "type": "Passive",
+        "description": "This Unit's Autocannon and Underbelly Machine Gun weapons gain PRECISION (1)."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Scatter Missiles",
+        "cost": 30,
+        "type": "Weapon",
+        "description": "Replaces Hellfire Missiles. RNG 18, TGT Ground, RoA 6, Hit 5+, Surge Light, S.Die D3, Dmg 1. Keywords: INDIRECT FIRE, LOCKED IN (6), LONG RANGE (24\"), SIDEARM.",
+        "modifies": {
+          "weapon": "Hellfire Missiles"
+        },
+        "weaponProfile": {
+          "name": "Scatter Missiles",
+          "phase": "Assault",
+          "range": "18",
+          "target": "Ground",
+          "roa": 6,
+          "hit": "5+",
+          "surge": "Light",
+          "sDie": "D3",
+          "damage": 1,
+          "keywords": [
+            "INDIRECT FIRE",
+            "LOCKED IN (6)",
+            "LONG RANGE (24\")",
+            "SIDEARM"
+          ]
+        }
+      },
+      {
+        "name": "Haywire Missiles",
+        "cost": 40,
+        "type": "Weapon",
+        "description": "Replaces Hellfire Missiles. RNG 12, TGT Ground, RoA 3, Hit 3+, Surge Armoured, S.Die D3, Dmg 1. Keywords: PIERCE Armoured (3), SIDEARM.",
+        "modifies": {
+          "weapon": "Hellfire Missiles"
+        },
+        "weaponProfile": {
+          "name": "Haywire Missiles",
+          "phase": "Assault",
+          "range": "12",
+          "target": "Ground",
+          "roa": 3,
+          "hit": "3+",
+          "surge": "Armoured",
+          "sDie": "D3",
+          "damage": 1,
+          "keywords": [
+            "PIERCE Armoured (3)",
+            "SIDEARM"
+          ]
+        }
+      }
+    ]
+  }
+},
 
   // CORE
   { id: 'marauder', name: 'Marauder', role: 'Core', tags: ['Armoured', 'Biological', 'Ground'],
@@ -1498,28 +1653,176 @@
       'Assault Phase': [{ name: 'Laser Targeting Systems', cost: '20/40', type: 'Passive', description: 'This Unit\'s Quad K12 weapon gains LONG RANGE (16").' }]
     }
   },
-  { id: 'marine', name: 'Marine', role: 'Core', tags: ['Biological', 'Light', 'Ground'],
-    stats: { shield: null, speed: '4/7', evade: '5+', armour: '5+', hp: 2, size: 2 },
-    tiers: [{ tier: 'T3', cost: 220, models: '7-9', supply: 2 }, { tier: 'T2', cost: 170, models: '4-6', supply: 1 }, { tier: 'T1', cost: null, models: '1-3', supply: 0 }],
-    weapons: [
-      { name: 'C-14 Rifle', phase: 'Assault', range: '12', target: 'All', roa: 2, hit: '3+', surge: 'Light', sDie: 'D3', damage: 1, keywords: [] },
-      { name: 'Strike', phase: 'Combat', range: 'E', target: 'Ground', roa: 1, hit: '5+', surge: '-', sDie: '-', damage: 1, keywords: [] }
-    ],
-    abilities: [],
-    phaseAbilities: {
-      'Movement Phase': [{ name: 'Stimpack', type: 'Active (1 Command Point)', description: 'This Unit suffers NON-LETHAL DAMAGE (2). This Unit gains BUFF Speed (3). Additionally, its C-14 Rifle and all Close Combat Weapons gain PRECISION (3).' }]
-    },
-    upgrades: {
-      'Movement Phase': [{ name: 'Combat Shield', cost: '20/30', type: 'Active (1 Command Point)', description: 'This Unit is always eligible to make an Evade Roll against any Close Combat Attack targeting it and any Damage from an Enemy Special Ability.' }],
-      'Assault Phase': [
-        { name: 'AGG-12', cost: '10/10', type: 'Weapon', description: 'Replaces C-14 Rifle. RNG 12, TGT Ground, RoA 2, Hit 3+, Surge Armoured, S.Die D3, Dmg 1. Keywords: LONG RANGE (18"), SPECIALIST.', modifies: { weapon: 'C-14 Rifle' } },
-        { name: 'Rocket Launcher', cost: '40/40', type: 'Weapon', description: 'Additional weapon. RNG 12, TGT Ground, RoA 4, Hit 3+, Dmg 1. Keywords: INDIRECT FIRE, LONG RANGE (18"), SIDEARM, SPECIALIST.' },
-        { name: 'Slugthrower', cost: '10/20', type: 'Passive', description: 'When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8", that weapon gains ANTI-EVADE (1).' },
-        { name: 'Grenades - Frag', cost: '10/10', type: 'Passive', description: "When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8\", that weapon's S Dice is replaced by D6." }
-      ],
-      'Combat Phase': [{ name: 'Bayonet', cost: '20/30', type: 'Weapon', description: 'Replaces Strike. RNG E, TGT Ground, RoA 2, Hit 5+, Dmg 1.', modifies: { weapon: 'Strike' } }]
-    }
+  {
+  "id": "marine",
+  "name": "Marine",
+  "role": "Core",
+  "tags": [
+    "Biological",
+    "Light",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "4/7",
+    "evade": "5+",
+    "armour": "5+",
+    "hp": 2,
+    "size": 2
   },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": 220,
+      "models": "7-9",
+      "supply": 2
+    },
+    {
+      "tier": "T2",
+      "cost": 170,
+      "models": "4-6",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "1-3",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "C-14 Rifle",
+      "phase": "Assault",
+      "range": "12",
+      "target": "All",
+      "roa": 2,
+      "hit": "3+",
+      "surge": "Light",
+      "sDie": "D3",
+      "damage": 1,
+      "keywords": []
+    },
+    {
+      "name": "Strike",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 1,
+      "hit": "5+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [],
+  "phaseAbilities": {
+    "Movement Phase": [
+      {
+        "name": "Stimpack",
+        "type": "Active (1 Command Point)",
+        "description": "This Unit suffers NON-LETHAL DAMAGE (2). This Unit gains BUFF Speed (3). Additionally, its C-14 Rifle and all Close Combat Weapons gain PRECISION (3)."
+      }
+    ]
+  },
+  "upgrades": {
+    "Movement Phase": [
+      {
+        "name": "Combat Shield",
+        "cost": "20/30",
+        "type": "Active (1 Command Point)",
+        "description": "This Unit is always eligible to make an Evade Roll against any Close Combat Attack targeting it and any Damage from an Enemy Special Ability."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "AGG-12",
+        "cost": "10/10",
+        "type": "Weapon",
+        "description": "Replaces C-14 Rifle. RNG 12, TGT Ground, RoA 2, Hit 3+, Surge Armoured, S.Die D3, Dmg 1. Keywords: LONG RANGE (18\"), SPECIALIST.",
+        "modifies": {
+          "weapon": "C-14 Rifle"
+        },
+        "weaponProfile": {
+          "name": "AGG-12",
+          "phase": "Assault",
+          "range": "12",
+          "target": "Ground",
+          "roa": 2,
+          "hit": "3+",
+          "surge": "Armoured",
+          "sDie": "D3",
+          "damage": 1,
+          "keywords": [
+            "LONG RANGE (18\")",
+            "SPECIALIST"
+          ]
+        },
+        "specialist": true
+      },
+      {
+        "name": "Rocket Launcher",
+        "cost": "40/40",
+        "type": "Weapon",
+        "description": "Additional weapon. RNG 12, TGT Ground, RoA 4, Hit 3+, Dmg 1. Keywords: INDIRECT FIRE, LONG RANGE (18\"), SIDEARM, SPECIALIST.",
+        "weaponProfile": {
+          "name": "Rocket Launcher",
+          "phase": "Assault",
+          "range": "12",
+          "target": "Ground",
+          "roa": 4,
+          "hit": "3+",
+          "surge": "-",
+          "sDie": "-",
+          "damage": 1,
+          "keywords": [
+            "INDIRECT FIRE",
+            "LONG RANGE (18\")",
+            "SIDEARM",
+            "SPECIALIST"
+          ]
+        },
+        "specialist": true
+      },
+      {
+        "name": "Slugthrower",
+        "cost": "10/20",
+        "type": "Passive",
+        "description": "When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8\", that weapon gains ANTI-EVADE (1)."
+      },
+      {
+        "name": "Grenades - Frag",
+        "cost": "10/10",
+        "type": "Passive",
+        "description": "When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8\", that weapon's S Dice is replaced by D6."
+      }
+    ],
+    "Combat Phase": [
+      {
+        "name": "Bayonet",
+        "cost": "20/30",
+        "type": "Weapon",
+        "description": "Replaces Strike. RNG E, TGT Ground, RoA 2, Hit 5+, Dmg 1.",
+        "modifies": {
+          "weapon": "Strike"
+        },
+        "weaponProfile": {
+          "name": "Bayonet",
+          "phase": "Combat",
+          "range": "E",
+          "target": "Ground",
+          "roa": 2,
+          "hit": "5+",
+          "surge": "-",
+          "sDie": "-",
+          "damage": 1,
+          "keywords": []
+        }
+      }
+    ]
+  }
+},
   { id: 'raynors-raider', name: "Raynor's Raider (Marine)", role: 'Core', factionTag: "Raynor's Raiders", tags: ['Biological', 'Light', 'Ground'],
     stats: { shield: null, speed: '4/7', evade: '5+', armour: '5+', hp: 2, size: 2 },
     tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 230, models: '1-6', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
@@ -1566,7 +1869,159 @@
     }
   },
 
-  // OTHER
+  {
+  "id": "siege-tank",
+  "name": "Siege Tank",
+  "role": "Elite",
+  "tags": [
+    "Armoured",
+    "Mechanical",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "7",
+    "evade": "-",
+    "armour": "5+",
+    "hp": 14,
+    "size": 2
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    },
+    {
+      "tier": "T2",
+      "cost": 220,
+      "models": "1",
+      "supply": 2
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Twin Cannon",
+      "phase": "Assault",
+      "range": "12",
+      "target": "Ground",
+      "roa": 8,
+      "hit": "3+",
+      "surge": "Armoured",
+      "sDie": "D6",
+      "damage": 1,
+      "keywords": [
+        "PIERCE Armoured (2)"
+      ]
+    },
+    {
+      "name": "Shock Cannon",
+      "phase": "Assault",
+      "range": "18",
+      "target": "Ground",
+      "roa": "BT+4",
+      "hit": "4+",
+      "surge": "Light, Armoured",
+      "sDie": "BT",
+      "damage": 1,
+      "keywords": [
+        "SIEGE MODE"
+      ]
+    },
+    {
+      "name": "Rolling Over",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "2+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Large",
+      "type": "Passive",
+      "description": "Leading Model cannot pass through physical gaps narrower than 3 inches. Moving through Size 0 or Size 1 Impassable Terrain (excluding tokens) removes that terrain as specified by the card."
+    },
+    {
+      "phase": "Any Phase",
+      "name": "Heavy Plating",
+      "type": "Passive",
+      "description": "Gain TOUGH (1) when rolling Armour unless the Unit has SIEGE MODE Status."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Indomitable",
+      "type": "Passive",
+      "description": "While Engaged, can target and be targeted by Unengaged enemy Units; defender gains an Evade Roll in either case."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Point Blank",
+      "type": "Passive",
+      "description": "While in SIEGE MODE, cannot target Enemy Units it is Engaged with."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Aftershock Rounds",
+      "type": "Passive",
+      "description": "While in SIEGE MODE, this weapon's Damage is treated as the target Unit's current Size, minimum 1."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Devastating Charge",
+      "type": "Passive",
+      "description": "Immediately after a successful Charge, resolve IMPACT (4) 3+."
+    }
+  ],
+  "phaseAbilities": {},
+  "upgrades": {
+    "Movement Phase": [
+      {
+        "name": "Mode Transformation",
+        "cost": 20,
+        "type": "Active (1 CP)",
+        "description": "Gain or lose SIEGE MODE Status. While in SIEGE MODE, treat this Unit's Size as 3."
+      },
+      {
+        "name": "Coordinated Strike",
+        "cost": 20,
+        "type": "Active (0 CP)",
+        "description": "Choose a Friendly Unengaged Unit on the battlefield (no LoS needed). With Shock Cannon this Round, may ignore normal Range and use a model of that Unit as the acting model to target an Enemy Within 8 inches and visible to it."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Shaped Blast",
+        "cost": 10,
+        "type": "Reaction (0 CP)",
+        "description": "Once per Game when declaring a Ranged Attack while in SIEGE MODE, its weapon gains PINPOINT and LOCKED IN (4)."
+      },
+      {
+        "name": "Smart Shells",
+        "cost": 10,
+        "type": "Reaction (0 CP)",
+        "description": "Once per Game when declaring a Ranged Attack while in SIEGE MODE, its weapon gains INDIRECT FIRE and LONG RANGE (24)."
+      }
+    ]
+  },
+  "cardSource": "https://starcraft-tmg.com/files/downloads/StarCraft-Terran-P2P-W2-Card-Sheets-A4_EN.pdf",
+  "wave": 2
+},
+
+      // OTHER
   { id: 'point-defense-drone', name: 'Point Defense Drone', role: 'Other', factionTag: "Raynor's Raiders", tags: ['Armoured', 'Mechanical', 'Flying'],
     stats: { shield: null, speed: '-', evade: '6+', armour: '6+', hp: 3, size: null },
     tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 0, models: '1', supply: 0 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
@@ -1633,6 +2088,33 @@
   { id: 'supply-depot', name: 'Supply Depot', unique: true, cost: 40, resource: '+1 CP', slots: { hero: 1, elite: 1, core: 1 },
     abilities: [{ phase: 'Movement Phase', name: 'Additional Supply Depots', type: 'Active', description: "The active Unit's Supply Value is improved by 1 for Controlling and Contesting Mission Markers and completing objectives." }]
   },
+{
+  "id": "factory-tech-lab",
+  "name": "Factory (Tech Lab)",
+  "unique": true,
+  "cost": 40,
+  "resource": "+1 CP",
+  "slots": {
+    "elite": 2
+  },
+  "category": "combat",
+  "summary": "Vehicle repairs and stationary ranged precision",
+  "abilities": [
+    {
+      "phase": "Movement Phase",
+      "name": "Field Repair",
+      "type": "Active",
+      "description": "Active Mechanical Unit resolves HEAL (2)."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Pound 'Em Flat!",
+      "type": "Active",
+      "description": "If the active Mechanical Unit has Stationary Status, its first Ranged Weapon used gains PRECISION (2)."
+    }
+  ],
+  "wave": 2
+},
 ];
 
     // ============================================================================

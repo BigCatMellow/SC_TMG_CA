@@ -974,7 +974,24 @@ class Component extends DCLogic {
       { k: 'HP', v: String(s.hp) }, { k: 'SIZE', v: String(s.size) }
     ];
     if (s.shield) stats.unshift({ k: 'SHD', v: String(s.shield) });
-    const weapons = (unit.weapons || []).map(w => ({
+    // Show the weapon profiles for this roster, including purchased replacements.
+    // A SPECIALIST changes one model only, so retain the parent weapon too.
+    const selected = entry ? this.unitUpgList(unit).filter(up => (entry.upgs || []).includes(up.name)) : [];
+    const selectedNames = new Set(selected.map(up => up.name));
+    const replaced = new Set(selected.filter(up => up.type === 'Weapon' && !up.specialist && up.modifies && up.modifies.weapon).map(up => up.modifies.weapon));
+    let effectiveWeapons = (unit.weapons || [])
+      .filter(w => (!w.replaces || selectedNames.has(w.name)) && !replaced.has(w.name))
+      .map(w => ({ ...w, keywords: [...(w.keywords || [])] }));
+    for (const up of selected) {
+      if (up.weaponProfile && !effectiveWeapons.some(w => w.name === up.weaponProfile.name)) {
+        effectiveWeapons.push({ ...up.weaponProfile, keywords: [...(up.weaponProfile.keywords || [])] });
+      }
+      if (up.type !== 'Weapon' && up.modifies && up.modifies.changes && up.modifies.changes.keywords) {
+        effectiveWeapons = effectiveWeapons.map(w => w.name === up.modifies.weapon
+          ? { ...w, keywords: [...up.modifies.changes.keywords] } : w);
+      }
+    }
+    const weapons = effectiveWeapons.map(w => ({
       name: w.name,
       ...this.phaseBadge(w.phase + ' Phase'),
       phase: w.phase,
@@ -1204,7 +1221,21 @@ class Component extends DCLogic {
   // ---------- actions ----------
   toggleUpgrade(key, name) {
     this.setState(st => ({
-      army: st.army.map(e => e.key === key ? { ...e, upgs: (e.upgs || []).includes(name) ? e.upgs.filter(n => n !== name) : [...(e.upgs || []), name] } : e)
+      army: st.army.map(e => {
+        if (e.key !== key) return e;
+        const u = this.D().UNITS.find(x => x.id === e.unitId);
+        if (!u) return e;
+        const list = this.unitUpgList(u), upgrade = list.find(x => x.name === name);
+        if (!upgrade) return e;
+        const prior = e.upgs || [];
+        if (prior.includes(name)) return { ...e, upgs: prior.filter(x => x !== name) };
+        const exclusive = upgrade.type === 'Weapon' && !upgrade.specialist && upgrade.modifies && upgrade.modifies.weapon;
+        const keep = exclusive ? prior.filter(n => {
+          const previous = list.find(x => x.name === n);
+          return !(previous && previous.type === 'Weapon' && !previous.specialist && previous.modifies && previous.modifies.weapon === upgrade.modifies.weapon);
+        }) : prior;
+        return { ...e, upgs: [...keep, name] };
+      })
     }), () => this.save());
   }
   addUnit(unit) {

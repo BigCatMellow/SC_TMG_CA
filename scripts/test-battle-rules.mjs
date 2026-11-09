@@ -10,10 +10,10 @@ const w = {};
 for (const p of ['terran-data.js','zerg-data.js','protoss-data.js','rules-data.js','battle-rules-data.js']) {
   vm.runInNewContext(read(p), { window: w }, { filename: p });
 }
-assert.equal(w.SCTMG_BATTLE_RULES.sections.length, 18);
+assert.equal(w.SCTMG_BATTLE_RULES.sections.length, 23);
 const r = w.SCTMG_BATTLE_RULES.sections;
 assert.equal(new Set(r.map(s => s.id)).size, r.length);
-assert.equal(r.filter(s => s.scope === 'core').length, 15);
+assert.equal(r.filter(s => s.scope === 'core').length, 20);
 for (const f of ['terran','zerg','protoss']) {
   assert.equal(r.filter(s => s.scope === f).length, 1);
   assert.ok(w['SCTMG_' + f.toUpperCase()].UNITS.length > 0, f + ' units load');
@@ -22,6 +22,12 @@ for (const s of r) {
   assert.ok(s.sourceLabel && s.groups.length, s.id + ' has PDF citations and groups');
   assert.ok(s.groups.every(g => g.items.length && g.items.every(it => it.t.length > 5)), s.id + ' has text');
 }
+const faq = r.filter(s => s.id.startsWith('faq-'));
+assert.equal(faq.length, 5);
+assert.ok(faq.every(s => s.sourceLabel.includes('FAQ v1.1') && s.groups.length >= 2));
+const faqText = faq.flatMap(s => s.groups.flatMap(g => g.items.map(i => i.t))).join(' ');
+for(const key of ['Artefact Hunt','Surge','2+','Tactical Card','PINPOINT','Coherency','PLACE'])
+  assert.ok(faqText.includes(key),'FAQ coverage missing '+key);
 const terran = w.SCTMG_TERRAN.KEYWORDS;
 const zerg = w.SCTMG_ZERG.KEYWORDS;
 const protoss = w.SCTMG_PROTOSS.KEYWORDS;
@@ -47,10 +53,13 @@ c.state = {ready:true,scope:'core',exp:{},q:'',sheet:null,play:{round:1,phase:0,
 for (const scope of ['core','terran','zerg','protoss']) {
   c.state.scope = scope;
   const rendered = c.renderVals();
-  assert.equal(rendered.sections.length, scope === 'core' ? 15 : 16);
+  assert.equal(rendered.sections.length, scope === 'core' ? 20 : 21);
   assert.equal(rendered.factionTabs.filter(t=>t.active).length,1);
   assert.ok(rendered.sourceBanner.length > 30);
 }
+c.state.scope = 'core';
+c.state.q = 'Artefact Hunt';
+assert.ok(c.renderVals().sections.some(s => s.name === 'FAQ: Missions, Markers & Scoring'),'FAQ searchable by mission name');
 c.state.scope = 'protoss';
 c.state.q = 'shield';
 assert.ok(c.renderVals().sections.some(s=>s.name === 'Protoss Field Reference'));

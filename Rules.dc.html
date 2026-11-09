@@ -428,7 +428,7 @@ class Component extends DCLogic {
       clearQ: () => this.setState({ q: '' }),
       chips, sections, factionTabs,
       sourceBanner: window.SCTMG_BATTLE_RULES
-        ? '2026 Core Rules mechanics + October 2026 official Wave 1 points. Consult printed cards and the publisher FAQ for specific effects; not every newer-wave unit is included.'
+        ? '2026 Core Rules + publisher FAQ v1.1 for rulings; October 2026 balance for points. Includes selected Wave 2 units. Follow official card text for disputed interactions; the full newer-wave catalogue is not loaded.'
         : 'Legacy HTML summary loaded. The 2026 battle reference is unavailable — do not rely on this as fully updated.',
       noHits: searching && sections.length === 0,
       sheetOpen: !!(st.sheet && st.sheet.type !== 'play'),

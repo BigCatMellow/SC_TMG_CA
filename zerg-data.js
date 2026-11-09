@@ -114,29 +114,130 @@ const KEYWORDS = {
           'Assault Phase': [{ name: 'Grooved Spines', cost: '20/30', type: 'Passive', description: 'This Unit\'s Needle Spines ranged weapon gains LONG RANGE (16").' }]
         }
       },
-      { id: 'raptor', name: 'Raptor (Zergling)', role: 'Elite', tags: ['Biological', 'Light', 'Ground'],
-        stats: { shield: null, speed: '5/9', evade: '4+', armour: '6+', hp: 1, size: 1 },
-        tiers: [{ tier: 'T3', cost: 260, models: '13-18', supply: 2 }, { tier: 'T2', cost: 210, models: '7-12', supply: 1 }, { tier: 'T1', cost: null, models: '1-6', supply: 0 }],
-        weapons: [{ name: 'Claws', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '4+', surge: 'Light', sDie: 'D3', damage: 1, keywords: [] }],
-        abilities: [
-          { phase: 'Any Phase', name: 'Squadron', type: 'Passive', description: "This Unit's Horizontal Coherency is 4\"." },
-          { phase: 'Any Phase', name: 'Raptor Strain', type: 'Passive', description: 'This Unit can move through IMPASSABLE TERRAIN of Size 4 or less and change elevation without using ACCESS POINTS.' }
-        ],
-        phaseAbilities: {
-          'Assault Phase': [
-            { name: 'Adrenal Overload', type: 'Active (1 Biomass)', description: 'This Unit gains a +1 Modifier to all IMPACT Hit Rolls.' },
-            { name: 'Metabolic Boost', type: 'Active (1 Biomass)', description: "When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit's Speed characteristic." },
-            { name: 'Devastating Charge', type: 'Passive', description: 'Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 5+ effect.' }
-          ]
+      {
+  "id": "raptor",
+  "name": "Raptor (Zergling)",
+  "role": "Elite",
+  "tags": [
+    "Biological",
+    "Light",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "5/9",
+    "evade": "4+",
+    "armour": "6+",
+    "hp": 1,
+    "size": 1
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": 260,
+      "models": "13-18",
+      "supply": 2
+    },
+    {
+      "tier": "T2",
+      "cost": 210,
+      "models": "7-12",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "1-6",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Claws",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "4+",
+      "surge": "Light",
+      "sDie": "D3",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Squadron",
+      "type": "Passive",
+      "description": "This Unit's Horizontal Coherency is 4\"."
+    },
+    {
+      "phase": "Any Phase",
+      "name": "Raptor Strain",
+      "type": "Passive",
+      "description": "This Unit can move through IMPASSABLE TERRAIN of Size 4 or less and change elevation without using ACCESS POINTS."
+    }
+  ],
+  "phaseAbilities": {
+    "Assault Phase": [
+      {
+        "name": "Adrenal Overload",
+        "type": "Active (1 Biomass)",
+        "description": "This Unit gains a +1 Modifier to all IMPACT Hit Rolls."
+      },
+      {
+        "name": "Metabolic Boost",
+        "type": "Active (1 Biomass)",
+        "description": "When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit's Speed characteristic."
+      },
+      {
+        "name": "Devastating Charge",
+        "type": "Passive",
+        "description": "Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 5+ effect."
+      }
+    ]
+  },
+  "upgrades": {
+    "Movement Phase": [
+      {
+        "name": "Burrow Ambush",
+        "cost": "20/30",
+        "type": "Passive",
+        "description": "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends."
+      }
+    ],
+    "Combat Phase": [
+      {
+        "name": "Shredding Claws",
+        "cost": "10/10",
+        "type": "Weapon",
+        "description": "Replaces Claws. Surge: Light, Armoured. S.Die: D3.",
+        "weaponProfile": {
+          "name": "Shredding Claws",
+          "phase": "Combat",
+          "range": "E",
+          "target": "Ground",
+          "roa": 2,
+          "hit": "4+",
+          "surge": "Light, Armoured",
+          "sDie": "D3",
+          "damage": 1,
+          "keywords": []
         },
-        upgrades: {
-          'Movement Phase': [{ name: 'Burrow Ambush', cost: '20/30', type: 'Passive', description: "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends." }],
-          'Combat Phase': [
-            { name: 'Shredding Claws', cost: '10/10', type: 'Weapon', description: 'Replaces Claws. Surge: Light, Armoured. S.Die: D3.' },
-            { name: 'Adrenal Glands', cost: '20/20', type: 'Passive', description: "This Unit's Claws and Shredding Claws weapons gain PRECISION (2)." }
-          ]
+        "modifies": {
+          "weapon": "Claws"
         }
       },
+      {
+        "name": "Adrenal Glands",
+        "cost": "20/20",
+        "type": "Passive",
+        "description": "This Unit's Claws and Shredding Claws weapons gain PRECISION (2)."
+      }
+    ]
+  }
+},
       { id: 'kerrigan-raptor', name: "Kerrigan's Raptor (Zergling)", role: 'Elite', unique: true, factionTag: "Kerrigan's Swarm", tags: ['Biological', 'Light', 'Ground'],
         stats: { shield: null, speed: '5/9', evade: '4+', armour: '5+', hp: 2, size: 1 },
         tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 230, models: '4-6', supply: 1 }, { tier: 'T1', cost: null, models: '1-3', supply: 0 }],
@@ -399,26 +500,124 @@ const KEYWORDS = {
     ]
   }
 },
-      { id: 'zergling', name: 'Zergling', role: 'Core', tags: ['Biological', 'Light', 'Ground'],
-        stats: { shield: null, speed: '5/9', evade: '5+', armour: '6+', hp: 1, size: 1 },
-        tiers: [{ tier: 'T3', cost: 210, models: '13-18', supply: 2 }, { tier: 'T2', cost: 150, models: '7-12', supply: 1 }, { tier: 'T1', cost: null, models: '1-6', supply: 0 }],
-        weapons: [{ name: 'Claws', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '4+', surge: '-', sDie: '-', damage: 1, keywords: [] }],
-        abilities: [{ phase: 'Any Phase', name: 'Squadron', type: 'Passive', description: "This Unit's Horizontal Coherency is 4\"." }],
-        phaseAbilities: {
-          'Assault Phase': [
-            { name: 'Adrenal Overload', type: 'Active (1 Biomass)', description: 'This Unit gains a +1 Modifier to all IMPACT Hit Rolls.' },
-            { name: 'Metabolic Boost', type: 'Active (1 Biomass)', description: "When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit's Speed characteristic." },
-            { name: 'Devastating Charge', type: 'Passive', description: 'Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 5+ effect.' }
-          ]
+      {
+  "id": "zergling",
+  "name": "Zergling",
+  "role": "Core",
+  "tags": [
+    "Biological",
+    "Light",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "5/9",
+    "evade": "5+",
+    "armour": "6+",
+    "hp": 1,
+    "size": 1
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": 210,
+      "models": "13-18",
+      "supply": 2
+    },
+    {
+      "tier": "T2",
+      "cost": 150,
+      "models": "7-12",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "1-6",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Claws",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "4+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Squadron",
+      "type": "Passive",
+      "description": "This Unit's Horizontal Coherency is 4\"."
+    }
+  ],
+  "phaseAbilities": {
+    "Assault Phase": [
+      {
+        "name": "Adrenal Overload",
+        "type": "Active (1 Biomass)",
+        "description": "This Unit gains a +1 Modifier to all IMPACT Hit Rolls."
+      },
+      {
+        "name": "Metabolic Boost",
+        "type": "Active (1 Biomass)",
+        "description": "When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit's Speed characteristic."
+      },
+      {
+        "name": "Devastating Charge",
+        "type": "Passive",
+        "description": "Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 5+ effect."
+      }
+    ]
+  },
+  "upgrades": {
+    "Movement Phase": [
+      {
+        "name": "Burrow Ambush",
+        "cost": "20/30",
+        "type": "Passive",
+        "description": "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends."
+      }
+    ],
+    "Combat Phase": [
+      {
+        "name": "Shredding Claws",
+        "cost": "10/10",
+        "type": "Weapon",
+        "description": "Replaces Claws. Surge: Light, Armoured. S.Die: D3.",
+        "weaponProfile": {
+          "name": "Shredding Claws",
+          "phase": "Combat",
+          "range": "E",
+          "target": "Ground",
+          "roa": 2,
+          "hit": "4+",
+          "surge": "Light, Armoured",
+          "sDie": "D3",
+          "damage": 1,
+          "keywords": []
         },
-        upgrades: {
-          'Movement Phase': [{ name: 'Burrow Ambush', cost: '20/30', type: 'Passive', description: "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends." }],
-          'Combat Phase': [
-            { name: 'Shredding Claws', cost: '10/10', type: 'Weapon', description: 'Replaces Claws. Surge: Light, Armoured. S.Die: D3.' },
-            { name: 'Adrenal Glands', cost: '20/20', type: 'Passive', description: "This Unit's Claws and Shredding Claws weapons gain PRECISION (2)." }
-          ]
+        "modifies": {
+          "weapon": "Claws"
         }
       },
+      {
+        "name": "Adrenal Glands",
+        "cost": "20/20",
+        "type": "Passive",
+        "description": "This Unit's Claws and Shredding Claws weapons gain PRECISION (2)."
+      }
+    ]
+  }
+},
 
       // SUPPORT
       {
@@ -768,6 +967,128 @@ const KEYWORDS = {
   }
 },
 
+      {
+  "id": "ravager",
+  "name": "Ravager",
+  "role": "Core",
+  "tags": [
+    "Armoured",
+    "Biological",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "4/8",
+    "evade": "5+",
+    "armour": "5+",
+    "hp": 9,
+    "size": 3
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": 270,
+      "models": "2",
+      "supply": 2
+    },
+    {
+      "tier": "T2",
+      "cost": 160,
+      "models": "1",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Plasma Discharge",
+      "phase": "Assault",
+      "range": "12",
+      "target": "Ground",
+      "roa": 4,
+      "hit": "3+",
+      "surge": "Light",
+      "sDie": "D3+1",
+      "damage": 1,
+      "keywords": []
+    },
+    {
+      "name": "Claws",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "4+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Squadron",
+      "type": "Passive",
+      "description": "Horizontal Coherency is 4 inches."
+    }
+  ],
+  "phaseAbilities": {
+    "Movement Phase": [
+      {
+        "name": "Deep Tunnel",
+        "type": "Active (1 BM)",
+        "description": "Set a Ravager Burrow token Wholly Within 12 inches of any model in this Unit. At End of Round, place all models in Coherency using the token as Leading Model; token has DISPLACEMENT."
+      },
+      {
+        "name": "Corrosive Bile",
+        "type": "Active (1 BM)",
+        "description": "For each model, set a Corrosive Bile token within 14 inches. At End of Assault Phase, resolve HITS 5 (1) against each Unit within 1 inch of each token, then remove tokens; these persist if Ravager is destroyed until that resolution."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Devastating Charge",
+        "type": "Passive",
+        "description": "Immediately after successful Charge, resolve IMPACT (2) 4+."
+      }
+    ]
+  },
+  "upgrades": {
+    "Any Phase": [
+      {
+        "name": "Bloated Bile Ducts",
+        "cost": "20/40",
+        "type": "Passive",
+        "description": "Increase Corrosive Bile area of effect to 2 inches."
+      }
+    ],
+    "Movement Phase": [
+      {
+        "name": "Burrow Ambush",
+        "cost": "20/40",
+        "type": "Passive",
+        "description": "When nominated to Deploy from Reserves, resolve PLACE (18) from the controlling Entry Edge; no model may be set Within 10 inches of an Enemy; Activation ends."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Potent Bile",
+        "cost": "20/40",
+        "type": "Passive",
+        "description": "Before the enemy Armour Roll for HITS caused by this Unit's Corrosive Bile, that Unit suffers DEBUFF Armour (1)."
+      }
+    ]
+  },
+  "cardSource": "https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-W2-Card-Sheets-A4_EN.pdf",
+  "wave": 2
+},
+
       // OTHER
       { id: 'omega-worm', name: 'Omega Worm', role: 'Other', factionTag: "Kerrigan's Swarm", tags: ['Armoured', 'Biological', 'Ground'],
         stats: { shield: null, speed: '-', evade: '-', armour: '5+', hp: 10, size: 3 },
@@ -866,7 +1187,34 @@ const KEYWORDS = {
           { phase: 'Combat Phase', name: 'Feral Rage', type: 'Active', description: "The active Unit's first Close Combat Weapon used gains PRECISION (2)." }
         ]
       },
-    ];
+    {
+  "id": "cocoon",
+  "name": "Cocoon",
+  "unique": true,
+  "cost": 30,
+  "resource": null,
+  "slots": {
+    "elite": 1
+  },
+  "category": "combat",
+  "summary": "Respawn light biological units; morph Roaches into Ravagers",
+  "abilities": [
+    {
+      "phase": "Movement Phase",
+      "name": "Spawn Larva",
+      "type": "Active",
+      "description": "Active Friendly non-Unique Biological Unit of Size 1 resolves RESPAWN (2)."
+    },
+    {
+      "phase": "Movement Phase",
+      "name": "Ravager Morph",
+      "type": "Active",
+      "description": "Once per Game, active Friendly Roach Unit resolves MORPH (Ravager) 1."
+    }
+  ],
+  "wave": 2
+},
+];
   return { KEYWORDS, TAGS, SURGE_TAGS, TYPE_TAGS, ENGAGEMENT_SCALES,
     FACTION_CARDS: ZERG_FACTION_CARDS, UNITS: ZERG_UNITS, TACTICAL_CARDS: ZERG_TACTICAL_CARDS };
 })();
