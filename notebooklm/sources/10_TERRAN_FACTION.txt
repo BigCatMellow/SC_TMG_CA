@@ -1,0 +1,152 @@
+TERRAN UNIT AND CARD REFERENCE
+Companion implementation only; verify exact rulings against publisher cards.
+Rules: https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf
+Current points: https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Cost-Table-10.2026_EN.pdf
+
+=================================================================
+FACTION CARD: Raynor's Raiders
+Slots: {"hero":1,"core":3,"support":1}
+
+=================================================================
+FACTION CARD: Terran Armed Forces
+Slots: {"elite":1,"core":3,"support":1}
+
+=================================================================
+Jim Raynor | Hero | Biological, Ground
+Stats: SPD 7; EVADE 5+; ARMOUR 4+; HP 8; SIZE 2; SHIELD —
+Buy 1 models: 280 Minerals / Supply 1
+Weapon Commando Rifle (Assault): Range 18, RoA 3, Hit 3+, Target All, Surge Armoured, SDie D3, DMG 1; BULKY, PIERCE Armoured (3)
+Weapon C-14 Rifle (Assault): Range 12, RoA 6, Hit 3+, Target All, Surge Light, SDie D3+1, DMG 1; BURST FIRE 8" (3)
+Weapon "Justice" Revolver (Assault): Range 6, RoA 2, Hit 3+, Target Ground, Surge -, SDie -, DMG 2; ANTI-EVADE (2), SIDEARM, PINPOINT
+Weapon Bayonet (Combat): Range E, RoA 2, Hit 4+, Target Ground, Surge Light, SDie D3, DMG 1; 
+Ability Commander (Passive, Any Phase): Treat this Unit's Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks.
+Ability Freedom Fighters (Passive, Any Phase): The Supply Value of all Friendly Units Within 8" of this Unit cannot be reduced below 1 for Contesting Mission Markers and completing objectives.
+Ability Orders (Active (X Command Point), See card): REPEATABLE. Select another Friendly Biological Unit Within 8", spend CP and apply one of the following effects: 1 CP: That Unit's first used weapon gains the CRITICAL HIT (2). 1 CP: That Unit ignores the Disengage penalty for the remainder of the Round. 2 CP: Remove the Activation Marker from that Unit.
+Upgrade C-14 Rifle (0 Minerals): Replaces Commando Rifle. Range 12, Target All, RoA 6, Hit 3+, Surge Light, S.Dice D3+1, Damage 1, BURST FIRE 8" (3).
+
+=================================================================
+Goliath | Elite | Armoured, Mechanical, Ground
+Stats: SPD 7; EVADE -; ARMOUR 4+; HP 10; SIZE 3; SHIELD —
+Buy 1 models: 180 Minerals / Supply 2
+Weapon Autocannon (Assault): Range 12, RoA 9, Hit 4+, Target Ground, Surge -, SDie -, DMG 1; LONG RANGE (18")
+Weapon Underbelly Machine Gun (Assault): Range 8, RoA 6, Hit 3+, Target Ground, Surge Light, SDie D3, DMG 1; PINPOINT, SIDEARM
+Weapon Hellfire Missiles (Assault): Range 16, RoA 6, Hit 3+, Target Flying, Surge Light, SDie D3, DMG 1; ANTI-EVADE (1), SIDEARM
+Weapon Stomp (Combat): Range E, RoA 4, Hit 5+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Target Lock (Active (1 Command Point), See card): Select one Enemy Unit Within 12". Whenever a Friendly Goliath Unit targets that enemy with an Autocannon, that weapon gains Surge Type: Light, Armoured, and S Dice: D3+1.
+Ability Indomitable (Passive, See card): While Engaged, this Unit may target and be targeted by Unengaged Enemy Units. In both cases, the defending Unit gains an Evade Roll against those attacks.
+Ability Devastating Charge (Passive, See card): Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 3+ effect.
+Upgrade Ares-Class Targeting System (20 Minerals): This Unit's Autocannon and Underbelly Machine Gun weapons gain PRECISION (1).
+Upgrade Scatter Missiles (30 Minerals): Replaces Hellfire Missiles. RNG 18, TGT Ground, RoA 6, Hit 5+, Surge Light, S.Die D3, Dmg 1. Keywords: INDIRECT FIRE, LOCKED IN (6), LONG RANGE (24"), SIDEARM.
+Upgrade Haywire Missiles (40 Minerals): Replaces Hellfire Missiles. RNG 12, TGT Ground, RoA 3, Hit 3+, Surge Armoured, S.Die D3, Dmg 1. Keywords: PIERCE Armoured (3), SIDEARM.
+
+=================================================================
+Marauder | Core | Armoured, Biological, Ground
+Stats: SPD 4/7; EVADE 6+; ARMOUR 4+; HP 5; SIZE 2; SHIELD —
+Buy 2 models: 160 Minerals / Supply 1
+Buy 4 models: 290 Minerals / Supply 2
+Weapon Quad K12 (Assault): Range 12, RoA 3, Hit 3+, Target Ground, Surge Armoured, SDie D3, DMG 1; PIERCE Armoured (2)
+Weapon Strike (Combat): Range E, RoA 2, Hit 4+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Stimpack (Active (1 Command Point), See card): This Unit suffers NON-LETHAL DAMAGE (2). This Unit gains BUFF Speed (3). Additionally, its Quad K12 and all Close Combat Weapons gain PRECISION (2).
+Ability Concussive Shells (Reaction (1 Command Point), See card): When an Enemy declares a Charge against a Friendly Unit Within 8", that Enemy gains DEBUFF Speed (2).
+Upgrade Veteran of Tarsonis (20/40 Minerals): While this Unit is Within 3" of a Mission Marker, its Armour characteristic is increased by 1.
+Upgrade Kinetic Foam (20/40 Minerals): Increase this Unit's Hit Points characteristic by 1.
+Upgrade Laser Targeting Systems (20/40 Minerals): This Unit's Quad K12 weapon gains LONG RANGE (16").
+
+=================================================================
+Marine | Core | Biological, Light, Ground
+Stats: SPD 4/7; EVADE 5+; ARMOUR 5+; HP 2; SIZE 2; SHIELD —
+Buy 6 models: 170 Minerals / Supply 1
+Buy 9 models: 220 Minerals / Supply 2
+Weapon C-14 Rifle (Assault): Range 12, RoA 2, Hit 3+, Target All, Surge Light, SDie D3, DMG 1; 
+Weapon Strike (Combat): Range E, RoA 1, Hit 5+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Stimpack (Active (1 Command Point), See card): This Unit suffers NON-LETHAL DAMAGE (2). This Unit gains BUFF Speed (3). Additionally, its C-14 Rifle and all Close Combat Weapons gain PRECISION (3).
+Upgrade Combat Shield (20/30 Minerals): This Unit is always eligible to make an Evade Roll against any Close Combat Attack targeting it and any Damage from an Enemy Special Ability.
+Upgrade AGG-12 (10/10 Minerals): Replaces C-14 Rifle. RNG 12, TGT Ground, RoA 2, Hit 3+, Surge Armoured, S.Die D3, Dmg 1. Keywords: LONG RANGE (18"), SPECIALIST. [SPECIALIST: single model]
+Upgrade Rocket Launcher (40/40 Minerals): Additional weapon. RNG 12, TGT Ground, RoA 4, Hit 3+, Dmg 1. Keywords: INDIRECT FIRE, LONG RANGE (18"), SIDEARM, SPECIALIST. [SPECIALIST: single model]
+Upgrade Slugthrower (10/20 Minerals): When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8", that weapon gains ANTI-EVADE (1).
+Upgrade Grenades - Frag (10/10 Minerals): When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8", that weapon's S Dice is replaced by D6.
+Upgrade Bayonet (20/30 Minerals): Replaces Strike. RNG E, TGT Ground, RoA 2, Hit 5+, Dmg 1.
+
+=================================================================
+Raynor's Raider (Marine) | Core | Biological, Light, Ground
+Stats: SPD 4/7; EVADE 5+; ARMOUR 5+; HP 2; SIZE 2; SHIELD —
+Buy 6 models: 230 Minerals / Supply 1
+Weapon C-14 Rifle (Assault): Range 12, RoA 2, Hit 3+, Target All, Surge Light, SDie D3, DMG 1; 
+Weapon Bayonet (Combat): Range E, RoA 2, Hit 5+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Stimpack (Active (1 Command Point), See card): This Unit suffers NON-LETHAL DAMAGE (2). This Unit gains BUFF Speed (3). Additionally, its C-14 Rifle and all Close Combat Weapons gain PRECISION (3).
+Ability Raiders Roll! (Passive, See card): When this Unit is nominated to deploy from Reserves, it may resolve its Stimpack ability with the CP cost reduced by 1 (to a minimum of 0).
+Ability Rapid Reinforcements (Passive, See card): When this Unit is nominated to deploy from Reserves, it may resolve the PLACE (10) effect from another Friendly Unit. No model may be set Within 8" of any Enemy model. This Unit's Activation ends.
+Ability Slugthrower (Passive, See card): When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8", that weapon gains ANTI-EVADE (1).
+Ability Grenades - Frag (Passive, See card): When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8", that weapon's S Dice is replaced by D6.
+
+=================================================================
+Medic | Support | Biological, Light, Ground
+Stats: SPD 4/7; EVADE 5+; ARMOUR 5+; HP 2; SIZE 2; SHIELD —
+Buy 3 models: 120 Minerals / Supply 1
+Weapon Strike (Combat): Range E, RoA 1, Hit 5+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Life Support (Reaction (1 Command Point), Any Phase): Use when another Friendly Biological Unit suffers Damage Within 4". Reduce the Total Damage before allocation by 1 for each model in this Unit that is Within 4" of the damaged Unit.
+Ability Restoration (Reaction (1 Command Point), Any Phase): Use when a Friendly Unit Within 4" receives a DEBUFF. Remove all DEBUFFS from it.
+Ability Medpack (Active (1 Command Point), See card): Select another Friendly Biological Unit Within 4". Resolve the HEAL (X) effect for the targeted Unit, where X is the number of models in this Unit that are Within 4" of the target Unit.
+Ability Optical Flare (Active (2 Command Point), See card): Select one Enemy Unit Within 12". Until the End of the Round, apply DEBUFF Range (4) to that Unit's Ranged Weapons. That Unit cannot benefit from LONG RANGE.
+Upgrade Advanced Medic Facilities (60 Minerals): This Unit's Supply Value counts as 0 when calculating the Supply Pool.
+Upgrade A-13 Flash Grenade Launcher (20 Minerals): Increase the Optical Flare special ability's Range to 16".
+Upgrade Stabilizer Medpacks (20 Minerals): When this Unit resolves a Life Support or Medpack ability, treat it as having 1 additional model Within Range for calculating that ability's effects.
+
+=================================================================
+Siege Tank | Elite | Armoured, Mechanical, Ground
+Stats: SPD 7; EVADE -; ARMOUR 5+; HP 14; SIZE 2; SHIELD —
+Buy 1 models: 220 Minerals / Supply 2
+Wave card: https://starcraft-tmg.com/files/downloads/StarCraft-Terran-P2P-W2-Card-Sheets-A4_EN.pdf
+Weapon Twin Cannon (Assault): Range 12, RoA 8, Hit 3+, Target Ground, Surge Armoured, SDie D6, DMG 1; PIERCE Armoured (2)
+Weapon Shock Cannon (Assault): Range 18, RoA BT+4, Hit 4+, Target Ground, Surge Light, Armoured, SDie BT, DMG 1; SIEGE MODE
+Weapon Rolling Over (Combat): Range E, RoA 2, Hit 2+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Large (Passive, Any Phase): Leading Model cannot pass through physical gaps narrower than 3 inches. Moving through Size 0 or Size 1 Impassable Terrain (excluding tokens) removes that terrain as specified by the card.
+Ability Heavy Plating (Passive, Any Phase): Gain TOUGH (1) when rolling Armour unless the Unit has SIEGE MODE Status.
+Ability Indomitable (Passive, Assault Phase): While Engaged, can target and be targeted by Unengaged enemy Units; defender gains an Evade Roll in either case.
+Ability Point Blank (Passive, Assault Phase): While in SIEGE MODE, cannot target Enemy Units it is Engaged with.
+Ability Aftershock Rounds (Passive, Assault Phase): While in SIEGE MODE, this weapon's Damage is treated as the target Unit's current Size, minimum 1.
+Ability Devastating Charge (Passive, Assault Phase): Immediately after a successful Charge, resolve IMPACT (4) 3+.
+Upgrade Mode Transformation (20 Minerals): Gain or lose SIEGE MODE Status. While in SIEGE MODE, treat this Unit's Size as 3.
+Upgrade Coordinated Strike (20 Minerals): Choose a Friendly Unengaged Unit on the battlefield (no LoS needed). With Shock Cannon this Round, may ignore normal Range and use a model of that Unit as the acting model to target an Enemy Within 8 inches and visible to it.
+Upgrade Shaped Blast (10 Minerals): Once per Game when declaring a Ranged Attack while in SIEGE MODE, its weapon gains PINPOINT and LOCKED IN (4).
+Upgrade Smart Shells (10 Minerals): Once per Game when declaring a Ranged Attack while in SIEGE MODE, its weapon gains INDIRECT FIRE and LONG RANGE (24).
+
+=================================================================
+Point Defense Drone | Other | Armoured, Mechanical, Flying
+Stats: SPD -; EVADE 6+; ARMOUR 6+; HP 3; SIZE null; SHIELD —
+Summoned/reference-only or otherwise not directly purchasable.
+Ability Point Defense Laser (Passive, Any Phase): When another Friendly Unit Within 4" is targeted by a Ranged Attack without the INSTANT keyword, remove up to 2 dice from the Attack Pool. Then remove this Unit from the battlefield.
+Ability Gliding (Passive, Any Phase): This model has DISPLACEMENT.
+Ability Structure (Passive, Any Phase): This Unit cannot be Activated in any Phase and cannot perform actions. Its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers. This Unit cannot be a target of an ability, unless stated otherwise.
+
+=================================================================
+TACTICAL CARDS
+Academy: 40 Gas; Unique; resource +1 CP; slots {"support":2}
+  Advanced Training (Reaction, Any Phase): Once per Round, when a Friendly Support Unit activates a Special Ability that costs CP, resolve that ability with its CP cost reduced by 1 (to a minimum of 0). Do not Exhaust this card.
+Armory: 30 Gas; Repeatable purchase; resource +1 CP; slots {"elite":1}
+  Vehicle Plating (Reaction, Any Phase): Use before a Friendly Mechanical Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.
+  Vehicle Weapons (Active, Assault Phase): The active Mechanical Unit's first Ranged Weapon used gains CRITICAL HIT (1).
+Barracks: 30 Gas; Repeatable purchase; resource +1 CP; slots {"core":1}
+  Go! Go! Go! (Active, Movement Phase): The active Biological Unit performs a 2" Move action. This does not count towards its action limit.
+Barracks (Proxy): 40 Gas; Unique; resource +2 CP; slots {"core":2}
+  Go! Go! Go! (Active, Movement Phase): The active Biological Unit performs a 2" Move action. This does not count towards its action limit.
+  Armed and Ready (Active, Movement Phase): The active Biological Unit Deploys from any table edge that is not a player's Entry Edge. No model may be placed Within 10" of any Enemy model. This ability cannot be used if another Friendly Biological Unit has already been Deployed this Round.
+Barracks (Tech Lab): 40 Gas; Unique; resource +2 CP; slots {"elite":1,"core":1}
+  Go! Go! Go! (Active, Movement Phase): The active Biological Unit performs a 2" Move action. This does not count towards its action limit.
+  Let's Have a Blast! (Active, Assault Phase): The active Biological Unit's first Ranged Weapon used gains ANTI-EVADE (1).
+Dropship: 35 Gas; Unique; resource +1 CP; slots {"core":1,"support":1}
+  Strap in! (Active, Movement Phase): The active, Unengaged Ground Unit is placed in Reserves instead of performing an action.
+  Ready For Dust-off (Active, Movement Phase): Place a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.
+Engineering Bay: 25 Gas; Repeatable purchase; resource +1 CP; slots {"core":1}
+  Infantry Armor (Reaction, Any Phase): Use before a Friendly Biological Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.
+  Infantry Weapons (Active, Assault Phase): The active Biological Unit's first Ranged Weapon used gains CRITICAL HIT (1).
+Factory: 35 Gas; Repeatable purchase; resource +1 CP; slots {"elite":2}
+  Field Repair (Active, Movement Phase): The active Mechanical Unit resolves the HEAL (2) effect.
+Orbital Command: 25 Gas; Unique; resource +1 CP; slots {"core":1}
+  ComSat Station (Active, Movement Phase): Select one table edge that is not a player's Entry Edge. Until the End of the Round, Enemy Units cannot Deploy from that edge.
+  Scanner Sweep (Active, Movement Phase): Place a Faction Indicator anywhere on the battlefield. While Enemy Units are Within 6" of this Faction Indicator, they lose HIDDEN.
+Supply Depot: 40 Gas; Unique; resource +1 CP; slots {"hero":1,"elite":1,"core":1}
+  Additional Supply Depots (Active, Movement Phase): The active Unit's Supply Value is improved by 1 for Controlling and Contesting Mission Markers and completing objectives.
+Factory (Tech Lab): 40 Gas; Unique; resource +1 CP; slots {"elite":2}
+  Field Repair (Active, Movement Phase): Active Mechanical Unit resolves HEAL (2).
+  Pound 'Em Flat! (Active, Assault Phase): If the active Mechanical Unit has Stationary Status, its first Ranged Weapon used gains PRECISION (2).

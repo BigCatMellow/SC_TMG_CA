@@ -8,6 +8,8 @@
     "build:rules": "node ./scripts/build-rules.mjs",
     "build": "node ./scripts/build-all.mjs",
     "test:rules": "node ./scripts/test-battle-rules.mjs",
-    "test:appendix": "node ./scripts/test-appendix.mjs"
+    "test:appendix": "node ./scripts/test-appendix.mjs",
+    "build:study": "node ./scripts/build-notebooklm.mjs",
+    "test:study": "node ./scripts/build-notebooklm.mjs --check"
   }
 }

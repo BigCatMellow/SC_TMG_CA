@@ -1,0 +1,13 @@
+OFFICIAL SOURCE FILES — DOWNLOAD DIRECTLY FROM PUBLISHER
+rules: https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf
+faq: https://starcraft-tmg.com/files/downloads/StarCraft-TMG-FAQ_EN.pdf
+costs: https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Cost-Table-10.2026_EN.pdf
+changelog: https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Changelog-10.2026_EN.pdf
+official: https://starcraft-tmg.com/downloads
+Wave 1 terran: https://starcraft-tmg.com/files/downloads/StarCraft-Terran-P2P-Card-Sheets-A4_EN.pdf
+Wave 1 zerg: https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-Card-Sheets-A4_EN.pdf
+Wave 1 protoss: https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-Card-Sheets-A4_EN.pdf
+Wave 2: https://starcraft-tmg.com/files/downloads/StarCraft-Terran-P2P-W2-Card-Sheets-A4_EN.pdf
+Wave 2: https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-W2-Card-Sheets-A4_EN.pdf
+Wave 2: https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-W2-Card-Sheets-A4_EN.pdf
+The full original book, diagrams, and verbatim chapter extraction are not mirrored in this public repo.
