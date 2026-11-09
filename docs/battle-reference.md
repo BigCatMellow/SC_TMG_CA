@@ -5,7 +5,7 @@
 The `Rules.dc.html` screen now prefers `battle-rules-data.js`, a compact **paraphrased** quick reference grounded in the user-supplied 2026 StarCraft TMG Core Rules PDF. The older `rules-data.js` remains as a fallback and as the generated output of the pre-existing HTML parser.
 
 - The Rules screen provides **Core / Terran / Zerg / Protoss** tabs. Each faction view includes all shared rules plus that faction's reference.
-- Seventeen? No: **18 cards total:** 15 shared rule cards plus one for each of the three factions.
+- **18 cards total:** 15 shared rule cards plus one for each of the three factions.
 - Cards display section / printed-page citations (PDF viewer pages are printed page + 2).
 - Scope-aware search and quick navigation operate on the selected set of rules.
 - Keyword tooltips can search every faction dataset (not only Zerg); they are labeled **companion data** and should be checked against the PDF glossary when disputed.
