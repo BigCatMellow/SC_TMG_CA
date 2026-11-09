@@ -1,0 +1,9 @@
+STARCRAFT TMG — NOTEBOOKLM STUDY PACK
+Generated from the companion repo, not a replacement for publisher rules/cards.
+Authority: 2026 Core Rules for mechanics; FAQ v1.1 for clarified exceptions;
+October 2026 official table for point costs; published card sheets for exact abilities.
+Note: the rulebook's original price appendix contains superseded point values.
+Missing Wave 2/3 units are NOT covered by this companion until implemented.
+Rules: https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf
+FAQ: https://starcraft-tmg.com/files/downloads/StarCraft-TMG-FAQ_EN.pdf
+Current costs: https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Cost-Table-10.2026_EN.pdf

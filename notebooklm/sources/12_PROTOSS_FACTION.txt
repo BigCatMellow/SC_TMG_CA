@@ -1,0 +1,142 @@
+PROTOSS UNIT AND CARD REFERENCE
+Companion implementation only; verify exact rulings against publisher cards.
+Rules: https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf
+Current points: https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Cost-Table-10.2026_EN.pdf
+
+=================================================================
+FACTION CARD: Daelaam
+Slots: {"elite":1,"core":3,"support":1}
+
+=================================================================
+FACTION CARD: Khalai
+Slots: {"hero":1,"elite":2,"core":3}
+
+=================================================================
+Artanis | Hero | Biological, Psionic, Ground
+Stats: SPD 7; EVADE 5+; ARMOUR 4+; HP 8; SIZE 2; SHIELD 4
+Buy 1 models: 270 Minerals / Supply 1
+Weapon Twilight Blades Strike (Combat): Range E, RoA 2, Hit 2+, Target Ground, Surge Armoured, SDie D3, DMG 3; 
+Weapon Twilight Blades Sweep (Combat): Range E, RoA 6, Hit 2+, Target Ground, Surge Light, SDie D3+1, DMG 1; 
+Ability Commander (Passive, Any Phase): Treat this Unit's Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks.
+Ability Phase Prism (Passive, See card): When Artanis is nominated to deploy from Reserves, it may resolve the PLACE (0) effect from another Friendly Unit. That Friendly Unit is removed from the battlefield and returned to Reserves. Artanis' Activation ends.
+Ability Hierarch's Stand (Reaction (1 Psionic Energy), See card): When another Friendly Unit Within 8" is declared as the target of a Ranged Attack and this Unit is a valid target, redirect the attack to this Unit. This Unit is eligible to make an Evade Roll against the redirected attack. This Special Ability remains active until the End of the current Activation.
+Ability Lightning Dash (Reaction (1 Psionic Energy), See card): After this Unit resolves a successful Charge action, it may declare a second Charge action against a different Enemy Unit, ignoring the restriction on Charging while Engaged. The Devastating Charge ability does not trigger a second time.
+Ability Devastating Charge (Passive, See card): Immediately after this Unit completes a successful Charge, resolve the IMPACT (6) 4+ effect.
+
+=================================================================
+Praetor Guard (Zealot) | Elite | Biological, Light, Ground
+Stats: SPD 4/7; EVADE 5+; ARMOUR 5+; HP 4; SIZE 2; SHIELD 3
+Buy 3 models: 260 Minerals / Supply 2
+Weapon Psi Blades (Combat): Range E, RoA 4, Hit 3+, Target Ground, Surge Light, SDie D3, DMG 1; 
+Ability Shield Overcharge (Passive, Any Phase): This Unit gains TOUGH (2) on the first Armour Roll each Round.
+Ability Leg Enhancements (Active (1 Psionic Energy), See card): This Unit performs a 2" Move action. This does not count towards its action limit.
+Ability Charge (Active (1 Psionic Energy), See card): When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit's Speed characteristic.
+Ability Devastating Charge (Passive, See card): Immediately after this Unit completes a successful Charge, resolve the IMPACT (3) 4+ effect.
+Ability Titan Killers (Passive, See card): When this Unit makes a Close Combat Attack, and the target is Size 3 or larger, the weapon's Damage characteristic is treated as 2.
+Ability Precognition (Passive, See card): This Unit is eligible to make an Evade roll against all attacks targeting it.
+
+=================================================================
+Stalker | Elite | Armoured, Mechanical, Ground
+Stats: SPD 4/8; EVADE 6+; ARMOUR 4+; HP 6; SIZE 3; SHIELD 3
+Buy 1 models: 160 Minerals / Supply 1
+Buy 2 models: 270 Minerals / Supply 2
+Weapon Particle Disruptors (Assault): Range 12, RoA 4, Hit 3+, Target All, Surge Armoured, SDie D3, DMG 2; 
+Weapon Stomp (Combat): Range E, RoA 2, Hit 5+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Squadron (Passive, Any Phase): This Unit's Horizontal Coherency is 4".
+Ability Blink (Active (1 Psionic Energy), See card): Resolve the PLACE (6) effect. Models set by this effect cannot be set up Within the Engagement Range of any Enemy Unit.
+Upgrade Path of Shadows (20/40 Minerals): This Unit gains HIDDEN Status until it performs another action.
+Upgrade Fury of the Nerazim (20/30 Minerals): When this Unit attacks an Enemy Unit that has already been Activated during this Phase, its Particle Disruptors gain INSTANT for that attack.
+
+=================================================================
+Adept | Core | Biological, Light, Ground
+Stats: SPD 5/8; EVADE 5+; ARMOUR 5+; HP 3; SIZE 2; SHIELD 2
+Buy 4 models: 160 Minerals / Supply 1
+Weapon Glaive Cannon (Assault): Range 8, RoA 2, Hit 3+, Target All, Surge Light, SDie D3+1, DMG 1; ANTI-EVADE (1)
+Weapon Strike (Combat): Range E, RoA 1, Hit 4+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Psionic Presence (Passive, Any Phase): All Weapons of Friendly Units targeting an Enemy Unit Within 4" of this Unit's Shade token gain PRECISION (1).
+Ability Psionic Transfer (Active (1 Psionic Energy), See card): Set a Shade token Wholly Within 12" of any model in this Unit. At the End of the Round, the controlling player may set all models of this Unit in Coherency, treating the Shade token as the Leading Model. The Shade token has DISPLACEMENT.
+Upgrade Resonating Glaives (20 Minerals): This Unit's Glaive Cannon gains BUFF RoA (1).
+Upgrade Guidance (10 Minerals): This Unit's Glaive Cannon Ranged weapon gains ANTI-EVADE (2).
+Upgrade Glaive Strike (20 Minerals): Replaces Strike. RNG E, TGT Ground, RoA 1, Hit 4+, Surge Light, S.Die D3, Dmg 1. Keywords: PIERCE Light (2).
+
+=================================================================
+Zealot | Core | Biological, Light, Ground
+Stats: SPD 4/7; EVADE 5+; ARMOUR 5+; HP 4; SIZE 2; SHIELD 3
+Buy 3 models: 170 Minerals / Supply 2
+Weapon Psi Blades (Combat): Range E, RoA 4, Hit 3+, Target Ground, Surge Light, SDie D3, DMG 1; 
+Ability Charge (Active (1 Psionic Energy), See card): When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit's Speed characteristic.
+Ability Devastating Charge (Passive, See card): Immediately after this Unit completes a successful Charge, resolve the IMPACT (3) 4+ effect.
+Upgrade My Life for Aiur (10 Minerals): When this Unit resolves IMPACT, each eligible model generates 1 additional IMPACT die.
+Upgrade Leg Enhancements (20 Minerals): This Unit performs a 2" Move action. This does not count towards its action limit.
+Upgrade Zealous Round (10 Minerals): When this Unit is not Activated and receives Damage, the controlling player may count this Unit as Activated in this Phase (flip its Activation Marker) to reduce the Total Damage by 2.
+Upgrade We Stand as One (20 Minerals): When this Unit makes a Close Combat Attack, if the target is Engaged with at least 1 other Friendly Unit, this Unit's Close Combat Weapon gains PRECISION (2).
+
+=================================================================
+Sentry | Support | Light, Mechanical, Psionic, Ground
+Stats: SPD 4/7; EVADE 6+; ARMOUR 5+; HP 4; SIZE 1; SHIELD 2
+Buy 2 models: 130 Minerals / Supply 1
+Weapon Disruption Beam (Assault): Range 8, RoA 2, Hit 2+, Target All, Surge -, SDie -, DMG 1; INSTANT
+Weapon Beam (Combat): Range E, RoA 2, Hit 3+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Restoration (Reaction (1 Psionic Energy), Any Phase): Use when a Friendly Unit Within 4" receives a DEBUFF. Remove all DEBUFFS from it.
+Ability Force Field (Active (1 Psionic Energy), See card): Set a Force Field token Within 8" in an unoccupied space. Units of Size 2 or lower cannot move across Force Fields. Models of Size 3 or more can move over it, and it's then removed.
+Ability Guardian Shield (Active (1 Psionic Energy), See card): All Ranged Attacks targeting a Friendly Unit Within 4" (Line of Sight is not required) are made with 1 fewer die in the Attack Pool.
+Upgrade Solid-Field Projectors (10 Minerals): Set a Force Field token Within 8" in an unoccupied space. Units of Size 2 or lower cannot move across Force Fields. Models of Size 3 or more can move over it, and it's then removed.
+Upgrade Hallucination (20 Minerals): When an Enemy Unit declares a Ranged Attack against a Friendly Unit Within 4", the targeted Friendly Unit is eligible to make an Evade Roll against that attack.
+
+=================================================================
+Immortal | Elite | Armoured, Mechanical, Ground
+Stats: SPD 7; EVADE -; ARMOUR 4+; HP 8; SIZE 3; SHIELD 6
+Buy 1 models: 280 Minerals / Supply 2
+Wave card: https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-W2-Card-Sheets-A4_EN.pdf
+Weapon Left Photon Disruptor (Assault): Range 12, RoA 4, Hit 3+, Target Ground, Surge Armoured, SDie D3, DMG 2; CONCENTRATED FIRE (1), LONG RANGE (16)
+Weapon Right Photon Disruptor (Assault): Range 12, RoA 4, Hit 3+, Target Ground, Surge Armoured, SDie D3, DMG 2; CONCENTRATED FIRE (1), LONG RANGE (16), SIDEARM
+Weapon Stomp (Combat): Range E, RoA 3, Hit 3+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Improved Barrier (Reaction (0 PE), Any Phase): When selected as target of an attack, if SHIELDED, attacker weapon Damage is treated as maximum 1 for that attack.
+Ability Indomitable (Passive, Assault Phase): While Engaged may target or be targeted by Unengaged enemy Units; defending Unit gains Evade Roll.
+Ability Devastating Charge (Passive, Assault Phase): Immediately after a successful Charge, resolve IMPACT (4) 3+.
+Upgrade Shield Overcharge (20 Minerals): Before Armour Roll, if this Unit is SHIELDED, it gains TOUGH (2) for this roll.
+Upgrade Left Phase Disruptor (20 Minerals): Replaces Left Photon Disruptor. 12 Ground, RoA4, Hit3+, Surge Armoured, S Die D3, Damage1, PIERCE Armoured (3).
+Upgrade Right Phase Disruptor (20 Minerals): Replaces Right Photon Disruptor. 12 Ground, RoA4, Hit3+, Surge Armoured, S Die D3, Damage1, PIERCE Armoured (3), SIDEARM.
+Upgrade Fury Unyielding (20 Minerals): While Within 3 inches of a Mission Marker, Ranged Weapons gain CRITICAL HIT (1) when targeting an Enemy Unit also Within 3 inches of that Marker.
+Upgrade For the Ancients (20 Minerals): When targeting an Enemy more than 8 inches away with a Ranged Attack, weapons gain PRECISION (1).
+
+=================================================================
+Pylon | Other | Armoured, Ground
+Stats: SPD -; EVADE -; ARMOUR 5+; HP 8; SIZE 3; SHIELD 2
+Summoned/reference-only or otherwise not directly purchasable.
+Ability Structure (Passive, Any Phase): This Unit cannot be Activated in any Phase and cannot perform actions. Its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers. This Unit cannot be a target of an ability, unless stated otherwise.
+Ability Khalai Ingenuity (Passive, Any Phase): Once per Round, when a Friendly Unit Within 4" of this Pylon uses a Special Ability that costs Psionic Energy, that ability's PE cost is reduced by 1.
+Ability Warp Conduit (Passive, See card): Once per Round, the controlling player may deploy a Ground Unit from Reserves using this Pylon base as the Entry Edge. This Unit's Activation ends.
+
+=================================================================
+TACTICAL CARDS
+Forge: 30 Gas; Repeatable purchase; resource +1 PE; slots {"elite":1}
+  Ground Armor (Reaction, Any Phase): Use before a Friendly Ground Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.
+  Ground Weapons (Active, Assault Phase): The active Ground Unit's first Ranged Weapon used gains CRITICAL HIT (1).
+Gate Chronoboosted: 35 Gas; Unique; resource +1 PE; slots {"elite":1,"core":1}
+  Zealous Charge (Active, Movement Phase): The active Unit gains BUFF Speed (2).
+  Quick Strikes (Active, Combat Phase): The active Unit's first Close Combat Weapon used gains PRECISION (2).
+Gateway: 25 Gas; Repeatable purchase; resource +1 PE; slots {"core":1}
+  Quick Strikes (Active, Combat Phase): The active Unit's first Close Combat Weapon used gains PRECISION (2).
+Nexus: 40 Gas; Unique; resource +1 PE; slots {"core":2}
+  Ancient Pride (Active, Any Phase): The active Unit's first Weapon used gains INSTANT.
+  Strategic Recall (Active, Movement Phase): The active, Unengaged Ground Unit is placed in Reserves instead of performing an action.
+Observer: 25 Gas; Unique; resource +1 PE; slots {"support":1}
+  Surveillance (Active, Movement Phase): Place a Faction Indicator anywhere on the battlefield. While Enemy Units are Within 6" of this Faction Indicator, they lose HIDDEN.
+  Gravitic Boosters (Reaction, Assault Phase): Use after a Friendly Unit rolls a D6 for Charge Distance. Add 1 to the Charge Distance for this Unit.
+Overcharged Nexus: 35 Gas; Unique; resource +1 PE; slots {"elite":1,"core":1}
+  Photon Overcharge (Reaction, Any Phase): Use when an Enemy Unit enters the battlefield from Reserves via a location other than its own Entry Edge. That Unit immediately suffers HITS 3 (1).
+  Strategic Recall (Active, Movement Phase): The active, Unengaged Ground Unit is placed in Reserves instead of performing an action.
+Power Field: 40 Gas; Unique; resource +1 PE; slots {"hero":1,"elite":1,"core":1}
+  Guardian Shell (Reaction, Any Phase): Use before a Friendly Ground Unit makes an Armour Roll. That Unit gains DODGE (2) for this roll.
+Twilight Council: 40 Gas; Unique; resource +1 PE; slots {"elite":1,"support":1}
+  Veil of Shadows (Reaction, Any Phase): Use after a Friendly Unit resolves a PLACE effect. That Unit immediately resolves the HEAL (2) effect.
+  Weapons of the Firstborn (Active, Assault Phase): The active Ground Unit's first Ranged Weapon used gains BUFF Range (4).
+Warp Gate: 40 Gas; Unique; resource +1 PE; slots {"core":2}
+  Warp In (Active, Movement Phase): The active Ground Unit Deploys from any table edge that is not a player's Entry Edge. This deployment must end more than 10" away from any Enemy model. The controlling player cannot use this ability if another Friendly Ground Unit has already Deployed this Round.
+  Quick Strikes (Active, Combat Phase): The active Unit's first Close Combat Weapon used gains PRECISION (2).
+Warp Prism: 35 Gas; Unique; resource +1 PE; slots {"core":2}
+  Phase (Active, Movement Phase): The active Unit resolves the PLACE (3) effect.
+  Warp Conduit (Active, Movement Phase): Place a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.
+Robotics Facility: 35 Gas; Repeatable purchase; resource +1 PE; slots {"elite":2}
+  Plasma Shields (Reaction, Any Phase): Before a Friendly Mechanical Ground Unit makes an Armour Roll while SHIELDED, it gains TOUGH (1) and DODGE (1) for this roll.

@@ -1,0 +1,218 @@
+ZERG UNIT AND CARD REFERENCE
+Companion implementation only; verify exact rulings against publisher cards.
+Rules: https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf
+Current points: https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Cost-Table-10.2026_EN.pdf
+
+=================================================================
+FACTION CARD: Kerrigan's Swarm
+Slots: {"hero":1,"elite":2,"core":3}
+
+=================================================================
+FACTION CARD: Zerg Swarm
+Slots: {"elite":1,"core":3,"support":1}
+
+=================================================================
+Kerrigan | Hero | Biological, Psionic, Ground
+Stats: SPD 7; EVADE 6+; ARMOUR 5+; HP 9; SIZE 2; SHIELD —
+Buy 1 models: 250 Minerals / Supply 1
+Weapon Energy Blast (Assault): Range 8, RoA 5, Hit 3+, Target All, Surge Light, Armoured, SDie D3, DMG 1; 
+Weapon Blades (Combat): Range E, RoA 6, Hit 4+, Target Ground, Surge -, SDie -, DMG 2; CRITICAL HIT (2)
+Ability Commander (Passive, Any Phase): Treat this Unit's Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks.
+Ability Crushing Grip (Active (1 Biomass), See card): Select one Enemy Unit Within 12". That Unit counts as Activated in this Phase.
+Ability Mutating Carapace (Active (1 Biomass), See card): Select one Enemy Unit Within 18". This Unit is eligible to make an Evade Roll against all attacks made by the selected Enemy Unit, with a +2 Modifier applied to those Evade Rolls.
+Ability Leaping Strike (Active (1 Biomass), See card): If Unengaged, resolve the PLACE (6) effect.
+Ability Devastating Charge (Passive, See card): Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 4+ effect.
+
+=================================================================
+Hydralisk | Elite | Biological, Light, Ground
+Stats: SPD 4/8; EVADE 5+; ARMOUR 5+; HP 4; SIZE 2; SHIELD —
+Buy 2 models: 140 Minerals / Supply 2
+Buy 4 models: 260 Minerals / Supply 3
+Weapon Needle Spines (Assault): Range 12, RoA 3, Hit 3+, Target All, Surge Light, Armoured, SDie D3+1, DMG 2; 
+Weapon Scythe (Combat): Range E, RoA 2, Hit 4+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Squadron (Passive, Any Phase): This Unit's Horizontal Coherency is 4".
+Ability Lunge (Reaction (1 Biomass), See card): When another Friendly Unit Within 10" is the target of a Ranged Attack, after the attack is fully resolved, this Unit, if Unengaged, may perform a Move action Directly Towards the attacking Unit.
+Upgrade Ancillary Carapace (20/30 Minerals): This Unit gains TOUGH (1) on the first Armour Roll of each Activation.
+Upgrade Lurking (10/10 Minerals): If this Unit has Stationary Status, it is eligible to make an Evade Roll against the first Ranged Attack targeting it this Round. If this Unit is ON CREEP, it gains +1 Modifier to this Evade Roll.
+Upgrade Burrow Ambush (20/40 Minerals): When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+Upgrade Grooved Spines (20/30 Minerals): This Unit's Needle Spines ranged weapon gains LONG RANGE (16").
+
+=================================================================
+Raptor (Zergling) | Elite | Biological, Light, Ground
+Stats: SPD 5/9; EVADE 4+; ARMOUR 6+; HP 1; SIZE 1; SHIELD —
+Buy 12 models: 210 Minerals / Supply 1
+Buy 18 models: 260 Minerals / Supply 2
+Weapon Claws (Combat): Range E, RoA 2, Hit 4+, Target Ground, Surge Light, SDie D3, DMG 1; 
+Ability Squadron (Passive, Any Phase): This Unit's Horizontal Coherency is 4".
+Ability Raptor Strain (Passive, Any Phase): This Unit can move through IMPASSABLE TERRAIN of Size 4 or less and change elevation without using ACCESS POINTS.
+Ability Adrenal Overload (Active (1 Biomass), See card): This Unit gains a +1 Modifier to all IMPACT Hit Rolls.
+Ability Metabolic Boost (Active (1 Biomass), See card): When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit's Speed characteristic.
+Ability Devastating Charge (Passive, See card): Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 5+ effect.
+Upgrade Burrow Ambush (20/30 Minerals): When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+Upgrade Shredding Claws (10/10 Minerals): Replaces Claws. Surge: Light, Armoured. S.Die: D3.
+Upgrade Adrenal Glands (20/20 Minerals): This Unit's Claws and Shredding Claws weapons gain PRECISION (2).
+
+=================================================================
+Kerrigan's Raptor (Zergling) | Elite | Biological, Light, Ground
+Stats: SPD 5/9; EVADE 4+; ARMOUR 5+; HP 2; SIZE 1; SHIELD —
+Buy 6 models: 230 Minerals / Supply 1
+Weapon Claws (Combat): Range E, RoA 2, Hit 3+, Target Ground, Surge Light, Armoured, SDie D6, DMG 1; INSTANT
+Ability Squadron (Passive, Any Phase): This Unit's Horizontal Coherency is 4".
+Ability Raptor Strain (Passive, Any Phase): This Unit can move through IMPASSABLE TERRAIN of Size 4 or less and change elevation without using ACCESS POINTS.
+Ability Leap (Active (1 Biomass), See card): When determining Charge Distance for this Unit, add 2 to the Charge Distance.
+Ability Adrenal Overload (Active (1 Biomass), See card): This Unit gains a +1 Modifier to all IMPACT Hit Rolls.
+Ability Devastating Charge (Passive, See card): Immediately after this Unit completes a successful Charge, resolve the IMPACT (2) 5+ effect.
+
+=================================================================
+Corpser (Roach) | Core | Armoured, Biological, Ground
+Stats: SPD 4/7; EVADE 5+; ARMOUR 3+; HP 4; SIZE 2; SHIELD —
+Buy 3 models: 220 Minerals / Supply 1
+Weapon Acid Saliva (Assault): Range 8, RoA 2, Hit 3+, Target Ground, Surge -, SDie -, DMG 1; 
+Weapon Claws (Combat): Range E, RoA 3, Hit 4+, Target Ground, Surge Light, SDie D3+1, DMG 1; 
+Ability Burrow (Active (2 Biomass), Any Phase): If Unengaged, this Unit gains or loses BURROWED Status.
+Ability Roachling Infestation (Active (2 Biomass), See card): Once per Game, resolve SUMMON (Roachling).
+Ability Regeneration (Passive, See card): When Activated while BURROWED, resolve HEAL (2).
+Ability Devastating Charge (Passive, See card): Immediately after a successful Charge, resolve IMPACT (3) 4+.
+Upgrade Burrow Ambush (20 Minerals): When nominated to Deploy from Reserves, resolve PLACE (18) from the controlling player's Entry Edge. No model may be Within 10" of an Enemy model. Activation ends.
+Upgrade Glial Reconstitution (10 Minerals): This Unit gains BUFF Speed (1), or BUFF Speed (2) when ON CREEP.
+Upgrade Hydriodic Bile (10 Minerals): Acid Saliva gains Surge Type Light and S Dice D3+1.
+Upgrade Tunneling Claws (10 Minerals): While BURROWED, this Unit can Move and Run without losing BURROWED and may move through other Units' bases.
+
+=================================================================
+Roach | Core | Armoured, Biological, Ground
+Stats: SPD 4/7; EVADE 5+; ARMOUR 3+; HP 4; SIZE 2; SHIELD —
+Buy 3 models: 170 Minerals / Supply 1
+Weapon Acid Saliva (Assault): Range 8, RoA 3, Hit 3+, Target Ground, Surge -, SDie -, DMG 1; 
+Weapon Claws (Combat): Range E, RoA 2, Hit 4+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Burrow (Active (2 Biomass), Any Phase): If Unengaged, this Unit gains or loses BURROWED Status.
+Ability Regeneration (Passive, See card): When Activated while BURROWED, resolve HEAL (2).
+Ability Devastating Charge (Passive, See card): Immediately after a successful Charge, resolve IMPACT (2) 4+.
+Upgrade Burrow Ambush (20 Minerals): When nominated to Deploy from Reserves, resolve PLACE (18) from the controlling player's Entry Edge. No model may be Within 10" of an Enemy model. Activation ends.
+Upgrade Glial Reconstitution (10 Minerals): This Unit gains BUFF Speed (1), or BUFF Speed (2) when ON CREEP.
+Upgrade Hydriodic Bile (10 Minerals): Acid Saliva gains Surge Type Light and S Dice D3+1.
+Upgrade Tunneling Claws (10 Minerals): While BURROWED, this Unit can Move and Run without losing BURROWED and may move through other Units' bases.
+
+=================================================================
+Zergling | Core | Biological, Light, Ground
+Stats: SPD 5/9; EVADE 5+; ARMOUR 6+; HP 1; SIZE 1; SHIELD —
+Buy 12 models: 150 Minerals / Supply 1
+Buy 18 models: 210 Minerals / Supply 2
+Weapon Claws (Combat): Range E, RoA 2, Hit 4+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Squadron (Passive, Any Phase): This Unit's Horizontal Coherency is 4".
+Ability Adrenal Overload (Active (1 Biomass), See card): This Unit gains a +1 Modifier to all IMPACT Hit Rolls.
+Ability Metabolic Boost (Active (1 Biomass), See card): When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit's Speed characteristic.
+Ability Devastating Charge (Passive, See card): Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 5+ effect.
+Upgrade Burrow Ambush (20/30 Minerals): When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+Upgrade Shredding Claws (10/10 Minerals): Replaces Claws. Surge: Light, Armoured. S.Die: D3.
+Upgrade Adrenal Glands (20/20 Minerals): This Unit's Claws and Shredding Claws weapons gain PRECISION (2).
+
+=================================================================
+Queen | Support | Armoured, Biological, Psionic, Ground
+Stats: SPD 4; EVADE -; ARMOUR 4+; HP 9; SIZE 3; SHIELD —
+Buy 1 models: 140 Minerals / Supply 1
+Weapon Talons (Assault): Range 6, RoA 4, Hit 4+, Target Ground, Surge Light, SDie D3, DMG 2; 
+Weapon Acid Spines (Assault): Range 12, RoA 4, Hit 4+, Target Flying, Surge Light, Armoured, SDie D3, DMG 2; 
+Weapon Talons (Combat): Range E, RoA 3, Hit 4+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Spawn Creep Tumor (Active (1 Biomass), Any Phase): Set a Creep Tumor Token in base-to-base contact with this Unit.
+Ability Transfusion (Reaction (1 Biomass), Any Phase): When another Friendly Biological Unit (including a Structure) Within 4" suffers Damage, reduce Damage by 2 before Total Damage allocation.
+Ability Restoration (Reaction (1 Biomass), Any Phase): When a Friendly Unit Within 4" receives a DEBUFF, remove all DEBUFFs from it.
+Ability Psionic Link (Passive, Any Phase): Once per Round, if at least 7 Friendly models are Within 6", this Unit may resolve its Special Ability with BM cost reduced by 1.
+Ability Devastating Charge (Passive, See card): Immediately after a successful Charge, resolve IMPACT (4) 3+.
+Upgrade Creep Speed (10 Minerals): While ON CREEP, increase Speed characteristic by 2.
+Upgrade Domineering Presence (10 Minerals): Select another Friendly Unit Within 6" (LoS not required); increase its Supply by 1 for Controlling/Contesting Mission Markers and completing objectives.
+
+=================================================================
+Vile (Roach) | Core | Armoured, Biological, Ground
+Stats: SPD 4/7; EVADE 5+; ARMOUR 3+; HP 4; SIZE 2; SHIELD —
+Buy 3 models: 190 Minerals / Supply 1
+Weapon Acid Saliva (Assault): Range 8, RoA 4, Hit 3+, Target Ground, Surge -, SDie -, DMG 1; 
+Weapon Vile Claws (Combat): Range E, RoA 2, Hit 4+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Burrow (Active (2 Biomass), Any Phase): If Unengaged, this Unit gains or loses BURROWED Status.
+Ability Debilitating Saliva (Reaction (1 Biomass), Any Phase): When an Enemy Unit Within 8" declares a Ranged Attack, apply DEBUFF Hit (1) to each of its Ranged Weapons.
+Ability Regeneration (Passive, See card): When Activated while BURROWED, resolve HEAL (2).
+Ability Devastating Charge (Passive, See card): Immediately after a successful Charge, resolve IMPACT (1) 4+.
+Upgrade Burrow Ambush (20 Minerals): When nominated to Deploy from Reserves, resolve PLACE (18) from the controlling player's Entry Edge. No model may be Within 10" of an Enemy model. Activation ends.
+Upgrade Glial Reconstitution (10 Minerals): This Unit gains BUFF Speed (1), or BUFF Speed (2) when ON CREEP.
+Upgrade Hydriodic Bile (10 Minerals): Acid Saliva gains Surge Type Light and S Dice D3+1.
+Upgrade Tunneling Claws (10 Minerals): While BURROWED, this Unit can Move and Run without losing BURROWED and may move through other Units' bases.
+
+=================================================================
+Swarmling (Zergling) | Core | Biological, Light, Ground
+Stats: SPD 4/8; EVADE 5+; ARMOUR 6+; HP 1; SIZE 1; SHIELD —
+Buy 18 models: 210 Minerals / Supply 1
+Weapon Claws (Combat): Range E, RoA 2, Hit 5+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Squadron (Passive, Any Phase): Horizontal Coherency is 4".
+Ability Zergling Reconstitution (Active (1 Biomass), See card): Resolve RESPAWN (2), or RESPAWN (3) while ON CREEP.
+Ability Metabolic Boost (Active (1 Biomass), See card): Roll 2D6 rather than D6 for Charge Distance and use the higher result.
+Ability Devastating Charge (Passive, See card): After successful Charge, resolve IMPACT (1) 5+.
+Upgrade Burrow Ambush (20 Minerals): When nominated to Deploy from Reserves, resolve PLACE (18) from the controlling player's Entry Edge. No model may be Within 10" of an Enemy model. Activation ends.
+
+=================================================================
+Ravager | Core | Armoured, Biological, Ground
+Stats: SPD 4/8; EVADE 5+; ARMOUR 5+; HP 9; SIZE 3; SHIELD —
+Buy 1 models: 160 Minerals / Supply 1
+Buy 2 models: 270 Minerals / Supply 2
+Wave card: https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-W2-Card-Sheets-A4_EN.pdf
+Weapon Plasma Discharge (Assault): Range 12, RoA 4, Hit 3+, Target Ground, Surge Light, SDie D3+1, DMG 1; 
+Weapon Claws (Combat): Range E, RoA 2, Hit 4+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Squadron (Passive, Any Phase): Horizontal Coherency is 4 inches.
+Ability Deep Tunnel (Active (1 BM), See card): Set a Ravager Burrow token Wholly Within 12 inches of any model in this Unit. At End of Round, place all models in Coherency using the token as Leading Model; token has DISPLACEMENT.
+Ability Corrosive Bile (Active (1 BM), See card): For each model, set a Corrosive Bile token within 14 inches. At End of Assault Phase, resolve HITS 5 (1) against each Unit within 1 inch of each token, then remove tokens; these persist if Ravager is destroyed until that resolution.
+Ability Devastating Charge (Passive, See card): Immediately after successful Charge, resolve IMPACT (2) 4+.
+Upgrade Bloated Bile Ducts (20/40 Minerals): Increase Corrosive Bile area of effect to 2 inches.
+Upgrade Burrow Ambush (20/40 Minerals): When nominated to Deploy from Reserves, resolve PLACE (18) from the controlling Entry Edge; no model may be set Within 10 inches of an Enemy; Activation ends.
+Upgrade Potent Bile (20/40 Minerals): Before the enemy Armour Roll for HITS caused by this Unit's Corrosive Bile, that Unit suffers DEBUFF Armour (1).
+
+=================================================================
+Omega Worm | Other | Armoured, Biological, Ground
+Stats: SPD -; EVADE -; ARMOUR 5+; HP 10; SIZE 3; SHIELD —
+Summoned/reference-only or otherwise not directly purchasable.
+Ability Detection (Passive, Any Phase): While Enemy Units are Within 6" of this Unit, they lose HIDDEN Status.
+Ability Source of Creep (Passive, Any Phase): A Friendly or Enemy Ground Zerg Unit Within 6" of this Unit, counts as being ON CREEP.
+Ability Structure (Passive, Any Phase): This Unit cannot be Activated in any Phase and cannot perform actions. Its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers. This Unit cannot be a target of an ability, unless stated otherwise.
+Ability Omega Network (Passive, Any Phase): The base of the Omega Worm counts as an Entry Edge. Each Round, Friendly Units with a combined Supply cost of 2 or less may be Deployed via this Entry Edge. If a Friendly Leading model finishes a Move, Disengage, or Run action in base-to-base contact with the Omega Worm, the controlling player may remove that Unit from the battlefield and return it to Reserves.
+
+=================================================================
+Roachling | Other | Biological, Light, Ground
+Stats: SPD 4/7; EVADE 6+; ARMOUR 6+; HP 1; SIZE 1; SHIELD —
+Summoned/reference-only or otherwise not directly purchasable.
+Weapon Claws (Combat): Range E, RoA 2, Hit 4+, Target Ground, Surge -, SDie -, DMG 1; 
+Ability Underdeveloped Claws (Passive, Any Phase): This Unit cannot gain Burrowed Status.
+
+=================================================================
+TACTICAL CARDS
+Accelerating Creep: 0 Gas; Unique; resource —; slots {}
+  Speed on Creep (Passive, Any Phase): If the active Friendly Zerg Unit is ON CREEP, increase its Speed characteristic by 1.
+  Living Glob of Tissue (Passive, Any Phase): Creep Tumor tokens have STAY IN PLAY and DISPLACEMENT.
+  Creep Removal (Passive, Any Phase): If an Enemy Unit ends a Move, Deploy, Run, Charge or Disengage action Within 1" of a Friendly Creep Tumor token, remove that token from the battlefield.
+Evolution Chamber: 25 Gas; Repeatable purchase; resource +1 BM; slots {"core":1}
+  Carapace (Reaction, Any Phase): Use before a Friendly Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.
+  Extended Claws (Active, Assault Phase): The active Unit gains a +1 Modifier to all IMPACT Hit Rolls.
+Hatchery: 30 Gas; Repeatable purchase; resource +1 BM; slots {"support":1}
+  Lie in Wait (Active, Movement Phase): The active, Unengaged Ground Unit gains the Burrowed Status.
+  Creep Spread (Active, Movement Phase): Place a Creep Tumor token on the battlefield Within 6" (Line of Sight is not required) of either a Friendly Entry Edge or an existing Friendly Creep Tumor token.
+Hydralisk Den: 30 Gas; Repeatable purchase; resource +1 BM; slots {"elite":2}
+  Missile Attacks (Active, Assault Phase): The active Unit's first Ranged Weapon used gains PRECISION (1).
+Lair: 35 Gas; Unique; resource +1 BM; slots {"elite":1,"core":1}
+  Predation (Active, Any Phase): The active Unit's Close Combat Weapons gain INSTANT.
+  Creep Spread (Active, Movement Phase): Place a Creep Tumor token on the battlefield Within 6" (Line of Sight is not required) of either a Friendly Entry Edge or an existing Friendly Creep Tumor token.
+Malignant Creep: 10 Gas; Unique; resource —; slots {}
+  Living Glob of Tissue (Passive, Any Phase): Creep Tumor tokens have STAY IN PLAY and DISPLACEMENT.
+  Creep Removal (Passive, Any Phase): If an Enemy Unit ends a Move, Deploy, Run, Charge or Disengage action Within 1" of a Friendly Creep Tumor token, remove that token from the battlefield.
+  Malevolent Matriarch (Passive, Assault Phase): If the active Friendly Zerg Unit declares a Charge action while ON CREEP, it gains +1 Modifier to IMPACT Hit Rolls.
+Overlord: 35 Gas; Unique; resource +1 BM; slots {"hero":1,"elite":1,"core":1}
+  Ventral Sacs (Active, Movement Phase): Place a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.
+  Excrete Creep (Active, Assault Phase): Place a Creep Tumor token on the battlefield Within 6" (Line of Sight is not required) of either a Friendly Entry Edge or an existing Friendly Creep Tumor token.
+Overseer: 25 Gas; Unique; resource +1 BM; slots {"support":1}
+  Oversight Mode (Active, Movement Phase): Place a Faction Indicator anywhere on the battlefield. While Enemy Units are Within 6" of this Faction Indicator, they lose HIDDEN.
+  Pneumatized Carapace (Reaction, Assault Phase): Use after a Friendly Unit rolls a D6 for Charge Distance. Roll an additional D6 and use the higher result to calculate the total Charge Distance.
+Roach Warren: 25 Gas; Repeatable purchase; resource +1 BM; slots {"core":1}
+  Nasty Surprise (Active, Assault Phase): The active Ground Unit loses the Burrowed Status.
+Spawning Pool: 25 Gas; Repeatable purchase; resource +1 BM; slots {"core":1}
+  Feral Rage (Active, Combat Phase): The active Unit's first Close Combat Weapon used gains PRECISION (2).
+Spawning Pool (Six Pool): 35 Gas; Unique; resource +2 BM; slots {"core":2}
+  Timing Push (Active, Movement Phase): The active Zergling Unit Deploys from any table edge that is not a Player's Entry Edge. This action must end more than 10" away from any Enemy model.
+  Feral Rage (Active, Combat Phase): The active Unit's first Close Combat Weapon used gains PRECISION (2).
+Cocoon: 30 Gas; Unique; resource —; slots {"elite":1}
+  Spawn Larva (Active, Movement Phase): Active Friendly non-Unique Biological Unit of Size 1 resolves RESPAWN (2).
+  Ravager Morph (Active, Movement Phase): Once per Game, active Friendly Roach Unit resolves MORPH (Ravager) 1.
