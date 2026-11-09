@@ -326,7 +326,7 @@
                       </sc-for>
                     </div>
                   </div>
-                  <button onClick="{{ en.onAdd }}" aria-label="Add unit" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:rgba(147,51,234,0.16);border:1px solid rgba(176,110,247,0.45);color:#d9bafc;font-size:20px;cursor:pointer;clip-path:var(--sc-corner-9)">+</button>
+                  <button onClick="{{ en.onAdd }}" disabled="{{ !en.recruitable }}" title="{{ !en.recruitable ? 'Not recruitable under this faction or summoned only' : 'Add Unit' }}" aria-label="Add unit" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:rgba(147,51,234,0.16);border:1px solid rgba(176,110,247,0.45);color:#d9bafc;font-size:20px;cursor:pointer;clip-path:var(--sc-corner-9)">+</button>
                 </div>
                 <sc-if value="{{ en.expanded }}" hint-placeholder-val="{{ false }}">
                   <div style="position:relative;border-top:1px solid #1f2430;padding:12px">
@@ -863,8 +863,11 @@ class Component extends DCLogic {
   }
 
   // ---------- totals ----------
-  upgCostNum(cost) {
-    if (typeof cost === 'string' && cost.includes('/')) return parseInt(cost.split('/')[0], 10) || 0;
+  upgCostNum(cost, tierIdx = 1) {
+    if (typeof cost === 'string' && cost.includes('/')) {
+      const parts = cost.split('/').map(x => parseInt(x, 10) || 0);
+      return tierIdx === 0 ? parts[1] : parts[0];
+    }
     return parseInt(cost, 10) || 0;
   }
   unitUpgList(unit) {
@@ -931,7 +934,7 @@ class Component extends DCLogic {
       const upgs = this.unitUpgList(unit);
       (e.upgs || []).forEach(name => {
         const u = upgs.find(x => x.name === name);
-        if (u) minerals += this.upgCostNum(u.cost);
+        if (u) minerals += this.upgCostNum(u.cost, e.tierIdx);
       });
     });
     const gas = this.state.tactical.reduce((s, id) => {
@@ -972,7 +975,7 @@ class Component extends DCLogic {
     const upgrades = upgList.map(u => {
       const on = entry ? (entry.upgs || []).includes(u.name) : false;
       return {
-        name: u.name, cost: String(u.cost) + 'm', type: u.type, phase: u.phase.replace(' Phase', ''),
+        name: u.name, cost: (entry ? this.upgCostNum(u.cost, entry.tierIdx) : u.cost) + 'm', type: u.type, phase: u.phase.replace(' Phase', ''),
         ...this.phaseBadge(u.phase),
         segs: this.segs(u.description),
         interactive: !!entry, on,
@@ -1154,7 +1157,7 @@ class Component extends DCLogic {
         if (!unit || unit.role !== role) return;
         const tier = unit.tiers[e.tierIdx];
         const upgList = this.unitUpgList(unit);
-        const upgCost = (e.upgs || []).reduce((s, n) => { const u = upgList.find(x => x.name === n); return s + (u ? this.upgCostNum(u.cost) : 0); }, 0);
+        const upgCost = (e.upgs || []).reduce((s, n) => { const u = upgList.find(x => x.name === n); return s + (u ? this.upgCostNum(u.cost, e.tierIdx) : 0); }, 0);
         unitsHtml += this.printUnitBlock(unit, e, (tier.cost || 0) + upgCost, role);
       });
     });
@@ -1183,7 +1186,17 @@ class Component extends DCLogic {
     }), () => this.save());
   }
   addUnit(unit) {
-    const opts = unit.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost !== null);
+    if (unit.role === 'Other' || !unit.tiers.some(t => t.cost > 0)) return;
+    const faction = this.D().FACTION_CARDS.find(fc => fc.id === this.state.factionId) || this.D().FACTION_CARDS[0];
+    if (unit.factionTag && unit.factionTag !== faction.name) {
+      window.alert(unit.name + ' requires the ' + unit.factionTag + ' faction.');
+      return;
+    }
+    if (unit.unique && this.state.army.some(e => e.unitId === unit.id)) {
+      window.alert('Only one ' + unit.name + ' may be mustered.');
+      return;
+    }
+    const opts = unit.tiers.map((t, i) => ({ t, i })).filter(x => typeof x.t.cost === 'number' && x.t.cost > 0);
     if (opts.length === 1) { this.commitAdd(unit.id, opts[0].i); return; }
     this.setState({ sheet: { type: 'tier', unitId: unit.id, mode: 'add' } });
   }
@@ -1222,12 +1235,12 @@ class Component extends DCLogic {
       const t = D.TACTICAL_CARDS.find(x => x.id === id);
       if (t) Object.entries(t.slots || {}).forEach(([k, v]) => { baseSlots[k] = (baseSlots[k] || 0) + v; });
     });
-    const usedSlots = { hero: 0, elite: 0, core: 0, support: 0 };
+    const usedSlots = { hero: 0, elite: 0, core: 0, support: 0, air: 0 };
     st.army.forEach(e => {
       const u = D.UNITS.find(x => x.id === e.unitId);
-      if (u && usedSlots[u.role.toLowerCase()] !== undefined) usedSlots[u.role.toLowerCase()] += 1;
+      if (u && usedSlots[u.role.toLowerCase()] !== undefined) usedSlots[u.role.toLowerCase()] += (u.tiers[e.tierIdx]?.supply || 0);
     });
-    const slotPills = ['hero', 'elite', 'core', 'support'].filter(k => baseSlots[k]).map(k => {
+    const slotPills = ['hero', 'elite', 'core', 'support', 'air'].filter(k => baseSlots[k] || usedSlots[k]).map(k => {
       const over = usedSlots[k] > baseSlots[k];
       return { label: k.slice(0, 1).toUpperCase() + k.slice(1, 3) + ' ' + usedSlots[k] + '/' + baseSlots[k], fg: over ? '#f08a8a' : '#a7aec2', bd: over ? 'rgba(240,74,74,0.4)' : 'var(--sc-border-input)' };
     });
@@ -1243,13 +1256,13 @@ class Component extends DCLogic {
         const tier = unit.tiers[e.tierIdx];
         const upgCost = (e.upgs || []).reduce((s, n) => {
           const u = this.unitUpgList(unit).find(x => x.name === n);
-          return s + (u ? this.upgCostNum(u.cost) : 0);
+          return s + (u ? this.upgCostNum(u.cost, e.tierIdx) : 0);
         }, 0);
         cost += (tier.cost || 0) + upgCost;
         const expanded = !!st.expArmy[e.key];
         return {
           name: unit.name, unique: !!unit.unique,
-          tierLabel: tier.tier + ' · ' + tier.models + ' models' + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
+          tierLabel: tier.tier + ' · ' + this.unitStartingModels(unit, e.tierIdx) + ' models' + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
           cost: (tier.cost || 0) + upgCost, supply: tier.supply,
           expanded, chev: expanded ? 90 : 0, ...this.portrait(unit),
           borderColor: expanded ? 'rgba(176,110,247,0.45)' : 'var(--sc-border-neutral)',
@@ -1273,12 +1286,12 @@ class Component extends DCLogic {
       const effTier = effIdx >= 0 ? unit.tiers[effIdx] : null;
       const upgCost = (e.upgs || []).reduce((s, n) => {
         const u = this.unitUpgList(unit).find(x => x.name === n);
-        return s + (u ? this.upgCostNum(u.cost) : 0);
+        return s + (u ? this.upgCostNum(u.cost, e.tierIdx) : 0);
       }, 0);
       const expanded = !!st.expArmy[e.key];
       return {
         key: e.key, role: unit.role, name: unit.name, unique: !!unit.unique,
-        tierLabel: tier.tier + ' · ' + tier.models + ' models' + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
+        tierLabel: tier.tier + ' · ' + this.unitStartingModels(unit, e.tierIdx) + ' models' + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
         cost: (tier.cost || 0) + upgCost,
         ...this.portrait(unit),
         borderColor: expanded ? 'rgba(176,110,247,0.45)' : 'var(--sc-border-neutral)',
@@ -1338,6 +1351,7 @@ class Component extends DCLogic {
             tags: (u.tags || []).map(t => ({ name: t, onOpen: (ev) => { ev.stopPropagation(); this.openTag(t); } })),
             detail: expanded ? this.buildDetail(u, null) : null,
             onToggle: () => this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: !s2.expLib[u.id] } })),
+            recruitable: u.role !== 'Other' && u.tiers.some(t => t.cost > 0) && (!u.factionTag || u.factionTag === faction.name),
             onAdd: (ev) => { ev.stopPropagation(); this.addUnit(u); }
           };
         })
@@ -1446,7 +1460,7 @@ class Component extends DCLogic {
       if (unit) {
         tierUnitName = unit.name;
         tierOptions = unit.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost !== null).map(x => ({
-          tier: x.t.tier, models: x.t.models, supply: x.t.supply, cost: x.t.cost,
+          tier: x.t.tier, models: String(this.unitStartingModels(unit, x.i)), supply: x.t.supply, cost: x.t.cost,
           onPick: () => st.sheet.mode === 'change' ? this.changeTier(st.sheet.entryKey, x.i) : this.commitAdd(unit.id, x.i)
         }));
       }
