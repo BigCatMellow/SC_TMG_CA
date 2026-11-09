@@ -1065,6 +1065,563 @@ const extra = {
         ]
       }
     ]
+  },
+  "zerg": {
+    "units": [
+      {
+        "id": "zagara",
+        "name": "Zagara",
+        "role": "Hero",
+        "stats": {
+          "shield": null,
+          "speed": "7",
+          "evade": "6+",
+          "armour": "4+",
+          "hp": 10,
+          "size": 3
+        },
+        "tags": [
+          "Biological",
+          "Psionic",
+          "Ground"
+        ],
+        "tiers": [
+          {
+            "tier": "T3",
+            "cost": null,
+            "models": "-",
+            "supply": 0
+          },
+          {
+            "tier": "T2",
+            "cost": 250,
+            "models": "1",
+            "supply": 1
+          },
+          {
+            "tier": "T1",
+            "cost": null,
+            "models": "-",
+            "supply": 0
+          }
+        ],
+        "weapons": [
+          {
+            "name": "Zagara's Talons",
+            "phase": "Assault",
+            "range": "8",
+            "target": "Ground",
+            "roa": 4,
+            "hit": "3+",
+            "surge": "Light, Armoured",
+            "sDie": "D3",
+            "damage": 2,
+            "keywords": []
+          },
+          {
+            "name": "Zagara's Acid Spines",
+            "phase": "Assault",
+            "range": "14",
+            "target": "Flying",
+            "roa": 8,
+            "hit": "3+",
+            "surge": "Light, Armoured",
+            "sDie": "D3",
+            "damage": 1,
+            "keywords": []
+          },
+          {
+            "name": "Talons",
+            "phase": "Combat",
+            "range": "E",
+            "target": "Ground",
+            "roa": 4,
+            "hit": "3+",
+            "surge": "-",
+            "sDie": "-",
+            "damage": 1,
+            "keywords": []
+          }
+        ],
+        "abilities": [
+          {
+            "phase": "Any Phase",
+            "name": "Commander",
+            "type": "Passive",
+            "description": "Increase Supply characteristic by 1 for Mission Marker control, contesting, objectives and Disengage checks."
+          },
+          {
+            "phase": "Any Phase",
+            "name": "Transfusion",
+            "type": "Reaction (1 BM)",
+            "description": "When another Friendly Biological Unit, including a Structure, within 4 inches suffers damage, reduce Total Damage by 2 before allocation."
+          },
+          {
+            "phase": "Any Phase",
+            "name": "Psionic Link",
+            "type": "Passive",
+            "description": "Once per Round, if at least seven Friendly models are within 6 inches, reduce one of this Unit's Special Ability BM costs by 1."
+          }
+        ],
+        "phaseAbilities": {
+          "Movement Phase": [
+            {
+              "phase": "Movement Phase",
+              "name": "Infested Drop",
+              "type": "Passive",
+              "description": "Zagara's base counts as an Entry Edge. Once per Round, Friendly Units whose combined Supply is at most 1 may Deploy through this Entry Edge."
+            }
+          ],
+          "Assault Phase": [
+            {
+              "phase": "Assault Phase",
+              "name": "Indomitable",
+              "type": "Passive",
+              "description": "While Engaged, may target and be targeted by Unengaged Enemy Units, granting the defender an Evade Roll."
+            },
+            {
+              "phase": "Assault Phase",
+              "name": "Devastating Charge",
+              "type": "Passive",
+              "description": "After successful Charge resolve IMPACT (6) 3+."
+            }
+          ]
+        },
+        "upgrades": {},
+        "wave": 3,
+        "cardSource": "https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-W3-Card-Sheets-A4_EN.pdf",
+        "unique": true,
+        "cardNote": "Broodmother is an optional upgrade on the official card, but no price is shown in October 2026 cost table. Not auto-purchasable."
+      },
+      {
+        "id": "defiler",
+        "name": "Defiler",
+        "role": "Support",
+        "stats": {
+          "shield": null,
+          "speed": "7",
+          "evade": "5+",
+          "armour": "5+",
+          "hp": 8,
+          "size": 2
+        },
+        "tags": [
+          "Biological",
+          "Light",
+          "Psionic",
+          "Ground"
+        ],
+        "tiers": [
+          {
+            "tier": "T3",
+            "cost": null,
+            "models": "-",
+            "supply": 0
+          },
+          {
+            "tier": "T2",
+            "cost": 130,
+            "models": "1",
+            "supply": 1
+          },
+          {
+            "tier": "T1",
+            "cost": null,
+            "models": "-",
+            "supply": 0
+          }
+        ],
+        "weapons": [
+          {
+            "name": "Claws",
+            "phase": "Combat",
+            "range": "E",
+            "target": "Ground",
+            "roa": 4,
+            "hit": "3+",
+            "surge": "-",
+            "sDie": "-",
+            "damage": 1,
+            "keywords": []
+          }
+        ],
+        "abilities": [
+          {
+            "phase": "Any Phase",
+            "name": "Consume",
+            "type": "Passive",
+            "description": "When spending BM on this Unit's Special Ability, remove one model from a Friendly Unit within 4 inches to generate 1 BM for the cost."
+          }
+        ],
+        "phaseAbilities": {
+          "Movement Phase": [
+            {
+              "phase": "Movement Phase",
+              "name": "Gestate Dark Swarm",
+              "type": "Active (0 BM)",
+              "description": "Set a Dark Swarm token in an unoccupied space within 4 inches and Line of Sight. Token has DISPLACEMENT."
+            }
+          ],
+          "Assault Phase": [
+            {
+              "phase": "Assault Phase",
+              "name": "Dark Swarm",
+              "type": "Reaction (1 BM)",
+              "description": "REPEATABLE. When a Friendly Unit within 4 inches of a Friendly Dark Swarm token is attacked, if the Defiler is within 4 inches of that token, the target gains an Evade Roll; Size 1 gains +1 to Evade."
+            },
+            {
+              "phase": "Assault Phase",
+              "name": "Devastating Charge",
+              "type": "Passive",
+              "description": "After a successful Charge, resolve IMPACT (4) 4+."
+            }
+          ]
+        },
+        "upgrades": {
+          "Movement Phase": [
+            {
+              "phase": "Movement Phase",
+              "name": "Burrow Ambush",
+              "type": "Passive",
+              "description": "When deploying from Reserves, may PLACE (18) from own Entry Edge, staying more than 10 inches from enemies; Activation ends.",
+              "cost": 20
+            }
+          ],
+          "Assault Phase": [
+            {
+              "name": "Plague",
+              "cost": 20,
+              "type": "Active (1–3 BM)",
+              "description": "Set a Plague template within 10 inches with LoS. Roll 2 dice plus 1 per partially covered target model: for 1 BM, each 5+ deals NON-LETHAL DAMAGE (1); 2 BM uses 4+, 3 BM uses 3+. Covered Units lose HIDDEN."
+            }
+          ],
+          "Combat Phase": [
+            {
+              "name": "Cancerous Bite",
+              "cost": 20,
+              "type": "Weapon",
+              "description": "Optional SIDEARM weapon: E / Ground / RoA 2 / Hit 3+ / Damage 2 / CRITICAL HIT (1).",
+              "weaponProfile": {
+                "name": "Cancerous Bite",
+                "phase": "Combat",
+                "range": "E",
+                "target": "Ground",
+                "roa": 2,
+                "hit": "3+",
+                "surge": "-",
+                "sDie": "-",
+                "damage": 2,
+                "keywords": [
+                  "CRITICAL HIT (1)",
+                  "SIDEARM"
+                ]
+              }
+            }
+          ]
+        },
+        "wave": 3,
+        "cardSource": "https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-W3-Card-Sheets-A4_EN.pdf"
+      },
+      {
+        "id": "vileling",
+        "name": "Vileling (Zergling)",
+        "role": "Core",
+        "stats": {
+          "shield": null,
+          "speed": "4/8",
+          "evade": "5+",
+          "armour": "6+",
+          "hp": 1,
+          "size": 1
+        },
+        "tags": [
+          "Biological",
+          "Light",
+          "Ground"
+        ],
+        "tiers": [
+          {
+            "tier": "T3",
+            "cost": 180,
+            "models": "7-18",
+            "supply": 2
+          },
+          {
+            "tier": "T2",
+            "cost": null,
+            "models": "1-6",
+            "supply": 1
+          },
+          {
+            "tier": "T1",
+            "cost": null,
+            "models": "-",
+            "supply": 0
+          }
+        ],
+        "weapons": [
+          {
+            "name": "Claws",
+            "phase": "Combat",
+            "range": "E",
+            "target": "Ground",
+            "roa": 2,
+            "hit": "5+",
+            "surge": "-",
+            "sDie": "-",
+            "damage": 1,
+            "keywords": []
+          }
+        ],
+        "abilities": [
+          {
+            "phase": "Any Phase",
+            "name": "Squadron",
+            "type": "Passive",
+            "description": "Horizontal Coherency is 4 inches."
+          }
+        ],
+        "phaseAbilities": {
+          "Movement Phase": [
+            {
+              "phase": "Movement Phase",
+              "name": "Zergling Reconstitution",
+              "type": "Active (1 BM)",
+              "description": "Resolve RESPAWN (2), or RESPAWN (3) while ON CREEP."
+            },
+            {
+              "phase": "Movement Phase",
+              "name": "Burrow Ambush",
+              "type": "Passive",
+              "description": "When deployed from Reserves, may resolve PLACE (18) from own Entry Edge with every model more than 10 inches from any enemy; Activation ends."
+            }
+          ],
+          "Assault Phase": [
+            {
+              "phase": "Assault Phase",
+              "name": "Metabolic Boost",
+              "type": "Active (1 BM)",
+              "description": "Roll 2D6 for Charge Distance and use higher result."
+            },
+            {
+              "phase": "Assault Phase",
+              "name": "Devastating Charge",
+              "type": "Passive",
+              "description": "Following Charge, resolve IMPACT (1) 5+."
+            }
+          ],
+          "Combat Phase": [
+            {
+              "phase": "Combat Phase",
+              "name": "Debilitating Claws",
+              "type": "Passive",
+              "description": "When an enemy suffers Damage from this Unit, apply DEBUFF Hit (1) to each of its weapons."
+            }
+          ]
+        },
+        "upgrades": {},
+        "wave": 3,
+        "cardSource": "https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-W3-Card-Sheets-A4_EN.pdf",
+        "factionTag": "Zagara's Swarm"
+      },
+      {
+        "id": "bile-launcher",
+        "name": "Bile Launcher",
+        "role": "Support",
+        "stats": {
+          "shield": null,
+          "speed": "-",
+          "evade": "-",
+          "armour": "4+",
+          "hp": 10,
+          "size": 3
+        },
+        "tags": [
+          "Armoured",
+          "Biological",
+          "Ground"
+        ],
+        "tiers": [
+          {
+            "tier": "T3",
+            "cost": null,
+            "models": "-",
+            "supply": 0
+          },
+          {
+            "tier": "T2",
+            "cost": 150,
+            "models": "1",
+            "supply": 1
+          },
+          {
+            "tier": "T1",
+            "cost": null,
+            "models": "-",
+            "supply": 0
+          }
+        ],
+        "weapons": [
+          {
+            "name": "Bile Bomb",
+            "phase": "Assault",
+            "range": "12",
+            "target": "Ground",
+            "roa": 6,
+            "hit": "3+",
+            "surge": "Light, Armoured",
+            "sDie": "D3",
+            "damage": 1,
+            "keywords": [
+              "PIERCE Armoured (2)",
+              "PINPOINT"
+            ]
+          }
+        ],
+        "abilities": [
+          {
+            "phase": "Any Phase",
+            "name": "Biological Structure",
+            "type": "Passive",
+            "description": "Cannot gain BURROWED, return to Reserves, or be affected by IMPACT."
+          },
+          {
+            "phase": "Any Phase",
+            "name": "Detection",
+            "type": "Passive",
+            "description": "Enemy Units within 6 inches lose HIDDEN."
+          },
+          {
+            "phase": "Any Phase",
+            "name": "Source of Creep",
+            "type": "Passive",
+            "description": "Friendly or Enemy Ground Zerg Units within 6 inches count as ON CREEP."
+          }
+        ],
+        "phaseAbilities": {
+          "Movement Phase": [
+            {
+              "phase": "Movement Phase",
+              "name": "Burrow Ambush",
+              "type": "Passive",
+              "description": "When deploying from Reserves may PLACE (18) from own Entry Edge and remain more than 10 inches from enemies; Activation ends."
+            },
+            {
+              "phase": "Movement Phase",
+              "name": "Bombard",
+              "type": "Active (1 BM)",
+              "description": "Set Bile Bomb token within 24 inches. This Round, when firing Bile Bomb, can target enemy within 3 inches of token without Range/LoS or HIDDEN restriction. After attack, remove token and set Creep Tumor touching it; token has DISPLACEMENT."
+            }
+          ],
+          "Assault Phase": [
+            {
+              "phase": "Assault Phase",
+              "name": "Indomitable",
+              "type": "Passive",
+              "description": "While Engaged, may attack or be attacked by Unengaged Units; defender gains Evade."
+            }
+          ]
+        },
+        "upgrades": {},
+        "wave": 3,
+        "cardSource": "https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-W3-Card-Sheets-A4_EN.pdf",
+        "unique": true
+      }
+    ],
+    "factions": [
+      {
+        "id": "zagaras-swarm",
+        "name": "Zagara's Swarm",
+        "unique": true,
+        "resource": "+1 BM",
+        "slots": {
+          "hero": 1,
+          "core": 4,
+          "support": 1
+        },
+        "wave": 3,
+        "abilities": [
+          {
+            "phase": "Any Phase",
+            "name": "Instinctive Reaction",
+            "type": "Reaction",
+            "description": "When Enemy declares Close Combat attack against Friendly Unit, that Unit may make Evade Roll."
+          },
+          {
+            "phase": "Any Phase",
+            "name": "Zerg Creep",
+            "type": "Passive",
+            "description": "Choose exactly one Creep Card during army building and pay its cost."
+          },
+          {
+            "phase": "Combat Phase",
+            "name": "Scourge Queen",
+            "type": "Active (1 BM)",
+            "description": "If this Unit contains more models than all Engaged Enemy Units combined, its Close Combat weapons gain INSTANT and PRECISION (4)."
+          }
+        ]
+      }
+    ],
+    "tactical": [
+      {
+        "id": "defiler-mound",
+        "name": "Defiler Mound",
+        "unique": true,
+        "cost": 35,
+        "resource": "+1 BM",
+        "slots": {
+          "elite": 1,
+          "support": 1
+        },
+        "category": "combat",
+        "wave": 3,
+        "abilities": [
+          {
+            "phase": "Movement Phase",
+            "name": "Poisonous Essence",
+            "type": "Active (1 BM)",
+            "description": "Mark active Friendly Unit with Faction Indicator; at End of Assault, all Biological Enemies Engaged with it take NON-LETHAL DAMAGE (2)."
+          },
+          {
+            "phase": "Movement Phase",
+            "name": "Tunnel Network",
+            "type": "Active",
+            "description": "Instead of action, return active Unengaged Ground Unit to Reserves."
+          }
+        ]
+      },
+      {
+        "id": "reactive-creep",
+        "name": "Reactive Creep",
+        "unique": true,
+        "cost": 10,
+        "resource": null,
+        "slots": {},
+        "category": "creep",
+        "factionTag": "Zagara's Swarm",
+        "wave": 3,
+        "abilities": [
+          {
+            "phase": "Any Phase",
+            "name": "Reactive Tissue",
+            "type": "Passive",
+            "description": "Friendly Zerg Units ON CREEP gain DODGE (1) against attacks."
+          },
+          {
+            "phase": "Any Phase",
+            "name": "Living Glob of Tissue",
+            "type": "Passive",
+            "description": "Creep Tumor tokens gain STAY IN PLAY and DISPLACEMENT."
+          },
+          {
+            "phase": "Any Phase",
+            "name": "Creep Removal",
+            "type": "Passive",
+            "description": "Enemy completing Move, Deploy, Run, Charge or Disengage within 1 inch of Friendly Creep Tumor removes it."
+          }
+        ]
+      }
+    ]
   }
 };
 for(const [name,patch] of Object.entries(extra)) {
