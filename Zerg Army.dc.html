@@ -387,7 +387,11 @@
                       </sc-for>
                     </div>
                   </div>
-                  <button onClick="{{ tc.onAddRemove }}" aria-label="Toggle tactical card" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:{{ tc.btnBg }};border:1px solid {{ tc.btnBd }};color:{{ tc.btnFg }};font-size:19px;cursor:pointer;clip-path:var(--sc-corner-9)">{{ tc.btnGlyph }}</button>
+                  <div style="display:flex;align-items:center;gap:4px;flex:0 0 auto">
+                     <button onClick="{{ tc.onRemove }}" disabled="{{ tc.count === 0 }}" aria-label="Remove one copy" style="height:44px;width:34px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:20px;cursor:pointer">−</button>
+                     <span style="min-width:20px;text-align:center;font-family:Rajdhani,sans-serif;font-weight:700;color:#e9ecf2;font-size:16px">{{ tc.count }}</span>
+                     <button onClick="{{ tc.onAdd }}" disabled="{{ !tc.canAdd }}" aria-label="Add one copy" style="height:44px;width:34px;background:rgba(37,99,235,0.16);border:1px solid rgba(98,169,247,0.45);color:#bcd9fd;font-size:20px;cursor:pointer">+</button>
+                   </div>
                 </div>
                 <sc-if value="{{ tc.expanded }}" hint-placeholder-val="{{ false }}">
                   <div style="border-top:1px solid #1f2430;padding:12px;display:grid;gap:10px">
@@ -707,7 +711,7 @@ class Component extends DCLogic {
         this.state.army = (saved.army || []).filter(e => this.D().UNITS.find(u => u.id === e.unitId))
           .map(e => ({ modelsLost: 0, deployed: false, ...e }));
         this.state.tactical = (saved.tactical || []).filter(id => this.D().TACTICAL_CARDS.find(t => t.id === id));
-        this.state.tacticalTapped = (saved.tacticalTapped || []).filter(id => this.state.tactical.includes(id));
+        this.state.tacticalTapped = (saved.tacticalTapped || []).map(id => String(id).includes('#') ? String(id) : String(id) + '#0').filter(key => this.state.tactical.includes(key.split('#')[0]));
         if (saved.battleSupplyAvailable != null) this.state.battleSupplyAvailable = saved.battleSupplyAvailable;
         if (saved.scaleId) this.state.scaleId = saved.scaleId;
         if (saved.factionId) this.state.factionId = saved.factionId;
@@ -768,7 +772,7 @@ class Component extends DCLogic {
     this.setState({
       army: (entry.army || []).filter(e => D.UNITS.find(u => u.id === e.unitId)).map(e => ({ modelsLost: 0, deployed: false, ...e })),
       tactical,
-      tacticalTapped: (entry.tacticalTapped || []).filter(tid => tactical.includes(tid)),
+      tacticalTapped: (entry.tacticalTapped || []).map(id => String(id).includes('#') ? String(id) : String(id) + '#0').filter(key => tactical.includes(key.split('#')[0])),
       battleSupplyAvailable: entry.battleSupplyAvailable != null ? entry.battleSupplyAvailable : 4,
       scaleId: entry.scaleId || this.state.scaleId,
       factionId: entry.factionId || this.state.factionId,
@@ -1363,17 +1367,21 @@ class Component extends DCLogic {
       if (!entries.length) return null;
       return { role, color: this.roleColor(role), entries };
     }).filter(Boolean);
+    const tacticalCopyCounts = {};
     const battleTactical = st.tactical.map(id => {
+      const copyIndex = tacticalCopyCounts[id] || 0;
+      tacticalCopyCounts[id] = copyIndex + 1;
+      const tappedKey = id + '#' + copyIndex;
       const t = D.TACTICAL_CARDS.find(x => x.id === id);
       if (!t) return null;
-      const tapped = st.tacticalTapped.includes(id);
+      const tapped = st.tacticalTapped.includes(tappedKey);
       return {
         id, name: t.name, cost: t.cost, tapped,
         bg: tapped ? 'rgba(139,146,163,0.1)' : 'rgba(56,211,232,0.1)',
         bd: tapped ? 'var(--sc-border-input)' : 'rgba(56,211,232,0.35)',
         fg: tapped ? '#5b6275' : '#38d3e8',
         label: tapped ? 'Tapped' : 'Ready',
-        onToggle: () => this.toggleTapped(id)
+        onToggle: () => this.toggleTapped(tappedKey)
       };
     }).filter(Boolean);
     const anyTapped = st.tacticalTapped.length > 0;
@@ -1410,10 +1418,11 @@ class Component extends DCLogic {
       return {
         name: catNames[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1)),
         cards: cards.map(t => {
-          const inArmy = st.tactical.includes(t.id);
+          const count = st.tactical.filter(id => id === t.id).length;
+          const inArmy = count > 0;
           const expanded = !!st.expTac[t.id];
           return {
-            name: t.name, unique: !!t.unique, summary: t.summary, cost: t.cost,
+            name: t.name, unique: !!t.unique, summary: t.summary, cost: t.cost, count, canAdd: !t.unique || count === 0,
             resource: t.resource || false, expanded,
             borderColor: inArmy ? 'rgba(56,211,232,0.45)' : (expanded ? 'rgba(176,110,247,0.45)' : 'var(--sc-border-neutral)'),
             slotPills: Object.entries(t.slots || {}).map(([k, v]) => '+' + v + ' ' + k),
@@ -1423,9 +1432,24 @@ class Component extends DCLogic {
             btnFg: inArmy ? '#5fd98d' : '#d9bafc',
             abilities: expanded ? t.abilities.map(a => ({ name: a.name, type: a.type, phase: a.phase.replace(' Phase', ''), ...this.phaseBadge(a.phase), segs: this.segs(a.description) })) : [],
             onToggle: () => this.setState(s2 => ({ expTac: { ...s2.expTac, [t.id]: !s2.expTac[t.id] } })),
-            onAddRemove: (ev) => {
+            onAdd: (ev) => {
               ev.stopPropagation();
-              this.setState(s2 => ({ tactical: s2.tactical.includes(t.id) ? s2.tactical.filter(x => x !== t.id) : [...s2.tactical, t.id] }), () => this.save());
+              this.setState(s2 => {
+                if (t.unique && s2.tactical.includes(t.id)) return {};
+                return { tactical: [...s2.tactical, t.id] };
+              }, () => this.save());
+            },
+            onRemove: (ev) => {
+              ev.stopPropagation();
+              this.setState(s2 => {
+                const tactical = [...s2.tactical];
+                const index = tactical.lastIndexOf(t.id);
+                if (index === -1) return {};
+                const copyIndex = tactical.filter(id => id === t.id).length - 1;
+                tactical.splice(index, 1);
+                const key = t.id + '#' + copyIndex;
+                return { tactical, tacticalTapped: s2.tacticalTapped.filter(x => x !== key) };
+              }, () => this.save());
             }
           };
         })
