@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref || github.ref_name }}
       - name: Restore original miniature JPEGs when not yet tracked
         run: |
           if [ ! -f portraits/pdf/terran/marine.jpg ]; then
@@ -48,3 +50,12 @@ jobs:
           git add portraits/pdf
           git commit -m 'Include exact miniature photos from credited 2026 publisher PDF'
           git push -u origin HEAD:generated/pdf-wave1-miniatures-2026
+      - name: Include original JPEG binaries on this import PR
+        if: github.event_name == 'pull_request' && github.head_ref == 'codex/add-22-pdf-image-binaries-2026-11-09'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add portraits/pdf
+          git commit -m 'Include 22 original Core Rules painted-miniature JPEGs'
+          git push origin HEAD:codex/add-22-pdf-image-binaries-2026-11-09
+
