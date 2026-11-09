@@ -100,7 +100,7 @@
                 <sc-if value="{{ sec.phase }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;background:{{ sec.phBg }};color:{{ sec.color }}">{{ sec.phase }}</span></sc-if>
               </div>
               <div style="font-size:12px;color:#8a91a5">{{ sec.meta }}</div>
-              <sc-if value="{{ sec.sourceLabel }}" hint-placeholder-val="{{ true }}"><div style="font-size:10px;color:#5fd9ea;letter-spacing:0.03em;margin-top:2px">2026 PDF · {{ sec.sourceLabel }}</div></sc-if>
+              <sc-if value="{{ sec.sourceLabel }}" hint-placeholder-val="{{ true }}"><div style="font-size:10px;color:#5fd9ea;letter-spacing:0.03em;margin-top:2px">Source · {{ sec.sourceLabel }}</div></sc-if>
             </div>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex:0 0 auto;transform:rotate({{ sec.chev }}deg);transition:transform 0.18s"><path d="M6 4l4 4-4 4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
           </div>
@@ -428,7 +428,7 @@ class Component extends DCLogic {
       clearQ: () => this.setState({ q: '' }),
       chips, sections, factionTabs,
       sourceBanner: window.SCTMG_BATTLE_RULES
-        ? 'Compact, paraphrased 2026 PDF reference. Exact card wording and diagram-heavy rules take priority. Unit / upgrade point tables still need a numeric audit.'
+        ? '2026 Core Rules mechanics + October 2026 official Wave 1 points. Consult printed cards and the publisher FAQ for specific effects; not every newer-wave unit is included.'
         : 'Legacy HTML summary loaded. The 2026 battle reference is unavailable — do not rely on this as fully updated.',
       noHits: searching && sections.length === 0,
       sheetOpen: !!(st.sheet && st.sheet.type !== 'play'),
