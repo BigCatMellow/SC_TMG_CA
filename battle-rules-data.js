@@ -697,7 +697,7 @@ window.SCTMG_BATTLE_RULES = {
               "t": "Follow the Mission / Deployment draft and Battlefield Setup rules; reference the Deployment Card for Entry Edges and Marker positions."
             },
             {
-              "t": "The PDF's unit and upgrade tables are on printed pp. 96–106, with Tactical Card costs on p. 107. These tables require visual checking."
+              "t": "Use the official October 9, 2026 balance table for current points; the printed Core Rules appendix contains earlier values."
             }
           ]
         }
@@ -776,10 +776,10 @@ window.SCTMG_BATTLE_RULES = {
           "name": "Table Reference",
           "items": [
             {
-              "t": "Terran Unit and upgrade costs: printed pp. 96–98. Tactical Card costs: p. 107."
+              "t": "Current Terran points are in the publisher's October 2026 balance tables, PDF pages 2–3; the printed rulebook appendix has older prices."
             },
             {
-              "t": "Current unit and card datasets on the Terran Army page need separate reconciliation against the 2026 source tables."
+              "t": "Listed Wave 1 points follow October 2026 balance; use official cards for precise ability wording."
             }
           ]
         }
@@ -821,10 +821,10 @@ window.SCTMG_BATTLE_RULES = {
           "name": "Table Reference",
           "items": [
             {
-              "t": "Zerg Unit and upgrade costs: printed pp. 99–103. Tactical Card costs: p. 107."
+              "t": "Current Zerg points are in the publisher's October 2026 balance tables, PDF pages 4–6; the printed rulebook appendix has older prices."
             },
             {
-              "t": "Current unit and card datasets on the Zerg Army page need separate reconciliation against the 2026 source tables."
+              "t": "Listed Wave 1 points follow October 2026 balance; Swarmling and Vile Roach are now included."
             }
           ]
         }
@@ -844,7 +844,7 @@ window.SCTMG_BATTLE_RULES = {
           "name": "Resource & Faction",
           "items": [
             {
-              "t": "The 2026 rules explicitly call the Protoss faction resource **PE** (not EN)."
+              "t": "The 2026 rules use **PE** for Protoss ability resources; the companion dataset now matches."
             },
             {
               "t": "Only eligible Units and Tactical Cards matching the Faction Card's tags can join an army."
@@ -869,10 +869,10 @@ window.SCTMG_BATTLE_RULES = {
           "name": "Table Reference",
           "items": [
             {
-              "t": "Protoss Unit and upgrade costs: printed pp. 104–106. Tactical Card costs: p. 107."
+              "t": "Current Protoss points are in the publisher's October 2026 balance tables, PDF pages 7–8; the printed rulebook appendix has older prices."
             },
             {
-              "t": "**Compatibility warning:** the existing Protoss companion data uses EN terminology; validate resource labels and abilities before relying on this page."
+              "t": "The companion now uses PE for Protoss resources; check printed cards and latest FAQ for exact interactions."
             }
           ]
         }
