@@ -252,27 +252,72 @@
           </div>
         </div>
 
-        <!-- tactical cards -->
-        <sc-if value="{{ hasBattleTactical }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-bottom:16px">
-            <div style="display:flex;align-items:center;gap:8px;padding:0 2px 8px">
-              <span style="width:8px;height:8px;background:#38d3e8;clip-path:var(--sc-diamond)"></span>
-              <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#38d3e8">Tactical Cards</span>
-              <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
-              <sc-if value="{{ anyTapped }}" hint-placeholder-val="{{ false }}">
-                <button onClick="{{ refreshTactical }}" style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a91a5;background:none;border:1px solid var(--sc-border-input);padding:3px 8px;cursor:pointer">Refresh All</button>
+        <!-- Card abilities and a one-ability resource payment helper.
+             Resources are generated/spent immediately; they cannot be banked. -->
+        <div style="margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:8px;padding:0 2px 8px">
+            <span style="width:8px;height:8px;background:#38d3e8;clip-path:var(--sc-diamond)"></span>
+            <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#38d3e8">Cards &amp; Energy</span>
+            <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
+            <sc-if value="{{ anyTapped }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ refreshTactical }}" style="min-height:32px;font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#a7aec2;background:#1a1f2e;border:1px solid var(--sc-border-input);padding:3px 8px;cursor:pointer">Refresh (Cleanup)</button>
+            </sc-if>
+          </div>
+          <div class="sc-battle-payment">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span class="sc-battle-payment-caption">Current ability payment</span>
+              <span class="sc-battle-payment-count">{{ paymentTotal }} {{ paymentResource }}</span>
+              <sc-if value="{{ hasPendingPayment }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ finishResourcePayment }}" class="sc-battle-payment-finish">Finish payment</button>
               </sc-if>
             </div>
-            <div style="display:grid;gap:6px">
-              <sc-for list="{{ battleTactical }}" as="tc" hint-placeholder-count="2">
-                <button onClick="{{ tc.onToggle }}" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:{{ tc.bg }};border:1px solid {{ tc.bd }};color:#e9ecf2;cursor:pointer;text-align:left">
-                  <span style="flex:1;font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;letter-spacing:0.03em">{{ tc.name }}</span>
-                  <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:{{ tc.fg }}">{{ tc.label }}</span>
-                </button>
-              </sc-for>
-            </div>
+            <div class="sc-battle-payment-hint">Exhaust Ready cards to pay a single ability. Unused energy is lost, not saved for later.</div>
           </div>
-        </sc-if>
+          <div style="display:grid;gap:8px">
+            <sc-for list="{{ battleCards }}" as="tc" hint-placeholder-count="3">
+              <div class="sc-battle-card" style="background:{{ tc.bg }};border:1px solid {{ tc.bd }}">
+                <button onClick="{{ tc.onExpand }}" aria-label="View card abilities" class="sc-battle-card-header">
+                  <span style="flex:1;min-width:0;text-align:left">
+                    <span class="sc-battle-card-kind">{{ tc.kind }} <span>{{ tc.copyLabel }}</span></span>
+                    <span class="sc-battle-card-title">{{ tc.name }}</span>
+                  </span>
+                  <sc-if value="{{ tc.hasResource }}" hint-placeholder-val="{{ false }}">
+                    <span class="sc-battle-card-output">{{ tc.resource }}</span>
+                  </sc-if>
+                  <span class="sc-battle-card-status" style="color:{{ tc.fg }}">{{ tc.label }}</span>
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex:0 0 auto;transform:rotate({{ tc.expanded ? 180 : 0 }}deg)">
+                    <path d="M4 6l4 4 4-4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </button>
+                <sc-if value="{{ tc.expanded }}" hint-placeholder-val="{{ false }}">
+                  <div class="sc-battle-card-abilities">
+                    <sc-for list="{{ tc.abilities }}" as="ab" hint-placeholder-count="2">
+                      <div class="sc-battle-card-ability">
+                        <div class="sc-battle-card-ability-meta">{{ ab.phase }} · {{ ab.type }}</div>
+                        <div class="sc-battle-card-ability-name">{{ ab.name }}</div>
+                        <div class="sc-battle-card-ability-description">{{ ab.description }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <div class="sc-battle-card-actions">
+                  <sc-if value="{{ !tc.tapped && tc.hasResource }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ tc.onResource }}" class="sc-battle-card-action sc-battle-card-action--resource">Exhaust for {{ tc.resource }}</button>
+                  </sc-if>
+                  <sc-if value="{{ !tc.tapped && tc.canUseAbility }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ tc.onAbility }}" class="sc-battle-card-action">Exhaust for ability</button>
+                  </sc-if>
+                  <sc-if value="{{ tc.tapped }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ tc.onReady }}" class="sc-battle-card-action">Ready card</button>
+                  </sc-if>
+                  <sc-if value="{{ !tc.hasResource && !tc.canUseAbility && !tc.tapped }}" hint-placeholder-val="{{ false }}">
+                    <span class="sc-battle-card-passive">Passive effects: no exhaustion needed</span>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
 
         <!-- units -->
         <sc-for list="{{ battleGroups }}" as="grp" hint-placeholder-count="2">
