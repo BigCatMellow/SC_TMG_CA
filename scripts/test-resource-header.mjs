@@ -1,4 +1,4 @@
-// Scroll collapse regression: one compact resources row across all faction screens.
+// Scroll collapse regression: original scoreboard styling plus compact HUD on all factions.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
@@ -9,6 +9,47 @@ const styles = read('shared-styles.css');
 assert.match(styles, /\.sc-resource-strip--compact\s*\{\s*height:\s*26px;/);
 assert.match(styles, /\.sc-resource-strip\s*\{[\s\S]*?height:\s*50px;/);
 assert.match(styles, /prefers-reduced-motion/);
+assert.match(styles, /\.sc-scoreboard--compact\s*\{/);
+for (const [variable, value] of Object.entries({
+  '--sc-scoreboard-padding': '5px 12px',
+  '--sc-scoreboard-vp-size': '20px',
+  '--sc-scoreboard-round-size': '14px',
+  '--sc-scoreboard-phase-size': '11px'
+})) {
+  assert.ok(styles.includes(variable + ': ' + value + ';'), variable + ' compact style missing');
+}
+
+// Normalize only the intentional sizing variables, then verify the original
+// markup, colors, clip-path, gradient and event wiring are byte-for-byte intact.
+const originalScoreboardHashes = { terran: 'b179839f', zerg: '2b6ccd69', protoss: 'f2989468' };
+const scoreboardSizingChanges = [
+  ['<div class="{{ scoreboardClass }}" onClick="{{ togglePlay }}" role="button" aria-label="Open round tracker"',
+   '<div onClick="{{ togglePlay }}" role="button" aria-label="Open round tracker"'],
+  ['margin:0 14px var(--sc-scoreboard-bottom-gap,8px);background:linear-gradient',
+   'margin:0 14px 8px;background:linear-gradient'],
+  ['justify-content:space-between;gap:var(--sc-scoreboard-card-gap,10px);background:var(--sc-card-bg);padding:var(--sc-scoreboard-padding,12px 16px)',
+   'justify-content:space-between;gap:10px;background:var(--sc-card-bg);padding:12px 16px'],
+  ['align-items:center;gap:var(--sc-scoreboard-round-gap,6px);flex:0 0 auto',
+   'align-items:center;gap:6px;flex:0 0 auto'],
+  ["font-family:'Chakra Petch',sans-serif;font-size:var(--sc-scoreboard-round-size,17px)",
+   "font-family:'Chakra Petch',sans-serif;font-size:17px"],
+  ['align-items:center;gap:var(--sc-scoreboard-vp-gap,10px);flex:1;justify-content:center',
+   'align-items:center;gap:10px;flex:1;justify-content:center'],
+  ["font-family:'Chakra Petch',sans-serif;font-size:var(--sc-scoreboard-vp-size,32px)",
+   "font-family:'Chakra Petch',sans-serif;font-size:32px"],
+  ['color:#5b6275;font-size:var(--sc-scoreboard-colon-size,20px)">:</span>',
+   'color:#5b6275;font-size:20px">:</span>'],
+  ['font-size:var(--sc-scoreboard-phase-label-size,9px);line-height:var(--sc-scoreboard-phase-line-height,1.5);font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5">Phase</div>',
+   'font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5">Phase</div>'],
+  ['font-size:var(--sc-scoreboard-phase-size,13px);line-height:var(--sc-scoreboard-phase-line-height,1.5);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:{{ phaseColor }};white-space:nowrap',
+   'font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:{{ phaseColor }};white-space:nowrap']
+];
+function originalScoreboardHash(str) {
+  let h = 2166136261;
+  for (let i = 0; i < str.length; i++) h = Math.imul(h ^ str.charCodeAt(i), 16777619) >>> 0;
+  return h.toString(16).padStart(8, '0');
+}
+
 
 for (const faction of ['terran', 'zerg', 'protoss']) {
   const html = read(faction[0].toUpperCase() + faction.slice(1) + ' Army.dc.html');
@@ -22,6 +63,17 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   assert.ok(html.includes('{{ gasUsed }}') && html.includes('{{ gasCap }}'), faction + ' gas');
   assert.ok(html.includes('{{ supplyUsed }}'), faction + ' supply');
   assert.ok(html.includes('onClick="{{ togglePlay }}"'), faction + ' round tracker preserved');
+  const first = html.indexOf('    <!-- play HUD, scoreboard layout: round left, score center, phase right -->');
+  const last = html.indexOf('    <!-- Resource totals: full at the top, one-line summary after scrolling. -->', first);
+  assert.ok(first !== -1 && last > first, faction + ' original scoreboard boundaries');
+  let scoreboard = html.slice(first, last);
+  for (const [changed, original] of scoreboardSizingChanges) {
+    assert.ok(scoreboard.includes(changed), faction + ' scoreboard original structure lost: ' + changed);
+    scoreboard = scoreboard.split(changed).join(original);
+  }
+  assert.equal(originalScoreboardHash(scoreboard), originalScoreboardHashes[faction],
+    faction + ' scoreboard styling differs from original layout');
+  assert.ok(html.includes('scoreboardClass: st.resourcesCompact ?'), faction + ' scroll state binding');
 
   const listeners = new Map();
   const world = {
@@ -49,25 +101,31 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   controller._secEls = {};
   controller.state = { ...controller.state, ready: true, army: [], tactical: [] };
   const css = () => controller.renderVals().resourceStripClass;
+  const boardCss = () => controller.renderVals().scoreboardClass;
 
-  assert.equal(css(), 'sc-resource-strip', faction + ' starts expanded');
+  assert.equal(css(), 'sc-resource-strip', faction + ' resources start expanded');
+  assert.equal(boardCss(), 'sc-scoreboard', faction + ' original scoreboard at top');
   controller.componentDidMount();
   assert.equal(listeners.get('scroll')?.options?.passive, true, faction + ' passive scroll listener');
 
   world.scrollY = 100;
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip', faction + ' does not collapse on minor scroll');
+  assert.equal(boardCss(), 'sc-scoreboard', faction + ' scoreboard unchanged on minor scroll');
   world.scrollY = 145;
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip sc-resource-strip--compact', faction + ' collapses');
+  assert.equal(boardCss(), 'sc-scoreboard sc-scoreboard--compact', faction + ' scoreboard collapses');
   world.scrollY = 90;
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip sc-resource-strip--compact', faction + ' hysteresis');
+  assert.equal(boardCss(), 'sc-scoreboard sc-scoreboard--compact', faction + ' scoreboard hysteresis');
   world.scrollY = 64;
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip', faction + ' re-expands near top');
+  assert.equal(boardCss(), 'sc-scoreboard', faction + ' scoreboard re-expands near top');
 
   controller.componentWillUnmount();
   assert.equal(listeners.size, 0, faction + ' cleans up scroll listener');
 }
-console.log('Responsive resource header checks passed for Terran, Zerg and Protoss');
+console.log('Original scoreboard preserved; synchronized compact headers pass for all factions');
