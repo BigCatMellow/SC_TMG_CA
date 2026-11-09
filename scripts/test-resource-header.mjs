@@ -9,6 +9,16 @@ const styles = read('shared-styles.css');
 assert.match(styles, /\.sc-resource-strip--compact\s*\{\s*height:\s*26px;/);
 assert.match(styles, /\.sc-resource-strip\s*\{[\s\S]*?height:\s*50px;/);
 assert.match(styles, /prefers-reduced-motion/);
+for (const [name,value] of Object.entries({
+  '--sc-title-pad-top':'2px',
+  '--sc-title-pad-bottom':'2px',
+  '--sc-title-heading-size':'20px',
+  '--sc-title-faction-size':'10px'
+})) {
+  assert.ok(styles.includes(name + ': ' + value + ';'), name + ' compact heading CSS');
+}
+assert.match(styles, /\.sc-title-row--compact \.sc-title-kicker\s*\{\s*display: none;/);
+assert.match(styles, /\.sc-title-row--compact \.sc-title-faction\s*\{[\s\S]*?text-overflow: ellipsis;/);
 assert.match(styles, /\.sc-scoreboard--compact\s*\{/);
 for (const [variable, value] of Object.entries({
   '--sc-scoreboard-padding': '5px 12px',
@@ -51,6 +61,31 @@ function originalScoreboardHash(str) {
 }
 
 
+// Baseline hashes from original title rows on main before this change.
+const originalTitleHashes = {"terran":"eca5f626","zerg":"188c1517","protoss":"1ba3c571"};
+const titleSizingChanges = [
+  [
+    "    <div class=\"{{ titleHeaderClass }}\" style=\"display:flex;align-items:center;gap:var(--sc-title-gap,10px);padding:calc(var(--sc-title-pad-top,10px) + env(safe-area-inset-top)) 14px var(--sc-title-pad-bottom,8px)\">",
+    "    <div style=\"display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 8px\">"
+  ],
+  [
+    "<div class=\"sc-title-kicker\" style=\"font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#8a91a5\">",
+    "<div style=\"font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#8a91a5\">"
+  ],
+  [
+    "<div style=\"display:flex;align-items:baseline;gap:var(--sc-title-name-gap,8px)\">",
+    "<div style=\"display:flex;align-items:baseline;gap:8px\">"
+  ],
+  [
+    "<div class=\"sc-title-faction-name\" style=\"font-family:'Chakra Petch',sans-serif;font-size:var(--sc-title-heading-size,24px);",
+    "<div style=\"font-family:'Chakra Petch',sans-serif;font-size:24px;"
+  ],
+  [
+    "<div class=\"sc-title-faction\" style=\"font-family:Rajdhani,sans-serif;font-size:var(--sc-title-faction-size,12px);font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:",
+    "<div style=\"font-family:Rajdhani,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:"
+  ]
+];
+
 for (const faction of ['terran', 'zerg', 'protoss']) {
   const html = read(faction[0].toUpperCase() + faction.slice(1) + ' Army.dc.html');
   assert.equal((html.match(/class="\{\{ resourceStripClass \}\}"/g) || []).length, 1, faction + ' resource row');
@@ -74,6 +109,23 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   assert.equal(originalScoreboardHash(scoreboard), originalScoreboardHashes[faction],
     faction + ' scoreboard styling differs from original layout');
   assert.ok(html.includes('scoreboardClass: st.resourcesCompact ?'), faction + ' scroll state binding');
+  // Only the class and reversible sizing variables may change in the title row.
+  assert.equal((html.match(/class="\{\{ titleHeaderClass \}\}"/g) || []).length, 1,
+    faction + ' single title header');
+  const titleStart = html.indexOf('    <!-- title row -->');
+  const titleEnd = html.indexOf('    <!-- play HUD, scoreboard', titleStart);
+  assert.ok(titleStart >= 0 && titleEnd > titleStart, faction + ' title region boundaries');
+  let title = html.slice(titleStart, titleEnd);
+  for (const [compact, original] of titleSizingChanges) {
+    assert.ok(title.includes(compact), faction + ' original title property changed: ' + compact);
+    title = title.split(compact).join(original);
+  }
+  assert.equal(originalScoreboardHash(title), originalTitleHashes[faction],
+    faction + ' title markup/style diverges from original');
+  assert.ok(html.includes('aria-label="Back to command center"'), faction + ' back button');
+  assert.ok(html.includes('aria-label="Search everything"'), faction + ' search button');
+  assert.ok(html.includes('width:40px;height:40px'), faction + ' original 40px controls');
+
 
   const listeners = new Map();
   const world = {
@@ -102,9 +154,11 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   controller.state = { ...controller.state, ready: true, army: [], tactical: [] };
   const css = () => controller.renderVals().resourceStripClass;
   const boardCss = () => controller.renderVals().scoreboardClass;
+  const titleCss = () => controller.renderVals().titleHeaderClass;
 
   assert.equal(css(), 'sc-resource-strip', faction + ' resources start expanded');
   assert.equal(boardCss(), 'sc-scoreboard', faction + ' original scoreboard at top');
+  assert.equal(titleCss(), 'sc-title-row', faction + ' original title at top');
   controller.componentDidMount();
   assert.equal(listeners.get('scroll')?.options?.passive, true, faction + ' passive scroll listener');
 
@@ -112,20 +166,24 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip', faction + ' does not collapse on minor scroll');
   assert.equal(boardCss(), 'sc-scoreboard', faction + ' scoreboard unchanged on minor scroll');
+  assert.equal(titleCss(), 'sc-title-row', faction + ' title unchanged on minor scroll');
   world.scrollY = 145;
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip sc-resource-strip--compact', faction + ' collapses');
   assert.equal(boardCss(), 'sc-scoreboard sc-scoreboard--compact', faction + ' scoreboard collapses');
+  assert.equal(titleCss(), 'sc-title-row sc-title-row--compact', faction + ' title collapses');
   world.scrollY = 90;
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip sc-resource-strip--compact', faction + ' hysteresis');
   assert.equal(boardCss(), 'sc-scoreboard sc-scoreboard--compact', faction + ' scoreboard hysteresis');
+  assert.equal(titleCss(), 'sc-title-row sc-title-row--compact', faction + ' title hysteresis');
   world.scrollY = 64;
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip', faction + ' re-expands near top');
   assert.equal(boardCss(), 'sc-scoreboard', faction + ' scoreboard re-expands near top');
+  assert.equal(titleCss(), 'sc-title-row', faction + ' title re-expands near top');
 
   controller.componentWillUnmount();
   assert.equal(listeners.size, 0, faction + ' cleans up scroll listener');
 }
-console.log('Original scoreboard preserved; synchronized compact headers pass for all factions');
+console.log('Original title and scoreboard styles preserved; synchronized compact headers pass for all factions');
