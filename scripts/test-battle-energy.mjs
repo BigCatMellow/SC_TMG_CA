@@ -146,7 +146,7 @@ for (const faction of units) {
   controller.state.savedRosters=[{...saved,id:'old',factionTappedId:undefined}];
   controller.loadRoster('old');
   assert.equal(view().battleFaction.tapped,false);
-  controller.state.savedRosters=[{...saved,id:'legacy-faction',factionId:'kerrigans-swarm'}];
+  controller.state.savedRosters=[{...saved,id:'legacy-faction',factionId:'kerrigans-swarm',factionTappedId:undefined}];
   if(faction!=='zerg') {
     controller.loadRoster('legacy-faction');
     assert.equal(controller.state.factionId, D.FACTION_CARDS[0].id,
