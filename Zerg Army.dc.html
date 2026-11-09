@@ -24,6 +24,7 @@
     ::selection { background: rgba(147,51,234,0.4); }
   </style>
   <script src="zerg-data.js"></script>
+  <script src="wave3-data.js"></script>
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
@@ -1315,12 +1316,16 @@ class Component extends DCLogic {
       if (!u.tiers[e.tierIdx] || !Number.isFinite(u.tiers[e.tierIdx].cost) || u.tiers[e.tierIdx].cost <= 0) rosterWarnings.push('Invalid purchased composition for ' + u.name + '.');
     }
     const uniqueTactical = new Set();
+    let selectedCreepCount = 0;
     for (const id of st.tactical) {
       const t = D.TACTICAL_CARDS.find(x => x.id === id);
       if (!t) { rosterWarnings.push('Saved roster contains an unavailable Tactical Card: ' + id + '.'); continue; }
       if (t.unique && uniqueTactical.has(id)) rosterWarnings.push('Unique Tactical Card duplicated: ' + t.name + '.');
+      if (t.factionTag && t.factionTag !== faction.name) rosterWarnings.push('Card ' + t.name + ' requires ' + t.factionTag + '.');
+      if (t.category === 'creep') selectedCreepCount++;
       if (t.unique) uniqueTactical.add(id);
     }
+    if (selectedCreepCount !== 1) rosterWarnings.push('Select exactly one Zerg Creep Card (currently ' + selectedCreepCount + ').');
 
     // roster groups
     const roles = ['Hero', 'Elite', 'Core', 'Support', 'Other'];
@@ -1432,7 +1437,9 @@ class Component extends DCLogic {
             tags: (u.tags || []).map(t => ({ name: t, onOpen: (ev) => { ev.stopPropagation(); this.openTag(t); } })),
             detail: expanded ? this.buildDetail(u, null) : null,
             onToggle: () => this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: !s2.expLib[u.id] } })),
-            recruitable: u.role !== 'Other' && u.tiers.some(t => t.cost > 0) && (!u.factionTag || u.factionTag === faction.name),
+            recruitable: u.role !== 'Other' && u.tiers.some(t => t.cost > 0)
+              && (!u.factionTag || u.factionTag === faction.name)
+              && !(u.unique && st.army.some(e => e.unitId === u.id)),
             onAdd: (ev) => { ev.stopPropagation(); this.addUnit(u); }
           };
         })
@@ -1453,7 +1460,10 @@ class Component extends DCLogic {
           const inArmy = count > 0;
           const expanded = !!st.expTac[t.id];
           return {
-            name: t.name, unique: !!t.unique, summary: t.summary, cost: t.cost, count, canAdd: !t.unique || count === 0,
+            name: t.name, unique: !!t.unique, summary: t.summary, cost: t.cost, count,
+            canAdd: (!t.unique || count === 0)
+              && (!t.factionTag || t.factionTag === faction.name)
+              && (t.category !== 'creep' || !st.tactical.some(id => D.TACTICAL_CARDS.find(tc => tc.id === id)?.category === 'creep')),
             resource: t.resource || false, expanded,
             borderColor: inArmy ? 'rgba(56,211,232,0.45)' : (expanded ? 'rgba(176,110,247,0.45)' : 'var(--sc-border-neutral)'),
             slotPills: Object.entries(t.slots || {}).map(([k, v]) => '+' + v + ' ' + k),
@@ -1467,6 +1477,9 @@ class Component extends DCLogic {
               ev.stopPropagation();
               this.setState(s2 => {
                 if (t.unique && s2.tactical.includes(t.id)) return {};
+                const selectedFaction = D.FACTION_CARDS.find(fc => fc.id === s2.factionId) || D.FACTION_CARDS[0];
+                if (t.factionTag && t.factionTag !== selectedFaction.name) return {};
+                if (t.category === 'creep' && s2.tactical.some(id => D.TACTICAL_CARDS.find(card => card.id === id)?.category === 'creep')) return {};
                 return { tactical: [...s2.tactical, t.id] };
               }, () => this.save());
             },

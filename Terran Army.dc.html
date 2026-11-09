@@ -24,6 +24,7 @@
     ::selection { background: rgba(37,99,235,0.4); }
   </style>
   <script src="terran-data.js"></script>
+  <script src="wave3-data.js"></script>
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
@@ -1267,6 +1268,13 @@ class Component extends DCLogic {
       window.alert('Only one ' + unit.name + ' may be mustered.');
       return;
     }
+    if (unit.exclusiveGroup && this.state.army.some(e => {
+      const other = this.D().UNITS.find(u => u.id === e.unitId);
+      return other && other.exclusiveGroup === unit.exclusiveGroup;
+    })) {
+      window.alert('Only one Nova mode is allowed in an army.');
+      return;
+    }
     const opts = unit.tiers.map((t, i) => ({ t, i })).filter(x => typeof x.t.cost === 'number' && x.t.cost > 0);
     if (opts.length === 1) { this.commitAdd(unit.id, opts[0].i); return; }
     this.setState({ sheet: { type: 'tier', unitId: unit.id, mode: 'add' } });
@@ -1323,6 +1331,7 @@ class Component extends DCLogic {
       if (count > (baseSlots[role] || 0)) rosterWarnings.push('Army slots: ' + role + ' uses ' + count + ' of ' + (baseSlots[role] || 0) + ' allowed.');
     }
     const uniqueUnits = new Set();
+    const exclusiveGroups = new Set();
     for (const e of st.army) {
       const u = D.UNITS.find(x => x.id === e.unitId);
       if (!u) { rosterWarnings.push('Saved roster contains an unavailable Unit: ' + e.unitId + '.'); continue; }
@@ -1330,6 +1339,8 @@ class Component extends DCLogic {
       if (u.role === 'Other' || !u.tiers.some(t => t.cost > 0)) rosterWarnings.push(u.name + ' is summoned and cannot be purchased.');
       if (u.unique && uniqueUnits.has(u.id)) rosterWarnings.push('Unique Unit duplicated: ' + u.name + '.');
       if (u.unique) uniqueUnits.add(u.id);
+      if (u.exclusiveGroup && exclusiveGroups.has(u.exclusiveGroup)) rosterWarnings.push('Mutually exclusive Units: ' + u.name + '.');
+      if (u.exclusiveGroup) exclusiveGroups.add(u.exclusiveGroup);
       if (!u.tiers[e.tierIdx] || !Number.isFinite(u.tiers[e.tierIdx].cost) || u.tiers[e.tierIdx].cost <= 0) rosterWarnings.push('Invalid purchased composition for ' + u.name + '.');
     }
     const uniqueTactical = new Set();
@@ -1450,7 +1461,10 @@ class Component extends DCLogic {
             tags: (u.tags || []).map(t => ({ name: t, onOpen: (ev) => { ev.stopPropagation(); this.openTag(t); } })),
             detail: expanded ? this.buildDetail(u, null) : null,
             onToggle: () => this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: !s2.expLib[u.id] } })),
-            recruitable: u.role !== 'Other' && u.tiers.some(t => t.cost > 0) && (!u.factionTag || u.factionTag === faction.name),
+            recruitable: u.role !== 'Other' && u.tiers.some(t => t.cost > 0)
+              && (!u.factionTag || u.factionTag === faction.name)
+              && !(u.unique && st.army.some(e => e.unitId === u.id))
+              && !(u.exclusiveGroup && st.army.some(e => D.UNITS.find(other => other.id === e.unitId)?.exclusiveGroup === u.exclusiveGroup)),
             onAdd: (ev) => { ev.stopPropagation(); this.addUnit(u); }
           };
         })
