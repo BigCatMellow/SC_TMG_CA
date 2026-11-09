@@ -59,7 +59,7 @@ for (const scope of ['core','terran','zerg','protoss']) {
 }
 c.state.scope = 'core';
 c.state.q = 'Artefact Hunt';
-assert.ok(c.renderVals().sections.some(s => s.id === 'faq-objectives'),'FAQ searchable by mission name');
+assert.ok(c.renderVals().sections.some(s => s.name === 'FAQ: Missions, Markers & Scoring'),'FAQ searchable by mission name');
 c.state.scope = 'protoss';
 c.state.q = 'shield';
 assert.ok(c.renderVals().sections.some(s=>s.name === 'Protoss Field Reference'));
