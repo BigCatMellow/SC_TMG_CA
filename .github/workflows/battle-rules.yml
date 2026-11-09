@@ -17,6 +17,8 @@ jobs:
         run: npm run test:appendix
       - name: Verify actual Wave 3 companion and army screens
         run: npm run test:wave3
+      - name: Verify miniature picture sources and local fallbacks
+        run: npm run test:portraits
       - name: Check committed NotebookLM study sources
         run: npm run test:study
       - name: Check faction data generator output
