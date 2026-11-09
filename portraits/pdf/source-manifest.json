@@ -1,0 +1,207 @@
+{
+  "source_pdf": "StarCraft-TMG_EN.pdf",
+  "source_url": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf",
+  "pdf_sha256": "27639c562e6db9777dd9ba984d0c9f9b581841ec30166848e021f893cd00ea54",
+  "pdf_pages": 128,
+  "provenance": "© 2026 Blizzard Entertainment and Archon Studio. Copyright and distribution rights remain with the owners; this manifest does not grant a license.",
+  "units": [
+    {
+      "faction": "terran",
+      "unit_id": "marine",
+      "file": "terran/marine.jpg",
+      "pdf_page": 98,
+      "printed_page": 96,
+      "xref": 3873,
+      "sha256": "52a6f532d76602a1c11df3a40d7ce5138a9748fbf3f0f28a78fbb56d5757891f"
+    },
+    {
+      "faction": "terran",
+      "unit_id": "raynors-raider",
+      "file": "terran/raynors-raider.jpg",
+      "pdf_page": 98,
+      "printed_page": 96,
+      "xref": 3872,
+      "sha256": "2ae9b5e81379ea32341aa8bc5ebb3efc4c9dc09851015aba91fb0cb9c3020dbf"
+    },
+    {
+      "faction": "terran",
+      "unit_id": "marauder",
+      "file": "terran/marauder.jpg",
+      "pdf_page": 99,
+      "printed_page": 97,
+      "xref": 3955,
+      "sha256": "dee6c1dc9b51557f0dd230bd3217a98502f34b4aba6b7db611ebf0320dc9bab0"
+    },
+    {
+      "faction": "terran",
+      "unit_id": "medic",
+      "file": "terran/medic.jpg",
+      "pdf_page": 99,
+      "printed_page": 97,
+      "xref": 3956,
+      "sha256": "7ffe7fd53a8912b2bf6c274f0d8b6e42624c0da2e29a059a226ea1e29f7132fc"
+    },
+    {
+      "faction": "terran",
+      "unit_id": "goliath",
+      "file": "terran/goliath.jpg",
+      "pdf_page": 100,
+      "printed_page": 98,
+      "xref": 4741,
+      "sha256": "7b742a6af51115e73afdb397f1f1bfebff9d6f0e06162cce6d0f73b6d0154713"
+    },
+    {
+      "faction": "terran",
+      "unit_id": "jim-raynor",
+      "file": "terran/jim-raynor.jpg",
+      "pdf_page": 100,
+      "printed_page": 98,
+      "xref": 4742,
+      "sha256": "ebbe47d3a616f5a775778256ae70cea6b6e8eec42b9d495f45e7a36bf8ca9833"
+    },
+    {
+      "faction": "zerg",
+      "unit_id": "zergling",
+      "file": "zerg/zergling.jpg",
+      "pdf_page": 101,
+      "printed_page": 99,
+      "xref": 4829,
+      "sha256": "80866080fcf5372bee2c5a5dc70f34562933cce16e5a051cdd4108b63208abb5"
+    },
+    {
+      "faction": "zerg",
+      "unit_id": "raptor",
+      "file": "zerg/raptor.jpg",
+      "pdf_page": 101,
+      "printed_page": 99,
+      "xref": 4830,
+      "sha256": "5b509a7923fb3b8d6eacf5cab6029ff2bd86ae2bbe26ae7ae64e65084a7b04c4"
+    },
+    {
+      "faction": "zerg",
+      "unit_id": "kerrigan-raptor",
+      "file": "zerg/kerrigan-raptor.jpg",
+      "pdf_page": 102,
+      "printed_page": 100,
+      "xref": 4866,
+      "sha256": "d18c76868a16bb5411e3ad483acb7328c3eb28704b8afb04b41cd7c1cb29a9fe"
+    },
+    {
+      "faction": "zerg",
+      "unit_id": "swarmling",
+      "file": "zerg/swarmling.jpg",
+      "pdf_page": 102,
+      "printed_page": 100,
+      "xref": 4865,
+      "sha256": "d48b4321c0c6b0382b89d7a46ad714cd2113c6362f2696eb4dbd396ca5ac63f8"
+    },
+    {
+      "faction": "zerg",
+      "unit_id": "roach",
+      "file": "zerg/roach.jpg",
+      "pdf_page": 103,
+      "printed_page": 101,
+      "xref": 5732,
+      "sha256": "9f67f2f78233e8287e22cac65dcd90a54f468cf3dfe7d5c0b80bb2064f1bf226"
+    },
+    {
+      "faction": "zerg",
+      "unit_id": "vile",
+      "file": "zerg/vile.jpg",
+      "pdf_page": 103,
+      "printed_page": 101,
+      "xref": 5733,
+      "sha256": "5956e61a1b18735d2f140b383829857e5b8b0a009ddf69039fc9b79cb8a15a91"
+    },
+    {
+      "faction": "zerg",
+      "unit_id": "corpser",
+      "file": "zerg/corpser.jpg",
+      "pdf_page": 104,
+      "printed_page": 102,
+      "xref": 5829,
+      "sha256": "bf0dfb92749a07a58146362c22768bb6a9c077d2f0db835bebbec322eee517ac"
+    },
+    {
+      "faction": "zerg",
+      "unit_id": "hydralisk",
+      "file": "zerg/hydralisk.jpg",
+      "pdf_page": 104,
+      "printed_page": 102,
+      "xref": 5830,
+      "sha256": "ff9d86369d1406a7c126e71ca37381114b2b668556e72c87c23ab22a14f88919"
+    },
+    {
+      "faction": "zerg",
+      "unit_id": "queen",
+      "file": "zerg/queen.jpg",
+      "pdf_page": 105,
+      "printed_page": 103,
+      "xref": 5872,
+      "sha256": "bbcb5f024d68b49ca2131ab70c4f9ec335c10dc5395a3797c3afcc3a78010aea"
+    },
+    {
+      "faction": "zerg",
+      "unit_id": "kerrigan",
+      "file": "zerg/kerrigan.jpg",
+      "pdf_page": 105,
+      "printed_page": 103,
+      "xref": 5873,
+      "sha256": "c2f12c3ec042c3fd9ce949b49f1dbf4f97f7b7db66d62d4ad24e3461cc31a590"
+    },
+    {
+      "faction": "protoss",
+      "unit_id": "zealot",
+      "file": "protoss/zealot.jpg",
+      "pdf_page": 106,
+      "printed_page": 104,
+      "xref": 5438,
+      "sha256": "082e262fa16081b9b483296e08c4994c2c042dcea96a4a6824d14db8254f04dd"
+    },
+    {
+      "faction": "protoss",
+      "unit_id": "praetor-guard",
+      "file": "protoss/praetor-guard.jpg",
+      "pdf_page": 106,
+      "printed_page": 104,
+      "xref": 5439,
+      "sha256": "22291b012e04546295dfe06ba15e94c8729a98fbc1231c6b272bd07553b074da"
+    },
+    {
+      "faction": "protoss",
+      "unit_id": "adept",
+      "file": "protoss/adept.jpg",
+      "pdf_page": 107,
+      "printed_page": 105,
+      "xref": 5506,
+      "sha256": "643f2218052ab128a3265e52e55680dec340aadc11f1e2beb02bc6f0ae165a24"
+    },
+    {
+      "faction": "protoss",
+      "unit_id": "sentry",
+      "file": "protoss/sentry.jpg",
+      "pdf_page": 107,
+      "printed_page": 105,
+      "xref": 5507,
+      "sha256": "7220786e44b8677688e633016f8b8c0a2426f44b74ceb13bca111e2439cbc9f2"
+    },
+    {
+      "faction": "protoss",
+      "unit_id": "stalker",
+      "file": "protoss/stalker.jpg",
+      "pdf_page": 108,
+      "printed_page": 106,
+      "xref": 5555,
+      "sha256": "382a8495344950a7777c5685d2015ffa2f133eddcae708deb38b232d9b956615"
+    },
+    {
+      "faction": "protoss",
+      "unit_id": "artanis",
+      "file": "protoss/artanis.jpg",
+      "pdf_page": 108,
+      "printed_page": 106,
+      "xref": 5556,
+      "sha256": "3e0ed822eb8fc3ccd13a82293f02a28b5c662eb9ee74a065a7b7920a495f296d"
+    }
+  ]
+}
