@@ -1,52 +1,51 @@
-# Battle-ready rules reference — 2026 Core Rules
+# Battle reference: 2026 rules + October 2026 balance
 
-## What changed
+## Source precedence
 
-The `Rules.dc.html` screen now prefers `battle-rules-data.js`, a compact **paraphrased** quick reference grounded in the user-supplied 2026 StarCraft TMG Core Rules PDF. The older `rules-data.js` remains as a fallback and as the generated output of the pre-existing HTML parser.
+1. **2026 Core Rules Book** (`StarCraft-TMG_EN.pdf`, provided by the user): mechanics, game phases, army legality, glossary, printed-page citation. PDF viewer page = printed page + 2.
+2. **Publisher October 9, 2026 cost table**: [latest balance table](https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Cost-Table-10.2026_EN.pdf) supersedes the Core Rules Appendix for unit, upgrade, and Tactical Card costs. [Official changelog](https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Changelog-10.2026_EN.pdf).
+3. **Publisher official card sheets**: [Terran](https://starcraft-tmg.com/files/downloads/StarCraft-Terran-P2P-Card-Sheets-A4_EN.pdf), [Zerg](https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-Card-Sheets-A4_EN.pdf), [Protoss](https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-Card-Sheets-A4_EN.pdf) for card-specific abilities and stats, subject to newer errata.
+4. **[Publisher FAQ](https://starcraft-tmg.com/files/downloads/StarCraft-TMG-FAQ_EN.pdf)** when it clarifies or modifies the above.
+5. **Companion data** is a presentation of sources, not a separate rule authority. The old `rules-data.js` is an HTML-derived fallback only.
 
-- The Rules screen provides **Core / Terran / Zerg / Protoss** tabs. Each faction view includes all shared rules plus that faction's reference.
-- **18 cards total:** 15 shared rule cards plus one for each of the three factions.
-- Cards display section / printed-page citations (PDF viewer pages are printed page + 2).
-- Scope-aware search and quick navigation operate on the selected set of rules.
-- Keyword tooltips can search every faction dataset (not only Zerg); they are labeled **companion data** and should be checked against the PDF glossary when disputed.
+Do not mistake the old Core Rules price appendix (printed pp. 96–107) for the October 2026 balance, and do not guess table cells from flattened PDF text.
 
-## High-impact corrections checked against the PDF
+## At-table interface
 
-| Item | Correct 2026 interpretation | Source |
-|---|---|---|
-| PIERCE [TAG] X | Against the named Combat Tag, weapon Damage becomes X. It does **not** move Armour dice to Damage. | Glossary p. 88 |
-| INSTANT | Enemy Units cannot respond to that weapon's attacks with Reaction abilities. | Glossary p. 86 |
-| NON-LETHAL DAMAGE (X) | Add Damage but do not remove models immediately; a later standard Damage event uses combined Total Damage for casualties. | Glossary p. 88 |
-| Protoss resource | **PE** (not EN); applies to faction/tactical resources. | §10.5.1 p. 81 |
-| SIDEARM | Additional weapons resolve as separate Batches; each can target another eligible Unit. | Glossary p. 89 |
-| BURROWED | Cannot contest/control, has special action restrictions, and must unburrow via Close Ranks to attack in Combat. | Glossary p. 82 |
-| PLACE | Has special positioning, Coherency, and Assault-phase Engagement treatment. | Glossary p. 88 |
-| SHIELDED | Bonus first-model HP and loss of Shielded status; HEAL does not restore the status. | Glossary p. 89 |
-| RESPAWN / SUMMON | Respect Supply, legal placement and specific activation sequencing. | Glossary pp. 89–90 |
+- `Rules.dc.html`: 15 common rule cards, plus one Terran/Zerg/Protoss-specific card each. All faction views retain common rules, search, jump chips, and printed rule citations.
+- Faction Army pages: roster, unit/card details, Tactical Cards, battle trackers, saved rosters, and source-based costs.
+- Wave 1 unit compositions and upgrades use the **October 2026** prices from `agent-rules/appendix-2026.json`. The data covers 22 purchasable Wave 1 units across the 3 factions and 31 existing Tactical Card prices. Zerg Swarmling and Vile Roach are newly included.
+- Purchasable model counts match listed compositions; casualty ranges are **not** additional starting sizes.
+- A Unit uses as many **Army Slots as its starting Supply Value**, not one slot per Unit.
+- For upgrades with `low/high` point pairs, the higher cost applies to the larger composition.
+- Summoned-only units are visible for reference but cannot be added through the muster button. Unique Units cannot be duplicated, and wrong-subfaction Units are blocked.
+- Non-Unique Tactical Cards can have multiple copies. Each copy has its own Ready/Exhausted state; Unique Tactical Cards are limited to one.
+- Saved rosters are not silently destroyed or rewritten: the app warns about wrong-faction Units, exceeded Minerals/Gas/Army Slots, duplicates of Unique cards, and invalid Units or compositions.
 
-The tooltip wording was revised in **both** `*-data.js` and its generator source `uploads/*.html`; regeneration by `npm run build:units` should preserve the corrections.
+## Specific corrected keyword/card defects
 
-## Use at the table
+The previous datasets misrepresented **PIERCE**, **INSTANT**, and **NON-LETHAL DAMAGE**. All three were corrected using the glossary, together with SIDEARM, BURROWED, SHIELDED, PLACE, SUMMON, RESPAWN, and Protoss **PE** terminology. Source `uploads/*.html` and generated `*-data.js` are kept in sync.
 
-1. Choose **Core** for the phase sequence, activation, legal actions, shooting, scoring, and cleanup.
-2. Select the faction tab to keep core rules while adding that faction's resources and keyword focus.
-3. Expand the relevant card. Its printed rulebook pages are shown next to the heading.
-4. For a dispute or nontrivial terrain diagram, consult the original PDF. For unit/cost disputes, use the original Unit Card or rendered faction table.
-5. Keep the existing round/VP tracker separate from the rules source. It records player inputs; it does not adjudicate results.
+The Zerg Queen, Roach, and Corpser had mismatched weapons/abilities; these profiles were reconciled against the publisher's official printed cards. Vile Roach and Swarmling were added from the same cards. Jim Raynor's 0-point C-14 Rifle replacement upgrade was restored. See official unit-card sheets for exact card interactions.
 
-## Current limitations
+## Verification commands
 
-**Not a fully audited army builder yet.** PDF printed pp. 96–106 contain multi-column unit/upgrade tables; p. 107 contains tactical-card point tables. Current faction cards, unit stats, upgrades, slot counts, and point costs were **not exhaustively reconciled** to those tables. This change corrects a verified glossary subset and PE terminology, not every number. Before competitive play, complete that visual table/card-by-card audit.
+```sh
+npm run test:rules
+```
 
-The PDF text extraction has some mixed-column sections; do not convert them to hard-coded numerics without image verification. The UI summaries are concise paraphrases, not authoritative replacements for specific card text. The imported PDF and full parsed text remain user-local; the public repo contains citations, curated summaries, and references but not the full copyrighted book.
+```sh
+npm run test:appendix
+```
 
-## Verification
+```sh
+npm run build:units
+```
 
-- Run `npm run test:rules` (source invariant and screen rendering checks).
-- Run `npm run build:units`; verify the three output data files remain in sync with their `uploads/*.html` sources.
-- Manually inspect the Rules screen at narrow phone width and verify search, faction filters, a keyword popup, expansion, and the round tracker.
-- For numeric changes, add explicit source edition, printed page, and visual evidence before updating a value.
+Run `git diff --exit-code -- terran-data.js zerg-data.js protoss-data.js` immediately after regeneration to prove source and compiled data match. The PR GitHub Actions workflow runs these checks. The appendix test compares every listed unit composition, upgrade cost, and Tactical Card cost against the official 2026-10-09 map; it also exercises duplicate Tactical Cards and independent exhaustion state on each Army controller.
 
-## NotebookLM practice
+## Limits and release scope
 
-The user's separately generated `StarCraft_TMG_NotebookLM_Ready.zip` contains 12 chapter-level TXT sources, faction-focused TXT sources, glossary, consolidated text, a practice prompt, and the original PDF. This user-local archive is not committed to GitHub. For self-quizzing, import the chosen faction source and original PDF; ask NotebookLM to cite the section and printed page.
+**Current verified target: Wave 1 source set represented in the companion; not the publisher's complete October 2026 catalogue.** The updated cost table also includes Wave 2/3 Units and Tactical Cards that are **not implemented**. Do not assume those missing Units/cards are available. See issue #2 for the remaining comprehensive unit-card/ability audit.
+
+The app does not automate mission-specific scoring, all terrain geometry, or every card's conditional logic; it is a companion, not a rules engine. For disputed game states or modifiers, consult the printed page or publisher FAQ. The Rules screen is a paraphrase, not a substitute for the full official rulebook. The full PDF and NotebookLM study sources are user-local, not committed into this public repository.
