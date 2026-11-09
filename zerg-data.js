@@ -3,7 +3,7 @@ window.SCTMG_ZERG = (function () {
 const KEYWORDS = {
       'ANTI-EVADE': { type: 'Combat', description: 'The target suffers -X to its Evade Rolls for this attack.' },
       'BUFF': { type: 'Effect', description: 'The Unit gains a bonus of X to the specified Characteristic until End of the Round.' },
-      'BURROWED': { type: 'Status', description: 'The unit becomes HIDDEN and counts as Size 0. For Disengage checks it counts as Supply 0. It cannot contest or control Mission Markers. It gets an Evade Roll against every attack.' },
+      'BURROWED': { type: 'Status', description: "BURROWED grants HIDDEN, treats Size as 0 and Supply as 0 for Disengage, and prevents Mission Marker control. Move, Deploy, Disengage, Run, or Close Ranks removes BURROWED; Hold does not. An Engaged BURROWED Unit must activate in Combat but cannot attack unless it first removes BURROWED through Close Ranks. See PDF p. 82." },
       'CRITICAL HIT': { type: 'Combat', description: 'Move X dice directly from the Armour Pool to the Damage Pool, bypassing armour.' },
       'DEBUFF': { type: 'Effect', description: 'The Unit suffers a penalty of X to the specified Characteristic until End of the Round.' },
       'DISPLACEMENT': { type: 'Movement', description: 'This model/token can be moved through by other models and does not block movement.' },
@@ -14,13 +14,13 @@ const KEYWORDS = {
       'INSTANT': { type: 'Weapon', description: "Enemy Units cannot declare or resolve Reaction abilities in response to attacks made with this weapon." },
       'LONG RANGE': { type: 'Weapon', description: "The weapon's maximum range extends to X inches, but shots beyond the normal listed range suffer a -1 Hit penalty." },
       'ON CREEP': { type: 'Zerg', description: 'A Ground Zerg Unit is ON CREEP while Within 6" of any Creep Tumor Token or Source of Creep (like Omega Worm).' },
-      'PLACE': { type: 'Movement', description: 'Remove the Leading Model and set it Wholly Within X inches of its starting point. PLACE ignores normal pathing, gap clearance, terrain restrictions, and elevation requirements, then the unit is rebuilt in Coherency.' },
+      'PLACE': { type: 'Movement', description: "Remove and set a Leading Model Wholly Within X inches, then rebuild the Unit in Coherency. PLACE ignores movement path, Gap Clearance and elevation requirements; the placement must otherwise be legal. Normally do not end within enemy Engagement Range; during Assault a PLACE effect may set models in Engagement. See PDF p. 88." },
       'PRECISION': { type: 'Combat', description: 'After rolling to hit, move up to X missed dice into the Armour Pool. They still need to survive armour.' },
-      'RESPAWN': { type: 'Effect', description: 'Return up to X Destroyed models to the Unit. Cannot increase the Unit into a higher Supply bracket.' },
-      'SHIELDED': { type: 'Status', description: 'The first model in the unit gets extra Hit Points equal to its Shield value. The status ends when that shield is broken or the first model is removed.' },
+      'RESPAWN': { type: 'Effect', description: "Return up to X Destroyed models without increasing the Unit's Current Supply. Place them Base-to-Base with existing models and outside enemy Engagement Range; models that cannot be placed legally do not return. See PDF p. 89." },
+      'SHIELDED': { type: 'Status', description: "Add Shield value to the first model's HP. SHIELDED ends when Total Damage exceeds the Shield value or the first model is removed; HEAL does not restore SHIELDED. See PDF p. 89." },
       'STATIONARY': { type: 'Status', description: 'All units start each round Stationary. The status is lost the moment the unit moves, is moved, or is placed.' },
       'STAY IN PLAY': { type: 'Other', description: 'This token or marker persists through cleanup instead of being removed at the end of the round.' },
-      'SUMMON': { type: 'Movement', description: 'Create the named unit adjacent to the parent unit. It must be placed legally, with enough Available Supply, and usually gains an Activation Marker.' },
+      'SUMMON': { type: 'Movement', description: "Set the named Unit in Base-to-Base with its parent with legal Coherency and sufficient Available Supply; do not place it within enemy Engagement Range or Zone of Influence. It cannot activate in the summoning Phase and in later Phases acts immediately after the parent. See PDF p. 90." },
       'TOUGH': { type: 'Combat', description: 'When making Armour Rolls, convert up to X failed results into successes.' },
     };
 
