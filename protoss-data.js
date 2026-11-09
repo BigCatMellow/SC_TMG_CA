@@ -62,7 +62,7 @@ const KEYWORDS = {
   // HERO
   { id: 'artanis', name: 'Artanis', role: 'Hero', unique: true, tags: ['Biological', 'Psionic', 'Ground'],
     stats: { shield: 4, speed: '7', evade: '5+', armour: '4+', hp: 8, size: 2 },
-    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 250, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
+    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 270, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
     weapons: [
       { name: 'Twilight Blades Strike', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '2+', surge: 'Armoured', sDie: 'D3', damage: 3, keywords: [] },
       { name: 'Twilight Blades Sweep', phase: 'Combat', range: 'E', target: 'Ground', roa: 6, hit: '2+', surge: 'Light', sDie: 'D3+1', damage: 1, keywords: [] }
@@ -82,7 +82,7 @@ const KEYWORDS = {
   // ELITE
   { id: 'praetor-guard', name: 'Praetor Guard (Zealot)', role: 'Elite', unique: true, factionTag: 'Khalai', tags: ['Biological', 'Light', 'Ground'],
     stats: { shield: 3, speed: '4/7', evade: '5+', armour: '5+', hp: 4, size: 2 },
-    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 280, models: '2-3', supply: 2 }, { tier: 'T1', cost: null, models: '1', supply: 1 }],
+    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 260, models: '2-3', supply: 2 }, { tier: 'T1', cost: null, models: '1', supply: 1 }],
     weapons: [{ name: 'Psi Blades', phase: 'Combat', range: 'E', target: 'Ground', roa: 4, hit: '3+', surge: 'Light', sDie: 'D3', damage: 1, keywords: [] }],
     abilities: [{ phase: 'Any Phase', name: 'Shield Overcharge', type: 'Passive', description: 'This Unit gains TOUGH (2) on the first Armour Roll each Round.' }],
     phaseAbilities: {
@@ -100,7 +100,7 @@ const KEYWORDS = {
   },
   { id: 'stalker', name: 'Stalker', role: 'Elite', tags: ['Armoured', 'Mechanical', 'Ground'],
     stats: { shield: 3, speed: '4/8', evade: '6+', armour: '4+', hp: 6, size: 3 },
-    tiers: [{ tier: 'T3', cost: 270, models: '2', supply: 2 }, { tier: 'T2', cost: 170, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
+    tiers: [{ tier: 'T3', cost: 270, models: '2', supply: 2 }, { tier: 'T2', cost: 160, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
     weapons: [
       { name: 'Particle Disruptors', phase: 'Assault', range: '12', target: 'All', roa: 4, hit: '3+', surge: 'Armoured', sDie: 'D3', damage: 2, keywords: [] },
       { name: 'Stomp', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '5+', surge: '-', sDie: '-', damage: 1, keywords: [] }
@@ -118,7 +118,7 @@ const KEYWORDS = {
   // CORE
   { id: 'adept', name: 'Adept', role: 'Core', tags: ['Biological', 'Light', 'Ground'],
     stats: { shield: 2, speed: '5/8', evade: '5+', armour: '5+', hp: 3, size: 2 },
-    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 150, models: '3-4', supply: 1 }, { tier: 'T1', cost: null, models: '1-2', supply: 0 }],
+    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 160, models: '3-4', supply: 1 }, { tier: 'T1', cost: null, models: '1-2', supply: 0 }],
     weapons: [
       { name: 'Glaive Cannon', phase: 'Assault', range: '8', target: 'All', roa: 2, hit: '3+', surge: 'Light', sDie: 'D3+1', damage: 1, keywords: ['ANTI-EVADE (1)'] },
       { name: 'Strike', phase: 'Combat', range: 'E', target: 'Ground', roa: 1, hit: '4+', surge: '-', sDie: '-', damage: 1, keywords: [] }
@@ -137,7 +137,7 @@ const KEYWORDS = {
   },
   { id: 'zealot', name: 'Zealot', role: 'Core', tags: ['Biological', 'Light', 'Ground'],
     stats: { shield: 3, speed: '4/7', evade: '5+', armour: '5+', hp: 4, size: 2 },
-    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 160, models: '2-3', supply: 2 }, { tier: 'T1', cost: null, models: '1', supply: 1 }],
+    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 170, models: '2-3', supply: 2 }, { tier: 'T1', cost: null, models: '1', supply: 1 }],
     weapons: [{ name: 'Psi Blades', phase: 'Combat', range: 'E', target: 'Ground', roa: 4, hit: '3+', surge: 'Light', sDie: 'D3', damage: 1, keywords: [] }],
     abilities: [],
     phaseAbilities: {
@@ -170,8 +170,8 @@ const KEYWORDS = {
       ]
     },
     upgrades: {
-      'Movement Phase': [{ name: 'Solid-Field Projectors', cost: 20, type: 'Active (1 Psionic Energy)', description: 'Set a Force Field token Within 8" in an unoccupied space. Units of Size 2 or lower cannot move across Force Fields. Models of Size 3 or more can move over it, and it\'s then removed.' }],
-      'Assault Phase': [{ name: 'Hallucination', cost: 30, type: 'Reaction (0 Psionic Energy)', description: 'When an Enemy Unit declares a Ranged Attack against a Friendly Unit Within 4", the targeted Friendly Unit is eligible to make an Evade Roll against that attack.' }]
+      'Movement Phase': [{ name: 'Solid-Field Projectors', cost: 10, type: 'Active (1 Psionic Energy)', description: 'Set a Force Field token Within 8" in an unoccupied space. Units of Size 2 or lower cannot move across Force Fields. Models of Size 3 or more can move over it, and it\'s then removed.' }],
+      'Assault Phase': [{ name: 'Hallucination', cost: 20, type: 'Reaction (0 Psionic Energy)', description: 'When an Enemy Unit declares a Ranged Attack against a Friendly Unit Within 4", the targeted Friendly Unit is eligible to make an Evade Roll against that attack.' }]
     }
   },
 
@@ -210,7 +210,7 @@ const KEYWORDS = {
   { id: 'gateway', name: 'Gateway', unique: false, cost: 25, resource: '+1 PE', slots: { core: 1 }, category: 'combat',
     abilities: [{ phase: 'Combat Phase', name: 'Quick Strikes', type: 'Active', description: "The active Unit's first Close Combat Weapon used gains PRECISION (2)." }]
   },
-  { id: 'nexus', name: 'Nexus', unique: true, cost: 35, resource: '+1 PE', slots: { core: 2 }, category: 'positioning',
+  { id: 'nexus', name: 'Nexus', unique: true, cost: 40, resource: '+1 PE', slots: { core: 2 }, category: 'positioning',
     abilities: [
       { phase: 'Any Phase', name: 'Ancient Pride', type: 'Active', description: "The active Unit's first Weapon used gains INSTANT." },
       { phase: 'Movement Phase', name: 'Strategic Recall', type: 'Active', description: 'The active, Unengaged Ground Unit is placed in Reserves instead of performing an action.' }
@@ -231,7 +231,7 @@ const KEYWORDS = {
   { id: 'power-field', name: 'Power Field', unique: true, cost: 40, resource: '+1 PE', slots: { hero: 1, elite: 1, core: 1 }, category: 'defense',
     abilities: [{ phase: 'Any Phase', name: 'Guardian Shell', type: 'Reaction', description: 'Use before a Friendly Ground Unit makes an Armour Roll. That Unit gains DODGE (2) for this roll.' }]
   },
-  { id: 'twilight-council', name: 'Twilight Council', unique: true, cost: 45, resource: '+1 PE', slots: { elite: 1, support: 1 }, category: 'positioning',
+  { id: 'twilight-council', name: 'Twilight Council', unique: true, cost: 40, resource: '+1 PE', slots: { elite: 1, support: 1 }, category: 'positioning',
     abilities: [
       { phase: 'Any Phase', name: 'Veil of Shadows', type: 'Reaction', description: 'Use after a Friendly Unit resolves a PLACE effect. That Unit immediately resolves the HEAL (2) effect.' },
       { phase: 'Assault Phase', name: 'Weapons of the Firstborn', type: 'Active', description: "The active Ground Unit's first Ranged Weapon used gains BUFF Range (4)." }
