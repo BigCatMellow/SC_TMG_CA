@@ -73,24 +73,140 @@ const KEYWORDS = {
     // ============================================================================
     const ZERG_UNITS = [
   // HERO
-  { id: 'jim-raynor', name: 'Jim Raynor', role: 'Hero', unique: true, tags: ['Biological', 'Ground'],
-    stats: { shield: null, speed: '7', evade: '5+', armour: '4+', hp: 8, size: 2 },
-    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 280, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
-    weapons: [
-      { name: 'Commando Rifle', phase: 'Assault', range: '18', target: 'All', roa: 3, hit: '3+', surge: 'Armoured', sDie: 'D3', damage: 1, keywords: ['BULKY', 'PIERCE Armoured (3)'] },
-      { name: 'C-14 Rifle', phase: 'Assault', range: '12', target: 'All', roa: 6, hit: '3+', surge: 'Light', sDie: 'D3+1', damage: 1, keywords: ['BURST FIRE 8" (3)'], replaces: 'Commando Rifle' },
-      { name: '"Justice" Revolver', phase: 'Assault', range: '6', target: 'Ground', roa: 2, hit: '3+', surge: '-', sDie: '-', damage: 2, keywords: ['ANTI-EVADE (2)', 'SIDEARM', 'PINPOINT'] },
-      { name: 'Bayonet', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '4+', surge: 'Light', sDie: 'D3', damage: 1, keywords: [] }
-    ],
-    abilities: [
-      { phase: 'Any Phase', name: 'Commander', type: 'Passive', description: "Treat this Unit's Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks." },
-      { phase: 'Any Phase', name: 'Freedom Fighters', type: 'Passive', description: 'The Supply Value of all Friendly Units Within 8" of this Unit cannot be reduced below 1 for Contesting Mission Markers and completing objectives.' }
-    ],
-    phaseAbilities: {
-      'Movement Phase': [{ name: 'Orders', type: 'Active (X Command Point)', description: 'REPEATABLE. Select another Friendly Biological Unit Within 8", spend CP and apply one of the following effects: 1 CP: That Unit\'s first used weapon gains the CRITICAL HIT (2). 1 CP: That Unit ignores the Disengage penalty for the remainder of the Round. 2 CP: Remove the Activation Marker from that Unit.' }]
-    },
-    upgrades: {}
+  {
+  "id": "jim-raynor",
+  "name": "Jim Raynor",
+  "role": "Hero",
+  "unique": true,
+  "tags": [
+    "Biological",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "7",
+    "evade": "5+",
+    "armour": "4+",
+    "hp": 8,
+    "size": 2
   },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    },
+    {
+      "tier": "T2",
+      "cost": 280,
+      "models": "1",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Commando Rifle",
+      "phase": "Assault",
+      "range": "18",
+      "target": "All",
+      "roa": 3,
+      "hit": "3+",
+      "surge": "Armoured",
+      "sDie": "D3",
+      "damage": 1,
+      "keywords": [
+        "BULKY",
+        "PIERCE Armoured (3)"
+      ]
+    },
+    {
+      "name": "C-14 Rifle",
+      "phase": "Assault",
+      "range": "12",
+      "target": "All",
+      "roa": 6,
+      "hit": "3+",
+      "surge": "Light",
+      "sDie": "D3+1",
+      "damage": 1,
+      "keywords": [
+        "BURST FIRE 8\" (3)"
+      ],
+      "replaces": "Commando Rifle"
+    },
+    {
+      "name": "\"Justice\" Revolver",
+      "phase": "Assault",
+      "range": "6",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "3+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 2,
+      "keywords": [
+        "ANTI-EVADE (2)",
+        "SIDEARM",
+        "PINPOINT"
+      ]
+    },
+    {
+      "name": "Bayonet",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "4+",
+      "surge": "Light",
+      "sDie": "D3",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Commander",
+      "type": "Passive",
+      "description": "Treat this Unit's Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks."
+    },
+    {
+      "phase": "Any Phase",
+      "name": "Freedom Fighters",
+      "type": "Passive",
+      "description": "The Supply Value of all Friendly Units Within 8\" of this Unit cannot be reduced below 1 for Contesting Mission Markers and completing objectives."
+    }
+  ],
+  "phaseAbilities": {
+    "Movement Phase": [
+      {
+        "name": "Orders",
+        "type": "Active (X Command Point)",
+        "description": "REPEATABLE. Select another Friendly Biological Unit Within 8\", spend CP and apply one of the following effects: 1 CP: That Unit's first used weapon gains the CRITICAL HIT (2). 1 CP: That Unit ignores the Disengage penalty for the remainder of the Round. 2 CP: Remove the Activation Marker from that Unit."
+      }
+    ]
+  },
+  "upgrades": {
+    "Assault Phase": [
+      {
+        "name": "C-14 Rifle",
+        "cost": 0,
+        "type": "Weapon",
+        "description": "Replaces Commando Rifle. Range 12, Target All, RoA 6, Hit 3+, Surge Light, S.Dice D3+1, Damage 1, BURST FIRE 8\" (3).",
+        "modifies": {
+          "weapon": "Commando Rifle"
+        }
+      }
+    ]
+  }
+},
 
   // ELITE
   { id: 'goliath', name: 'Goliath', role: 'Elite', tags: ['Armoured', 'Mechanical', 'Ground'],
