@@ -7,6 +7,7 @@ const load=p=>fs.readFileSync(new URL(p,root),'utf8');
 const w={alert(){}};
 for(const f of ['terran','zerg','protoss'])vm.runInNewContext(load(f+'-data.js'),{window:w});
 vm.runInNewContext(load('wave3-data.js'),{window:w});
+vm.runInNewContext(load('model-portraits.js'),{window:w});
 const expected={
  terran:{
   units:{'nova-stealth':[240,1,1],'nova-assault':[260,1,1],'spec-ops-marauder':[230,2,1],raven:[170,1,1]},

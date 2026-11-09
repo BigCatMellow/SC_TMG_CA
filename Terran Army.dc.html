@@ -147,7 +147,7 @@
           <div style="display:grid;gap:8px">
             <sc-for list="{{ grp.entries }}" as="en" hint-placeholder-count="2">
               <div style="position:relative;background:var(--sc-card-bg);border:1px solid {{ en.borderColor }};clip-path:var(--sc-corner-12)">
-                <sc-if value="{{ en.portrait }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;pointer-events:none;opacity:0.5;background-image:{{ en.portraitBg }};background-repeat:no-repeat;background-size:{{ en.portraitSize }};background-position:{{ en.portraitPos }}"></span><span style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(11,14,23,0.88) 20%,rgba(11,14,23,0.4) 46%,rgba(11,14,23,0.08) 72%,rgba(11,14,23,0.3) 100%)"></span></sc-if>
+                <sc-if value="{{ en.portrait }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;pointer-events:none;opacity:0.5;overflow:hidden"><img src="{{ en.portrait }}" onError="{{ en.onPortraitError }}" alt="" aria-hidden="true" style="{{ en.portraitImgStyle }}"></span><span style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(11,14,23,0.88) 20%,rgba(11,14,23,0.4) 46%,rgba(11,14,23,0.08) 72%,rgba(11,14,23,0.3) 100%)"></span></sc-if>
                 <div onClick="{{ en.onToggle }}" role="button" style="position:relative;display:flex;align-items:center;gap:10px;padding:12px;cursor:pointer;min-height:44px">
                   <div style="position:relative;flex:1;min-width:0">
                     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
@@ -282,7 +282,7 @@
             <div style="display:grid;gap:8px">
               <sc-for list="{{ grp.entries }}" as="u" hint-placeholder-count="2">
                 <div style="position:relative;background:var(--sc-card-bg);border:1px solid {{ u.borderColor }};clip-path:var(--sc-corner-12)">
-                  <sc-if value="{{ u.portrait }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;pointer-events:none;opacity:0.5;background-image:{{ u.portraitBg }};background-repeat:no-repeat;background-size:{{ u.portraitSize }};background-position:{{ u.portraitPos }}"></span><span style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(11,14,23,0.88) 20%,rgba(11,14,23,0.4) 46%,rgba(11,14,23,0.08) 72%,rgba(11,14,23,0.3) 100%)"></span></sc-if>
+                  <sc-if value="{{ u.portrait }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;pointer-events:none;opacity:0.5;overflow:hidden"><img src="{{ u.portrait }}" onError="{{ u.onPortraitError }}" alt="" aria-hidden="true" style="{{ u.portraitImgStyle }}"></span><span style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(11,14,23,0.88) 20%,rgba(11,14,23,0.4) 46%,rgba(11,14,23,0.08) 72%,rgba(11,14,23,0.3) 100%)"></span></sc-if>
                   <div onClick="{{ u.onToggle }}" role="button" style="position:relative;display:flex;align-items:center;gap:10px;padding:12px;cursor:pointer;min-height:44px">
                     <div style="position:relative;flex:1;min-width:0">
                       <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
@@ -332,7 +332,7 @@
           <div style="display:grid;gap:8px">
             <sc-for list="{{ grp.entries }}" as="en" hint-placeholder-count="2">
               <div style="position:relative;background:var(--sc-card-bg);border:1px solid {{ en.borderColor }};clip-path:var(--sc-corner-12)">
-                <sc-if value="{{ en.portrait }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;pointer-events:none;opacity:0.5;background-image:{{ en.portraitBg }};background-repeat:no-repeat;background-size:{{ en.portraitSize }};background-position:{{ en.portraitPos }}"></span><span style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(11,14,23,0.88) 20%,rgba(11,14,23,0.4) 46%,rgba(11,14,23,0.08) 72%,rgba(11,14,23,0.3) 100%)"></span></sc-if>
+                <sc-if value="{{ en.portrait }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;pointer-events:none;opacity:0.5;overflow:hidden"><img src="{{ en.portrait }}" onError="{{ en.onPortraitError }}" alt="" aria-hidden="true" style="{{ en.portraitImgStyle }}"></span><span style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(11,14,23,0.88) 20%,rgba(11,14,23,0.4) 46%,rgba(11,14,23,0.08) 72%,rgba(11,14,23,0.3) 100%)"></span></sc-if>
                 <div style="position:relative;display:flex;align-items:center;gap:10px;padding:12px;min-height:44px">
                   <div onClick="{{ en.onToggle }}" role="button" style="position:relative;flex:1;min-width:0;cursor:pointer">
                     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
@@ -872,33 +872,7 @@ class Component extends DCLogic {
       'point-defense-drone': { src: 'portraits/terran/point-defense-drone.png', size: 'auto 86px', pos: 'right -62px top -3px' },
       'raynors-raider': { src: 'portraits/terran/raynors-raider.png', size: 'auto 289px', pos: 'right 59px top -63px' }
     };
-    const base = P[u.id];
-    const official = window.SCTMG_MODEL_PORTRAITS?.factions?.terran?.[u.id];
-    const fallback = P[official?.fallbackId] || base;
-    const primary = official?.src || fallback?.src;
-    if (!primary) return { portrait: false };
-    // Layer the original local file below the published photo: if hotlinking
-    // fails, the old portrait remains available instead of showing a blank card.
-    const images = [primary];
-    const sizes = [official?.size || fallback?.size || 'auto 288px'];
-    const positions = [official?.pos || fallback?.pos || 'right center'];
-    if (official?.fallbackSrc && official.fallbackSrc !== primary) {
-      images.push(official.fallbackSrc);
-      sizes.push(official.fallbackSize || official.size || 'auto 288px');
-      positions.push(official.fallbackPos || official.pos || 'right center');
-    }
-    if (official?.src && fallback?.src && !images.includes(fallback.src)) {
-      images.push(fallback.src);
-      sizes.push(fallback.size || 'auto 288px');
-      positions.push(fallback.pos || 'right center');
-    }
-    const background = images.map(src => "url('" + src.replace(/'/g, '%27') + "')").join(', ');
-    return {
-      portrait: primary,
-      portraitBg: background,
-      portraitSize: sizes.join(', '),
-      portraitPos: positions.join(', ')
-    };
+    return window.SCTMG_MAKE_PORTRAIT('terran', u.id, P);
   }
   tacticalPortrait(t) {
     const P = {

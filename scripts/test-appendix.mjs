@@ -8,6 +8,7 @@ const ref = JSON.parse(load('agent-rules/appendix-2026.json'));
 assert.equal(ref.balance_source.published, '2026-10-09');
 const window = {};
 for (const f of ['terran','zerg','protoss']) vm.runInNewContext(load(f+'-data.js'),{window});
+vm.runInNewContext(load('model-portraits.js'), {window});
 function maximumModels(x){return Number(String(x).match(/\d+(?=\D*$)/)?.[0]||0)}
 const missing = [], checks = {units:0,compositions:0,upgrades:0,tactical:0};
 for (const faction of ['terran','zerg','protoss']){
