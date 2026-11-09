@@ -369,3 +369,56 @@ window.SCTMG_MODEL_PORTRAITS = {
     }
   }
 };
+
+
+// A card has exactly one visible portrait. Images are fixed to the top edge,
+// so expanding a unit reveals its lower body without recentering the artwork.
+// Error fallbacks replace the image element; they are never stacked behind it.
+window.SCTMG_MAKE_PORTRAIT = function(faction, unitId, localPortraits) {
+  const official = window.SCTMG_MODEL_PORTRAITS?.factions?.[faction]?.[unitId];
+  const local = localPortraits[official?.fallbackId] || localPortraits[unitId];
+  const sources = [];
+  function add(src, size, pos) {
+    if (src && !sources.some(item => item.src === src)) {
+      sources.push({ src, size: size || 'auto 288px', pos: pos || 'right top' });
+    }
+  }
+  add(official?.src, official?.size, official?.pos);
+  add(official?.fallbackSrc, official?.fallbackSize || official?.size,
+      official?.fallbackPos || official?.pos);
+  add(local?.src, local?.size, local?.pos);
+  if (!sources.length) return { portrait: false };
+
+  function imageStyle(item) {
+    const height = Number(item.size.match(/\bauto\s+(\d+)px/)?.[1] || 288);
+    const position = item.pos || 'right top';
+    const side = position.match(/^(left|right)(?:\s+(-?\d+)px)?/);
+    const horizontal = side ? side[1] + ':' + (side[2] || '0') + 'px'
+      : 'left:50%;transform:translateX(-50%)';
+    // Never use background-position:center on an expanding card: it moves the model.
+    const y = Number(position.match(/\btop\s+(-?\d+)px/)?.[1] || 0);
+    return 'position:absolute;' + horizontal + ';top:' + y +
+      'px;height:' + height + 'px;width:auto;max-width:none;display:block;';
+  }
+
+  const first = sources[0];
+  return {
+    portrait: first.src,
+    portraitBg: "url('" + first.src.replace(/'/g, '%27') + "')",
+    portraitSize: first.size,
+    portraitPos: first.pos,
+    portraitImgStyle: imageStyle(first),
+    onPortraitError: (event) => {
+      const img = event.currentTarget;
+      const nextIndex = Number(img.dataset.portraitFallbackIndex || 0) + 1;
+      img.dataset.portraitFallbackIndex = String(nextIndex);
+      if (nextIndex >= sources.length) {
+        img.style.display = 'none';
+        return;
+      }
+      const next = sources[nextIndex];
+      img.style.cssText = imageStyle(next);
+      img.src = next.src;
+    }
+  };
+};
