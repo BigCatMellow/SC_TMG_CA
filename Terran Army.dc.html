@@ -731,7 +731,7 @@ class Component extends DCLogic {
     tab: 'roster',
     play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0 },
     scaleId: 'standard',
-    factionId: 'kerrigans-swarm',
+    factionId: 'raynors-raiders',
     army: [],        // [{key, unitId, tierIdx, upgs:[names], modelsLost, deployed}]
     tactical: [],    // [ids]
     tacticalTapped: [], // [ids currently tapped/exhausted]
@@ -807,6 +807,12 @@ class Component extends DCLogic {
           if (v4.factionId) this.state.factionId = v4.factionId;
         }
       }
+      // Older installations may have saved a faction ID from another faction screen.
+      // Normalize to a valid selected card before tracking its Exhausted state.
+      if (!this.D().FACTION_CARDS.some(fc => fc.id === this.state.factionId)) {
+        this.state.factionId = this.D().FACTION_CARDS[0].id;
+      }
+      if (this.state.factionTappedId !== this.state.factionId) this.state.factionTappedId = null;
       const list = JSON.parse(localStorage.getItem('sctmg_terran_rosters_v1') || '[]');
       this.state.savedRosters = Array.isArray(list) ? list : [];
     } catch (e) { console.error(e); }
@@ -846,15 +852,17 @@ class Component extends DCLogic {
     if (!entry) return;
     const D = this.D();
     const tactical = (entry.tactical || []).filter(tid => D.TACTICAL_CARDS.find(t => t.id === tid));
+    const loadedFactionId = D.FACTION_CARDS.some(fc => fc.id === entry.factionId)
+      ? entry.factionId : this.state.factionId;
     this.setState({
       army: (entry.army || []).filter(e => D.UNITS.find(u => u.id === e.unitId)).map(e => ({ modelsLost: 0, deployed: false, ...e })),
       tactical,
       tacticalTapped: (entry.tacticalTapped || []).map(id => String(id).includes('#') ? String(id) : String(id) + '#0').filter(key => tactical.includes(key.split('#')[0])),
-      factionTappedId: entry.factionTappedId === entry.factionId ? entry.factionTappedId : null,
+      factionTappedId: entry.factionTappedId === loadedFactionId ? entry.factionTappedId : null,
       paymentCards: [],
       battleSupplyAvailable: entry.battleSupplyAvailable != null ? entry.battleSupplyAvailable : 4,
       scaleId: entry.scaleId || this.state.scaleId,
-      factionId: entry.factionId || this.state.factionId,
+      factionId: loadedFactionId,
       sheet: null,
       confirmDeleteRosterId: null
     }, () => this.save());
