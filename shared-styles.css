@@ -92,6 +92,14 @@ input::placeholder { color: #5b6275; }
 .sc-resource-strip--compact .sc-resource-cap { font-size: 9px; }
 
 
+/* Extra header action keeps the faction subtitle within its available space. */
+.sc-title-row .sc-title-faction {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
 /*
   Preserve the faction heading's original artwork, colors, back/search buttons
   and typography. Only compress spacing and type size alongside the existing

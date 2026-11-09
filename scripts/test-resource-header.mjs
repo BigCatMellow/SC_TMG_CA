@@ -9,6 +9,7 @@ const styles = read('shared-styles.css');
 assert.match(styles, /\.sc-resource-strip--compact\s*\{\s*height:\s*26px;/);
 assert.match(styles, /\.sc-resource-strip\s*\{[\s\S]*?height:\s*50px;/);
 assert.match(styles, /prefers-reduced-motion/);
+assert.match(styles, /\.sc-title-row \.sc-title-faction\s*\{[\s\S]*?text-overflow: ellipsis;/);
 for (const [name,value] of Object.entries({
   '--sc-title-pad-top':'2px',
   '--sc-title-pad-bottom':'2px',
@@ -116,6 +117,31 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   const titleEnd = html.indexOf('    <!-- play HUD, scoreboard', titleStart);
   assert.ok(titleStart >= 0 && titleEnd > titleStart, faction + ' title region boundaries');
   let title = html.slice(titleStart, titleEnd);
+  // The new management button is the sole permitted addition to the original title markup.
+  const newButton = title.match(/      <button onClick="\{\{ openRosters \}\}" aria-label="Army management"[\s\S]*?<\/button>\n/);
+  assert.ok(newButton, faction + ' management button beside Search');
+  assert.equal((title.match(/aria-label="Army management"/g) || []).length, 1, faction + ' one header management action');
+  assert.ok(title.indexOf(newButton[0]) < title.indexOf('onClick="{{ openSearch }}"'),
+    faction + ' management icon must appear immediately before Search');
+  assert.match(newButton[0], /width:40px;height:40px;/, faction + ' full-size icon hit target');
+  assert.match(newButton[0], /clip-path:var\(--sc-corner-8\)/, faction + ' preserves beveled button styling');
+  title = title.replace(newButton[0], '');
+  const managerStart = html.indexOf('  <!-- ============ SAVED ROSTERS SHEET ============ -->');
+  const managerEnd = html.indexOf('  <!-- ============ ROUND TRACKER SHEET ============ -->', managerStart);
+  assert.ok(managerStart >= 0 && managerEnd > managerStart, faction + ' management sheet retained');
+  const sheet = html.slice(managerStart, managerEnd);
+  for (const control of [
+    'onClick="{{ exportArmySheet }}"',
+    'onClick="{{ saveCurrentAsRoster }}"',
+    'onClick="{{ r.onLoad }}"',
+    'onClick="{{ r.onExport }}"',
+    'onClick="{{ triggerImport }}"'
+  ]) assert.ok(sheet.includes(control), faction + ' missing action in management sheet: ' + control);
+  assert.ok(sheet.includes('>Army Management</div>'), faction + ' management sheet heading');
+  assert.ok(sheet.includes('>Saved Rosters</div>'), faction + ' saved roster list preserved');
+  assert.ok(sheet.includes('aria-label="Download roster file"'), faction + ' JSON export accessible');
+  assert.ok(sheet.includes('<sc-if value="{{ !rosterEmpty }}"'), faction + ' print export requires nonempty army');
+
   for (const [compact, original] of titleSizingChanges) {
     assert.ok(title.includes(compact), faction + ' original title property changed: ' + compact);
     title = title.split(compact).join(original);
@@ -159,6 +185,17 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   assert.equal(css(), 'sc-resource-strip', faction + ' resources start expanded');
   assert.equal(boardCss(), 'sc-scoreboard', faction + ' original scoreboard at top');
   assert.equal(titleCss(), 'sc-title-row', faction + ' original title at top');
+  for (const tab of ['roster', 'battle', 'library', 'tactics']) {
+    controller.state.tab = tab;
+    const before = controller.state.tab;
+    const action = controller.renderVals().openRosters;
+    assert.equal(typeof action, 'function', faction + ' management available on ' + tab);
+    action();
+    assert.equal(controller.renderVals().sheetRosters, true, faction + ' roster manager opens from ' + tab);
+    assert.equal(controller.state.tab, before, faction + ' manager must not change active tab');
+    controller.renderVals().closeSheet();
+    assert.equal(controller.renderVals().sheetRosters, false, faction + ' manager closes on ' + tab);
+  }
   controller.componentDidMount();
   assert.equal(listeners.get('scroll')?.options?.passive, true, faction + ' passive scroll listener');
 
