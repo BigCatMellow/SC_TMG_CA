@@ -690,6 +690,9 @@ class Component extends DCLogic {
     army: [],        // [{key, unitId, tierIdx, upgs:[names], modelsLost, deployed}]
     tactical: [],    // [ids]
     tacticalTapped: [], // [ids currently tapped/exhausted]
+    factionTappedId: null, // currently exhausted Faction Card
+    paymentCards: [], // transient resource output for one ability payment (never banked)
+    expBattleCards: {}, // expanded Faction and Tactical Card ability details
     battleSupplyAvailable: 4,
     expArmy: {},
     expLib: {},
@@ -739,6 +742,8 @@ class Component extends DCLogic {
           .map(e => ({ modelsLost: 0, deployed: false, ...e }));
         this.state.tactical = (saved.tactical || []).filter(id => this.D().TACTICAL_CARDS.find(t => t.id === id));
         this.state.tacticalTapped = (saved.tacticalTapped || []).map(id => String(id).includes('#') ? String(id) : String(id) + '#0').filter(key => this.state.tactical.includes(key.split('#')[0]));
+        this.state.factionTappedId = saved.factionTappedId === saved.factionId ? saved.factionTappedId : null;
+        this.state.paymentCards = []; // Never restore unspent resource across visits.
         if (saved.battleSupplyAvailable != null) this.state.battleSupplyAvailable = saved.battleSupplyAvailable;
         if (saved.scaleId) this.state.scaleId = saved.scaleId;
         if (saved.factionId) this.state.factionId = saved.factionId;
@@ -764,7 +769,7 @@ class Component extends DCLogic {
 
   save() {
     try {
-      localStorage.setItem('sctmg_terran_v1', JSON.stringify({ army: this.state.army, tactical: this.state.tactical, tacticalTapped: this.state.tacticalTapped, battleSupplyAvailable: this.state.battleSupplyAvailable, scaleId: this.state.scaleId, factionId: this.state.factionId }));
+      localStorage.setItem('sctmg_terran_v1', JSON.stringify({ army: this.state.army, tactical: this.state.tactical, tacticalTapped: this.state.tacticalTapped, factionTappedId: this.state.factionTappedId, battleSupplyAvailable: this.state.battleSupplyAvailable, scaleId: this.state.scaleId, factionId: this.state.factionId }));
     } catch (e) {}
   }
   savePlay() {
@@ -782,7 +787,7 @@ class Component extends DCLogic {
       name,
       savedAt: Date.now(),
       army: st.army, tactical: st.tactical, tacticalTapped: st.tacticalTapped,
-      battleSupplyAvailable: st.battleSupplyAvailable, scaleId: st.scaleId, factionId: st.factionId
+      factionTappedId: st.factionTappedId, battleSupplyAvailable: st.battleSupplyAvailable, scaleId: st.scaleId, factionId: st.factionId
     };
   }
   saveCurrentAsRoster() {
@@ -800,6 +805,8 @@ class Component extends DCLogic {
       army: (entry.army || []).filter(e => D.UNITS.find(u => u.id === e.unitId)).map(e => ({ modelsLost: 0, deployed: false, ...e })),
       tactical,
       tacticalTapped: (entry.tacticalTapped || []).map(id => String(id).includes('#') ? String(id) : String(id) + '#0').filter(key => tactical.includes(key.split('#')[0])),
+      factionTappedId: entry.factionTappedId === entry.factionId ? entry.factionTappedId : null,
+      paymentCards: [],
       battleSupplyAvailable: entry.battleSupplyAvailable != null ? entry.battleSupplyAvailable : 4,
       scaleId: entry.scaleId || this.state.scaleId,
       factionId: entry.factionId || this.state.factionId,
@@ -836,6 +843,7 @@ class Component extends DCLogic {
           name: data.name || file.name.replace(/\.sctmg\.json$|\.json$/i, ''),
           savedAt: Date.now(),
           army: data.army || [], tactical: data.tactical || [], tacticalTapped: data.tacticalTapped || [],
+          factionTappedId: data.factionTappedId === data.factionId ? data.factionTappedId : null,
           battleSupplyAvailable: data.battleSupplyAvailable != null ? data.battleSupplyAvailable : 4,
           scaleId: data.scaleId || this.state.scaleId, factionId: data.factionId || this.state.factionId
         };
@@ -975,13 +983,94 @@ class Component extends DCLogic {
       army: st.army.map(e => e.key === key ? { ...e, deployed: !e.deployed } : e)
     }), () => this.save());
   }
-  toggleTapped(id) {
-    this.setState(st => ({
-      tacticalTapped: st.tacticalTapped.includes(id) ? st.tacticalTapped.filter(x => x !== id) : [...st.tacticalTapped, id]
-    }), () => this.save());
+  resourceYield(card) {
+    const match = String(card?.resource || '').trim().match(/^\+(\d+)\s+(CP|BM|PE)$/);
+    return match ? Number(match[1]) : 0;
   }
+
+  battleCardView(card, key, kind, tapped, copyLabel = '') {
+    const abilities = Array.isArray(card.abilities) ? card.abilities : [];
+    const resourceAmount = this.resourceYield(card);
+    return {
+      id: card.id, key, name: card.name, kind, copyLabel,
+      resource: card.resource || '', hasResource: resourceAmount > 0,
+      tapped, label: tapped ? 'Exhausted' : 'Ready',
+      bg: tapped ? 'rgba(139,146,163,0.08)' : 'rgba(56,211,232,0.06)',
+      bd: tapped ? 'var(--sc-border-input)' : 'rgba(56,211,232,0.35)',
+      fg: tapped ? '#8a91a5' : '#38d3e8',
+      expanded: !!this.state.expBattleCards[key],
+      abilities: abilities.map(a => ({
+        phase: a.phase || 'Any Phase', type: a.type || '',
+        name: a.name || '', description: a.description || ''
+      })),
+      canUseAbility: abilities.some(a => /\b(Active|Reaction)\b/i.test(a.type || '')
+        && !/do not exhaust this card/i.test(a.description || '')),
+      onExpand: () => this.setState(st => ({
+        expBattleCards: { ...st.expBattleCards, [key]: !st.expBattleCards[key] }
+      })),
+      onResource: () => this.exhaustBattleCard(key, true),
+      onAbility: () => this.exhaustBattleCard(key, false),
+      onReady: () => this.readyBattleCard(key),
+      // Retain the old controller action for consumers outside the Battle markup.
+      onToggle: () => tapped ? this.readyBattleCard(key) : this.exhaustBattleCard(key, false)
+    };
+  }
+
+  exhaustBattleCard(key, forResource) {
+    const isFaction = key.startsWith('faction#');
+    this.setState(st => {
+      const D = this.D();
+      let card;
+      if (isFaction) {
+        const id = key.slice('faction#'.length);
+        if (id !== st.factionId || st.factionTappedId === id) return {};
+        card = D.FACTION_CARDS.find(c => c.id === id);
+      } else {
+        const separator = key.lastIndexOf('#');
+        if (separator < 1) return {};
+        const id = key.slice(0, separator);
+        const copyIndex = Number(key.slice(separator + 1));
+        if (!Number.isInteger(copyIndex) || copyIndex < 0
+          || st.tactical.filter(t => t === id).length <= copyIndex
+          || st.tacticalTapped.includes(key)) return {};
+        card = D.TACTICAL_CARDS.find(c => c.id === id);
+      }
+      if (!card) return {};
+      const amount = this.resourceYield(card);
+      if (forResource && !amount) return {};
+      return {
+        ...(isFaction ? { factionTappedId: card.id } :
+          { tacticalTapped: [...st.tacticalTapped, key] }),
+        // This is only the payment currently being resolved, never a resource bank.
+        paymentCards: forResource
+          ? [...(st.paymentCards || []), { key, amount }]
+          : st.paymentCards
+      };
+    }, () => this.save());
+  }
+
+  readyBattleCard(key) {
+    const isFaction = key.startsWith('faction#');
+    this.setState(st => {
+      if (isFaction ? st.factionTappedId !== key.slice('faction#'.length)
+        : !st.tacticalTapped.includes(key)) return {};
+      return {
+        ...(isFaction ? { factionTappedId: null } :
+          { tacticalTapped: st.tacticalTapped.filter(x => x !== key) }),
+        paymentCards: (st.paymentCards || []).filter(p => p.key !== key)
+      };
+    }, () => this.save());
+  }
+
+  finishResourcePayment() {
+    // Unused output is lost; cards stay exhausted until explicitly readied.
+    this.setState({ paymentCards: [] });
+  }
+
   refreshTactical() {
-    this.setState({ tacticalTapped: [] }, () => this.save());
+    // Only use at Cleanup or when another rule explicitly readies these cards.
+    this.setState({ tacticalTapped: [], factionTappedId: null, paymentCards: [] },
+      () => this.save());
   }
   bumpBattleSupply(d) {
     this.setState(st => ({ battleSupplyAvailable: Math.max(0, st.battleSupplyAvailable + d) }), () => this.save());
@@ -1452,23 +1541,25 @@ class Component extends DCLogic {
       return { role, color: this.roleColor(role), entries };
     }).filter(Boolean);
     const tacticalCopyCounts = {};
+    const battleFaction = this.battleCardView(
+      faction, 'faction#' + faction.id, 'Faction Card',
+      st.factionTappedId === faction.id
+    );
     const battleTactical = st.tactical.map(id => {
       const copyIndex = tacticalCopyCounts[id] || 0;
       tacticalCopyCounts[id] = copyIndex + 1;
-      const tappedKey = id + '#' + copyIndex;
-      const t = D.TACTICAL_CARDS.find(x => x.id === id);
-      if (!t) return null;
-      const tapped = st.tacticalTapped.includes(tappedKey);
-      return {
-        id, name: t.name, cost: t.cost, tapped,
-        bg: tapped ? 'rgba(139,146,163,0.1)' : 'rgba(56,211,232,0.1)',
-        bd: tapped ? 'var(--sc-border-input)' : 'rgba(56,211,232,0.35)',
-        fg: tapped ? '#5b6275' : '#38d3e8',
-        label: tapped ? 'Tapped' : 'Ready',
-        onToggle: () => this.toggleTapped(tappedKey)
-      };
+      const key = id + '#' + copyIndex;
+      const card = D.TACTICAL_CARDS.find(x => x.id === id);
+      if (!card) return null;
+      const copyLabel = st.tactical.filter(x => x === id).length > 1
+        ? 'Copy ' + (copyIndex + 1) : '';
+      return this.battleCardView(card, key, 'Tactical Card',
+        st.tacticalTapped.includes(key), copyLabel);
     }).filter(Boolean);
-    const anyTapped = st.tacticalTapped.length > 0;
+    const battleCards = [battleFaction, ...battleTactical];
+    const anyTapped = st.tacticalTapped.length > 0 || st.factionTappedId === faction.id;
+    const paymentTotal = (st.paymentCards || []).reduce((sum, p) => sum + p.amount, 0);
+    const paymentResource = (faction.resource || '').match(/\b(CP|BM|PE)\b/)?.[1] || '';
 
     // library groups
     const armyIds = st.army.map(e => e.unitId);
@@ -1535,7 +1626,8 @@ class Component extends DCLogic {
                 const copyIndex = tactical.filter(id => id === t.id).length - 1;
                 tactical.splice(index, 1);
                 const key = t.id + '#' + copyIndex;
-                return { tactical, tacticalTapped: s2.tacticalTapped.filter(x => x !== key) };
+                return { tactical, tacticalTapped: s2.tacticalTapped.filter(x => x !== key),
+                  paymentCards: (s2.paymentCards || []).filter(p => p.key !== key) };
               }, () => this.save());
             }
           };
@@ -1560,7 +1652,7 @@ class Component extends DCLogic {
         dot: sel ? '#62a9f7' : 'transparent', dotBd: sel ? '#62a9f7' : '#3a4154',
         slotPills: Object.entries(fc.slots || {}).map(([k, v]) => v + ' ' + k),
         abilities: fc.abilities.map(a => ({ name: a.name, type: a.type, phase: a.phase.replace(' Phase', ''), ...this.phaseBadge(a.phase), segs: this.segs(a.description) })),
-        onSelect: () => this.setState({ factionId: fc.id }, () => this.save())
+        onSelect: () => this.setState({ factionId: fc.id, factionTappedId: null, paymentCards: [] }, () => this.save())
       };
     });
 
@@ -1703,7 +1795,9 @@ class Component extends DCLogic {
       battleEmpty: battleUnits.length === 0, battleGroups,
       battleSupplyAvailable: st.battleSupplyAvailable, battleSupplyUsed, battleSupplyRemaining,
       battleSupplyUp: () => this.bumpBattleSupply(1), battleSupplyDown: () => this.bumpBattleSupply(-1),
-      hasBattleTactical: battleTactical.length > 0, battleTactical, anyTapped,
+      hasBattleTactical: battleTactical.length > 0, battleTactical, battleFaction, battleCards, anyTapped,
+      paymentTotal, paymentResource, hasPendingPayment: paymentTotal > 0,
+      finishResourcePayment: () => this.finishResourcePayment(),
       refreshTactical: () => this.refreshTactical(),
       gotoLibrary: () => this.setState({ tab: 'library' }),
       gotoFaction: () => this.setState({ tab: 'faction' }),
