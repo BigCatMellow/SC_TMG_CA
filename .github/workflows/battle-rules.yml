@@ -31,6 +31,8 @@ jobs:
         run: npm run test:portraits
       - name: Verify compact scroll resource header on faction screens
         run: npm run test:resource-header
+      - name: Verify Battle card abilities and resource payment tracking
+        run: npm run test:battle-energy
       - name: Check committed NotebookLM study sources
         run: npm run test:study
       - name: Check faction data generator output

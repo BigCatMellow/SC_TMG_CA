@@ -141,6 +141,142 @@ input::placeholder { color: #5b6275; }
   --sc-scoreboard-phase-line-height: 1.1;
 }
 
+
+/* In-battle cards reuse the companion's neutral panels and faction accents.
+   Viewing an ability never exhausts it: only explicit action buttons do. */
+.sc-battle-payment {
+  margin-bottom: 12px;
+  padding: 10px 12px;
+  background: #111725;
+  border: 1px solid rgba(56,211,232,0.35);
+  clip-path: var(--sc-corner-10);
+}
+.sc-battle-payment-caption {
+  flex: 1;
+  font: 700 11px Rajdhani, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: #a7aec2;
+}
+.sc-battle-payment-count {
+  font: 700 20px 'Chakra Petch', sans-serif;
+  color: #38d3e8;
+  font-variant-numeric: tabular-nums;
+}
+.sc-battle-payment-hint {
+  font-size: 11px;
+  line-height: 1.4;
+  color: #8a91a5;
+  padding-top: 5px;
+}
+.sc-battle-payment-finish {
+  min-height: 36px;
+  padding: 4px 10px;
+  background: #1c2733;
+  border: 1px solid #386c7b;
+  color: #b6edf3;
+  font: 700 11px Rajdhani, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  cursor: pointer;
+}
+.sc-battle-card {
+  overflow: hidden;
+  clip-path: var(--sc-corner-10);
+}
+.sc-battle-card-header {
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: #e9ecf2;
+  cursor: pointer;
+  border: none;
+  text-align: left;
+}
+.sc-battle-card-kind {
+  display: block;
+  font: 700 9px Rajdhani, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .13em;
+  color: #8a91a5;
+}
+.sc-battle-card-title {
+  display: block;
+  font: 700 15px Rajdhani, sans-serif;
+  letter-spacing: .02em;
+  color: #e9ecf2;
+}
+.sc-battle-card-output {
+  flex: 0 0 auto;
+  font: 700 13px 'Chakra Petch', sans-serif;
+  color: #38d3e8;
+}
+.sc-battle-card-status {
+  flex: 0 0 auto;
+  font: 700 10px Rajdhani, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.sc-battle-card-abilities {
+  position: relative;
+  padding: 0 12px 8px;
+  border-top: 1px solid #242a38;
+}
+.sc-battle-card-ability {
+  padding: 10px 0 8px;
+  border-bottom: 1px solid #242a38;
+}
+.sc-battle-card-ability:last-child { border-bottom: none; }
+.sc-battle-card-ability-meta {
+  color: #38d3e8;
+  font: 700 10px Rajdhani, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+}
+.sc-battle-card-ability-name {
+  color: #e9ecf2;
+  font: 700 14px Rajdhani, sans-serif;
+  margin-top: 2px;
+}
+.sc-battle-card-ability-description {
+  color: #b1b8c8;
+  font-size: 12px;
+  line-height: 1.5;
+  margin-top: 3px;
+}
+.sc-battle-card-actions {
+  padding: 7px 10px 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+}
+.sc-battle-card-action {
+  flex: 1 1 auto;
+  min-height: 40px;
+  padding: 8px 10px;
+  background: #1a1f2e;
+  border: 1px solid var(--sc-border-input);
+  color: #c8cede;
+  font: 700 11px Rajdhani, sans-serif;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.sc-battle-card-action--resource {
+  color: #a6f0f4;
+  border-color: rgba(56,211,232,0.45);
+  background: rgba(56,211,232,0.10);
+}
+.sc-battle-card-passive {
+  font-size: 11px;
+  color: #8a91a5;
+  padding: 5px 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sc-resource-strip { transition: none; }
 }

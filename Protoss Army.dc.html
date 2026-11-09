@@ -252,27 +252,72 @@
           </div>
         </div>
 
-        <!-- tactical cards -->
-        <sc-if value="{{ hasBattleTactical }}" hint-placeholder-val="{{ false }}">
-          <div style="margin-bottom:16px">
-            <div style="display:flex;align-items:center;gap:8px;padding:0 2px 8px">
-              <span style="width:8px;height:8px;background:#38d3e8;clip-path:var(--sc-diamond)"></span>
-              <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#38d3e8">Tactical Cards</span>
-              <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
-              <sc-if value="{{ anyTapped }}" hint-placeholder-val="{{ false }}">
-                <button onClick="{{ refreshTactical }}" style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#8a91a5;background:none;border:1px solid var(--sc-border-input);padding:3px 8px;cursor:pointer">Refresh All</button>
+        <!-- Card abilities and a one-ability resource payment helper.
+             Resources are generated/spent immediately; they cannot be banked. -->
+        <div style="margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:8px;padding:0 2px 8px">
+            <span style="width:8px;height:8px;background:#38d3e8;clip-path:var(--sc-diamond)"></span>
+            <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#38d3e8">Cards &amp; Energy</span>
+            <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
+            <sc-if value="{{ anyTapped }}" hint-placeholder-val="{{ false }}">
+              <button onClick="{{ refreshTactical }}" style="min-height:32px;font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#a7aec2;background:#1a1f2e;border:1px solid var(--sc-border-input);padding:3px 8px;cursor:pointer">Refresh (Cleanup)</button>
+            </sc-if>
+          </div>
+          <div class="sc-battle-payment">
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+              <span class="sc-battle-payment-caption">Current ability payment</span>
+              <span class="sc-battle-payment-count">{{ paymentTotal }} {{ paymentResource }}</span>
+              <sc-if value="{{ hasPendingPayment }}" hint-placeholder-val="{{ false }}">
+                <button onClick="{{ finishResourcePayment }}" class="sc-battle-payment-finish">Finish payment</button>
               </sc-if>
             </div>
-            <div style="display:grid;gap:6px">
-              <sc-for list="{{ battleTactical }}" as="tc" hint-placeholder-count="2">
-                <button onClick="{{ tc.onToggle }}" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:{{ tc.bg }};border:1px solid {{ tc.bd }};color:#e9ecf2;cursor:pointer;text-align:left">
-                  <span style="flex:1;font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;letter-spacing:0.03em">{{ tc.name }}</span>
-                  <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:{{ tc.fg }}">{{ tc.label }}</span>
-                </button>
-              </sc-for>
-            </div>
+            <div class="sc-battle-payment-hint">Exhaust Ready cards to pay a single ability. Unused energy is lost, not saved for later.</div>
           </div>
-        </sc-if>
+          <div style="display:grid;gap:8px">
+            <sc-for list="{{ battleCards }}" as="tc" hint-placeholder-count="3">
+              <div class="sc-battle-card" style="background:{{ tc.bg }};border:1px solid {{ tc.bd }}">
+                <button onClick="{{ tc.onExpand }}" aria-label="{{ tc.expandLabel }}" class="sc-battle-card-header">
+                  <span style="flex:1;min-width:0;text-align:left">
+                    <span class="sc-battle-card-kind">{{ tc.kind }} <span>{{ tc.copyLabel }}</span></span>
+                    <span class="sc-battle-card-title">{{ tc.name }}</span>
+                  </span>
+                  <sc-if value="{{ tc.hasResource }}" hint-placeholder-val="{{ false }}">
+                    <span class="sc-battle-card-output">{{ tc.resource }}</span>
+                  </sc-if>
+                  <span class="sc-battle-card-status" style="color:{{ tc.fg }}">{{ tc.label }}</span>
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex:0 0 auto;transform:rotate({{ tc.chev }}deg)">
+                    <path d="M4 6l4 4 4-4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                </button>
+                <sc-if value="{{ tc.expanded }}" hint-placeholder-val="{{ false }}">
+                  <div class="sc-battle-card-abilities">
+                    <sc-for list="{{ tc.abilities }}" as="ab" hint-placeholder-count="2">
+                      <div class="sc-battle-card-ability">
+                        <div class="sc-battle-card-ability-meta">{{ ab.meta }}</div>
+                        <div class="sc-battle-card-ability-name">{{ ab.name }}</div>
+                        <div class="sc-battle-card-ability-description">{{ ab.description }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </sc-if>
+                <div class="sc-battle-card-actions">
+                  <sc-if value="{{ !tc.tapped && tc.hasResource }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ tc.onResource }}" class="sc-battle-card-action sc-battle-card-action--resource">Exhaust for {{ tc.resource }}</button>
+                  </sc-if>
+                  <sc-if value="{{ !tc.tapped && tc.canUseAbility }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ tc.onAbility }}" class="sc-battle-card-action">Exhaust for ability</button>
+                  </sc-if>
+                  <sc-if value="{{ tc.tapped }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ tc.onReady }}" class="sc-battle-card-action">Ready card</button>
+                  </sc-if>
+                  <sc-if value="{{ !tc.hasResource && !tc.canUseAbility && !tc.tapped }}" hint-placeholder-val="{{ false }}">
+                    <span class="sc-battle-card-passive">Passive effects: no exhaustion needed</span>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
 
         <!-- units -->
         <sc-for list="{{ battleGroups }}" as="grp" hint-placeholder-count="2">
@@ -685,10 +730,13 @@ class Component extends DCLogic {
     tab: 'roster',
     play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0 },
     scaleId: 'standard',
-    factionId: 'kerrigans-swarm',
+    factionId: 'daelaam',
     army: [],        // [{key, unitId, tierIdx, upgs:[names], modelsLost, deployed}]
     tactical: [],    // [ids]
     tacticalTapped: [], // [ids currently tapped/exhausted]
+    factionTappedId: null, // currently exhausted Faction Card
+    paymentCards: [], // transient resource output for one ability payment (never banked)
+    expBattleCards: {}, // expanded Faction and Tactical Card ability details
     battleSupplyAvailable: 4,
     expArmy: {},
     expLib: {},
@@ -738,6 +786,8 @@ class Component extends DCLogic {
           .map(e => ({ modelsLost: 0, deployed: false, ...e }));
         this.state.tactical = (saved.tactical || []).filter(id => this.D().TACTICAL_CARDS.find(t => t.id === id));
         this.state.tacticalTapped = (saved.tacticalTapped || []).map(id => String(id).includes('#') ? String(id) : String(id) + '#0').filter(key => this.state.tactical.includes(key.split('#')[0]));
+        this.state.factionTappedId = saved.factionTappedId === saved.factionId ? saved.factionTappedId : null;
+        this.state.paymentCards = []; // Never restore unspent resource across visits.
         if (saved.battleSupplyAvailable != null) this.state.battleSupplyAvailable = saved.battleSupplyAvailable;
         if (saved.scaleId) this.state.scaleId = saved.scaleId;
         if (saved.factionId) this.state.factionId = saved.factionId;
@@ -756,6 +806,12 @@ class Component extends DCLogic {
           if (v4.factionId) this.state.factionId = v4.factionId;
         }
       }
+      // Older installations may have saved a faction ID from another faction screen.
+      // Normalize to a valid selected card before tracking its Exhausted state.
+      if (!this.D().FACTION_CARDS.some(fc => fc.id === this.state.factionId)) {
+        this.state.factionId = this.D().FACTION_CARDS[0].id;
+      }
+      if (this.state.factionTappedId !== this.state.factionId) this.state.factionTappedId = null;
       const list = JSON.parse(localStorage.getItem('sctmg_protoss_rosters_v1') || '[]');
       this.state.savedRosters = Array.isArray(list) ? list : [];
     } catch (e) { console.error(e); }
@@ -763,7 +819,7 @@ class Component extends DCLogic {
 
   save() {
     try {
-      localStorage.setItem('sctmg_protoss_v1', JSON.stringify({ army: this.state.army, tactical: this.state.tactical, tacticalTapped: this.state.tacticalTapped, battleSupplyAvailable: this.state.battleSupplyAvailable, scaleId: this.state.scaleId, factionId: this.state.factionId }));
+      localStorage.setItem('sctmg_protoss_v1', JSON.stringify({ army: this.state.army, tactical: this.state.tactical, tacticalTapped: this.state.tacticalTapped, factionTappedId: this.state.factionTappedId, battleSupplyAvailable: this.state.battleSupplyAvailable, scaleId: this.state.scaleId, factionId: this.state.factionId }));
     } catch (e) {}
   }
   savePlay() {
@@ -781,7 +837,7 @@ class Component extends DCLogic {
       name,
       savedAt: Date.now(),
       army: st.army, tactical: st.tactical, tacticalTapped: st.tacticalTapped,
-      battleSupplyAvailable: st.battleSupplyAvailable, scaleId: st.scaleId, factionId: st.factionId
+      factionTappedId: st.factionTappedId, battleSupplyAvailable: st.battleSupplyAvailable, scaleId: st.scaleId, factionId: st.factionId
     };
   }
   saveCurrentAsRoster() {
@@ -795,13 +851,17 @@ class Component extends DCLogic {
     if (!entry) return;
     const D = this.D();
     const tactical = (entry.tactical || []).filter(tid => D.TACTICAL_CARDS.find(t => t.id === tid));
+    const loadedFactionId = D.FACTION_CARDS.some(fc => fc.id === entry.factionId)
+      ? entry.factionId : this.state.factionId;
     this.setState({
       army: (entry.army || []).filter(e => D.UNITS.find(u => u.id === e.unitId)).map(e => ({ modelsLost: 0, deployed: false, ...e })),
       tactical,
       tacticalTapped: (entry.tacticalTapped || []).map(id => String(id).includes('#') ? String(id) : String(id) + '#0').filter(key => tactical.includes(key.split('#')[0])),
+      factionTappedId: entry.factionTappedId === loadedFactionId ? entry.factionTappedId : null,
+      paymentCards: [],
       battleSupplyAvailable: entry.battleSupplyAvailable != null ? entry.battleSupplyAvailable : 4,
       scaleId: entry.scaleId || this.state.scaleId,
-      factionId: entry.factionId || this.state.factionId,
+      factionId: loadedFactionId,
       sheet: null,
       confirmDeleteRosterId: null
     }, () => this.save());
@@ -835,6 +895,7 @@ class Component extends DCLogic {
           name: data.name || file.name.replace(/\.sctmg\.json$|\.json$/i, ''),
           savedAt: Date.now(),
           army: data.army || [], tactical: data.tactical || [], tacticalTapped: data.tacticalTapped || [],
+          factionTappedId: data.factionTappedId === data.factionId ? data.factionTappedId : null,
           battleSupplyAvailable: data.battleSupplyAvailable != null ? data.battleSupplyAvailable : 4,
           scaleId: data.scaleId || this.state.scaleId, factionId: data.factionId || this.state.factionId
         };
@@ -958,13 +1019,97 @@ class Component extends DCLogic {
       army: st.army.map(e => e.key === key ? { ...e, deployed: !e.deployed } : e)
     }), () => this.save());
   }
-  toggleTapped(id) {
-    this.setState(st => ({
-      tacticalTapped: st.tacticalTapped.includes(id) ? st.tacticalTapped.filter(x => x !== id) : [...st.tacticalTapped, id]
-    }), () => this.save());
+  resourceYield(card) {
+    const match = String(card?.resource || '').trim().match(/^\+(\d+)\s+(CP|BM|PE)$/);
+    return match ? Number(match[1]) : 0;
   }
+
+  battleCardView(card, key, kind, tapped, copyLabel = '') {
+    const abilities = Array.isArray(card.abilities) ? card.abilities : [];
+    const resourceAmount = this.resourceYield(card);
+    return {
+      id: card.id, key, name: card.name, kind, copyLabel,
+      chev: this.state.expBattleCards[key] ? 180 : 0,
+      expandLabel: card.name + (this.state.expBattleCards[key] ? ': hide abilities' : ': view abilities'),
+      resource: card.resource || '', hasResource: resourceAmount > 0,
+      tapped, label: tapped ? 'Exhausted' : 'Ready',
+      bg: tapped ? 'rgba(139,146,163,0.08)' : 'rgba(56,211,232,0.06)',
+      bd: tapped ? 'var(--sc-border-input)' : 'rgba(56,211,232,0.35)',
+      fg: tapped ? '#8a91a5' : '#38d3e8',
+      expanded: !!this.state.expBattleCards[key],
+      abilities: abilities.map(a => ({
+        phase: a.phase || 'Any Phase', type: a.type || '',
+        meta: [a.phase || 'Any Phase', a.type || ''].filter(Boolean).join(' · '),
+        name: a.name || '', description: a.description || ''
+      })),
+      canUseAbility: abilities.some(a => /\b(Active|Reaction)\b/i.test(a.type || '')
+        && !/do not exhaust this card/i.test(a.description || '')),
+      onExpand: () => this.setState(st => ({
+        expBattleCards: { ...st.expBattleCards, [key]: !st.expBattleCards[key] }
+      })),
+      onResource: () => this.exhaustBattleCard(key, true),
+      onAbility: () => this.exhaustBattleCard(key, false),
+      onReady: () => this.readyBattleCard(key),
+      // Retain the old controller action for consumers outside the Battle markup.
+      onToggle: () => tapped ? this.readyBattleCard(key) : this.exhaustBattleCard(key, false)
+    };
+  }
+
+  exhaustBattleCard(key, forResource) {
+    const isFaction = key.startsWith('faction#');
+    this.setState(st => {
+      const D = this.D();
+      let card;
+      if (isFaction) {
+        const id = key.slice('faction#'.length);
+        if (id !== st.factionId || st.factionTappedId === id) return {};
+        card = D.FACTION_CARDS.find(c => c.id === id);
+      } else {
+        const separator = key.lastIndexOf('#');
+        if (separator < 1) return {};
+        const id = key.slice(0, separator);
+        const copyIndex = Number(key.slice(separator + 1));
+        if (!Number.isInteger(copyIndex) || copyIndex < 0
+          || st.tactical.filter(t => t === id).length <= copyIndex
+          || st.tacticalTapped.includes(key)) return {};
+        card = D.TACTICAL_CARDS.find(c => c.id === id);
+      }
+      if (!card) return {};
+      const amount = this.resourceYield(card);
+      if (forResource && !amount) return {};
+      return {
+        ...(isFaction ? { factionTappedId: card.id } :
+          { tacticalTapped: [...st.tacticalTapped, key] }),
+        // This is only the payment currently being resolved, never a resource bank.
+        paymentCards: forResource
+          ? [...(st.paymentCards || []), { key, amount }]
+          : st.paymentCards
+      };
+    }, () => this.save());
+  }
+
+  readyBattleCard(key) {
+    const isFaction = key.startsWith('faction#');
+    this.setState(st => {
+      if (isFaction ? st.factionTappedId !== key.slice('faction#'.length)
+        : !st.tacticalTapped.includes(key)) return {};
+      return {
+        ...(isFaction ? { factionTappedId: null } :
+          { tacticalTapped: st.tacticalTapped.filter(x => x !== key) }),
+        paymentCards: (st.paymentCards || []).filter(p => p.key !== key)
+      };
+    }, () => this.save());
+  }
+
+  finishResourcePayment() {
+    // Unused output is lost; cards stay exhausted until explicitly readied.
+    this.setState({ paymentCards: [] });
+  }
+
   refreshTactical() {
-    this.setState({ tacticalTapped: [] }, () => this.save());
+    // Only use at Cleanup or when another rule explicitly readies these cards.
+    this.setState({ tacticalTapped: [], factionTappedId: null, paymentCards: [] },
+      () => this.save());
   }
   bumpBattleSupply(d) {
     this.setState(st => ({ battleSupplyAvailable: Math.max(0, st.battleSupplyAvailable + d) }), () => this.save());
@@ -1425,23 +1570,25 @@ class Component extends DCLogic {
       return { role, color: this.roleColor(role), entries };
     }).filter(Boolean);
     const tacticalCopyCounts = {};
+    const battleFaction = this.battleCardView(
+      faction, 'faction#' + faction.id, 'Faction Card',
+      st.factionTappedId === faction.id
+    );
     const battleTactical = st.tactical.map(id => {
       const copyIndex = tacticalCopyCounts[id] || 0;
       tacticalCopyCounts[id] = copyIndex + 1;
-      const tappedKey = id + '#' + copyIndex;
-      const t = D.TACTICAL_CARDS.find(x => x.id === id);
-      if (!t) return null;
-      const tapped = st.tacticalTapped.includes(tappedKey);
-      return {
-        id, name: t.name, cost: t.cost, tapped,
-        bg: tapped ? 'rgba(139,146,163,0.1)' : 'rgba(56,211,232,0.1)',
-        bd: tapped ? 'var(--sc-border-input)' : 'rgba(56,211,232,0.35)',
-        fg: tapped ? '#5b6275' : '#38d3e8',
-        label: tapped ? 'Tapped' : 'Ready',
-        onToggle: () => this.toggleTapped(tappedKey)
-      };
+      const key = id + '#' + copyIndex;
+      const card = D.TACTICAL_CARDS.find(x => x.id === id);
+      if (!card) return null;
+      const copyLabel = st.tactical.filter(x => x === id).length > 1
+        ? 'Copy ' + (copyIndex + 1) : '';
+      return this.battleCardView(card, key, 'Tactical Card',
+        st.tacticalTapped.includes(key), copyLabel);
     }).filter(Boolean);
-    const anyTapped = st.tacticalTapped.length > 0;
+    const battleCards = [battleFaction, ...battleTactical];
+    const anyTapped = st.tacticalTapped.length > 0 || st.factionTappedId === faction.id;
+    const paymentTotal = (st.paymentCards || []).reduce((sum, p) => sum + p.amount, 0);
+    const paymentResource = (faction.resource || '').match(/\b(CP|BM|PE)\b/)?.[1] || '';
 
     // library groups
     const armyIds = st.army.map(e => e.unitId);
@@ -1505,7 +1652,8 @@ class Component extends DCLogic {
                 const copyIndex = tactical.filter(id => id === t.id).length - 1;
                 tactical.splice(index, 1);
                 const key = t.id + '#' + copyIndex;
-                return { tactical, tacticalTapped: s2.tacticalTapped.filter(x => x !== key) };
+                return { tactical, tacticalTapped: s2.tacticalTapped.filter(x => x !== key),
+                  paymentCards: (s2.paymentCards || []).filter(p => p.key !== key) };
               }, () => this.save());
             }
           };
@@ -1530,7 +1678,7 @@ class Component extends DCLogic {
         dot: sel ? '#f2c860' : 'transparent', dotBd: sel ? '#f2c860' : '#3a4154',
         slotPills: Object.entries(fc.slots || {}).map(([k, v]) => v + ' ' + k),
         abilities: fc.abilities.map(a => ({ name: a.name, type: a.type, phase: a.phase.replace(' Phase', ''), ...this.phaseBadge(a.phase), segs: this.segs(a.description) })),
-        onSelect: () => this.setState({ factionId: fc.id }, () => this.save())
+        onSelect: () => this.setState({ factionId: fc.id, factionTappedId: null, paymentCards: [] }, () => this.save())
       };
     });
 
@@ -1673,7 +1821,9 @@ class Component extends DCLogic {
       battleEmpty: battleUnits.length === 0, battleGroups,
       battleSupplyAvailable: st.battleSupplyAvailable, battleSupplyUsed, battleSupplyRemaining,
       battleSupplyUp: () => this.bumpBattleSupply(1), battleSupplyDown: () => this.bumpBattleSupply(-1),
-      hasBattleTactical: battleTactical.length > 0, battleTactical, anyTapped,
+      hasBattleTactical: battleTactical.length > 0, battleTactical, battleFaction, battleCards, anyTapped,
+      paymentTotal, paymentResource, hasPendingPayment: paymentTotal > 0,
+      finishResourcePayment: () => this.finishResourcePayment(),
       refreshTactical: () => this.refreshTactical(),
       gotoLibrary: () => this.setState({ tab: 'library' }),
       gotoFaction: () => this.setState({ tab: 'faction' }),
