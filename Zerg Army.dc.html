@@ -90,6 +90,15 @@
 
   <!-- ============ ROSTER TAB ============ -->
   <sc-if value="{{ tabIsRoster }}" hint-placeholder-val="{{ true }}">
+      <sc-if value="{{ hasRosterWarnings }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-bottom:12px;padding:10px 12px;border:1px solid rgba(240,74,74,.5);background:rgba(240,74,74,.08)">
+          <div style="font-family:Rajdhani,sans-serif;font-size:13px;letter-spacing:.06em;font-weight:700;color:#f08a8a">Roster needs correction before battle</div>
+          <sc-for list="{{ rosterWarnings }}" as="warning" hint-placeholder-count="2">
+            <div style="font-size:12px;color:#f6b3b3;line-height:1.5;padding-top:4px">{{ warning }}</div>
+          </sc-for>
+        </div>
+      </sc-if>
+
     <div style="padding:14px">
 
       <!-- scale + faction row -->
@@ -199,6 +208,15 @@
 
   <!-- ============ BATTLE TAB ============ -->
   <sc-if value="{{ tabIsBattle }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ hasRosterWarnings }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-bottom:12px;padding:10px 12px;border:1px solid rgba(240,74,74,.5);background:rgba(240,74,74,.08)">
+          <div style="font-family:Rajdhani,sans-serif;font-size:13px;letter-spacing:.06em;font-weight:700;color:#f08a8a">Roster needs correction before battle</div>
+          <sc-for list="{{ rosterWarnings }}" as="warning" hint-placeholder-count="2">
+            <div style="font-size:12px;color:#f6b3b3;line-height:1.5;padding-top:4px">{{ warning }}</div>
+          </sc-for>
+        </div>
+      </sc-if>
+
     <div style="padding:14px">
 
       <!-- empty state -->
@@ -326,7 +344,7 @@
                       </sc-for>
                     </div>
                   </div>
-                  <button onClick="{{ en.onAdd }}" aria-label="Add unit" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:rgba(147,51,234,0.16);border:1px solid rgba(176,110,247,0.45);color:#d9bafc;font-size:20px;cursor:pointer;clip-path:var(--sc-corner-9)">+</button>
+                  <button onClick="{{ en.onAdd }}" disabled="{{ !en.recruitable }}" title="{{ !en.recruitable ? 'Not recruitable under this faction or summoned only' : 'Add Unit' }}" aria-label="Add unit" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:rgba(147,51,234,0.16);border:1px solid rgba(176,110,247,0.45);color:#d9bafc;font-size:20px;cursor:pointer;clip-path:var(--sc-corner-9)">+</button>
                 </div>
                 <sc-if value="{{ en.expanded }}" hint-placeholder-val="{{ false }}">
                   <div style="position:relative;border-top:1px solid #1f2430;padding:12px">
@@ -369,7 +387,11 @@
                       </sc-for>
                     </div>
                   </div>
-                  <button onClick="{{ tc.onAddRemove }}" aria-label="Toggle tactical card" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:{{ tc.btnBg }};border:1px solid {{ tc.btnBd }};color:{{ tc.btnFg }};font-size:19px;cursor:pointer;clip-path:var(--sc-corner-9)">{{ tc.btnGlyph }}</button>
+                  <div style="display:flex;align-items:center;gap:4px;flex:0 0 auto">
+                     <button onClick="{{ tc.onRemove }}" disabled="{{ tc.count === 0 }}" aria-label="Remove one copy" style="height:44px;width:34px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:20px;cursor:pointer">−</button>
+                     <span style="min-width:20px;text-align:center;font-family:Rajdhani,sans-serif;font-weight:700;color:#e9ecf2;font-size:16px">{{ tc.count }}</span>
+                     <button onClick="{{ tc.onAdd }}" disabled="{{ !tc.canAdd }}" aria-label="Add one copy" style="height:44px;width:34px;background:rgba(37,99,235,0.16);border:1px solid rgba(98,169,247,0.45);color:#bcd9fd;font-size:20px;cursor:pointer">+</button>
+                   </div>
                 </div>
                 <sc-if value="{{ tc.expanded }}" hint-placeholder-val="{{ false }}">
                   <div style="border-top:1px solid #1f2430;padding:12px;display:grid;gap:10px">
@@ -689,7 +711,7 @@ class Component extends DCLogic {
         this.state.army = (saved.army || []).filter(e => this.D().UNITS.find(u => u.id === e.unitId))
           .map(e => ({ modelsLost: 0, deployed: false, ...e }));
         this.state.tactical = (saved.tactical || []).filter(id => this.D().TACTICAL_CARDS.find(t => t.id === id));
-        this.state.tacticalTapped = (saved.tacticalTapped || []).filter(id => this.state.tactical.includes(id));
+        this.state.tacticalTapped = (saved.tacticalTapped || []).map(id => String(id).includes('#') ? String(id) : String(id) + '#0').filter(key => this.state.tactical.includes(key.split('#')[0]));
         if (saved.battleSupplyAvailable != null) this.state.battleSupplyAvailable = saved.battleSupplyAvailable;
         if (saved.scaleId) this.state.scaleId = saved.scaleId;
         if (saved.factionId) this.state.factionId = saved.factionId;
@@ -750,7 +772,7 @@ class Component extends DCLogic {
     this.setState({
       army: (entry.army || []).filter(e => D.UNITS.find(u => u.id === e.unitId)).map(e => ({ modelsLost: 0, deployed: false, ...e })),
       tactical,
-      tacticalTapped: (entry.tacticalTapped || []).filter(tid => tactical.includes(tid)),
+      tacticalTapped: (entry.tacticalTapped || []).map(id => String(id).includes('#') ? String(id) : String(id) + '#0').filter(key => tactical.includes(key.split('#')[0])),
       battleSupplyAvailable: entry.battleSupplyAvailable != null ? entry.battleSupplyAvailable : 4,
       scaleId: entry.scaleId || this.state.scaleId,
       factionId: entry.factionId || this.state.factionId,
@@ -863,8 +885,11 @@ class Component extends DCLogic {
   }
 
   // ---------- totals ----------
-  upgCostNum(cost) {
-    if (typeof cost === 'string' && cost.includes('/')) return parseInt(cost.split('/')[0], 10) || 0;
+  upgCostNum(cost, tierIdx = 1) {
+    if (typeof cost === 'string' && cost.includes('/')) {
+      const parts = cost.split('/').map(x => parseInt(x, 10) || 0);
+      return tierIdx === 0 ? parts[1] : parts[0];
+    }
     return parseInt(cost, 10) || 0;
   }
   unitUpgList(unit) {
@@ -931,7 +956,7 @@ class Component extends DCLogic {
       const upgs = this.unitUpgList(unit);
       (e.upgs || []).forEach(name => {
         const u = upgs.find(x => x.name === name);
-        if (u) minerals += this.upgCostNum(u.cost);
+        if (u) minerals += this.upgCostNum(u.cost, e.tierIdx);
       });
     });
     const gas = this.state.tactical.reduce((s, id) => {
@@ -972,7 +997,7 @@ class Component extends DCLogic {
     const upgrades = upgList.map(u => {
       const on = entry ? (entry.upgs || []).includes(u.name) : false;
       return {
-        name: u.name, cost: String(u.cost) + 'm', type: u.type, phase: u.phase.replace(' Phase', ''),
+        name: u.name, cost: (entry ? this.upgCostNum(u.cost, entry.tierIdx) : u.cost) + 'm', type: u.type, phase: u.phase.replace(' Phase', ''),
         ...this.phaseBadge(u.phase),
         segs: this.segs(u.description),
         interactive: !!entry, on,
@@ -1154,7 +1179,7 @@ class Component extends DCLogic {
         if (!unit || unit.role !== role) return;
         const tier = unit.tiers[e.tierIdx];
         const upgList = this.unitUpgList(unit);
-        const upgCost = (e.upgs || []).reduce((s, n) => { const u = upgList.find(x => x.name === n); return s + (u ? this.upgCostNum(u.cost) : 0); }, 0);
+        const upgCost = (e.upgs || []).reduce((s, n) => { const u = upgList.find(x => x.name === n); return s + (u ? this.upgCostNum(u.cost, e.tierIdx) : 0); }, 0);
         unitsHtml += this.printUnitBlock(unit, e, (tier.cost || 0) + upgCost, role);
       });
     });
@@ -1183,7 +1208,17 @@ class Component extends DCLogic {
     }), () => this.save());
   }
   addUnit(unit) {
-    const opts = unit.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost !== null);
+    if (unit.role === 'Other' || !unit.tiers.some(t => t.cost > 0)) return;
+    const faction = this.D().FACTION_CARDS.find(fc => fc.id === this.state.factionId) || this.D().FACTION_CARDS[0];
+    if (unit.factionTag && unit.factionTag !== faction.name) {
+      window.alert(unit.name + ' requires the ' + unit.factionTag + ' faction.');
+      return;
+    }
+    if (unit.unique && this.state.army.some(e => e.unitId === unit.id)) {
+      window.alert('Only one ' + unit.name + ' may be mustered.');
+      return;
+    }
+    const opts = unit.tiers.map((t, i) => ({ t, i })).filter(x => typeof x.t.cost === 'number' && x.t.cost > 0);
     if (opts.length === 1) { this.commitAdd(unit.id, opts[0].i); return; }
     this.setState({ sheet: { type: 'tier', unitId: unit.id, mode: 'add' } });
   }
@@ -1222,15 +1257,39 @@ class Component extends DCLogic {
       const t = D.TACTICAL_CARDS.find(x => x.id === id);
       if (t) Object.entries(t.slots || {}).forEach(([k, v]) => { baseSlots[k] = (baseSlots[k] || 0) + v; });
     });
-    const usedSlots = { hero: 0, elite: 0, core: 0, support: 0 };
+    const usedSlots = { hero: 0, elite: 0, core: 0, support: 0, air: 0 };
     st.army.forEach(e => {
       const u = D.UNITS.find(x => x.id === e.unitId);
-      if (u && usedSlots[u.role.toLowerCase()] !== undefined) usedSlots[u.role.toLowerCase()] += 1;
+      if (u && usedSlots[u.role.toLowerCase()] !== undefined) usedSlots[u.role.toLowerCase()] += (u.tiers[e.tierIdx]?.supply || 0);
     });
-    const slotPills = ['hero', 'elite', 'core', 'support'].filter(k => baseSlots[k]).map(k => {
+    const slotPills = ['hero', 'elite', 'core', 'support', 'air'].filter(k => baseSlots[k] || usedSlots[k]).map(k => {
       const over = usedSlots[k] > baseSlots[k];
       return { label: k.slice(0, 1).toUpperCase() + k.slice(1, 3) + ' ' + usedSlots[k] + '/' + baseSlots[k], fg: over ? '#f08a8a' : '#a7aec2', bd: over ? 'rgba(240,74,74,0.4)' : 'var(--sc-border-input)' };
     });
+
+    const rosterWarnings = [];
+    if (mOver) rosterWarnings.push('Minerals exceed the engagement limit by ' + (totals.minerals - scale.minerals) + '.');
+    if (gOver) rosterWarnings.push('Vespene exceeds the engagement limit by ' + (totals.gas - scale.gas) + '.');
+    for (const [role,count] of Object.entries(usedSlots)) {
+      if (count > (baseSlots[role] || 0)) rosterWarnings.push('Army slots: ' + role + ' uses ' + count + ' of ' + (baseSlots[role] || 0) + ' allowed.');
+    }
+    const uniqueUnits = new Set();
+    for (const e of st.army) {
+      const u = D.UNITS.find(x => x.id === e.unitId);
+      if (!u) { rosterWarnings.push('Saved roster contains an unavailable Unit: ' + e.unitId + '.'); continue; }
+      if (u.factionTag && u.factionTag !== faction.name) rosterWarnings.push(u.name + ' requires the ' + u.factionTag + ' faction.');
+      if (u.role === 'Other' || !u.tiers.some(t => t.cost > 0)) rosterWarnings.push(u.name + ' is summoned and cannot be purchased.');
+      if (u.unique && uniqueUnits.has(u.id)) rosterWarnings.push('Unique Unit duplicated: ' + u.name + '.');
+      if (u.unique) uniqueUnits.add(u.id);
+      if (!u.tiers[e.tierIdx] || !Number.isFinite(u.tiers[e.tierIdx].cost) || u.tiers[e.tierIdx].cost <= 0) rosterWarnings.push('Invalid purchased composition for ' + u.name + '.');
+    }
+    const uniqueTactical = new Set();
+    for (const id of st.tactical) {
+      const t = D.TACTICAL_CARDS.find(x => x.id === id);
+      if (!t) { rosterWarnings.push('Saved roster contains an unavailable Tactical Card: ' + id + '.'); continue; }
+      if (t.unique && uniqueTactical.has(id)) rosterWarnings.push('Unique Tactical Card duplicated: ' + t.name + '.');
+      if (t.unique) uniqueTactical.add(id);
+    }
 
     // roster groups
     const roles = ['Hero', 'Elite', 'Core', 'Support', 'Other'];
@@ -1243,13 +1302,13 @@ class Component extends DCLogic {
         const tier = unit.tiers[e.tierIdx];
         const upgCost = (e.upgs || []).reduce((s, n) => {
           const u = this.unitUpgList(unit).find(x => x.name === n);
-          return s + (u ? this.upgCostNum(u.cost) : 0);
+          return s + (u ? this.upgCostNum(u.cost, e.tierIdx) : 0);
         }, 0);
         cost += (tier.cost || 0) + upgCost;
         const expanded = !!st.expArmy[e.key];
         return {
           name: unit.name, unique: !!unit.unique,
-          tierLabel: tier.tier + ' · ' + tier.models + ' models' + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
+          tierLabel: tier.tier + ' · ' + this.unitStartingModels(unit, e.tierIdx) + ' models' + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
           cost: (tier.cost || 0) + upgCost, supply: tier.supply,
           expanded, chev: expanded ? 90 : 0, ...this.portrait(unit),
           borderColor: expanded ? 'rgba(176,110,247,0.45)' : 'var(--sc-border-neutral)',
@@ -1273,12 +1332,12 @@ class Component extends DCLogic {
       const effTier = effIdx >= 0 ? unit.tiers[effIdx] : null;
       const upgCost = (e.upgs || []).reduce((s, n) => {
         const u = this.unitUpgList(unit).find(x => x.name === n);
-        return s + (u ? this.upgCostNum(u.cost) : 0);
+        return s + (u ? this.upgCostNum(u.cost, e.tierIdx) : 0);
       }, 0);
       const expanded = !!st.expArmy[e.key];
       return {
         key: e.key, role: unit.role, name: unit.name, unique: !!unit.unique,
-        tierLabel: tier.tier + ' · ' + tier.models + ' models' + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
+        tierLabel: tier.tier + ' · ' + this.unitStartingModels(unit, e.tierIdx) + ' models' + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
         cost: (tier.cost || 0) + upgCost,
         ...this.portrait(unit),
         borderColor: expanded ? 'rgba(176,110,247,0.45)' : 'var(--sc-border-neutral)',
@@ -1308,17 +1367,21 @@ class Component extends DCLogic {
       if (!entries.length) return null;
       return { role, color: this.roleColor(role), entries };
     }).filter(Boolean);
+    const tacticalCopyCounts = {};
     const battleTactical = st.tactical.map(id => {
+      const copyIndex = tacticalCopyCounts[id] || 0;
+      tacticalCopyCounts[id] = copyIndex + 1;
+      const tappedKey = id + '#' + copyIndex;
       const t = D.TACTICAL_CARDS.find(x => x.id === id);
       if (!t) return null;
-      const tapped = st.tacticalTapped.includes(id);
+      const tapped = st.tacticalTapped.includes(tappedKey);
       return {
         id, name: t.name, cost: t.cost, tapped,
         bg: tapped ? 'rgba(139,146,163,0.1)' : 'rgba(56,211,232,0.1)',
         bd: tapped ? 'var(--sc-border-input)' : 'rgba(56,211,232,0.35)',
         fg: tapped ? '#5b6275' : '#38d3e8',
         label: tapped ? 'Tapped' : 'Ready',
-        onToggle: () => this.toggleTapped(id)
+        onToggle: () => this.toggleTapped(tappedKey)
       };
     }).filter(Boolean);
     const anyTapped = st.tacticalTapped.length > 0;
@@ -1338,6 +1401,7 @@ class Component extends DCLogic {
             tags: (u.tags || []).map(t => ({ name: t, onOpen: (ev) => { ev.stopPropagation(); this.openTag(t); } })),
             detail: expanded ? this.buildDetail(u, null) : null,
             onToggle: () => this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: !s2.expLib[u.id] } })),
+            recruitable: u.role !== 'Other' && u.tiers.some(t => t.cost > 0) && (!u.factionTag || u.factionTag === faction.name),
             onAdd: (ev) => { ev.stopPropagation(); this.addUnit(u); }
           };
         })
@@ -1354,10 +1418,11 @@ class Component extends DCLogic {
       return {
         name: catNames[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1)),
         cards: cards.map(t => {
-          const inArmy = st.tactical.includes(t.id);
+          const count = st.tactical.filter(id => id === t.id).length;
+          const inArmy = count > 0;
           const expanded = !!st.expTac[t.id];
           return {
-            name: t.name, unique: !!t.unique, summary: t.summary, cost: t.cost,
+            name: t.name, unique: !!t.unique, summary: t.summary, cost: t.cost, count, canAdd: !t.unique || count === 0,
             resource: t.resource || false, expanded,
             borderColor: inArmy ? 'rgba(56,211,232,0.45)' : (expanded ? 'rgba(176,110,247,0.45)' : 'var(--sc-border-neutral)'),
             slotPills: Object.entries(t.slots || {}).map(([k, v]) => '+' + v + ' ' + k),
@@ -1367,9 +1432,24 @@ class Component extends DCLogic {
             btnFg: inArmy ? '#5fd98d' : '#d9bafc',
             abilities: expanded ? t.abilities.map(a => ({ name: a.name, type: a.type, phase: a.phase.replace(' Phase', ''), ...this.phaseBadge(a.phase), segs: this.segs(a.description) })) : [],
             onToggle: () => this.setState(s2 => ({ expTac: { ...s2.expTac, [t.id]: !s2.expTac[t.id] } })),
-            onAddRemove: (ev) => {
+            onAdd: (ev) => {
               ev.stopPropagation();
-              this.setState(s2 => ({ tactical: s2.tactical.includes(t.id) ? s2.tactical.filter(x => x !== t.id) : [...s2.tactical, t.id] }), () => this.save());
+              this.setState(s2 => {
+                if (t.unique && s2.tactical.includes(t.id)) return {};
+                return { tactical: [...s2.tactical, t.id] };
+              }, () => this.save());
+            },
+            onRemove: (ev) => {
+              ev.stopPropagation();
+              this.setState(s2 => {
+                const tactical = [...s2.tactical];
+                const index = tactical.lastIndexOf(t.id);
+                if (index === -1) return {};
+                const copyIndex = tactical.filter(id => id === t.id).length - 1;
+                tactical.splice(index, 1);
+                const key = t.id + '#' + copyIndex;
+                return { tactical, tacticalTapped: s2.tacticalTapped.filter(x => x !== key) };
+              }, () => this.save());
             }
           };
         })
@@ -1446,7 +1526,7 @@ class Component extends DCLogic {
       if (unit) {
         tierUnitName = unit.name;
         tierOptions = unit.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost !== null).map(x => ({
-          tier: x.t.tier, models: x.t.models, supply: x.t.supply, cost: x.t.cost,
+          tier: x.t.tier, models: String(this.unitStartingModels(unit, x.i)), supply: x.t.supply, cost: x.t.cost,
           onPick: () => st.sheet.mode === 'change' ? this.changeTier(st.sheet.entryKey, x.i) : this.commitAdd(unit.id, x.i)
         }));
       }
@@ -1527,6 +1607,7 @@ class Component extends DCLogic {
       // roster
       scales, slotPills,
       rosterEmpty: st.army.length === 0, rosterGroups,
+      hasRosterWarnings: rosterWarnings.length > 0, rosterWarnings,
       hasTactical: rosterTactical.length > 0, rosterTactical, tacticalCount: rosterTactical.length,
       // battle
       battleEmpty: battleUnits.length === 0, battleGroups,

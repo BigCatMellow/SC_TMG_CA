@@ -16,8 +16,11 @@
   <style>
     ::selection { background: rgba(56,211,232,0.35); }
   </style>
+  <script src="terran-data.js"></script>
   <script src="zerg-data.js"></script>
+  <script src="protoss-data.js"></script>
   <script src="rules-data.js"></script>
+  <script src="battle-rules-data.js"></script>
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
@@ -64,6 +67,12 @@
       </sc-if>
     </div>
 
+    <!-- Choose core rules, or a faction with all shared rules included. -->
+    <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:0 14px 10px" role="group" aria-label="Rulebook faction filter">
+      <sc-for list="{{ factionTabs }}" as="ft" hint-placeholder-count="4">
+        <button onClick="{{ ft.onSelect }}" aria-pressed="{{ ft.active }}" style="min-height:40px;min-width:0;padding:7px 3px;background:{{ ft.bg }};border:1px solid {{ ft.bd }};color:{{ ft.fg }};font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.04em;cursor:pointer;white-space:nowrap">{{ ft.name }}</button>
+      </sc-for>
+    </div>
     <!-- quick-nav chips -->
     <div style="display:flex;gap:6px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none">
       <sc-for list="{{ chips }}" as="ch" hint-placeholder-count="6">
@@ -76,6 +85,7 @@
 
   <!-- ============ SECTIONS ============ -->
   <div style="padding:14px">
+    <div style="margin-bottom:12px;padding:9px 11px;background:rgba(56,211,232,0.06);border-left:2px solid #38d3e8;color:#9ab4bd;font-size:11px;line-height:1.5">{{ sourceBanner }}</div>
     <sc-if value="{{ noHits }}" hint-placeholder-val="{{ false }}">
       <div style="padding:40px 20px;text-align:center;color:#5b6275;font-size:13px">No rules match “{{ q }}”.</div>
     </sc-if>
@@ -90,6 +100,7 @@
                 <sc-if value="{{ sec.phase }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;background:{{ sec.phBg }};color:{{ sec.color }}">{{ sec.phase }}</span></sc-if>
               </div>
               <div style="font-size:12px;color:#8a91a5">{{ sec.meta }}</div>
+              <sc-if value="{{ sec.sourceLabel }}" hint-placeholder-val="{{ true }}"><div style="font-size:10px;color:#5fd9ea;letter-spacing:0.03em;margin-top:2px">Source · {{ sec.sourceLabel }}</div></sc-if>
             </div>
             <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex:0 0 auto;transform:rotate({{ sec.chev }}deg);transition:transform 0.18s"><path d="M6 4l4 4-4 4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
           </div>
@@ -136,7 +147,7 @@
       </sc-for>
     </div>
     <div style="margin-top:22px;text-align:center">
-      <div style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#3a4154">Reorganized Master Rules · Adjutant v5</div>
+      <div style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;color:#3a4154">2026 Core Rules · Source-Cited Battle Reference</div>
     </div>
   </div>
 
@@ -211,13 +222,14 @@ class Component extends DCLogic {
     play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0 },
     exp: {},
     q: '',
+    scope: 'core',
     sheet: null
   };
 
   componentDidMount() {
     this._secEls = {};
     this._poll = setInterval(() => {
-      if (window.SCTMG_RULES && window.SCTMG_ZERG) {
+      if (window.SCTMG_RULES && window.SCTMG_ZERG && window.SCTMG_TERRAN && window.SCTMG_PROTOSS) {
         clearInterval(this._poll);
         try {
           const play = JSON.parse(localStorage.getItem('sctmg_play') || 'null');
@@ -233,7 +245,7 @@ class Component extends DCLogic {
 
   kwRegex() {
     if (!this._kwRe) {
-      const names = Object.keys(window.SCTMG_ZERG.KEYWORDS).sort((a, b) => b.length - a.length).map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+      const names = [...new Set([window.SCTMG_TERRAN, window.SCTMG_ZERG, window.SCTMG_PROTOSS].flatMap(d => Object.keys(d.KEYWORDS || {})))].sort((a, b) => b.length - a.length).map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
       this._kwRe = new RegExp('\\b(' + names.join('|') + ')(\\s*\\([^)]*\\))?', 'g');
     }
     return this._kwRe;
@@ -267,8 +279,11 @@ class Component extends DCLogic {
   }
 
   openKeyword(name) {
-    const kw = window.SCTMG_ZERG.KEYWORDS[name];
-    if (kw) this.setState({ sheet: { title: name, meta: kw.type + ' · Keyword', body: kw.description } });
+    const s = this.state.scope;
+    const preferred = { terran: window.SCTMG_TERRAN, zerg: window.SCTMG_ZERG, protoss: window.SCTMG_PROTOSS }[s];
+    const kw = [preferred, window.SCTMG_TERRAN, window.SCTMG_ZERG, window.SCTMG_PROTOSS]
+      .filter(Boolean).map(d => d.KEYWORDS && d.KEYWORDS[name]).find(Boolean);
+    if (kw) this.setState({ sheet: { title: name, meta: kw.type + ' · Companion data (check 2026 PDF pp. 82–91)', body: kw.description } });
   }
 
   hexRgb(hex) {
@@ -289,7 +304,8 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state;
     if (!st.ready) return { ready: false };
-    const R = window.SCTMG_RULES;
+    const R = window.SCTMG_BATTLE_RULES || window.SCTMG_RULES;
+    const scope = st.scope || 'core';
     const q = st.q.trim().toLowerCase();
     const searching = q.length >= 2;
 
@@ -303,11 +319,12 @@ class Component extends DCLogic {
 
     const itemMatch = (it) => it.t.toLowerCase().includes(q) || (it.ph || '').toLowerCase().includes(q);
 
-    const sections = R.sections.map(sec => {
+    const visibleSections = R.sections.filter(sec => !sec.scope || sec.scope === 'core' || sec.scope === scope);
+    const sections = visibleSections.map(sec => {
       let groups = sec.groups;
       let match = true;
       if (searching) {
-        const secText = (sec.name + ' ' + sec.meta + ' ' + (sec.intro || '') + ' ' + (sec.practical || '')).toLowerCase();
+        const secText = (sec.name + ' ' + sec.meta + ' ' + (sec.sourceLabel || '') + ' ' + (sec.intro || '') + ' ' + (sec.practical || '')).toLowerCase();
         const secHit = secText.includes(q);
         const gHits = sec.groups.map(g => {
           const gHit = g.name.toLowerCase().includes(q);
@@ -320,7 +337,7 @@ class Component extends DCLogic {
       if (!match) return null;
       const expanded = searching ? true : !!st.exp[sec.id];
       return {
-        num: sec.num, name: sec.name, meta: sec.meta, color: sec.color,
+        num: sec.num, name: sec.name, meta: sec.meta, color: sec.color, sourceLabel: sec.sourceLabel || false,
         phase: sec.phase || false,
         phBg: 'rgba(' + this.hexRgb(sec.color) + ',0.14)',
         expanded, chev: expanded ? 90 : 0,
@@ -349,7 +366,7 @@ class Component extends DCLogic {
       };
     }).filter(Boolean);
 
-    const chips = R.sections.map(sec => {
+    const chips = visibleSections.map(sec => {
       const active = !!st.exp[sec.id];
       return {
         name: sec.name.replace(' Phase', '').replace(' & Cleanup', ''), color: sec.color,
@@ -357,6 +374,22 @@ class Component extends DCLogic {
         bd: active ? 'rgba(' + this.hexRgb(sec.color) + ',0.5)' : 'var(--sc-border-neutral)',
         fg: active ? '#e9ecf2' : '#8a91a5',
         onJump: () => this.jumpTo(sec.id)
+      };
+    });
+
+    const tabs = [
+      { id: 'core', name: 'Core', color: '#38d3e8' },
+      { id: 'terran', name: 'Terran', color: '#4f8df9' },
+      { id: 'zerg', name: 'Zerg', color: '#ec5f99' },
+      { id: 'protoss', name: 'Protoss', color: '#b06ef7' }
+    ];
+    const factionTabs = tabs.map(t => {
+      const active = scope === t.id;
+      return { name: t.name, active,
+        bg: active ? '#20283a' : '#12151f',
+        bd: active ? t.color : 'var(--sc-border-neutral)',
+        fg: active ? '#e9ecf2' : '#8a91a5',
+        onSelect: () => this.setState({ scope: t.id, exp: {} })
       };
     });
 
@@ -393,7 +426,10 @@ class Component extends DCLogic {
       q: st.q, hasQ: st.q.length > 0,
       onInput: (ev) => this.setState({ q: ev.target.value }),
       clearQ: () => this.setState({ q: '' }),
-      chips, sections,
+      chips, sections, factionTabs,
+      sourceBanner: window.SCTMG_BATTLE_RULES
+        ? '2026 Core Rules mechanics + October 2026 official Wave 1 points. Consult printed cards and the publisher FAQ for specific effects; not every newer-wave unit is included.'
+        : 'Legacy HTML summary loaded. The 2026 battle reference is unavailable — do not rely on this as fully updated.',
       noHits: searching && sections.length === 0,
       sheetOpen: !!(st.sheet && st.sheet.type !== 'play'),
       sheetPlay: !!(st.sheet && st.sheet.type === 'play'),

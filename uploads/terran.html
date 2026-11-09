@@ -1255,15 +1255,15 @@
   'HIDDEN': { type: 'Status', description: 'Enemies more than 4" away cannot target this unit with ranged attacks or Line of Sight abilities. The unit is immune to IMPACT and gets an Evade Roll against every attack.' },
   'IMPACT': { type: 'Combat', description: 'After a successful Charge, each eligible model generates X extra dice. Rolls of Y or higher become automatic hits placed in the Armour Pool.' },
   'INDIRECT FIRE': { type: 'Weapon', description: 'This weapon ignores Line of Sight requirements. The target still benefits from Cover.' },
-  'INSTANT': { type: 'Weapon', description: 'This weapon resolves immediately, typically granting the INSTANT keyword to close combat weapons for the active unit.' },
+  'INSTANT': { type: 'Weapon', description: "Enemy Units cannot declare or resolve Reaction abilities in response to attacks made with this weapon." },
   'LOCKED IN': { type: 'Weapon', description: 'This weapon can only target enemies Within X inches of the aimed point.' },
   'LONG RANGE': { type: 'Weapon', description: 'The weapon\'s maximum range extends to X inches, but shots beyond the normal listed range suffer a -1 Hit penalty.' },
-  'NON-LETHAL DAMAGE': { type: 'Effect', description: 'The unit suffers X damage that cannot reduce a model below 1 HP. Excess damage is ignored.' },
-  'PIERCE': { type: 'Combat', description: 'When attacking a target with the specified tag, move up to X dice from the Armour Pool directly to the Damage Pool.' },
+  'NON-LETHAL DAMAGE': { type: 'Effect', description: "Add X points of Damage to the Unit without removing models, even if Total Damage exceeds a model's HP. Subsequent standard Damage triggers casualty removal using combined Total Damage." },
+  'PIERCE': { type: 'Combat', description: "When attacking a Unit with the specified Combat Tag, treat this weapon's Damage characteristic as X." },
   'PINPOINT': { type: 'Weapon', description: 'This weapon can target individual models within a unit rather than the unit as a whole.' },
-  'PLACE': { type: 'Movement', description: 'Remove the Leading Model and set it Wholly Within X inches of its starting point. PLACE ignores normal pathing, gap clearance, terrain restrictions, and elevation requirements, then the unit is rebuilt in Coherency.' },
+  'PLACE': { type: 'Movement', description: "Remove and set a Leading Model Wholly Within X inches, then rebuild the Unit in Coherency. PLACE ignores movement path, Gap Clearance and elevation requirements; the placement must otherwise be legal. Normally do not end within enemy Engagement Range; during Assault a PLACE effect may set models in Engagement. See PDF p. 88." },
   'PRECISION': { type: 'Combat', description: 'After rolling to hit, move up to X missed dice into the Armour Pool. They still need to survive armour.' },
-  'SIDEARM': { type: 'Weapon', description: 'This weapon can be fired in addition to one other non-SIDEARM weapon in the same Activation.' },
+  'SIDEARM': { type: 'Weapon', description: "May be used in addition to the model's normal weapon during a Ranged Attack or Close Combat Attack. Multiple SIDEARMs may all be used, each as a separate Batch; each may select a different eligible target. See PDF p. 89." },
   'SPECIALIST': { type: 'Weapon', description: 'Only one model in the unit may use this weapon per Activation.' },
   'STATIONARY': { type: 'Status', description: 'All units start each round Stationary. The status is lost the moment the unit moves, is moved, or is placed.' },
   'TOUGH': { type: 'Combat', description: 'When making Armour Rolls, convert up to X failed results into successes.' },
@@ -1315,29 +1315,145 @@
     // ============================================================================
     const ZERG_UNITS = [
   // HERO
-  { id: 'jim-raynor', name: 'Jim Raynor', role: 'Hero', unique: true, tags: ['Biological', 'Ground'],
-    stats: { shield: null, speed: '7', evade: '5+', armour: '4+', hp: 8, size: 2 },
-    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 230, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
-    weapons: [
-      { name: 'Commando Rifle', phase: 'Assault', range: '18', target: 'All', roa: 3, hit: '3+', surge: 'Armoured', sDie: 'D3', damage: 1, keywords: ['BULKY', 'PIERCE Armoured (3)'] },
-      { name: 'C-14 Rifle', phase: 'Assault', range: '12', target: 'All', roa: 6, hit: '3+', surge: 'Light', sDie: 'D3+1', damage: 1, keywords: ['BURST FIRE 8" (3)'], replaces: 'Commando Rifle' },
-      { name: '"Justice" Revolver', phase: 'Assault', range: '6', target: 'Ground', roa: 2, hit: '3+', surge: '-', sDie: '-', damage: 2, keywords: ['ANTI-EVADE (2)', 'SIDEARM', 'PINPOINT'] },
-      { name: 'Bayonet', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '4+', surge: 'Light', sDie: 'D3', damage: 1, keywords: [] }
-    ],
-    abilities: [
-      { phase: 'Any Phase', name: 'Commander', type: 'Passive', description: "Treat this Unit's Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks." },
-      { phase: 'Any Phase', name: 'Freedom Fighters', type: 'Passive', description: 'The Supply Value of all Friendly Units Within 8" of this Unit cannot be reduced below 1 for Contesting Mission Markers and completing objectives.' }
-    ],
-    phaseAbilities: {
-      'Movement Phase': [{ name: 'Orders', type: 'Active (X Command Point)', description: 'REPEATABLE. Select another Friendly Biological Unit Within 8", spend CP and apply one of the following effects: 1 CP: That Unit\'s first used weapon gains the CRITICAL HIT (2). 1 CP: That Unit ignores the Disengage penalty for the remainder of the Round. 2 CP: Remove the Activation Marker from that Unit.' }]
-    },
-    upgrades: {}
+  {
+  "id": "jim-raynor",
+  "name": "Jim Raynor",
+  "role": "Hero",
+  "unique": true,
+  "tags": [
+    "Biological",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "7",
+    "evade": "5+",
+    "armour": "4+",
+    "hp": 8,
+    "size": 2
   },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    },
+    {
+      "tier": "T2",
+      "cost": 280,
+      "models": "1",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Commando Rifle",
+      "phase": "Assault",
+      "range": "18",
+      "target": "All",
+      "roa": 3,
+      "hit": "3+",
+      "surge": "Armoured",
+      "sDie": "D3",
+      "damage": 1,
+      "keywords": [
+        "BULKY",
+        "PIERCE Armoured (3)"
+      ]
+    },
+    {
+      "name": "C-14 Rifle",
+      "phase": "Assault",
+      "range": "12",
+      "target": "All",
+      "roa": 6,
+      "hit": "3+",
+      "surge": "Light",
+      "sDie": "D3+1",
+      "damage": 1,
+      "keywords": [
+        "BURST FIRE 8\" (3)"
+      ],
+      "replaces": "Commando Rifle"
+    },
+    {
+      "name": "\"Justice\" Revolver",
+      "phase": "Assault",
+      "range": "6",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "3+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 2,
+      "keywords": [
+        "ANTI-EVADE (2)",
+        "SIDEARM",
+        "PINPOINT"
+      ]
+    },
+    {
+      "name": "Bayonet",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "4+",
+      "surge": "Light",
+      "sDie": "D3",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Commander",
+      "type": "Passive",
+      "description": "Treat this Unit's Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks."
+    },
+    {
+      "phase": "Any Phase",
+      "name": "Freedom Fighters",
+      "type": "Passive",
+      "description": "The Supply Value of all Friendly Units Within 8\" of this Unit cannot be reduced below 1 for Contesting Mission Markers and completing objectives."
+    }
+  ],
+  "phaseAbilities": {
+    "Movement Phase": [
+      {
+        "name": "Orders",
+        "type": "Active (X Command Point)",
+        "description": "REPEATABLE. Select another Friendly Biological Unit Within 8\", spend CP and apply one of the following effects: 1 CP: That Unit's first used weapon gains the CRITICAL HIT (2). 1 CP: That Unit ignores the Disengage penalty for the remainder of the Round. 2 CP: Remove the Activation Marker from that Unit."
+      }
+    ]
+  },
+  "upgrades": {
+    "Assault Phase": [
+      {
+        "name": "C-14 Rifle",
+        "cost": 0,
+        "type": "Weapon",
+        "description": "Replaces Commando Rifle. Range 12, Target All, RoA 6, Hit 3+, Surge Light, S.Dice D3+1, Damage 1, BURST FIRE 8\" (3).",
+        "modifies": {
+          "weapon": "Commando Rifle"
+        }
+      }
+    ]
+  }
+},
 
   // ELITE
   { id: 'goliath', name: 'Goliath', role: 'Elite', tags: ['Armoured', 'Mechanical', 'Ground'],
     stats: { shield: null, speed: '7', evade: '-', armour: '4+', hp: 10, size: 3 },
-    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 190, models: '1', supply: 2 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
+    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 180, models: '1', supply: 2 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
     weapons: [
       { name: 'Autocannon', phase: 'Assault', range: '12', target: 'Ground', roa: 9, hit: '4+', surge: '-', sDie: '-', damage: 1, keywords: ['LONG RANGE (18")'] },
       { name: 'Underbelly Machine Gun', phase: 'Assault', range: '8', target: 'Ground', roa: 6, hit: '3+', surge: 'Light', sDie: 'D3', damage: 1, keywords: ['PINPOINT', 'SIDEARM'] },
@@ -1364,7 +1480,7 @@
   // CORE
   { id: 'marauder', name: 'Marauder', role: 'Core', tags: ['Armoured', 'Biological', 'Ground'],
     stats: { shield: null, speed: '4/7', evade: '6+', armour: '4+', hp: 5, size: 2 },
-    tiers: [{ tier: 'T3', cost: 280, models: '3-4', supply: 2 }, { tier: 'T2', cost: 150, models: '2', supply: 1 }, { tier: 'T1', cost: null, models: '1', supply: 0 }],
+    tiers: [{ tier: 'T3', cost: 290, models: '3-4', supply: 2 }, { tier: 'T2', cost: 160, models: '2', supply: 1 }, { tier: 'T1', cost: null, models: '1', supply: 0 }],
     weapons: [
       { name: 'Quad K12', phase: 'Assault', range: '12', target: 'Ground', roa: 3, hit: '3+', surge: 'Armoured', sDie: 'D3', damage: 1, keywords: ['PIERCE Armoured (2)'] },
       { name: 'Strike', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '4+', surge: '-', sDie: '-', damage: 1, keywords: [] }
@@ -1384,7 +1500,7 @@
   },
   { id: 'marine', name: 'Marine', role: 'Core', tags: ['Biological', 'Light', 'Ground'],
     stats: { shield: null, speed: '4/7', evade: '5+', armour: '5+', hp: 2, size: 2 },
-    tiers: [{ tier: 'T3', cost: 210, models: '7-9', supply: 2 }, { tier: 'T2', cost: 160, models: '4-6', supply: 1 }, { tier: 'T1', cost: null, models: '1-3', supply: 0 }],
+    tiers: [{ tier: 'T3', cost: 220, models: '7-9', supply: 2 }, { tier: 'T2', cost: 170, models: '4-6', supply: 1 }, { tier: 'T1', cost: null, models: '1-3', supply: 0 }],
     weapons: [
       { name: 'C-14 Rifle', phase: 'Assault', range: '12', target: 'All', roa: 2, hit: '3+', surge: 'Light', sDie: 'D3', damage: 1, keywords: [] },
       { name: 'Strike', phase: 'Combat', range: 'E', target: 'Ground', roa: 1, hit: '5+', surge: '-', sDie: '-', damage: 1, keywords: [] }
@@ -1396,10 +1512,10 @@
     upgrades: {
       'Movement Phase': [{ name: 'Combat Shield', cost: '20/30', type: 'Active (1 Command Point)', description: 'This Unit is always eligible to make an Evade Roll against any Close Combat Attack targeting it and any Damage from an Enemy Special Ability.' }],
       'Assault Phase': [
-        { name: 'AGG-12', cost: 10, type: 'Weapon', description: 'Replaces C-14 Rifle. RNG 12, TGT Ground, RoA 2, Hit 3+, Surge Armoured, S.Die D3, Dmg 1. Keywords: LONG RANGE (18"), SPECIALIST.', modifies: { weapon: 'C-14 Rifle' } },
-        { name: 'Rocket Launcher', cost: 40, type: 'Weapon', description: 'Additional weapon. RNG 12, TGT Ground, RoA 4, Hit 3+, Dmg 1. Keywords: INDIRECT FIRE, LONG RANGE (18"), SIDEARM, SPECIALIST.' },
+        { name: 'AGG-12', cost: '10/10', type: 'Weapon', description: 'Replaces C-14 Rifle. RNG 12, TGT Ground, RoA 2, Hit 3+, Surge Armoured, S.Die D3, Dmg 1. Keywords: LONG RANGE (18"), SPECIALIST.', modifies: { weapon: 'C-14 Rifle' } },
+        { name: 'Rocket Launcher', cost: '40/40', type: 'Weapon', description: 'Additional weapon. RNG 12, TGT Ground, RoA 4, Hit 3+, Dmg 1. Keywords: INDIRECT FIRE, LONG RANGE (18"), SIDEARM, SPECIALIST.' },
         { name: 'Slugthrower', cost: '10/20', type: 'Passive', description: 'When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8", that weapon gains ANTI-EVADE (1).' },
-        { name: 'Grenades - Frag', cost: 10, type: 'Passive', description: "When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8\", that weapon's S Dice is replaced by D6." }
+        { name: 'Grenades - Frag', cost: '10/10', type: 'Passive', description: "When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8\", that weapon's S Dice is replaced by D6." }
       ],
       'Combat Phase': [{ name: 'Bayonet', cost: '20/30', type: 'Weapon', description: 'Replaces Strike. RNG E, TGT Ground, RoA 2, Hit 5+, Dmg 1.', modifies: { weapon: 'Strike' } }]
     }
@@ -1429,7 +1545,7 @@
   // SUPPORT
   { id: 'medic', name: 'Medic', role: 'Support', tags: ['Biological', 'Light', 'Ground'],
     stats: { shield: null, speed: '4/7', evade: '5+', armour: '5+', hp: 2, size: 2 },
-    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 110, models: '2-3', supply: 1 }, { tier: 'T1', cost: null, models: '1', supply: 0 }],
+    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 120, models: '2-3', supply: 1 }, { tier: 'T1', cost: null, models: '1', supply: 0 }],
     weapons: [{ name: 'Strike', phase: 'Combat', range: 'E', target: 'Ground', roa: 1, hit: '5+', surge: '-', sDie: '-', damage: 1, keywords: [] }],
     abilities: [
       { phase: 'Any Phase', name: 'Life Support', type: 'Reaction (1 Command Point)', description: 'Use when another Friendly Biological Unit suffers Damage Within 4". Reduce the Total Damage before allocation by 1 for each model in this Unit that is Within 4" of the damaged Unit.' },
@@ -1445,7 +1561,7 @@
       'Any Phase': [
         { name: 'Advanced Medic Facilities', cost: 60, type: 'Passive', description: "This Unit's Supply Value counts as 0 when calculating the Supply Pool." },
         { name: 'A-13 Flash Grenade Launcher', cost: 20, type: 'Passive', description: 'Increase the Optical Flare special ability\'s Range to 16".' },
-        { name: 'Stabilizer Medpacks', cost: 30, type: 'Passive', description: 'When this Unit resolves a Life Support or Medpack ability, treat it as having 1 additional model Within Range for calculating that ability\'s effects.' }
+        { name: 'Stabilizer Medpacks', cost: 20, type: 'Passive', description: 'When this Unit resolves a Life Support or Medpack ability, treat it as having 1 additional model Within Range for calculating that ability\'s effects.' }
       ]
     }
   },
@@ -1469,7 +1585,7 @@
     // DATA: Tactical Cards
     // ============================================================================
     const ZERG_TACTICAL_CARDS = [
-  { id: 'academy', name: 'Academy', unique: true, cost: 35, resource: '+1 CP', slots: { support: 2 },
+  { id: 'academy', name: 'Academy', unique: true, cost: 40, resource: '+1 CP', slots: { support: 2 },
     abilities: [{ phase: 'Any Phase', name: 'Advanced Training', type: 'Reaction', description: 'Once per Round, when a Friendly Support Unit activates a Special Ability that costs CP, resolve that ability with its CP cost reduced by 1 (to a minimum of 0). Do not Exhaust this card.' }]
   },
   { id: 'armory', name: 'Armory', unique: false, cost: 30, resource: '+1 CP', slots: { elite: 1 },
@@ -1478,7 +1594,7 @@
       { phase: 'Assault Phase', name: 'Vehicle Weapons', type: 'Active', description: "The active Mechanical Unit's first Ranged Weapon used gains CRITICAL HIT (1)." }
     ]
   },
-  { id: 'barracks', name: 'Barracks', unique: false, cost: 25, resource: '+1 CP', slots: { core: 1 },
+  { id: 'barracks', name: 'Barracks', unique: false, cost: 30, resource: '+1 CP', slots: { core: 1 },
     abilities: [{ phase: 'Movement Phase', name: 'Go! Go! Go!', type: 'Active', description: 'The active Biological Unit performs a 2" Move action. This does not count towards its action limit.' }]
   },
   { id: 'barracks-proxy', name: 'Barracks (Proxy)', unique: true, cost: 40, resource: '+2 CP', slots: { core: 2 },
@@ -1487,19 +1603,19 @@
       { phase: 'Movement Phase', name: 'Armed and Ready', type: 'Active', description: "The active Biological Unit Deploys from any table edge that is not a player's Entry Edge. No model may be placed Within 10\" of any Enemy model. This ability cannot be used if another Friendly Biological Unit has already been Deployed this Round." }
     ]
   },
-  { id: 'barracks-tech-lab', name: 'Barracks (Tech Lab)', unique: true, cost: 45, resource: '+2 CP', slots: { elite: 1, core: 1 },
+  { id: 'barracks-tech-lab', name: 'Barracks (Tech Lab)', unique: true, cost: 40, resource: '+2 CP', slots: { elite: 1, core: 1 },
     abilities: [
       { phase: 'Movement Phase', name: 'Go! Go! Go!', type: 'Active', description: 'The active Biological Unit performs a 2" Move action. This does not count towards its action limit.' },
       { phase: 'Assault Phase', name: "Let's Have a Blast!", type: 'Active', description: "The active Biological Unit's first Ranged Weapon used gains ANTI-EVADE (1)." }
     ]
   },
-  { id: 'dropship', name: 'Dropship', unique: true, cost: 40, resource: '+1 CP', slots: { core: 1, support: 1 },
+  { id: 'dropship', name: 'Dropship', unique: true, cost: 35, resource: '+1 CP', slots: { core: 1, support: 1 },
     abilities: [
       { phase: 'Movement Phase', name: 'Strap in!', type: 'Active', description: 'The active, Unengaged Ground Unit is placed in Reserves instead of performing an action.' },
       { phase: 'Movement Phase', name: 'Ready For Dust-off', type: 'Active', description: 'Place a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.' }
     ]
   },
-  { id: 'engineering-bay', name: 'Engineering Bay', unique: false, cost: 30, resource: '+1 CP', slots: { core: 1 },
+  { id: 'engineering-bay', name: 'Engineering Bay', unique: false, cost: 25, resource: '+1 CP', slots: { core: 1 },
     abilities: [
       { phase: 'Any Phase', name: 'Infantry Armor', type: 'Reaction', description: 'Use before a Friendly Biological Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.' },
       { phase: 'Assault Phase', name: 'Infantry Weapons', type: 'Active', description: "The active Biological Unit's first Ranged Weapon used gains CRITICAL HIT (1)." }
