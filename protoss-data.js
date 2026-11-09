@@ -175,7 +175,156 @@ const KEYWORDS = {
     }
   },
 
-  // OTHER
+  {
+  "id": "immortal",
+  "name": "Immortal",
+  "role": "Elite",
+  "wave": 2,
+  "tags": [
+    "Armoured",
+    "Mechanical",
+    "Ground"
+  ],
+  "stats": {
+    "shield": 6,
+    "speed": "7",
+    "evade": "-",
+    "armour": "4+",
+    "hp": 8,
+    "size": 3
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    },
+    {
+      "tier": "T2",
+      "cost": 280,
+      "models": "1",
+      "supply": 2
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Left Photon Disruptor",
+      "phase": "Assault",
+      "range": "12",
+      "target": "Ground",
+      "roa": 4,
+      "hit": "3+",
+      "surge": "Armoured",
+      "sDie": "D3",
+      "damage": 2,
+      "keywords": [
+        "CONCENTRATED FIRE (1)",
+        "LONG RANGE (16)"
+      ]
+    },
+    {
+      "name": "Right Photon Disruptor",
+      "phase": "Assault",
+      "range": "12",
+      "target": "Ground",
+      "roa": 4,
+      "hit": "3+",
+      "surge": "Armoured",
+      "sDie": "D3",
+      "damage": 2,
+      "keywords": [
+        "CONCENTRATED FIRE (1)",
+        "LONG RANGE (16)",
+        "SIDEARM"
+      ]
+    },
+    {
+      "name": "Stomp",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 3,
+      "hit": "3+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Improved Barrier",
+      "type": "Reaction (0 PE)",
+      "description": "When selected as target of an attack, if SHIELDED, attacker weapon Damage is treated as maximum 1 for that attack."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Indomitable",
+      "type": "Passive",
+      "description": "While Engaged may target or be targeted by Unengaged enemy Units; defending Unit gains Evade Roll."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Devastating Charge",
+      "type": "Passive",
+      "description": "Immediately after a successful Charge, resolve IMPACT (4) 3+."
+    }
+  ],
+  "phaseAbilities": {},
+  "upgrades": {
+    "Any Phase": [
+      {
+        "name": "Shield Overcharge",
+        "cost": 20,
+        "type": "Reaction (1 PE)",
+        "description": "Before Armour Roll, if this Unit is SHIELDED, it gains TOUGH (2) for this roll."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Left Phase Disruptor",
+        "cost": 20,
+        "type": "Weapon",
+        "description": "Replaces Left Photon Disruptor. 12 Ground, RoA4, Hit3+, Surge Armoured, S Die D3, Damage1, PIERCE Armoured (3).",
+        "modifies": {
+          "weapon": "Left Photon Disruptor"
+        }
+      },
+      {
+        "name": "Right Phase Disruptor",
+        "cost": 20,
+        "type": "Weapon",
+        "description": "Replaces Right Photon Disruptor. 12 Ground, RoA4, Hit3+, Surge Armoured, S Die D3, Damage1, PIERCE Armoured (3), SIDEARM.",
+        "modifies": {
+          "weapon": "Right Photon Disruptor"
+        }
+      },
+      {
+        "name": "Fury Unyielding",
+        "cost": 20,
+        "type": "Passive",
+        "description": "While Within 3 inches of a Mission Marker, Ranged Weapons gain CRITICAL HIT (1) when targeting an Enemy Unit also Within 3 inches of that Marker."
+      },
+      {
+        "name": "For the Ancients",
+        "cost": 20,
+        "type": "Passive",
+        "description": "When targeting an Enemy more than 8 inches away with a Ranged Attack, weapons gain PRECISION (1)."
+      }
+    ]
+  },
+  "cardSource": "https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-W2-Card-Sheets-A4_EN.pdf"
+},
+
+    // OTHER
   { id: 'pylon', name: 'Pylon', role: 'Other', factionTag: 'Khalai', tags: ['Armoured', 'Ground'],
     stats: { shield: 2, speed: '-', evade: '-', armour: '5+', hp: 8, size: 3 },
     tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 0, models: '1', supply: 0 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
@@ -249,6 +398,27 @@ const KEYWORDS = {
       { phase: 'Movement Phase', name: 'Warp Conduit', type: 'Active', description: 'Place a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.' }
     ]
   },
+{
+  "id": "robotics-facility",
+  "name": "Robotics Facility",
+  "unique": false,
+  "cost": 35,
+  "resource": "+1 PE",
+  "slots": {
+    "elite": 2
+  },
+  "category": "combat",
+  "summary": "Shielded mechanical Armour Rolls get protection",
+  "wave": 2,
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Plasma Shields",
+      "type": "Reaction",
+      "description": "Before a Friendly Mechanical Ground Unit makes an Armour Roll while SHIELDED, it gains TOUGH (1) and DODGE (1) for this roll."
+    }
+  ]
+},
 ];
 
     const ENGAGEMENT_SCALES = [
