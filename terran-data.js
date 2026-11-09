@@ -324,7 +324,159 @@ const KEYWORDS = {
     }
   },
 
-  // OTHER
+  {
+  "id": "siege-tank",
+  "name": "Siege Tank",
+  "role": "Elite",
+  "tags": [
+    "Armoured",
+    "Mechanical",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "7",
+    "evade": "-",
+    "armour": "5+",
+    "hp": 14,
+    "size": 2
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    },
+    {
+      "tier": "T2",
+      "cost": 220,
+      "models": "1",
+      "supply": 2
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Twin Cannon",
+      "phase": "Assault",
+      "range": "12",
+      "target": "Ground",
+      "roa": 8,
+      "hit": "3+",
+      "surge": "Armoured",
+      "sDie": "D6",
+      "damage": 1,
+      "keywords": [
+        "PIERCE Armoured (2)"
+      ]
+    },
+    {
+      "name": "Shock Cannon",
+      "phase": "Assault",
+      "range": "18",
+      "target": "Ground",
+      "roa": "BT+4",
+      "hit": "4+",
+      "surge": "Light, Armoured",
+      "sDie": "D6",
+      "damage": 1,
+      "keywords": [
+        "SIEGE MODE"
+      ]
+    },
+    {
+      "name": "Rolling Over",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "2+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Large",
+      "type": "Passive",
+      "description": "Leading Model cannot pass through physical gaps narrower than 3 inches. Moving through Size 0 or Size 1 Impassable Terrain (excluding tokens) removes that terrain as specified by the card."
+    },
+    {
+      "phase": "Any Phase",
+      "name": "Heavy Plating",
+      "type": "Passive",
+      "description": "Gain TOUGH (1) when rolling Armour unless the Unit has SIEGE MODE Status."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Indomitable",
+      "type": "Passive",
+      "description": "While Engaged, can target and be targeted by Unengaged enemy Units; defender gains an Evade Roll in either case."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Point Blank",
+      "type": "Passive",
+      "description": "While in SIEGE MODE, cannot target Enemy Units it is Engaged with."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Aftershock Rounds",
+      "type": "Passive",
+      "description": "While in SIEGE MODE, this weapon's Damage is treated as the target Unit's current Size, minimum 1."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Devastating Charge",
+      "type": "Passive",
+      "description": "Immediately after a successful Charge, resolve IMPACT (4) 3+."
+    }
+  ],
+  "phaseAbilities": {},
+  "upgrades": {
+    "Movement Phase": [
+      {
+        "name": "Mode Transformation",
+        "cost": 20,
+        "type": "Active (1 CP)",
+        "description": "Gain or lose SIEGE MODE Status. While in SIEGE MODE, treat this Unit's Size as 3."
+      },
+      {
+        "name": "Coordinated Strike",
+        "cost": 20,
+        "type": "Active (0 CP)",
+        "description": "Choose a Friendly Unengaged Unit on the battlefield (no LoS needed). With Shock Cannon this Round, may ignore normal Range and use a model of that Unit as the acting model to target an Enemy Within 8 inches and visible to it."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Shaped Blast",
+        "cost": 10,
+        "type": "Reaction (0 CP)",
+        "description": "Once per Game when declaring a Ranged Attack while in SIEGE MODE, its weapon gains PINPOINT and LOCKED IN (4)."
+      },
+      {
+        "name": "Smart Shells",
+        "cost": 10,
+        "type": "Reaction (0 CP)",
+        "description": "Once per Game when declaring a Ranged Attack while in SIEGE MODE, its weapon gains INDIRECT FIRE and LONG RANGE (24)."
+      }
+    ]
+  },
+  "cardSource": "https://starcraft-tmg.com/files/downloads/StarCraft-Terran-P2P-W2-Card-Sheets-A4_EN.pdf",
+  "wave": 2
+},
+
+      // OTHER
   { id: 'point-defense-drone', name: 'Point Defense Drone', role: 'Other', factionTag: "Raynor's Raiders", tags: ['Armoured', 'Mechanical', 'Flying'],
     stats: { shield: null, speed: '-', evade: '6+', armour: '6+', hp: 3, size: null },
     tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 0, models: '1', supply: 0 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
@@ -391,6 +543,33 @@ const KEYWORDS = {
   { id: 'supply-depot', name: 'Supply Depot', unique: true, cost: 40, resource: '+1 CP', slots: { hero: 1, elite: 1, core: 1 },
     abilities: [{ phase: 'Movement Phase', name: 'Additional Supply Depots', type: 'Active', description: "The active Unit's Supply Value is improved by 1 for Controlling and Contesting Mission Markers and completing objectives." }]
   },
+{
+  "id": "factory-tech-lab",
+  "name": "Factory (Tech Lab)",
+  "unique": true,
+  "cost": 40,
+  "resource": "+1 CP",
+  "slots": {
+    "elite": 2
+  },
+  "category": "combat",
+  "summary": "Vehicle repairs and stationary ranged precision",
+  "abilities": [
+    {
+      "phase": "Movement Phase",
+      "name": "Field Repair",
+      "type": "Active",
+      "description": "Active Mechanical Unit resolves HEAL (2)."
+    },
+    {
+      "phase": "Assault Phase",
+      "name": "Pound 'Em Flat!",
+      "type": "Active",
+      "description": "If the active Mechanical Unit has Stationary Status, its first Ranged Weapon used gains PRECISION (2)."
+    }
+  ],
+  "wave": 2
+},
 ];
   return { KEYWORDS, TAGS, SURGE_TAGS, TYPE_TAGS, ENGAGEMENT_SCALES,
     FACTION_CARDS: ZERG_FACTION_CARDS, UNITS: ZERG_UNITS, TACTICAL_CARDS: ZERG_TACTICAL_CARDS };
