@@ -91,6 +91,26 @@ input::placeholder { color: #5b6275; }
 .sc-resource-strip--compact .sc-resource-value { font-size: 12px; }
 .sc-resource-strip--compact .sc-resource-cap { font-size: 9px; }
 
+
+/*
+  The original beveled scoreboard is deliberately untouched. Its inline styles
+  use fallback values matching the previous design; only these layout variables
+  change when the shared scroll state becomes compact. No replacement markup.
+*/
+.sc-scoreboard--compact {
+  --sc-scoreboard-bottom-gap: 4px;
+  --sc-scoreboard-card-gap: 6px;
+  --sc-scoreboard-round-gap: 4px;
+  --sc-scoreboard-vp-gap: 6px;
+  --sc-scoreboard-padding: 5px 12px;
+  --sc-scoreboard-round-size: 14px;
+  --sc-scoreboard-vp-size: 20px;
+  --sc-scoreboard-colon-size: 16px;
+  --sc-scoreboard-phase-label-size: 8px;
+  --sc-scoreboard-phase-size: 11px;
+  --sc-scoreboard-phase-line-height: 1.1;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sc-resource-strip { transition: none; }
 }

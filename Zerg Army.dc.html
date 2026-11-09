@@ -52,21 +52,21 @@
     </div>
 
     <!-- play HUD, scoreboard layout: round left, score center, phase right -->
-    <div onClick="{{ togglePlay }}" role="button" aria-label="Open round tracker" style="margin:0 14px 8px;background:linear-gradient(120deg,rgba(176,110,247,0.55),rgba(43,49,69,0.5) 55%);padding:1px;cursor:pointer;clip-path:var(--sc-corner-10)"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:var(--sc-card-bg);padding:12px 16px;clip-path:var(--sc-corner-10)">
-      <div style="display:flex;align-items:center;gap:6px;flex:0 0 auto">
+    <div class="{{ scoreboardClass }}" onClick="{{ togglePlay }}" role="button" aria-label="Open round tracker" style="margin:0 14px var(--sc-scoreboard-bottom-gap,8px);background:linear-gradient(120deg,rgba(176,110,247,0.55),rgba(43,49,69,0.5) 55%);padding:1px;cursor:pointer;clip-path:var(--sc-corner-10)"><div style="display:flex;align-items:center;justify-content:space-between;gap:var(--sc-scoreboard-card-gap,10px);background:var(--sc-card-bg);padding:var(--sc-scoreboard-padding,12px 16px);clip-path:var(--sc-corner-10)">
+      <div style="display:flex;align-items:center;gap:var(--sc-scoreboard-round-gap,6px);flex:0 0 auto">
         <span style="width:6px;height:6px;background:{{ phaseColor }};box-shadow:0 0 6px {{ phaseColor }};animation:scPulse 2s infinite;flex:0 0 auto"></span>
-        <span style="font-family:'Chakra Petch',sans-serif;font-size:17px;font-weight:700;letter-spacing:0.05em;color:#e9ecf2">R{{ round }}</span>
+        <span style="font-family:'Chakra Petch',sans-serif;font-size:var(--sc-scoreboard-round-size,17px);font-weight:700;letter-spacing:0.05em;color:#e9ecf2">R{{ round }}</span>
       </div>
-      <div style="display:flex;align-items:center;gap:10px;flex:1;justify-content:center">
+      <div style="display:flex;align-items:center;gap:var(--sc-scoreboard-vp-gap,10px);flex:1;justify-content:center">
         <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5">VP</span>
-        <span style="font-family:'Chakra Petch',sans-serif;font-size:32px;font-weight:700;color:#b06ef7;line-height:1">{{ vpYou }}</span>
-        <span style="color:#5b6275;font-size:20px">:</span>
-        <span style="font-family:'Chakra Petch',sans-serif;font-size:32px;font-weight:700;color:#c8cede;line-height:1">{{ vpFoe }}</span>
+        <span style="font-family:'Chakra Petch',sans-serif;font-size:var(--sc-scoreboard-vp-size,32px);font-weight:700;color:#b06ef7;line-height:1">{{ vpYou }}</span>
+        <span style="color:#5b6275;font-size:var(--sc-scoreboard-colon-size,20px)">:</span>
+        <span style="font-family:'Chakra Petch',sans-serif;font-size:var(--sc-scoreboard-vp-size,32px);font-weight:700;color:#c8cede;line-height:1">{{ vpFoe }}</span>
         <svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="margin-left:2px"><path d="M4 6l4 4 4-4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       </div>
       <div style="text-align:right;flex:0 0 auto">
-        <div style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5">Phase</div>
-        <div style="font-family:Rajdhani,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:{{ phaseColor }};white-space:nowrap">{{ phaseName }}</div>
+        <div style="font-family:Rajdhani,sans-serif;font-size:var(--sc-scoreboard-phase-label-size,9px);line-height:var(--sc-scoreboard-phase-line-height,1.5);font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5">Phase</div>
+        <div style="font-family:Rajdhani,sans-serif;font-size:var(--sc-scoreboard-phase-size,13px);line-height:var(--sc-scoreboard-phase-line-height,1.5);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:{{ phaseColor }};white-space:nowrap">{{ phaseName }}</div>
       </div>
     </div></div>
 
@@ -1662,6 +1662,7 @@ class Component extends DCLogic {
       tabs,
       tabIsRoster: st.tab === 'roster', tabIsBattle: st.tab === 'battle', tabIsLibrary: st.tab === 'library', tabIsTactics: st.tab === 'tactics',
       resourceStripClass: st.resourcesCompact ? 'sc-resource-strip sc-resource-strip--compact' : 'sc-resource-strip',
+      scoreboardClass: st.resourcesCompact ? 'sc-scoreboard sc-scoreboard--compact' : 'sc-scoreboard',
       tabIsFaction: st.tab === 'faction', tabIsCodex: st.tab === 'codex',
       // roster
       scales, slotPills,
