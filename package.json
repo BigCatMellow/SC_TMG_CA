@@ -12,6 +12,7 @@
     "build:study": "node ./scripts/build-notebooklm.mjs",
     "test:study": "node ./scripts/build-notebooklm.mjs --check",
     "test:wave3": "node ./scripts/test-wave3.mjs",
-    "test:portraits": "node ./scripts/test-portraits.mjs"
+    "test:portraits": "node ./scripts/test-portraits.mjs",
+    "test:resource-header": "node ./scripts/test-resource-header.mjs"
   }
 }
