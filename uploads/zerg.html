@@ -1397,38 +1397,249 @@
       },
 
       // CORE
-      { id: 'corpser', name: 'Corpser (Roach)', role: 'Core', tags: ['Armoured', 'Biological', 'Ground'],
-        stats: { shield: null, speed: '4/7', evade: '5+', armour: '3+', hp: 4, size: 2 },
-        tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 220, models: '2-3', supply: 1 }, { tier: 'T1', cost: null, models: '1', supply: 0 }],
-        weapons: [
-          { name: 'Acid Saliva', phase: 'Assault', range: '8', target: 'Ground', roa: 2, hit: '3+', surge: '-', sDie: '-', damage: 1, keywords: [] },
-          { name: 'Claws', phase: 'Combat', range: 'E', target: 'Ground', roa: 3, hit: '4+', surge: 'Light', sDie: 'D3+1', damage: 1, keywords: [] }
-        ],
-        abilities: [{ phase: 'Any Phase', name: 'Squadron', type: 'Passive', description: "This Unit's Horizontal Coherency is 4\"." }],
-        phaseAbilities: {
-          'Assault Phase': [{ name: 'Devastating Charge', type: 'Passive', description: 'Immediately after this Unit completes a successful Charge, resolve the IMPACT (2) 5+ effect.' }],
-          'Combat Phase': [{ name: 'Corpser Strain', type: 'Passive', description: 'When a model in this Unit is Destroyed, SUMMON (1) Roachling model.' }]
-        },
-        upgrades: {
-          'Movement Phase': [{ name: 'Burrow Ambush', cost: 20, type: 'Passive', description: "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends." }]
-        }
+      {
+  "id": "corpser",
+  "name": "Corpser (Roach)",
+  "role": "Core",
+  "tags": [
+    "Armoured",
+    "Biological",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "4/7",
+    "evade": "5+",
+    "armour": "3+",
+    "hp": 4,
+    "size": 2
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    },
+    {
+      "tier": "T2",
+      "cost": 220,
+      "models": "2-3",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "1",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Acid Saliva",
+      "phase": "Assault",
+      "range": "8",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "3+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    },
+    {
+      "name": "Claws",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 3,
+      "hit": "4+",
+      "surge": "Light",
+      "sDie": "D3+1",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Burrow",
+      "type": "Active (2 Biomass)",
+      "description": "If Unengaged, this Unit gains or loses BURROWED Status."
+    }
+  ],
+  "phaseAbilities": {
+    "Movement Phase": [
+      {
+        "name": "Roachling Infestation",
+        "type": "Active (2 Biomass)",
+        "description": "Once per Game, resolve SUMMON (Roachling)."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Regeneration",
+        "type": "Passive",
+        "description": "When Activated while BURROWED, resolve HEAL (2)."
       },
-      { id: 'roach', name: 'Roach', role: 'Core', tags: ['Armoured', 'Biological', 'Ground'],
-        stats: { shield: null, speed: '4/7', evade: '5+', armour: '3+', hp: 4, size: 2 },
-        tiers: [{ tier: 'T3', cost: null, models: '4-6', supply: 2 }, { tier: 'T2', cost: 170, models: '2-3', supply: 1 }, { tier: 'T1', cost: null, models: '1', supply: 0 }],
-        weapons: [
-          { name: 'Acid Saliva', phase: 'Assault', range: '8', target: 'Ground', roa: 2, hit: '3+', surge: '-', sDie: '-', damage: 1, keywords: [] },
-          { name: 'Claws', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '4+', surge: '-', sDie: '-', damage: 1, keywords: [] }
-        ],
-        abilities: [{ phase: 'Any Phase', name: 'Squadron', type: 'Passive', description: "This Unit's Horizontal Coherency is 4\"." }],
-        phaseAbilities: {
-          'Movement Phase': [{ name: 'Tunnelling Claws', type: 'Active (1 Biomass)', description: 'If unengaged and if this Unit has the Burrowed status, PLACE (4) this Unit. After the ability is resolved, this Unit loses the Burrowed status.' }],
-          'Assault Phase': [{ name: 'Glial Reconstitution', type: 'Active', description: 'HEAL (2) this Unit. Then, DEBUFF Speed (2) this Unit.' }]
-        },
-        upgrades: {
-          'Movement Phase': [{ name: 'Burrow Ambush', cost: 20, type: 'Passive', description: "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends." }]
-        }
+      {
+        "name": "Devastating Charge",
+        "type": "Passive",
+        "description": "Immediately after a successful Charge, resolve IMPACT (3) 4+."
+      }
+    ]
+  },
+  "upgrades": {
+    "Movement Phase": [
+      {
+        "name": "Burrow Ambush",
+        "cost": 20,
+        "type": "Passive",
+        "description": "When nominated to Deploy from Reserves, resolve PLACE (18) from the controlling player's Entry Edge. No model may be Within 10\" of an Enemy model. Activation ends."
       },
+      {
+        "name": "Glial Reconstitution",
+        "cost": 10,
+        "type": "Active (1 Biomass)",
+        "description": "This Unit gains BUFF Speed (1), or BUFF Speed (2) when ON CREEP."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Hydriodic Bile",
+        "cost": 10,
+        "type": "Passive",
+        "description": "Acid Saliva gains Surge Type Light and S Dice D3+1."
+      }
+    ],
+    "Any Phase": [
+      {
+        "name": "Tunneling Claws",
+        "cost": 10,
+        "type": "Passive",
+        "description": "While BURROWED, this Unit can Move and Run without losing BURROWED and may move through other Units' bases."
+      }
+    ]
+  }
+},
+      {
+  "id": "roach",
+  "name": "Roach",
+  "role": "Core",
+  "tags": [
+    "Armoured",
+    "Biological",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "4/7",
+    "evade": "5+",
+    "armour": "3+",
+    "hp": 4,
+    "size": 2
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "4-6",
+      "supply": 2
+    },
+    {
+      "tier": "T2",
+      "cost": 170,
+      "models": "2-3",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "1",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Acid Saliva",
+      "phase": "Assault",
+      "range": "8",
+      "target": "Ground",
+      "roa": 3,
+      "hit": "3+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    },
+    {
+      "name": "Claws",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "4+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Burrow",
+      "type": "Active (2 Biomass)",
+      "description": "If Unengaged, this Unit gains or loses BURROWED Status."
+    }
+  ],
+  "phaseAbilities": {
+    "Assault Phase": [
+      {
+        "name": "Regeneration",
+        "type": "Passive",
+        "description": "When Activated while BURROWED, resolve HEAL (2)."
+      },
+      {
+        "name": "Devastating Charge",
+        "type": "Passive",
+        "description": "Immediately after a successful Charge, resolve IMPACT (2) 4+."
+      }
+    ]
+  },
+  "upgrades": {
+    "Movement Phase": [
+      {
+        "name": "Burrow Ambush",
+        "cost": 20,
+        "type": "Passive",
+        "description": "When nominated to Deploy from Reserves, resolve PLACE (18) from the controlling player's Entry Edge. No model may be Within 10\" of an Enemy model. Activation ends."
+      },
+      {
+        "name": "Glial Reconstitution",
+        "cost": 10,
+        "type": "Active (1 Biomass)",
+        "description": "This Unit gains BUFF Speed (1), or BUFF Speed (2) when ON CREEP."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Hydriodic Bile",
+        "cost": 10,
+        "type": "Passive",
+        "description": "Acid Saliva gains Surge Type Light and S Dice D3+1."
+      }
+    ],
+    "Any Phase": [
+      {
+        "name": "Tunneling Claws",
+        "cost": 10,
+        "type": "Passive",
+        "description": "While BURROWED, this Unit can Move and Run without losing BURROWED and may move through other Units' bases."
+      }
+    ]
+  }
+},
       { id: 'zergling', name: 'Zergling', role: 'Core', tags: ['Biological', 'Light', 'Ground'],
         stats: { shield: null, speed: '5/9', evade: '5+', armour: '6+', hp: 1, size: 1 },
         tiers: [{ tier: 'T3', cost: 210, models: '13-18', supply: 2 }, { tier: 'T2', cost: 150, models: '7-12', supply: 1 }, { tier: 'T1', cost: null, models: '1-6', supply: 0 }],
@@ -1451,24 +1662,352 @@
       },
 
       // SUPPORT
-      { id: 'queen', name: 'Queen', role: 'Support', tags: ['Biological', 'Ground'],
-        stats: { shield: null, speed: '4/6', evade: '5+', armour: '4+', hp: 6, size: 2 },
-        tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 140, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
-        weapons: [
-          { name: 'Acid Spines', phase: 'Assault', range: '10', target: 'All', roa: 4, hit: '4+', surge: 'Light', sDie: 'D3', damage: 1, keywords: [] },
-          { name: 'Claws', phase: 'Combat', range: 'E', target: 'Ground', roa: 3, hit: '4+', surge: '-', sDie: '-', damage: 1, keywords: [] }
-        ],
-        abilities: [],
-        phaseAbilities: {
-          'Movement Phase': [
-            { name: 'Spawn Creep Tumor', type: 'Active', description: 'Place a Creep Tumor Token in base-to-base with this Unit. This Creep Tumor Token gains the STAY IN PLAY Keyword.' },
-            { name: 'Transfusion', type: 'Active (1 Biomass)', description: 'Select one Friendly Unit Within 10". That Unit gains HEAL (3). This Unit then gains 3 points of Damage.' }
-          ],
-          'Assault Phase': [{ name: 'Ensnare', type: 'Active (1 Biomass)', description: 'Select one Enemy Unit Within 10". That Unit gains DEBUFF Speed (2).' }],
-          'Combat Phase': [{ name: 'Rapid Transfusion', type: 'Active (1 Biomass)', description: 'Select one Friendly Unit Within 10". HEAL (1) that Unit.' }]
-        },
-        upgrades: {}
+      {
+  "id": "queen",
+  "name": "Queen",
+  "role": "Support",
+  "tags": [
+    "Armoured",
+    "Biological",
+    "Psionic",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "4",
+    "evade": "-",
+    "armour": "4+",
+    "hp": 9,
+    "size": 3
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    },
+    {
+      "tier": "T2",
+      "cost": 140,
+      "models": "1",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Talons",
+      "phase": "Assault",
+      "range": "6",
+      "target": "Ground",
+      "roa": 4,
+      "hit": "4+",
+      "surge": "Light",
+      "sDie": "D3",
+      "damage": 2,
+      "keywords": []
+    },
+    {
+      "name": "Acid Spines",
+      "phase": "Assault",
+      "range": "12",
+      "target": "Flying",
+      "roa": 4,
+      "hit": "4+",
+      "surge": "Light, Armoured",
+      "sDie": "D3",
+      "damage": 2,
+      "keywords": []
+    },
+    {
+      "name": "Talons",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 3,
+      "hit": "4+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Spawn Creep Tumor",
+      "type": "Active (1 Biomass)",
+      "description": "Set a Creep Tumor Token in base-to-base contact with this Unit."
+    },
+    {
+      "phase": "Any Phase",
+      "name": "Transfusion",
+      "type": "Reaction (1 Biomass)",
+      "description": "When another Friendly Biological Unit (including a Structure) Within 4\" suffers Damage, reduce Damage by 2 before Total Damage allocation."
+    },
+    {
+      "phase": "Any Phase",
+      "name": "Restoration",
+      "type": "Reaction (1 Biomass)",
+      "description": "When a Friendly Unit Within 4\" receives a DEBUFF, remove all DEBUFFs from it."
+    },
+    {
+      "phase": "Any Phase",
+      "name": "Psionic Link",
+      "type": "Passive",
+      "description": "Once per Round, if at least 7 Friendly models are Within 6\", this Unit may resolve its Special Ability with BM cost reduced by 1."
+    }
+  ],
+  "phaseAbilities": {
+    "Assault Phase": [
+      {
+        "name": "Devastating Charge",
+        "type": "Passive",
+        "description": "Immediately after a successful Charge, resolve IMPACT (4) 3+."
+      }
+    ]
+  },
+  "upgrades": {
+    "Any Phase": [
+      {
+        "name": "Creep Speed",
+        "cost": 10,
+        "type": "Passive",
+        "description": "While ON CREEP, increase Speed characteristic by 2."
+      }
+    ],
+    "Movement Phase": [
+      {
+        "name": "Domineering Presence",
+        "cost": 10,
+        "type": "Active (1 Biomass)",
+        "description": "Select another Friendly Unit Within 6\" (LoS not required); increase its Supply by 1 for Controlling/Contesting Mission Markers and completing objectives."
+      }
+    ]
+  }
+},
+
+      {
+  "id": "vile",
+  "name": "Vile (Roach)",
+  "role": "Core",
+  "tags": [
+    "Armoured",
+    "Biological",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "4/7",
+    "evade": "5+",
+    "armour": "3+",
+    "hp": 4,
+    "size": 2
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    },
+    {
+      "tier": "T2",
+      "cost": 190,
+      "models": "2-3",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "1",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Acid Saliva",
+      "phase": "Assault",
+      "range": "8",
+      "target": "Ground",
+      "roa": 4,
+      "hit": "3+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    },
+    {
+      "name": "Vile Claws",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "4+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Burrow",
+      "type": "Active (2 Biomass)",
+      "description": "If Unengaged, this Unit gains or loses BURROWED Status."
+    },
+    {
+      "phase": "Any Phase",
+      "name": "Debilitating Saliva",
+      "type": "Reaction (1 Biomass)",
+      "description": "When an Enemy Unit Within 8\" declares a Ranged Attack, apply DEBUFF Hit (1) to each of its Ranged Weapons."
+    }
+  ],
+  "phaseAbilities": {
+    "Assault Phase": [
+      {
+        "name": "Regeneration",
+        "type": "Passive",
+        "description": "When Activated while BURROWED, resolve HEAL (2)."
       },
+      {
+        "name": "Devastating Charge",
+        "type": "Passive",
+        "description": "Immediately after a successful Charge, resolve IMPACT (1) 4+."
+      }
+    ]
+  },
+  "upgrades": {
+    "Movement Phase": [
+      {
+        "name": "Burrow Ambush",
+        "cost": 20,
+        "type": "Passive",
+        "description": "When nominated to Deploy from Reserves, resolve PLACE (18) from the controlling player's Entry Edge. No model may be Within 10\" of an Enemy model. Activation ends."
+      },
+      {
+        "name": "Glial Reconstitution",
+        "cost": 10,
+        "type": "Active (1 Biomass)",
+        "description": "This Unit gains BUFF Speed (1), or BUFF Speed (2) when ON CREEP."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Hydriodic Bile",
+        "cost": 10,
+        "type": "Passive",
+        "description": "Acid Saliva gains Surge Type Light and S Dice D3+1."
+      }
+    ],
+    "Any Phase": [
+      {
+        "name": "Tunneling Claws",
+        "cost": 10,
+        "type": "Passive",
+        "description": "While BURROWED, this Unit can Move and Run without losing BURROWED and may move through other Units' bases."
+      }
+    ]
+  }
+},
+      {
+  "id": "swarmling",
+  "name": "Swarmling (Zergling)",
+  "role": "Core",
+  "tags": [
+    "Biological",
+    "Light",
+    "Ground"
+  ],
+  "stats": {
+    "shield": null,
+    "speed": "4/8",
+    "evade": "5+",
+    "armour": "6+",
+    "hp": 1,
+    "size": 1
+  },
+  "tiers": [
+    {
+      "tier": "T3",
+      "cost": null,
+      "models": "-",
+      "supply": 0
+    },
+    {
+      "tier": "T2",
+      "cost": 210,
+      "models": "7-18",
+      "supply": 1
+    },
+    {
+      "tier": "T1",
+      "cost": null,
+      "models": "1-6",
+      "supply": 0
+    }
+  ],
+  "weapons": [
+    {
+      "name": "Claws",
+      "phase": "Combat",
+      "range": "E",
+      "target": "Ground",
+      "roa": 2,
+      "hit": "5+",
+      "surge": "-",
+      "sDie": "-",
+      "damage": 1,
+      "keywords": []
+    }
+  ],
+  "abilities": [
+    {
+      "phase": "Any Phase",
+      "name": "Squadron",
+      "type": "Passive",
+      "description": "Horizontal Coherency is 4\"."
+    }
+  ],
+  "phaseAbilities": {
+    "Movement Phase": [
+      {
+        "name": "Zergling Reconstitution",
+        "type": "Active (1 Biomass)",
+        "description": "Resolve RESPAWN (2), or RESPAWN (3) while ON CREEP."
+      }
+    ],
+    "Assault Phase": [
+      {
+        "name": "Metabolic Boost",
+        "type": "Active (1 Biomass)",
+        "description": "Roll 2D6 rather than D6 for Charge Distance and use the higher result."
+      },
+      {
+        "name": "Devastating Charge",
+        "type": "Passive",
+        "description": "After successful Charge, resolve IMPACT (1) 5+."
+      }
+    ]
+  },
+  "upgrades": {
+    "Movement Phase": [
+      {
+        "name": "Burrow Ambush",
+        "cost": 20,
+        "type": "Passive",
+        "description": "When nominated to Deploy from Reserves, resolve PLACE (18) from the controlling player's Entry Edge. No model may be Within 10\" of an Enemy model. Activation ends."
+      }
+    ]
+  }
+},
 
       // OTHER
       { id: 'omega-worm', name: 'Omega Worm', role: 'Other', factionTag: "Kerrigan's Swarm", tags: ['Armoured', 'Biological', 'Ground'],
