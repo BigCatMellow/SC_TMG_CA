@@ -47,4 +47,42 @@ for(const faction of ['Terran','Zerg','Protoss']){
  assert.match(html,/unit\.unique \&\& this\.state\.army\.some/);
 }
 assert.ok(checks.units>=22 && checks.compositions>=26 && checks.upgrades>=40 && checks.tactical>=31);
+// Instantiate all three Army components without DOM to test copies, timing state and legality.
+for(const faction of ['terran','zerg','protoss']){
+ const pretty=faction[0].toUpperCase()+faction.slice(1);
+ const html=load(pretty+' Army.dc.html');
+ const inline=html.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/);
+ assert.ok(inline,pretty+' screen has an inline controller');
+ class DCLogic {
+   setState(update,done){
+     const next=typeof update==='function'?update(this.state):update;
+     this.state={...this.state,...next};
+     if(done)done();
+   }
+ }
+ const Component=new Function('DCLogic','window',inline[1]+'\nreturn Component;')(DCLogic,window);
+ const obj=new Component();
+ obj.save=()=>{};obj._secEls={};
+ const d=window['SCTMG_'+faction.toUpperCase()];
+ const nonunique=d.TACTICAL_CARDS.find(x=>!x.unique);
+ const unique=d.TACTICAL_CARDS.find(x=>x.unique);
+ obj.state={...obj.state,ready:true,tab:'tactics',army:[],tactical:[nonunique.id,nonunique.id],tacticalTapped:[nonunique.id+'#1'],savedRosters:[],play:{round:1,phase:0,vpYou:0,vpFoe:0}};
+ const ui=obj.renderVals();
+ const cards=ui.battleTactical.filter(x=>x.id===nonunique.id);
+ assert.equal(cards.length,2,pretty+' supports duplicate nonunique Tactical Cards');
+ assert.equal(cards[0].tapped,false);
+ assert.equal(cards[1].tapped,true);
+ const selected=ui.tacticalGroups.flatMap(x=>x.cards);
+ const entry=selected.find(x=>x.name===nonunique.name);
+ assert.equal(entry.count,2);
+ entry.onRemove({stopPropagation(){}});
+ assert.equal(obj.state.tactical.length,1);
+ assert.equal(obj.state.tacticalTapped.length,0);
+ entry.onAdd({stopPropagation(){}});
+ assert.equal(obj.state.tactical.length,2);
+ const one=selected.find(x=>x.name===unique.name);
+ one.onAdd({stopPropagation(){}});
+ one.onAdd({stopPropagation(){}});
+ assert.equal(obj.state.tactical.filter(x=>x===unique.id).length,1);
+}
 console.log('October 2026 source validation passed:',checks);
