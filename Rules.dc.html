@@ -222,13 +222,14 @@ class Component extends DCLogic {
     play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0 },
     exp: {},
     q: '',
+    scope: 'core',
     sheet: null
   };
 
   componentDidMount() {
     this._secEls = {};
     this._poll = setInterval(() => {
-      if (window.SCTMG_RULES && window.SCTMG_ZERG) {
+      if (window.SCTMG_RULES && window.SCTMG_ZERG && window.SCTMG_TERRAN && window.SCTMG_PROTOSS) {
         clearInterval(this._poll);
         try {
           const play = JSON.parse(localStorage.getItem('sctmg_play') || 'null');
@@ -244,7 +245,7 @@ class Component extends DCLogic {
 
   kwRegex() {
     if (!this._kwRe) {
-      const names = Object.keys(window.SCTMG_ZERG.KEYWORDS).sort((a, b) => b.length - a.length).map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
+      const names = [...new Set([window.SCTMG_TERRAN, window.SCTMG_ZERG, window.SCTMG_PROTOSS].flatMap(d => Object.keys(d.KEYWORDS || {})))].sort((a, b) => b.length - a.length).map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
       this._kwRe = new RegExp('\\b(' + names.join('|') + ')(\\s*\\([^)]*\\))?', 'g');
     }
     return this._kwRe;
@@ -278,8 +279,11 @@ class Component extends DCLogic {
   }
 
   openKeyword(name) {
-    const kw = window.SCTMG_ZERG.KEYWORDS[name];
-    if (kw) this.setState({ sheet: { title: name, meta: kw.type + ' · Keyword', body: kw.description } });
+    const s = this.state.scope;
+    const preferred = { terran: window.SCTMG_TERRAN, zerg: window.SCTMG_ZERG, protoss: window.SCTMG_PROTOSS }[s];
+    const kw = [preferred, window.SCTMG_TERRAN, window.SCTMG_ZERG, window.SCTMG_PROTOSS]
+      .filter(Boolean).map(d => d.KEYWORDS && d.KEYWORDS[name]).find(Boolean);
+    if (kw) this.setState({ sheet: { title: name, meta: kw.type + ' · Companion data (check 2026 PDF pp. 82–91)', body: kw.description } });
   }
 
   hexRgb(hex) {
@@ -300,7 +304,8 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state;
     if (!st.ready) return { ready: false };
-    const R = window.SCTMG_RULES;
+    const R = window.SCTMG_BATTLE_RULES || window.SCTMG_RULES;
+    const scope = st.scope || 'core';
     const q = st.q.trim().toLowerCase();
     const searching = q.length >= 2;
 
@@ -314,11 +319,12 @@ class Component extends DCLogic {
 
     const itemMatch = (it) => it.t.toLowerCase().includes(q) || (it.ph || '').toLowerCase().includes(q);
 
-    const sections = R.sections.map(sec => {
+    const visibleSections = R.sections.filter(sec => !sec.scope || sec.scope === 'core' || sec.scope === scope);
+    const sections = visibleSections.map(sec => {
       let groups = sec.groups;
       let match = true;
       if (searching) {
-        const secText = (sec.name + ' ' + sec.meta + ' ' + (sec.intro || '') + ' ' + (sec.practical || '')).toLowerCase();
+        const secText = (sec.name + ' ' + sec.meta + ' ' + (sec.sourceLabel || '') + ' ' + (sec.intro || '') + ' ' + (sec.practical || '')).toLowerCase();
         const secHit = secText.includes(q);
         const gHits = sec.groups.map(g => {
           const gHit = g.name.toLowerCase().includes(q);
@@ -331,7 +337,7 @@ class Component extends DCLogic {
       if (!match) return null;
       const expanded = searching ? true : !!st.exp[sec.id];
       return {
-        num: sec.num, name: sec.name, meta: sec.meta, color: sec.color,
+        num: sec.num, name: sec.name, meta: sec.meta, color: sec.color, sourceLabel: sec.sourceLabel || false,
         phase: sec.phase || false,
         phBg: 'rgba(' + this.hexRgb(sec.color) + ',0.14)',
         expanded, chev: expanded ? 90 : 0,
@@ -360,7 +366,7 @@ class Component extends DCLogic {
       };
     }).filter(Boolean);
 
-    const chips = R.sections.map(sec => {
+    const chips = visibleSections.map(sec => {
       const active = !!st.exp[sec.id];
       return {
         name: sec.name.replace(' Phase', '').replace(' & Cleanup', ''), color: sec.color,
