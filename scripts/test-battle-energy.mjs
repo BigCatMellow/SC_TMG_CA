@@ -49,6 +49,8 @@ for (const faction of units) {
   const Controller = new Function('DCLogic','window',script + '\nreturn Component;')(Stub,world);
   const controller = new Controller();
   const D = controller.D();
+  assert.equal(controller.state.factionId, D.FACTION_CARDS[0].id,
+    faction + ' default faction ID must match the displayed Faction Card');
   controller.save = () => {};
   controller._secEls = {};
   const primary = D.TACTICAL_CARDS.find(t=>!t.unique && parse(t.resource) > 0
@@ -144,6 +146,12 @@ for (const faction of units) {
   controller.state.savedRosters=[{...saved,id:'old',factionTappedId:undefined}];
   controller.loadRoster('old');
   assert.equal(view().battleFaction.tapped,false);
+  controller.state.savedRosters=[{...saved,id:'legacy-faction',factionId:'kerrigans-swarm'}];
+  if(faction!=='zerg') {
+    controller.loadRoster('legacy-faction');
+    assert.equal(controller.state.factionId, D.FACTION_CARDS[0].id,
+      faction + ' invalid legacy saved faction ID should fall back safely');
+  }
   const otherFaction=view().factionCards.find(c=>c.name!==view().battleFaction.name);
   if(otherFaction) {
     view().battleFaction.onResource();
