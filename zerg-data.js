@@ -132,8 +132,8 @@ const KEYWORDS = {
         upgrades: {
           'Movement Phase': [{ name: 'Burrow Ambush', cost: '20/30', type: 'Passive', description: "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends." }],
           'Combat Phase': [
-            { name: 'Shredding Claws', cost: 20, type: 'Weapon', description: 'Replaces Claws. Surge: Light, Armoured. S.Die: D3.' },
-            { name: 'Adrenal Glands', cost: 30, type: 'Passive', description: "This Unit's Claws and Shredding Claws weapons gain PRECISION (2)." }
+            { name: 'Shredding Claws', cost: '10/10', type: 'Weapon', description: 'Replaces Claws. Surge: Light, Armoured. S.Die: D3.' },
+            { name: 'Adrenal Glands', cost: '20/20', type: 'Passive', description: "This Unit's Claws and Shredding Claws weapons gain PRECISION (2)." }
           ]
         }
       },
@@ -158,7 +158,7 @@ const KEYWORDS = {
       // CORE
       { id: 'corpser', name: 'Corpser (Roach)', role: 'Core', tags: ['Armoured', 'Biological', 'Ground'],
         stats: { shield: null, speed: '4/7', evade: '5+', armour: '3+', hp: 4, size: 2 },
-        tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 250, models: '2-3', supply: 1 }, { tier: 'T1', cost: null, models: '1', supply: 0 }],
+        tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 240, models: '2-3', supply: 1 }, { tier: 'T1', cost: null, models: '1', supply: 0 }],
         weapons: [
           { name: 'Acid Saliva', phase: 'Assault', range: '8', target: 'Ground', roa: 2, hit: '3+', surge: '-', sDie: '-', damage: 1, keywords: [] },
           { name: 'Claws', phase: 'Combat', range: 'E', target: 'Ground', roa: 3, hit: '4+', surge: 'Light', sDie: 'D3+1', damage: 1, keywords: [] }
@@ -169,12 +169,12 @@ const KEYWORDS = {
           'Combat Phase': [{ name: 'Corpser Strain', type: 'Passive', description: 'When a model in this Unit is Destroyed, SUMMON (1) Roachling model.' }]
         },
         upgrades: {
-          'Movement Phase': [{ name: 'Burrow Ambush', cost: 30, type: 'Passive', description: "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends." }]
+          'Movement Phase': [{ name: 'Burrow Ambush', cost: 20, type: 'Passive', description: "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends." }]
         }
       },
       { id: 'roach', name: 'Roach', role: 'Core', tags: ['Armoured', 'Biological', 'Ground'],
         stats: { shield: null, speed: '4/7', evade: '5+', armour: '3+', hp: 4, size: 2 },
-        tiers: [{ tier: 'T3', cost: 240, models: '4-6', supply: 2 }, { tier: 'T2', cost: 120, models: '2-3', supply: 1 }, { tier: 'T1', cost: null, models: '1', supply: 0 }],
+        tiers: [{ tier: 'T3', cost: null, models: '4-6', supply: 2 }, { tier: 'T2', cost: 170, models: '2-3', supply: 1 }, { tier: 'T1', cost: null, models: '1', supply: 0 }],
         weapons: [
           { name: 'Acid Saliva', phase: 'Assault', range: '8', target: 'Ground', roa: 2, hit: '3+', surge: '-', sDie: '-', damage: 1, keywords: [] },
           { name: 'Claws', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '4+', surge: '-', sDie: '-', damage: 1, keywords: [] }
@@ -185,12 +185,12 @@ const KEYWORDS = {
           'Assault Phase': [{ name: 'Glial Reconstitution', type: 'Active', description: 'HEAL (2) this Unit. Then, DEBUFF Speed (2) this Unit.' }]
         },
         upgrades: {
-          'Movement Phase': [{ name: 'Burrow Ambush', cost: '20/40', type: 'Passive', description: "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends." }]
+          'Movement Phase': [{ name: 'Burrow Ambush', cost: 20, type: 'Passive', description: "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends." }]
         }
       },
       { id: 'zergling', name: 'Zergling', role: 'Core', tags: ['Biological', 'Light', 'Ground'],
         stats: { shield: null, speed: '5/9', evade: '5+', armour: '6+', hp: 1, size: 1 },
-        tiers: [{ tier: 'T3', cost: 180, models: '13-18', supply: 2 }, { tier: 'T2', cost: 90, models: '7-12', supply: 1 }, { tier: 'T1', cost: null, models: '1-6', supply: 0 }],
+        tiers: [{ tier: 'T3', cost: 220, models: '13-18', supply: 2 }, { tier: 'T2', cost: 180, models: '7-12', supply: 1 }, { tier: 'T1', cost: null, models: '1-6', supply: 0 }],
         weapons: [{ name: 'Claws', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '4+', surge: '-', sDie: '-', damage: 1, keywords: [] }],
         abilities: [{ phase: 'Any Phase', name: 'Squadron', type: 'Passive', description: "This Unit's Horizontal Coherency is 4\"." }],
         phaseAbilities: {
@@ -201,10 +201,10 @@ const KEYWORDS = {
           ]
         },
         upgrades: {
-          'Movement Phase': [{ name: 'Burrow Ambush', cost: '15/30', type: 'Passive', description: "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends." }],
+          'Movement Phase': [{ name: 'Burrow Ambush', cost: '20/30', type: 'Passive', description: "When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10\" of any Enemy model. This Unit's Activation ends." }],
           'Combat Phase': [
-            { name: 'Shredding Claws', cost: '10/20', type: 'Weapon', description: 'Replaces Claws. Surge: Light, Armoured. S.Die: D3.' },
-            { name: 'Adrenal Glands', cost: '15/30', type: 'Passive', description: "This Unit's Claws and Shredding Claws weapons gain PRECISION (2)." }
+            { name: 'Shredding Claws', cost: '10/10', type: 'Weapon', description: 'Replaces Claws. Surge: Light, Armoured. S.Die: D3.' },
+            { name: 'Adrenal Glands', cost: '20/20', type: 'Passive', description: "This Unit's Claws and Shredding Claws weapons gain PRECISION (2)." }
           ]
         }
       },
@@ -212,7 +212,7 @@ const KEYWORDS = {
       // SUPPORT
       { id: 'queen', name: 'Queen', role: 'Support', tags: ['Biological', 'Ground'],
         stats: { shield: null, speed: '4/6', evade: '5+', armour: '4+', hp: 6, size: 2 },
-        tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 170, models: '1', supply: 2 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
+        tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 150, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
         weapons: [
           { name: 'Acid Spines', phase: 'Assault', range: '10', target: 'All', roa: 4, hit: '4+', surge: 'Light', sDie: 'D3', damage: 1, keywords: [] },
           { name: 'Claws', phase: 'Combat', range: 'E', target: 'Ground', roa: 3, hit: '4+', surge: '-', sDie: '-', damage: 1, keywords: [] }
@@ -298,7 +298,7 @@ const KEYWORDS = {
           { phase: 'Assault Phase', name: 'Malevolent Matriarch', type: 'Passive', description: 'If the active Friendly Zerg Unit declares a Charge action while ON CREEP, it gains +1 Modifier to IMPACT Hit Rolls.' }
         ]
       },
-      { id: 'overlord', name: 'Overlord', unique: true, cost: 45, resource: '+1 BM', slots: { hero: 1, elite: 1, core: 1 }, category: 'positioning',
+      { id: 'overlord', name: 'Overlord', unique: true, cost: 35, resource: '+1 BM', slots: { hero: 1, elite: 1, core: 1 }, category: 'positioning',
         summary: 'Deep deploy units anywhere, spread creep',
         abilities: [
           { phase: 'Movement Phase', name: 'Ventral Sacs', type: 'Active', description: 'Place a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.' },
