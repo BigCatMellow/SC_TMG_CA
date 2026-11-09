@@ -38,6 +38,22 @@ for (const faction of ['terran','zerg','protoss']){
  }
 }
 assert.deepEqual(missing,[],'All currently listed Wave 1 faction units should be available');
+// Three Wave 2 unit/card profiles must agree with publisher cost+card exports.
+const wave2 = [
+  ['terran','siege-tank',220,2,'factory-tech-lab',40],
+  ['zerg','ravager',160,1,'cocoon',30],
+  ['protoss','immortal',280,2,'robotics-facility',35]
+];
+for(const [f,id,cost,supply,card,gas] of wave2){
+ const d=window['SCTMG_'+f.toUpperCase()];
+ const u=d.UNITS.find(u=>u.id===id);
+ const t=d.TACTICAL_CARDS.find(t=>t.id===card);
+ assert.ok(u && t,f+' Wave 2 content');
+ assert.equal(u.wave,2);
+ assert.ok(u.tiers.some(x=>x.cost===cost&&x.supply===supply));
+ assert.equal(t.cost,gas);
+ assert.ok(u.weapons.length>=2 && (u.abilities.length + Object.values(u.phaseAbilities).flat().length)>=2);
+}
 // Battle tracker model counts and upgrade costs use the same tier selection as the roster.
 for(const faction of ['Terran','Zerg','Protoss']){
  const html=load(faction+' Army.dc.html');
@@ -46,7 +62,7 @@ for(const faction of ['Terran','Zerg','Protoss']){
  assert.match(html,/unit\.role === 'Other'/);
  assert.match(html,/unit\.unique \&\& this\.state\.army\.some/);
 }
-assert.ok(checks.units>=22 && checks.compositions>=26 && checks.upgrades>=40 && checks.tactical>=31);
+assert.ok(checks.units>=25 && checks.compositions>=30 && checks.upgrades>=50 && checks.tactical>=34);
 // Instantiate all three Army components without DOM to test copies, timing state and legality.
 for(const faction of ['terran','zerg','protoss']){
  const pretty=faction[0].toUpperCase()+faction.slice(1);
