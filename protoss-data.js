@@ -100,7 +100,7 @@ const KEYWORDS = {
   },
   { id: 'stalker', name: 'Stalker', role: 'Elite', tags: ['Armoured', 'Mechanical', 'Ground'],
     stats: { shield: 3, speed: '4/8', evade: '6+', armour: '4+', hp: 6, size: 3 },
-    tiers: [{ tier: 'T3', cost: 260, models: '2', supply: 2 }, { tier: 'T2', cost: 160, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
+    tiers: [{ tier: 'T3', cost: 270, models: '2', supply: 2 }, { tier: 'T2', cost: 170, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
     weapons: [
       { name: 'Particle Disruptors', phase: 'Assault', range: '12', target: 'All', roa: 4, hit: '3+', surge: 'Armoured', sDie: 'D3', damage: 2, keywords: [] },
       { name: 'Stomp', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '5+', surge: '-', sDie: '-', damage: 1, keywords: [] }
@@ -201,7 +201,7 @@ const KEYWORDS = {
       { phase: 'Assault Phase', name: 'Ground Weapons', type: 'Active', description: "The active Ground Unit's first Ranged Weapon used gains CRITICAL HIT (1)." }
     ]
   },
-  { id: 'gate-chronoboosted', name: 'Gate Chronoboosted', unique: true, cost: 40, resource: '+1 PE', slots: { elite: 1, core: 1 }, category: 'combat',
+  { id: 'gate-chronoboosted', name: 'Gate Chronoboosted', unique: true, cost: 35, resource: '+1 PE', slots: { elite: 1, core: 1 }, category: 'combat',
     abilities: [
       { phase: 'Movement Phase', name: 'Zealous Charge', type: 'Active', description: 'The active Unit gains BUFF Speed (2).' },
       { phase: 'Combat Phase', name: 'Quick Strikes', type: 'Active', description: "The active Unit's first Close Combat Weapon used gains PRECISION (2)." }
@@ -231,7 +231,7 @@ const KEYWORDS = {
   { id: 'power-field', name: 'Power Field', unique: true, cost: 40, resource: '+1 PE', slots: { hero: 1, elite: 1, core: 1 }, category: 'defense',
     abilities: [{ phase: 'Any Phase', name: 'Guardian Shell', type: 'Reaction', description: 'Use before a Friendly Ground Unit makes an Armour Roll. That Unit gains DODGE (2) for this roll.' }]
   },
-  { id: 'twilight-council', name: 'Twilight Council', unique: true, cost: 40, resource: '+1 PE', slots: { elite: 1, support: 1 }, category: 'positioning',
+  { id: 'twilight-council', name: 'Twilight Council', unique: true, cost: 45, resource: '+1 PE', slots: { elite: 1, support: 1 }, category: 'positioning',
     abilities: [
       { phase: 'Any Phase', name: 'Veil of Shadows', type: 'Reaction', description: 'Use after a Friendly Unit resolves a PLACE effect. That Unit immediately resolves the HEAL (2) effect.' },
       { phase: 'Assault Phase', name: 'Weapons of the Firstborn', type: 'Active', description: "The active Ground Unit's first Ranged Weapon used gains BUFF Range (4)." }
@@ -243,7 +243,7 @@ const KEYWORDS = {
       { phase: 'Combat Phase', name: 'Quick Strikes', type: 'Active', description: "The active Unit's first Close Combat Weapon used gains PRECISION (2)." }
     ]
   },
-  { id: 'warp-prism', name: 'Warp Prism', unique: true, cost: 45, resource: '+1 PE', slots: { core: 2 }, category: 'positioning',
+  { id: 'warp-prism', name: 'Warp Prism', unique: true, cost: 35, resource: '+1 PE', slots: { core: 2 }, category: 'positioning',
     abilities: [
       { phase: 'Movement Phase', name: 'Phase', type: 'Active', description: 'The active Unit resolves the PLACE (3) effect.' },
       { phase: 'Movement Phase', name: 'Warp Conduit', type: 'Active', description: 'Place a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.' }
