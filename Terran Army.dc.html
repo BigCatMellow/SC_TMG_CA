@@ -276,7 +276,7 @@
           <div style="display:grid;gap:8px">
             <sc-for list="{{ battleCards }}" as="tc" hint-placeholder-count="3">
               <div class="sc-battle-card" style="background:{{ tc.bg }};border:1px solid {{ tc.bd }}">
-                <button onClick="{{ tc.onExpand }}" aria-label="View card abilities" class="sc-battle-card-header">
+                <button onClick="{{ tc.onExpand }}" aria-label="{{ tc.expandLabel }}" class="sc-battle-card-header">
                   <span style="flex:1;min-width:0;text-align:left">
                     <span class="sc-battle-card-kind">{{ tc.kind }} <span>{{ tc.copyLabel }}</span></span>
                     <span class="sc-battle-card-title">{{ tc.name }}</span>
@@ -285,7 +285,7 @@
                     <span class="sc-battle-card-output">{{ tc.resource }}</span>
                   </sc-if>
                   <span class="sc-battle-card-status" style="color:{{ tc.fg }}">{{ tc.label }}</span>
-                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex:0 0 auto;transform:rotate({{ tc.expanded ? 180 : 0 }}deg)">
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true" style="flex:0 0 auto;transform:rotate({{ tc.chev }}deg)">
                     <path d="M4 6l4 4 4-4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path>
                   </svg>
                 </button>
@@ -293,7 +293,7 @@
                   <div class="sc-battle-card-abilities">
                     <sc-for list="{{ tc.abilities }}" as="ab" hint-placeholder-count="2">
                       <div class="sc-battle-card-ability">
-                        <div class="sc-battle-card-ability-meta">{{ ab.phase }} · {{ ab.type }}</div>
+                        <div class="sc-battle-card-ability-meta">{{ ab.meta }}</div>
                         <div class="sc-battle-card-ability-name">{{ ab.name }}</div>
                         <div class="sc-battle-card-ability-description">{{ ab.description }}</div>
                       </div>
@@ -1038,6 +1038,8 @@ class Component extends DCLogic {
     const resourceAmount = this.resourceYield(card);
     return {
       id: card.id, key, name: card.name, kind, copyLabel,
+      chev: this.state.expBattleCards[key] ? 180 : 0,
+      expandLabel: card.name + (this.state.expBattleCards[key] ? ': hide abilities' : ': view abilities'),
       resource: card.resource || '', hasResource: resourceAmount > 0,
       tapped, label: tapped ? 'Exhausted' : 'Ready',
       bg: tapped ? 'rgba(139,146,163,0.08)' : 'rgba(56,211,232,0.06)',
@@ -1046,6 +1048,7 @@ class Component extends DCLogic {
       expanded: !!this.state.expBattleCards[key],
       abilities: abilities.map(a => ({
         phase: a.phase || 'Any Phase', type: a.type || '',
+        meta: [a.phase || 'Any Phase', a.type || ''].filter(Boolean).join(' · '),
         name: a.name || '', description: a.description || ''
       })),
       canUseAbility: abilities.some(a => /\b(Active|Reaction)\b/i.test(a.type || '')
