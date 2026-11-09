@@ -90,6 +90,15 @@
 
   <!-- ============ ROSTER TAB ============ -->
   <sc-if value="{{ tabIsRoster }}" hint-placeholder-val="{{ true }}">
+      <sc-if value="{{ hasRosterWarnings }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-bottom:12px;padding:10px 12px;border:1px solid rgba(240,74,74,.5);background:rgba(240,74,74,.08)">
+          <div style="font-family:Rajdhani,sans-serif;font-size:13px;letter-spacing:.06em;font-weight:700;color:#f08a8a">Roster needs correction before battle</div>
+          <sc-for list="{{ rosterWarnings }}" as="warning" hint-placeholder-count="2">
+            <div style="font-size:12px;color:#f6b3b3;line-height:1.5;padding-top:4px">{{ warning }}</div>
+          </sc-for>
+        </div>
+      </sc-if>
+
     <div style="padding:14px">
 
       <!-- scale + faction row -->
@@ -199,6 +208,15 @@
 
   <!-- ============ BATTLE TAB ============ -->
   <sc-if value="{{ tabIsBattle }}" hint-placeholder-val="{{ false }}">
+      <sc-if value="{{ hasRosterWarnings }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-bottom:12px;padding:10px 12px;border:1px solid rgba(240,74,74,.5);background:rgba(240,74,74,.08)">
+          <div style="font-family:Rajdhani,sans-serif;font-size:13px;letter-spacing:.06em;font-weight:700;color:#f08a8a">Roster needs correction before battle</div>
+          <sc-for list="{{ rosterWarnings }}" as="warning" hint-placeholder-count="2">
+            <div style="font-size:12px;color:#f6b3b3;line-height:1.5;padding-top:4px">{{ warning }}</div>
+          </sc-for>
+        </div>
+      </sc-if>
+
     <div style="padding:14px">
 
       <!-- empty state -->
@@ -1263,6 +1281,30 @@ class Component extends DCLogic {
       return { label: k.slice(0, 1).toUpperCase() + k.slice(1, 3) + ' ' + usedSlots[k] + '/' + baseSlots[k], fg: over ? '#f08a8a' : '#a7aec2', bd: over ? 'rgba(240,74,74,0.4)' : 'var(--sc-border-input)' };
     });
 
+    const rosterWarnings = [];
+    if (mOver) rosterWarnings.push('Minerals exceed the engagement limit by ' + (totals.minerals - scale.minerals) + '.');
+    if (gOver) rosterWarnings.push('Vespene exceeds the engagement limit by ' + (totals.gas - scale.gas) + '.');
+    for (const [role,count] of Object.entries(usedSlots)) {
+      if (count > (baseSlots[role] || 0)) rosterWarnings.push('Army slots: ' + role + ' uses ' + count + ' of ' + (baseSlots[role] || 0) + ' allowed.');
+    }
+    const uniqueUnits = new Set();
+    for (const e of st.army) {
+      const u = D.UNITS.find(x => x.id === e.unitId);
+      if (!u) { rosterWarnings.push('Saved roster contains an unavailable Unit: ' + e.unitId + '.'); continue; }
+      if (u.factionTag && u.factionTag !== faction.name) rosterWarnings.push(u.name + ' requires the ' + u.factionTag + ' faction.');
+      if (u.role === 'Other' || !u.tiers.some(t => t.cost > 0)) rosterWarnings.push(u.name + ' is summoned and cannot be purchased.');
+      if (u.unique && uniqueUnits.has(u.id)) rosterWarnings.push('Unique Unit duplicated: ' + u.name + '.');
+      if (u.unique) uniqueUnits.add(u.id);
+      if (!u.tiers[e.tierIdx] || !Number.isFinite(u.tiers[e.tierIdx].cost) || u.tiers[e.tierIdx].cost <= 0) rosterWarnings.push('Invalid purchased composition for ' + u.name + '.');
+    }
+    const uniqueTactical = new Set();
+    for (const id of st.tactical) {
+      const t = D.TACTICAL_CARDS.find(x => x.id === id);
+      if (!t) { rosterWarnings.push('Saved roster contains an unavailable Tactical Card: ' + id + '.'); continue; }
+      if (t.unique && uniqueTactical.has(id)) rosterWarnings.push('Unique Tactical Card duplicated: ' + t.name + '.');
+      if (t.unique) uniqueTactical.add(id);
+    }
+
     // roster groups
     const roles = ['Hero', 'Elite', 'Core', 'Support', 'Other'];
     const rosterGroups = roles.map(role => {
@@ -1559,6 +1601,7 @@ class Component extends DCLogic {
       // roster
       scales, slotPills,
       rosterEmpty: st.army.length === 0, rosterGroups,
+      hasRosterWarnings: rosterWarnings.length > 0, rosterWarnings,
       hasTactical: rosterTactical.length > 0, rosterTactical, tacticalCount: rosterTactical.length,
       // battle
       battleEmpty: battleUnits.length === 0, battleGroups,
