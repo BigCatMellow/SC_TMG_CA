@@ -882,7 +882,12 @@ class Component extends DCLogic {
     const images = [primary];
     const sizes = [official?.size || fallback?.size || 'auto 288px'];
     const positions = [official?.pos || fallback?.pos || 'right center'];
-    if (official?.src && fallback?.src && official.src !== fallback.src) {
+    if (official?.fallbackSrc && official.fallbackSrc !== primary) {
+      images.push(official.fallbackSrc);
+      sizes.push(official.fallbackSize || official.size || 'auto 288px');
+      positions.push(official.fallbackPos || official.pos || 'right center');
+    }
+    if (official?.src && fallback?.src && !images.includes(fallback.src)) {
       images.push(fallback.src);
       sizes.push(fallback.size || 'auto 288px');
       positions.push(fallback.pos || 'right center');
