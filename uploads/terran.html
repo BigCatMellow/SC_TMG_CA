@@ -1317,7 +1317,7 @@
   // HERO
   { id: 'jim-raynor', name: 'Jim Raynor', role: 'Hero', unique: true, tags: ['Biological', 'Ground'],
     stats: { shield: null, speed: '7', evade: '5+', armour: '4+', hp: 8, size: 2 },
-    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 230, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
+    tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 250, models: '1', supply: 1 }, { tier: 'T1', cost: null, models: '-', supply: 0 }],
     weapons: [
       { name: 'Commando Rifle', phase: 'Assault', range: '18', target: 'All', roa: 3, hit: '3+', surge: 'Armoured', sDie: 'D3', damage: 1, keywords: ['BULKY', 'PIERCE Armoured (3)'] },
       { name: 'C-14 Rifle', phase: 'Assault', range: '12', target: 'All', roa: 6, hit: '3+', surge: 'Light', sDie: 'D3+1', damage: 1, keywords: ['BURST FIRE 8" (3)'], replaces: 'Commando Rifle' },
@@ -1376,7 +1376,7 @@
     },
     upgrades: {
       'Any Phase': [
-        { name: 'Veteran of Tarsonis', cost: '20/40', type: 'Passive', description: "While this Unit is Within 3\" of a Mission Marker, its Armour characteristic is increased by 1." },
+        { name: 'Veteran of Tarsonis', cost: '20/30', type: 'Passive', description: "While this Unit is Within 3\" of a Mission Marker, its Armour characteristic is increased by 1." },
         { name: 'Kinetic Foam', cost: '20/40', type: 'Passive', description: "Increase this Unit's Hit Points characteristic by 1." }
       ],
       'Assault Phase': [{ name: 'Laser Targeting Systems', cost: '20/40', type: 'Passive', description: 'This Unit\'s Quad K12 weapon gains LONG RANGE (16").' }]
@@ -1396,10 +1396,10 @@
     upgrades: {
       'Movement Phase': [{ name: 'Combat Shield', cost: '20/30', type: 'Active (1 Command Point)', description: 'This Unit is always eligible to make an Evade Roll against any Close Combat Attack targeting it and any Damage from an Enemy Special Ability.' }],
       'Assault Phase': [
-        { name: 'AGG-12', cost: 10, type: 'Weapon', description: 'Replaces C-14 Rifle. RNG 12, TGT Ground, RoA 2, Hit 3+, Surge Armoured, S.Die D3, Dmg 1. Keywords: LONG RANGE (18"), SPECIALIST.', modifies: { weapon: 'C-14 Rifle' } },
-        { name: 'Rocket Launcher', cost: 40, type: 'Weapon', description: 'Additional weapon. RNG 12, TGT Ground, RoA 4, Hit 3+, Dmg 1. Keywords: INDIRECT FIRE, LONG RANGE (18"), SIDEARM, SPECIALIST.' },
+        { name: 'AGG-12', cost: '10/10', type: 'Weapon', description: 'Replaces C-14 Rifle. RNG 12, TGT Ground, RoA 2, Hit 3+, Surge Armoured, S.Die D3, Dmg 1. Keywords: LONG RANGE (18"), SPECIALIST.', modifies: { weapon: 'C-14 Rifle' } },
+        { name: 'Rocket Launcher', cost: '40/40', type: 'Weapon', description: 'Additional weapon. RNG 12, TGT Ground, RoA 4, Hit 3+, Dmg 1. Keywords: INDIRECT FIRE, LONG RANGE (18"), SIDEARM, SPECIALIST.' },
         { name: 'Slugthrower', cost: '10/20', type: 'Passive', description: 'When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8", that weapon gains ANTI-EVADE (1).' },
-        { name: 'Grenades - Frag', cost: 10, type: 'Passive', description: "When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8\", that weapon's S Dice is replaced by D6." }
+        { name: 'Grenades - Frag', cost: '10/10', type: 'Passive', description: "When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8\", that weapon's S Dice is replaced by D6." }
       ],
       'Combat Phase': [{ name: 'Bayonet', cost: '20/30', type: 'Weapon', description: 'Replaces Strike. RNG E, TGT Ground, RoA 2, Hit 5+, Dmg 1.', modifies: { weapon: 'Strike' } }]
     }
@@ -1499,7 +1499,7 @@
       { phase: 'Movement Phase', name: 'Ready For Dust-off', type: 'Active', description: 'Place a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.' }
     ]
   },
-  { id: 'engineering-bay', name: 'Engineering Bay', unique: false, cost: 30, resource: '+1 CP', slots: { core: 1 },
+  { id: 'engineering-bay', name: 'Engineering Bay', unique: false, cost: 25, resource: '+1 CP', slots: { core: 1 },
     abilities: [
       { phase: 'Any Phase', name: 'Infantry Armor', type: 'Reaction', description: 'Use before a Friendly Biological Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.' },
       { phase: 'Assault Phase', name: 'Infantry Weapons', type: 'Active', description: "The active Biological Unit's first Ranged Weapon used gains CRITICAL HIT (1)." }
