@@ -1,77 +1,57 @@
-# Unit portraits — image audit and source register
+# Miniature portrait audit — 9 November 2026
 
-**Audited against:** `main` repository unit data and the three live Army screen `portrait(u)` maps, 2026-11-09.
+## Current status
 
-The previous app had **20 portraits across 43 unit records**, leaving **23 missing**. The [source manifest](../model-portraits.js) uses publisher miniature photos where available, with original local artwork retained as an automatic CSS background fallback. Shared-sculpt aliases are **not** claimed to be unique photos of that variant. External copyright remains with its original owner; no external image binaries are copied into this repository.
+The live companion covers **43 units**. **22 original, distinct painted-miniature photos** are extracted *byte-for-byte* from the 2026 Core Rules PDF and are now the preferred portrait for their matching Wave 1 unit. Other units retain official galleries or existing local assets.
 
-| Faction | Units | Previously pictured | New exact/photo mappings | Shared-sculpt aliases | Covered now | Still missing |
-|---|---:|---:|---:|---:|---:|---:|
-| Terran | 15 | 7 | 6 | 1 | 13 | 2 |
-| Zerg | 17 | 6 | 6 | 6 | 17 | 0 |
-| Protoss | 11 | 7 | 4 | 0 | 11 | 0 |
+| Image category | Units |
+|---|---:|
+| Original local Core Rules miniature photographs | **22** |
+| External publisher/retailer miniature galleries (primarily Waves 2–3) | 14 |
+| Clearly labeled related-sculpt substitutes | 3 |
+| Existing local portraits not replaced | 2 |
+| No verified image | **2** |
+| **Total** | **43** |
 
-## Per-unit results
+The two unresolved units are summoned Terran **Sabotage Drone** and **Auto-Turret**. The three remaining related-sculpt substitutions are Spec Ops Marauder, Roachling, and Vileling. Every other Wave 1 model now has its *own* correct embedded miniature image, including Raptor, Kerrigan's Raptor, Swarmling, Vile Roach, Corpser, Praetor Guard, and Artanis.
 
-Status key: **Official model photo** = publisher/reproduction image aimed at that specific miniature (except explicitly labeled shared sculpt). **Shared sculpt placeholder** = photograph or existing local image of a related base mini, not confirmation of a distinct variant pose. **Retained local portrait** = prior binary, image type not reverified. **Unresolved** = no verified portrait.
+## 22 exact Core Rules photographs
 
-| Faction | Unit ID | Before | After | Source / note |
-|---|---|---|---|---|
-| TERRAN | `jim-raynor` | [`uploads/Raynor-card.png`](../uploads/Raynor-card.png) | Official model photo | [Publisher/source page](https://www.philibertnet.com/); Published painted mini photo replacing a card art crop; local crop retained as offline fallback |
-| TERRAN | `goliath` | [`portraits/terran/goliath.png`](../portraits/terran/goliath.png) | Retained local portrait | Existing local portrait retained |
-| TERRAN | `marauder` | [`portraits/terran/marauder.png`](../portraits/terran/marauder.png) | Retained local portrait | Existing local portrait retained |
-| TERRAN | `marine` | [`portraits/terran/marine.png`](../portraits/terran/marine.png) | Retained local portrait | Existing local portrait retained |
-| TERRAN | `raynors-raider` | [`portraits/terran/raynors-raider.png`](../portraits/terran/raynors-raider.png) | Retained local portrait | Existing local portrait retained |
-| TERRAN | `medic` | [`portraits/terran/medic.png`](../portraits/terran/medic.png) | Retained local portrait | Existing local portrait retained |
-| TERRAN | `siege-tank` | None | Official model photo | [Publisher/source page](https://starcraft-tmg.com/news/rules/siege-tank-thunder-from-the-high-ground); Publisher's painted tank/siege-mode models |
-| TERRAN | `point-defense-drone` | [`portraits/terran/point-defense-drone.png`](../portraits/terran/point-defense-drone.png) | Retained local portrait | Existing local portrait retained |
-| TERRAN | `nova-stealth` | None | Official model photo | [Publisher/source page](https://archon-studio.com/blog/starcraft-tmg/starcraft-miniatures-game-raven-nova-terra-wave-3); Official Nova stealth figure alongside holo-decoy |
-| TERRAN | `nova-assault` | None | Official model photo | [Publisher/source page](https://archon-studio.com/blog/starcraft-tmg/starcraft-miniatures-game-raven-nova-terra-wave-3); Official Nova assault pose |
-| TERRAN | `spec-ops-marauder` | None | Shared sculpt placeholder | Uses `marauder` local sculpt; Uses existing Marauder miniature portrait until a distinct Spec Ops pose is verified |
-| TERRAN | `raven` | None | Official model photo | [Publisher/source page](https://archon-studio.com/blog/starcraft-tmg/starcraft-miniatures-game-raven-nova-terra-wave-3); Official painted Raven miniature |
-| TERRAN | `holo-decoy` | None | Official model photo | [Publisher/source page](https://archon-studio.com/blog/starcraft-tmg/starcraft-miniatures-game-raven-nova-terra-wave-3); Same official photograph, framed toward transparent decoy figure |
-| TERRAN | `sabotage-drone` | None | Unresolved | Needs exact model photography |
-| TERRAN | `auto-turret` | None | Unresolved | Needs exact model photography |
-| ZERG | `kerrigan` | [`uploads/Kerrigan.png`](../uploads/Kerrigan.png) | Retained local portrait | Existing local portrait retained |
-| ZERG | `hydralisk` | [`portraits/zerg/hydralisk.png`](../portraits/zerg/hydralisk.png) | Retained local portrait | Existing local portrait retained |
-| ZERG | `raptor` | None | Shared sculpt placeholder | Uses `zergling` local sculpt; Zergling base sculpt placeholder, not a verified dedicated Raptor portrait |
-| ZERG | `kerrigan-raptor` | None | Shared sculpt placeholder | Uses `zergling` local sculpt; Zergling base sculpt placeholder, not a verified dedicated Kerrigan's Raptor portrait |
-| ZERG | `corpser` | [`portraits/zerg/corpser.png`](../portraits/zerg/corpser.png) | Retained local portrait | Existing local portrait retained |
-| ZERG | `roach` | [`portraits/zerg/roach.png`](../portraits/zerg/roach.png) | Retained local portrait | Existing local portrait retained |
-| ZERG | `zergling` | [`portraits/zerg/zergling.png`](../portraits/zerg/zergling.png) | Retained local portrait | Existing local portrait retained |
-| ZERG | `queen` | [`portraits/zerg/queen.png`](../portraits/zerg/queen.png) | Official model photo | [Publisher/source page](https://starcraft-tmg.com/shop/products/starcraft-queen); Publisher's painted miniature photography replaces older image; retains local portrait fallback |
-| ZERG | `vile` | None | Shared sculpt placeholder | Uses `roach` local sculpt; Roach base miniature used until separate Vile sculpt photo verified |
-| ZERG | `swarmling` | None | Shared sculpt placeholder | Uses `zergling` local sculpt; Zergling base miniature used for this variant |
-| ZERG | `ravager` | None | Official model photo | [Publisher/source page](https://starcraft-tmg.com/news/rules/ravager-corrosive-death-from-above); Published painted Ravager models |
-| ZERG | `omega-worm` | None | Official model photo | [Publisher/source page](https://starcraft-tmg.com/about-the-game); Official Omega Worm model photograph |
-| ZERG | `roachling` | None | Shared sculpt placeholder | Uses `roach` local sculpt; Roach base miniature fallback for summoned Roachling |
-| ZERG | `zagara` | None | Official model photo | [Publisher/source page](https://archon-studio.com/blog/starcraft-tmg/starcraft-tmg-wave-3-zerg-defiler-zagara-bile-launcher); Official painted Zagara miniature |
-| ZERG | `defiler` | None | Official model photo | [Publisher/source page](https://archon-studio.com/blog/starcraft-tmg/starcraft-tmg-wave-3-zerg-defiler-zagara-bile-launcher); Official painted Defiler miniature |
-| ZERG | `vileling` | None | Shared sculpt placeholder | Uses `zergling` local sculpt; Zergling base miniature used until Vileling photo verified |
-| ZERG | `bile-launcher` | None | Official model photo | [Publisher/source page](https://archon-studio.com/blog/starcraft-tmg/starcraft-tmg-wave-3-zerg-defiler-zagara-bile-launcher); Official painted Bile Launcher |
-| PROTOSS | `artanis` | [`uploads/Artanis-card.png`](../uploads/Artanis-card.png) | Retained local portrait | Existing local portrait retained |
-| PROTOSS | `praetor-guard` | [`portraits/protoss/praetor-guard.png`](../portraits/protoss/praetor-guard.png) | Retained local portrait | Existing local portrait retained |
-| PROTOSS | `stalker` | [`portraits/protoss/stalker.png`](../portraits/protoss/stalker.png) | Retained local portrait | Existing local portrait retained |
-| PROTOSS | `adept` | [`portraits/protoss/adept.png`](../portraits/protoss/adept.png) | Retained local portrait | Existing local portrait retained |
-| PROTOSS | `zealot` | [`portraits/protoss/zealot.png`](../portraits/protoss/zealot.png) | Retained local portrait | Existing local portrait retained |
-| PROTOSS | `sentry` | [`portraits/protoss/sentry.png`](../portraits/protoss/sentry.png) | Retained local portrait | Existing local portrait retained |
-| PROTOSS | `immortal` | None | Official model photo | [Publisher/source page](https://starcraft-tmg.com/news/rules/immortal-glory-through-endurance); Official painted Immortal sculpt |
-| PROTOSS | `pylon` | [`portraits/protoss/pylon.png`](../portraits/protoss/pylon.png) | Retained local portrait | Existing local portrait retained |
-| PROTOSS | `tassadar` | None | Official model photo | [Publisher/source page](https://starcraft-tmg.com/news/rules/protoss-tassadar-high-templar-wave-3); Official painted Tassadar |
-| PROTOSS | `twilight-templar` | None | Official model photo (shared sculpt) | [Publisher/source page](https://starcraft-tmg.com/news/rules/protoss-tassadar-high-templar-wave-3); Same High Templar sculpt shown for Twilight Templar variant; not a separate verified photo |
-| PROTOSS | `high-templar` | None | Official model photo | [Publisher/source page](https://starcraft-tmg.com/news/rules/protoss-tassadar-high-templar-wave-3); Official High Templar model |
+Each image retains its original pixel data, unit ID, PDF page, and SHA-256 in [source-manifest.json](../portraits/pdf/source-manifest.json).
 
-## Image reliability and licensing
+| Faction | Unit ID | Printed / PDF page | Image |
+|---|---|---|---|
+| terran | `marine` | 96 / 98 | [JPEG](../portraits/pdf/terran/marine.jpg) |
+| terran | `raynors-raider` | 96 / 98 | [JPEG](../portraits/pdf/terran/raynors-raider.jpg) |
+| terran | `marauder` | 97 / 99 | [JPEG](../portraits/pdf/terran/marauder.jpg) |
+| terran | `medic` | 97 / 99 | [JPEG](../portraits/pdf/terran/medic.jpg) |
+| terran | `goliath` | 98 / 100 | [JPEG](../portraits/pdf/terran/goliath.jpg) |
+| terran | `jim-raynor` | 98 / 100 | [JPEG](../portraits/pdf/terran/jim-raynor.jpg) |
+| zerg | `zergling` | 99 / 101 | [JPEG](../portraits/pdf/zerg/zergling.jpg) |
+| zerg | `raptor` | 99 / 101 | [JPEG](../portraits/pdf/zerg/raptor.jpg) |
+| zerg | `kerrigan-raptor` | 100 / 102 | [JPEG](../portraits/pdf/zerg/kerrigan-raptor.jpg) |
+| zerg | `swarmling` | 100 / 102 | [JPEG](../portraits/pdf/zerg/swarmling.jpg) |
+| zerg | `roach` | 101 / 103 | [JPEG](../portraits/pdf/zerg/roach.jpg) |
+| zerg | `vile` | 101 / 103 | [JPEG](../portraits/pdf/zerg/vile.jpg) |
+| zerg | `corpser` | 102 / 104 | [JPEG](../portraits/pdf/zerg/corpser.jpg) |
+| zerg | `hydralisk` | 102 / 104 | [JPEG](../portraits/pdf/zerg/hydralisk.jpg) |
+| zerg | `queen` | 103 / 105 | [JPEG](../portraits/pdf/zerg/queen.jpg) |
+| zerg | `kerrigan` | 103 / 105 | [JPEG](../portraits/pdf/zerg/kerrigan.jpg) |
+| protoss | `zealot` | 104 / 106 | [JPEG](../portraits/pdf/protoss/zealot.jpg) |
+| protoss | `praetor-guard` | 104 / 106 | [JPEG](../portraits/pdf/protoss/praetor-guard.jpg) |
+| protoss | `adept` | 105 / 107 | [JPEG](../portraits/pdf/protoss/adept.jpg) |
+| protoss | `sentry` | 105 / 107 | [JPEG](../portraits/pdf/protoss/sentry.jpg) |
+| protoss | `stalker` | 106 / 108 | [JPEG](../portraits/pdf/protoss/stalker.jpg) |
+| protoss | `artanis` | 106 / 108 | [JPEG](../portraits/pdf/protoss/artanis.jpg) |
 
-- `model-portraits.js` stores source URLs and provenance. The browser requests these images from the publisher or retailer; the repo does not rehost copyrighted photos.
-- For a pre-existing portrait, CSS places that local file below the external URL. If the external URL cannot load, the local image still appears. Variant aliases reuse those local files.
-- New units with an official external image but no local asset will be blank if the publisher denies hotlinking or removes the image. Retrying through another publisher-hosted source or obtaining redistribution permission to bundle optimized local images is the durable fix.
-- Preserve unit IDs across the three faction data files and Wave 3 overlay; do not assign an unrelated model photo to a unique variant.
-- Remaining unresolved: Terran summoned-only **Sabotage Drone** and **Auto-Turret**. The official Raven/Nova products confirm the models exist, but standalone publisher photographs were not verified.
-- **Visual limitation:** This change has programmatic checks and reviewed source images; no browser screenshot/device viewport inspection or production network hotlink success was verified. Confirm crop/focal positions and hotlink access in the deployed UI.
+The original [source PDF](https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf) has SHA-256 `27639c562e6db9777dd9ba984d0c9f9b581841ec30166848e021f893cd00ea54`. Re-extraction is reproducible with [scripts/extract-pdf-miniatures.py](../scripts/extract-pdf-miniatures.py). The script rejects changed source versions instead of silently substituting a similar image. The app’s [model-portraits.js](../model-portraits.js) maps photos to cards with existing artwork and external galleries kept as lower-priority fallbacks.
 
-## Sources
+## Remaining sources
 
-- [Official StarCraft: TMG publisher and unit downloads](https://starcraft-tmg.com/downloads)
-- [Raven and Nova Wave 3 miniatures](https://archon-studio.com/blog/starcraft-tmg/starcraft-miniatures-game-raven-nova-terra-wave-3)
-- [Zerg Wave 3 miniatures](https://archon-studio.com/blog/starcraft-tmg/starcraft-tmg-wave-3-zerg-defiler-zagara-bile-launcher)
-- [Protoss Wave 3 miniatures](https://starcraft-tmg.com/news/rules/protoss-tassadar-high-templar-wave-3)
+Wave 2–3 units still use official [publisher galleries](https://starcraft-tmg.com/downloads), where available. Their URL, unit ID, and source page are retained in the portrait manifest. Existing portrait binaries are not deleted.
+
+## Rights and release notes
+
+Miniature imagery and source book © 2026 Blizzard Entertainment / Archon Studio. The publishers retain copyright and distribution rights; repository attribution **does not** establish a redistribution license. This project does not claim ownership or endorse reuse elsewhere.
+
+The thumbnail extractor is run under GitHub Actions. A PR run validates the exact PDF version and image checksums; after the code is merged, Actions pushes the 22 JPEG binaries to a separate review branch, which is then merged to `main`. On the live companion, local images avoid external hotlink failure for Wave 1. Verify final image crops on a phone-sized viewport after deployment.
