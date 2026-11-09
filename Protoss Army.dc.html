@@ -35,15 +35,15 @@
   <div style="position:sticky;top:0;z-index:200;background:rgba(5,6,10,0.93);backdrop-filter:blur(14px);border-bottom:1px solid #232939;box-shadow:0 12px 28px rgba(0,0,0,0.5)">
 
     <!-- title row -->
-    <div style="display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 8px">
+    <div class="{{ titleHeaderClass }}" style="display:flex;align-items:center;gap:var(--sc-title-gap,10px);padding:calc(var(--sc-title-pad-top,10px) + env(safe-area-inset-top)) 14px var(--sc-title-pad-bottom,8px)">
       <a href="Command Center.dc.html" aria-label="Back to command center" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#8a91a5;text-decoration:none;background:#141824;border:1px solid var(--sc-border-neutral);clip-path:var(--sc-corner-8)">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       </a>
       <div style="position:relative;flex:1;min-width:0">
-        <div style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#8a91a5">StarCraft TMG · The Firstborn</div>
-        <div style="display:flex;align-items:baseline;gap:8px">
-          <div style="font-family:'Chakra Petch',sans-serif;font-size:24px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#e9ecf2;line-height:1.1;text-shadow:0 0 18px rgba(242,200,96,0.45)">Protoss</div>
-          <div style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#f2c860">{{ factionName }}</div>
+        <div class="sc-title-kicker" style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#8a91a5">StarCraft TMG · The Firstborn</div>
+        <div style="display:flex;align-items:baseline;gap:var(--sc-title-name-gap,8px)">
+          <div class="sc-title-faction-name" style="font-family:'Chakra Petch',sans-serif;font-size:var(--sc-title-heading-size,24px);font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#e9ecf2;line-height:1.1;text-shadow:0 0 18px rgba(242,200,96,0.45)">Protoss</div>
+          <div class="sc-title-faction" style="font-family:Rajdhani,sans-serif;font-size:var(--sc-title-faction-size,12px);font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#f2c860">{{ factionName }}</div>
         </div>
       </div>
       <button onClick="{{ openSearch }}" aria-label="Search everything" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#c8cede;background:#141824;border:1px solid var(--sc-border-neutral);cursor:pointer;clip-path:var(--sc-corner-8)">
@@ -1652,6 +1652,7 @@ class Component extends DCLogic {
       tabIsRoster: st.tab === 'roster', tabIsBattle: st.tab === 'battle', tabIsLibrary: st.tab === 'library', tabIsTactics: st.tab === 'tactics',
       resourceStripClass: st.resourcesCompact ? 'sc-resource-strip sc-resource-strip--compact' : 'sc-resource-strip',
       scoreboardClass: st.resourcesCompact ? 'sc-scoreboard sc-scoreboard--compact' : 'sc-scoreboard',
+      titleHeaderClass: st.resourcesCompact ? 'sc-title-row sc-title-row--compact' : 'sc-title-row',
       tabIsFaction: st.tab === 'faction', tabIsCodex: st.tab === 'codex',
       // roster
       scales, slotPills,

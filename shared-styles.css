@@ -93,6 +93,28 @@ input::placeholder { color: #5b6275; }
 
 
 /*
+  Preserve the faction heading's original artwork, colors, back/search buttons
+  and typography. Only compress spacing and type size alongside the existing
+  resource/scoreboard scroll state. Controls remain 40px touch targets.
+*/
+.sc-title-row--compact {
+  --sc-title-gap: 8px;
+  --sc-title-pad-top: 2px;
+  --sc-title-pad-bottom: 2px;
+  --sc-title-name-gap: 5px;
+  --sc-title-heading-size: 20px;
+  --sc-title-faction-size: 10px;
+}
+.sc-title-row--compact .sc-title-kicker { display: none; }
+.sc-title-row--compact .sc-title-faction-name { flex-shrink: 0; }
+.sc-title-row--compact .sc-title-faction {
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+/*
   The original beveled scoreboard is deliberately untouched. Its inline styles
   use fallback values matching the previous design; only these layout variables
   change when the shared scroll state becomes compact. No replacement markup.
