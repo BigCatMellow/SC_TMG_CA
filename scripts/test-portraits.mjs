@@ -1,4 +1,4 @@
-// Check live model pictures, source metadata and local layered fallbacks.
+// Check one stationary model image per card, source metadata and error fallbacks.
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
@@ -19,12 +19,14 @@ assert.deepEqual(Object.keys(config.factions).sort(), ['protoss','terran','zerg'
 const expectedUnmapped = ['terran/auto-turret','terran/sabotage-drone'];
 const unmapped = [];
 const stats = {};
+const controllers = {};
 for (const faction of ['terran','zerg','protoss']) {
   const file = faction[0].toUpperCase() + faction.slice(1) + ' Army.dc.html';
   const html = read(file);
   assert.ok(html.includes('src="model-portraits.js"'),file+' gallery load missing');
   assert.ok(html.indexOf('src="model-portraits.js"') > html.indexOf('src="wave3-data.js"'));
-  assert.equal((html.match(/background-image:\{\{ (?:en|u)\.portraitBg \}\}/g)||[]).length, 3, file+' portrait views');
+  assert.equal((html.match(/<img src="\{\{ (?:en|u)\.portrait \}\}" onError="\{\{ (?:en|u)\.onPortraitError \}\}"/g)||[]).length, 3, file+' single-image views');
+  assert.equal((html.match(/background-image:\{\{ (?:en|u)\.portraitBg \}\}/g)||[]).length, 0, file+' old layered backgrounds');
   const component = html.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)?.[1];
   assert.ok(component, file+' controller missing');
   class Stub { setState(update, done) {
@@ -33,6 +35,7 @@ for (const faction of ['terran','zerg','protoss']) {
   }}
   const Controller = new Function('DCLogic','window',component+'\nreturn Component;')(Stub,world);
   const controller = new Controller();
+  controllers[faction] = controller;
   const d = world['SCTMG_'+faction.toUpperCase()];
   const ids = d.UNITS.map(u=>u.id);
   assert.equal(ids.length,new Set(ids).size,'duplicate Unit IDs');
@@ -73,6 +76,14 @@ for (const faction of ['terran','zerg','protoss']) {
       stats[faction].covered++;
       assert.ok(picture.portraitBg.startsWith("url('"),unit.id+' CSS image missing');
       assert.ok(picture.portraitSize && picture.portraitPos,unit.id+' layout metadata missing');
+      assert.equal([...picture.portraitBg.matchAll(/url\('([^']+)'\)/g)].length, 1,
+        unit.id+' must render exactly one visible miniature');
+      assert.match(picture.portraitImgStyle, /position:absolute;/,unit.id+' image not anchored');
+      assert.match(picture.portraitImgStyle, /top:-?\d+px;/,unit.id+' image has no fixed top');
+      assert.match(picture.portraitImgStyle, /height:\d+px;/,unit.id+' artwork has no fixed height');
+      assert.equal(picture.portraitImgStyle,controller.portrait(unit).portraitImgStyle,
+        unit.id+' image placement must not depend on card expansion');
+      assert.equal(typeof picture.onPortraitError,'function',unit.id+' image fallback handler absent');
       // Every pre-existing or variant local portrait must still exist in the repository.
       const paths=[...picture.portraitBg.matchAll(/url\('([^']+)'\)/g)].map(x=>x[1]);
       for(const path of paths.filter(x=>!x.startsWith('https://'))) {
@@ -83,6 +94,20 @@ for (const faction of ['terran','zerg','protoss']) {
     }
   }
 }
+// Simulate one element failing through all available sources: image changes in place.
+const raynor = controllers.terran.portrait({ id: 'jim-raynor' });
+const img = { src: raynor.portrait, dataset: {}, style: { cssText: raynor.portraitImgStyle, display: '' } };
+raynor.onPortraitError({ currentTarget: img });
+assert.equal(img.src, config.factions.terran['jim-raynor'].fallbackSrc);
+raynor.onPortraitError({ currentTarget: img });
+assert.equal(img.src, 'uploads/Raynor-card.png');
+raynor.onPortraitError({ currentTarget: img });
+assert.equal(img.style.display, 'none','exhausted sources must not render a broken icon');
+const raptor = controllers.zerg.portrait({ id: 'raptor' });
+assert.equal(raptor.portrait,'portraits/pdf/zerg/raptor.jpg');
+const raptorImage = { src: raptor.portrait, dataset: {}, style: { cssText: raptor.portraitImgStyle, display: '' } };
+raptor.onPortraitError({ currentTarget: raptorImage });
+assert.equal(raptorImage.src,'portraits/zerg/zergling.png','related sculpt is error-only fallback');
 assert.deepEqual(unmapped.sort(),expectedUnmapped,'unexpected missing model photos');
 assert.equal(Object.values(stats).reduce((n,x)=>n+x.total,0),43,'check audit when adding units');
 assert.equal(Object.values(stats).reduce((n,x)=>n+x.covered,0),41);
