@@ -1,5 +1,5 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "source": {
     "file": "StarCraft-TMG_EN.pdf",
     "sha256": "27639c562e6db9777dd9ba984d0c9f9b581841ec30166848e021f893cd00ea54",
@@ -15,12 +15,12 @@
           "compositions": [
             [
               6,
-              160,
+              170,
               1
             ],
             [
               9,
-              210,
+              220,
               2
             ]
           ],
@@ -67,12 +67,12 @@
           "compositions": [
             [
               2,
-              150,
+              160,
               1
             ],
             [
               4,
-              280,
+              290,
               2
             ]
           ],
@@ -87,7 +87,7 @@
             ],
             "Veteran of Tarsonis": [
               20,
-              30
+              40
             ]
           }
         },
@@ -96,7 +96,7 @@
           "compositions": [
             [
               3,
-              110,
+              120,
               1
             ]
           ],
@@ -108,7 +108,7 @@
               60
             ],
             "Stabilizer Medpacks": [
-              30
+              20
             ]
           }
         },
@@ -117,7 +117,7 @@
           "compositions": [
             [
               1,
-              190,
+              180,
               2
             ]
           ],
@@ -138,7 +138,7 @@
           "compositions": [
             [
               1,
-              250,
+              280,
               1
             ]
           ],
@@ -150,16 +150,16 @@
         }
       },
       "tactical": {
-        "barracks": 25,
+        "barracks": 30,
         "barracks-proxy": 40,
-        "barracks-tech-lab": 45,
+        "barracks-tech-lab": 40,
         "supply-depot": 40,
         "factory": 35,
         "engineering-bay": 25,
         "armory": 30,
-        "academy": 35,
+        "academy": 40,
         "orbital-command": 25,
-        "dropship": 40
+        "dropship": 35
       }
     },
     "zerg": {
@@ -169,12 +169,12 @@
           "compositions": [
             [
               12,
-              180,
+              150,
               1
             ],
             [
               18,
-              220,
+              210,
               2
             ]
           ],
@@ -198,12 +198,12 @@
           "compositions": [
             [
               12,
-              240,
+              210,
               1
             ],
             [
               18,
-              300,
+              260,
               2
             ]
           ],
@@ -227,7 +227,7 @@
           "compositions": [
             [
               6,
-              250,
+              230,
               1
             ]
           ],
@@ -238,7 +238,7 @@
           "compositions": [
             [
               18,
-              260,
+              210,
               1
             ]
           ],
@@ -262,7 +262,7 @@
               20
             ],
             "Glial Reconstitution": [
-              20
+              10
             ],
             "Hydriodic Bile": [
               10
@@ -277,7 +277,7 @@
           "compositions": [
             [
               3,
-              200,
+              190,
               1
             ]
           ],
@@ -286,7 +286,7 @@
               20
             ],
             "Glial Reconstitution": [
-              20
+              10
             ],
             "Hydriodic Bile": [
               10
@@ -301,7 +301,7 @@
           "compositions": [
             [
               3,
-              240,
+              220,
               1
             ]
           ],
@@ -310,7 +310,7 @@
               20
             ],
             "Glial Reconstitution": [
-              20
+              10
             ],
             "Hydriodic Bile": [
               10
@@ -337,7 +337,7 @@
           "upgrades": {
             "Ancillary Carapace": [
               20,
-              40
+              30
             ],
             "Burrow Ambush": [
               20,
@@ -345,11 +345,11 @@
             ],
             "Grooved Spines": [
               20,
-              40
+              30
             ],
             "Lurking": [
               10,
-              20
+              10
             ]
           }
         },
@@ -358,7 +358,7 @@
           "compositions": [
             [
               1,
-              150,
+              140,
               1
             ]
           ],
@@ -385,10 +385,10 @@
       },
       "tactical": {
         "spawning-pool": 25,
-        "spawning-pool-six": 40,
+        "spawning-pool-six": 35,
         "roach-warren": 25,
-        "hydralisk-den": 35,
-        "evolution-chamber": 30,
+        "hydralisk-den": 30,
+        "evolution-chamber": 25,
         "hatchery": 30,
         "lair": 35,
         "overseer": 25,
@@ -404,7 +404,7 @@
           "compositions": [
             [
               3,
-              160,
+              170,
               2
             ]
           ],
@@ -428,7 +428,7 @@
           "compositions": [
             [
               3,
-              280,
+              260,
               2
             ]
           ],
@@ -439,7 +439,7 @@
           "compositions": [
             [
               4,
-              150,
+              160,
               1
             ]
           ],
@@ -466,10 +466,10 @@
           ],
           "upgrades": {
             "Hallucination": [
-              30
+              20
             ],
             "Solid-Field Projectors": [
-              20
+              10
             ]
           }
         },
@@ -478,7 +478,7 @@
           "compositions": [
             [
               1,
-              170,
+              160,
               1
             ],
             [
@@ -503,7 +503,7 @@
           "compositions": [
             [
               1,
-              250,
+              270,
               1
             ]
           ],
@@ -515,12 +515,12 @@
         "warp-gate": 40,
         "gate-chronoboosted": 35,
         "observer": 25,
-        "nexus": 35,
+        "nexus": 40,
         "overcharged-nexus": 35,
         "power-field": 40,
         "forge": 30,
         "warp-prism": 35,
-        "twilight-council": 45
+        "twilight-council": 40
       }
     }
   },
@@ -540,6 +540,30 @@
     "Exact army composition options are only those listed, not arbitrary model counts within supply-bracket ranges.",
     "Supply profile tiers may list ranges to track casualties. This appendix separately lists starting permitted composition sizes.",
     "Cards and unit-specific abilities are not fully specified by cost tables; verify against physical/official Unit and Faction Cards.",
-    "The appendix lists Swarmling and Vile but current companion data has no full profiles; do not fabricate stats."
-  ]
+    "The appendix lists Swarmling and Vile but current companion data has no full profiles; do not fabricate stats.",
+    "Latest official 2026-10-09 balance table controls costs, not older base PDF printed pages 96-107.",
+    "New Wave 2/3 units in updated publisher sheets are not automatically present in this companion; track coverage separately."
+  ],
+  "balance_source": {
+    "name": "StarCraft-TMG-Cost-Table-10.2026_EN.pdf",
+    "published": "2026-10-09",
+    "url": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Cost-Table-10.2026_EN.pdf",
+    "changelog_url": "https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Changelog-10.2026_EN.pdf",
+    "authority": "Publisher balance update supersedes base book's pp. 96–107 whenever points differ",
+    "pdf_pages_by_faction": {
+      "terran": [
+        2,
+        3
+      ],
+      "zerg": [
+        4,
+        5,
+        6
+      ],
+      "protoss": [
+        7,
+        8
+      ]
+    }
+  }
 }
