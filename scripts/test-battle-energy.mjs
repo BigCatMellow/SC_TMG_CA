@@ -191,6 +191,44 @@ for (const faction of units) {
     view().battleTactical[0].onResource();
     assert.equal(view().paymentTotal,parse(boosted.resource));
   }
+  // Active browser saves retain exhausted state but must never bank pending energy.
+  const storageKey = html.match(/localStorage\.setItem\('(sctmg_(?:terran|zerg|protoss)_v\d+)'/)?.[1];
+  assert.ok(storageKey, faction + ' active roster key');
+  const savedItems = new Map();
+  const previousStorage = globalThis.localStorage;
+  globalThis.localStorage = {
+    getItem: key => savedItems.has(key) ? savedItems.get(key) : null,
+    setItem: (key, value) => savedItems.set(key, value)
+  };
+  try {
+    const active = new Controller();
+    active.state = { ...active.state, tactical: [primary.id],
+      tacticalTapped: [primary.id + '#0'], factionTappedId: active.state.factionId,
+      paymentCards: [{ key: 'faction#' + active.state.factionId, amount: 1 }] };
+    active.save();
+    const serialized = JSON.parse(savedItems.get(storageKey));
+    assert.equal(serialized.factionTappedId, active.state.factionId);
+    assert.equal(serialized.paymentCards, undefined, faction + ' cannot persist unspent energy');
+    const restored = new Controller();
+    restored.loadSaved();
+    assert.equal(restored.state.factionTappedId, active.state.factionId);
+    assert.equal(restored.state.paymentCards.length, 0);
+    assert.ok(restored.state.tacticalTapped.includes(primary.id + '#0'));
+    if (faction !== 'zerg') {
+      savedItems.set(storageKey, JSON.stringify({
+        ...serialized, factionId: 'kerrigans-swarm', factionTappedId: 'kerrigans-swarm'
+      }));
+      const legacy = new Controller();
+      legacy.loadSaved();
+      assert.equal(legacy.state.factionId, D.FACTION_CARDS[0].id,
+        faction + ' normalize old incompatible faction ID');
+      assert.equal(legacy.state.factionTappedId, null,
+        faction + ' do not mark a different faction card exhausted');
+    }
+  } finally {
+    if (previousStorage === undefined) delete globalThis.localStorage;
+    else globalThis.localStorage = previousStorage;
+  }
   console.log(faction + ': battle abilities, card states, faction output, and resource payments passed');
 }
 console.log('Battle card energy checks passed across all factions');
