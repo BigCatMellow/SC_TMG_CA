@@ -70,20 +70,20 @@
       </div>
     </div></div>
 
-    <!-- resource strip (not on battle tab -- has its own supply block) -->
+    <!-- Resource totals: full at the top, one-line summary after scrolling. -->
     <sc-if value="{{ !tabIsBattle }}" hint-placeholder-val="{{ true }}">
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid #1c2130">
-        <div style="padding:7px 8px 9px;text-align:center;border-right:1px solid #1c2130">
-          <div style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#8a91a5">Minerals</div>
-          <div style="font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;line-height:1.2;color:{{ mineralsColor }}">{{ mineralsUsed }}<span style="font-size:11px;color:#5b6275;font-weight:600"> / {{ mineralsCap }}</span></div>
+      <div class="{{ resourceStripClass }}" aria-label="Army resource totals">
+        <div class="sc-resource-cell" aria-label="Minerals">
+          <div class="sc-resource-label"><span class="sc-resource-label-long">Minerals</span><span class="sc-resource-label-short" aria-hidden="true">M</span></div>
+          <div class="sc-resource-value" style="color:{{ mineralsColor }}">{{ mineralsUsed }}<span class="sc-resource-cap"> / {{ mineralsCap }}</span></div>
         </div>
-        <div style="padding:7px 8px 9px;text-align:center;border-right:1px solid #1c2130">
-          <div style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#8a91a5">Vespene</div>
-          <div style="font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;line-height:1.2;color:{{ gasColor }}">{{ gasUsed }}<span style="font-size:11px;color:#5b6275;font-weight:600"> / {{ gasCap }}</span></div>
+        <div class="sc-resource-cell" aria-label="Vespene gas">
+          <div class="sc-resource-label"><span class="sc-resource-label-long">Vespene</span><span class="sc-resource-label-short" aria-hidden="true">G</span></div>
+          <div class="sc-resource-value" style="color:{{ gasColor }}">{{ gasUsed }}<span class="sc-resource-cap"> / {{ gasCap }}</span></div>
         </div>
-        <div style="padding:7px 8px 9px;text-align:center">
-          <div style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#8a91a5">Supply</div>
-          <div style="font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;line-height:1.2;color:#f2c860">{{ supplyUsed }}</div>
+        <div class="sc-resource-cell" aria-label="Supply">
+          <div class="sc-resource-label"><span class="sc-resource-label-long">Supply</span><span class="sc-resource-label-short" aria-hidden="true">S</span></div>
+          <div class="sc-resource-value" style="color:#f2c860">{{ supplyUsed }}</div>
         </div>
       </div>
     </sc-if>
@@ -671,6 +671,7 @@
 class Component extends DCLogic {
   state = {
     ready: false,
+    resourcesCompact: false,
     tab: 'roster',
     play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0 },
     scaleId: 'standard',
@@ -692,6 +693,9 @@ class Component extends DCLogic {
   };
 
   componentDidMount() {
+    this._onResourceScroll = () => this.updateResourceStrip();
+    window.addEventListener('scroll', this._onResourceScroll, { passive: true });
+    this._onResourceScroll();
     this._poll = setInterval(() => {
       if (window.SCTMG_PROTOSS) {
         clearInterval(this._poll);
@@ -700,7 +704,17 @@ class Component extends DCLogic {
       }
     }, 40);
   }
-  componentWillUnmount() { clearInterval(this._poll); }
+  componentWillUnmount() {
+    clearInterval(this._poll);
+    window.removeEventListener('scroll', this._onResourceScroll);
+  }
+
+  updateResourceStrip() {
+    // Hysteresis prevents sticky-header height changes from toggling at the boundary.
+    const y = Math.max(0, Number(window.scrollY || window.pageYOffset || 0));
+    const compact = this.state.resourcesCompact ? y > 64 : y > 144;
+    if (compact !== this.state.resourcesCompact) this.setState({ resourcesCompact: compact });
+  }
 
   D() { return window.SCTMG_PROTOSS; }
 
@@ -1636,6 +1650,7 @@ class Component extends DCLogic {
       // tabs
       tabs,
       tabIsRoster: st.tab === 'roster', tabIsBattle: st.tab === 'battle', tabIsLibrary: st.tab === 'library', tabIsTactics: st.tab === 'tactics',
+      resourceStripClass: st.resourcesCompact ? 'sc-resource-strip sc-resource-strip--compact' : 'sc-resource-strip',
       tabIsFaction: st.tab === 'faction', tabIsCodex: st.tab === 'codex',
       // roster
       scales, slotPills,
