@@ -29,6 +29,8 @@ jobs:
         run: npm run test:wave3
       - name: Verify miniature picture sources and local fallbacks
         run: npm run test:portraits
+      - name: Verify compact scroll resource header on faction screens
+        run: npm run test:resource-header
       - name: Check committed NotebookLM study sources
         run: npm run test:study
       - name: Check faction data generator output
