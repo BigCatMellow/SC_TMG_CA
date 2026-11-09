@@ -1,0 +1,261 @@
+CORE RULES — CONCISE, CITED COMPANION SUMMARY
+Publisher Core Rules: https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf
+=================================================================
+Battle Quick Start
+Citation: §12.1–12.6 · pp. 92–93
+The essentials to reference at the table
+
+BEFORE ROUND 1
+- Choose a Mission and Deployment Card; set Mission Markers and terrain as specified.
+- Roll off; the winner assigns the First Player Marker for Round 1.
+
+FOUR PHASES
+- **1 Movement:** Deploy, Move, Disengage, or Hold.
+- **2 Assault:** Ranged Attack, Charge, Run, or Hold.
+- **3 Combat:** Engaged Ground Units fight using Close Combat attacks.
+- **4 Scoring & Cleanup:** Determine control, score VP, check game end, resolve end-of-round effects, refresh, then determine initiative.
+
+CRITICAL DISTINCTIONS
+- The first player to **Pass** takes the First Player Marker for the next Phase; passing ends their remaining activations for that Phase.
+- An Active Ability generally occurs immediately before declaring an action or after resolving one, not midway through it.
+- Always use the full numbered rule and unit/card wording for disputed edge cases.
+=================================================================
+Activations & Initiative
+Citation: §8.1–8.2.2 · pp. 54–55; §8.9.6 · p. 72
+Who acts, when to Pass, and who starts next
+
+ALTERNATING ACTIVATIONS
+- Each Round has four Phases; Phases 1–3 use alternating Unit activations.
+- The First Player Marker holder chooses which player activates first for each Phase.
+- Each activated Unit takes one legal action for that Phase.
+
+PASSING
+- A player can Pass instead of activating; they must Pass if they have no eligible Units.
+- First to Pass claims the First Player Marker for the **next Phase**.
+- After Passing, that player makes no further activations in the current Phase, even if the opponent continues.
+
+NEXT ROUND
+- During Scoring & Cleanup, the player with fewer VP gains the First Player Marker for the next Round; if tied, roll off.
+- A game normally lasts up to five Rounds, subject to the Mission Card.
+=================================================================
+Core Rules & Unit Cards
+Citation: §2.4–2.7 · pp. 29–30; §5.1 · pp. 38–39
+Rule priority, keywords, targets, and characteristics
+
+PRIORITY
+- Specific Unit, Mission, and ability rules take precedence when they contradict general Core Rules.
+- Identical keywords do not stack; where numeric values differ, use the highest value.
+
+COMBAT & FACTION TAGS
+- Combat Tags affect target eligibility, weapon Surge interactions, and other abilities.
+- Faction Tags determine whether Units and Tactical Cards may join the selected Faction Card.
+
+READING A UNIT
+- Speed applies to the Leading Model's movement. Armour and Evade are separate defenses; Evade requires eligibility.
+- Supply varies with models remaining. Weapon profiles list Phase, Range, Target, Rate of Attack, Hit, Surge, Damage, and keywords.
+- The Ground Combat Tag is distinct from GROUND LEVEL elevation.
+=================================================================
+Supply & Reserves
+Citation: §6.1–6.2 · p. 44; §8.3 · p. 55
+Deployment cap and changing Current Supply
+
+CALCULATE
+- **Available Supply = Current Supply Pool − combined Current Supply of Friendly Units already on the battlefield.**
+- Recalculate a Unit's Current Supply as soon as casualties cross a Supply Profile threshold.
+- A Unit can deploy only when its Current Supply is no greater than Available Supply.
+
+ESCALATION
+- The Mission Card specifies the Supply Pool and escalation each Round.
+- In the final Round (as defined by the Mission Card), Supply Pool restrictions are removed; deployment actions and other restrictions still apply.
+- Destroying or weakening Units can release Available Supply for later deployment.
+
+OTHER USES
+- Current Supply also determines Mission Marker contests and the Tactical Mass exception to Disengage.
+- A Supply 0 Unit can control an uncontested Marker if it meets the normal eligibility requirements.
+=================================================================
+Coherency & Movement Geometry
+Citation: §4.1–4.6 · pp. 33–37; §8.5.3 · pp. 56–58
+Leading Model, placement, and links
+
+MOVING
+- Choose the Leading Model; measure its movement up to Speed, then set the remaining models.
+- At the end of a repositioning action, place models Wholly Within 3 inches of the Leading Model and maintain legal Coherency Links where possible.
+- Coherency Links cannot pass through obstacles the Leading Model could not cross; see §4.4 for exceptions.
+
+ILLEGAL PLACEMENT
+- If no legal position with a Coherency Link exists for a model, remove that model as a casualty.
+- When a position within 3 inches is impossible but a legal link exists, §4.4 describes placing models as close as possible; the Unit may end Out of Coherency.
+- Out of Coherency Units cannot contest or control Mission Markers. Casualties alone never force a new Coherency check.
+
+TERRAIN
+- Movement, elevation, Access Points, gap clearance, and placement restrictions have additional rules; use the illustrated rules on pp. 33–37 and 56–58 for disputed cases.
+=================================================================
+Movement Phase
+Citation: §8.4–8.5.5 · pp. 56–59
+Deploy · Move · Disengage · Hold
+
+CHOOSE ONE ACTION
+- **Move:** An Unengaged Unit makes a standard Move.
+- **Deploy:** Bring a Unit from Reserves using an Entry Edge, while respecting Available Supply and placement restrictions.
+- **Disengage:** An Engaged Unit withdraws using the normal movement procedure.
+- **Hold:** Do nothing; the Unit still becomes activated.
+
+DISENGAGE
+- Every model must finish outside Engagement Range of all enemies or be removed; if the Leading Model cannot escape, Disengage fails and that model is removed.
+- After Disengaging, the Unit cannot Ranged Attack or Charge in the following Assault Phase, unless its Current Supply was greater than the combined Supply of enemies engaged with it.
+
+DEPLOY
+- Start the Leading Model in contact with your Entry Edge and move up to Speed; then place the rest in Coherency.
+- The deployed Unit may not finish inside the enemy Zone of Influence and must be legally In Coherency.
+- An activation marker is set after the action.
+=================================================================
+Assault Phase
+Citation: §8.6–8.7.3 · pp. 59–61
+Run · Hold · Ranged Attack · Charge
+
+CHOOSE ONE ACTION
+- Only Units activated in Movement on the battlefield act in Assault; Reserves cannot act.
+- **Run:** An Unengaged Unit repositions by a standard Move.
+- **Hold:** The Unit takes no action.
+- **Ranged Attack:** Resolve legal weapon attacks against an eligible target.
+- **Charge:** An Unengaged Ground Unit attempts to engage enemy Ground Units.
+
+TARGETING
+- Check attacker/target Engagement status, LoS, weapon Range and Target Tags, and other exceptions.
+- An Engaged attacker can only target enemy Units with which it is Engaged. Unengaged ranged attackers normally cannot shoot into an Engagement.
+- A weapon profile's individual batches are resolved completely before starting the next.
+=================================================================
+Ranged Attack Resolution
+Citation: §8.7.3–8.7.5 · pp. 60–64; §12.4 · p. 92
+Check target, build pools, resolve defenses
+
+BEFORE DICE
+- Choose a legal enemy target, check Range, LoS and Target Tags; observe any Engagement restrictions.
+- Group attacks using the same weapon profile against the same target into one Batch, resolving each Batch completely.
+
+SEQUENCE
+- **1:** Build the Attack Pool from eligible models and Rate of Attack; add applicable modifiers and Surge Dice.
+- **2:** Roll to Hit. Successful dice move into the Armour Pool.
+- **3:** Resolve Surge against a matching Combat Tag; its effect may bypass Armour as specified.
+- **4:** Defender rolls Armour against remaining dice, then Evade if eligible.
+- **5:** Apply weapon Damage to remaining dice and remove casualties using the correct allocation rules.
+
+IMPORTANT
+- Not every defender gets an Evade Roll. Check the specific entitlement and a non-null Evade characteristic.
+- Template weapons, multiple attack batches, and engaged-model casualty removal have additional procedures in §8.7.
+=================================================================
+Charge & Engagement
+Citation: §7.2 · p. 53; §8.7.7 · pp. 65–66
+Reach the target without confusing Charge with melee
+
+DECLARE
+- Charge targets must be enemy Ground Units; Line of Sight is not required.
+- Roll D6 for Charge Distance. The Leading Model can move up to Speed plus the roll, subject to Charge rules.
+
+RESOLVE
+- The Leading Model must be able to end within the 1-inch Engagement Range of all declared targets for the Charge to succeed.
+- After success, place the rest of the Unit using the Charge placement priority: Base-to-Base, Engagement Range, then Coherency.
+- If the Charge fails, the Unit stays in place and its activation ends.
+
+TIMING
+- The Charge takes place in the **Assault Phase**; normal Close Combat attacks are made in the later **Combat Phase**.
+=================================================================
+Close Combat
+Citation: §8.8–8.8.1 · pp. 67–68; §12.5 · p. 93
+Which models fight and how to resolve attacks
+
+ACTIVATION
+- All Engaged Ground Units must activate in Combat; players alternate.
+- A player only Passes once no eligible Engaged Units remain. Flying Units are never Engaged.
+
+CLOSE COMBAT ATTACK
+- Optionally **Close Ranks**: Leading Model moves up to 3 inches and ends closer to an already Engaged enemy; follow the repositioning rules.
+- **Fighting Rank:** models within 1 inch of an enemy. **Supporting Rank:** models Base-to-Base with a friendly Fighting Rank model.
+- Eligible models attack with Combat Phase weapons; resolve attacks using the attack sequence and applicable melee exceptions.
+- Evade during Combat requires a specific granting rule or keyword.
+
+DISPUTES
+- Use §8.8.1 to resolve multiple Engagements and the priority for removing models from Engaged Units.
+=================================================================
+Line of Sight & Cover
+Citation: §7.1–7.2.1 · pp. 45–53
+Top-down visibility, elevation, and terrain
+
+LOS BASICS
+- StarCraft TMG uses top-down (2D) Line of Sight, from the acting model's base to the target model's base.
+- Terrain's Effective Size and elevation affect whether the line is blocked or grants Cover.
+- A target or attack can be illegal even though the models look visible from a miniature's eye level.
+
+CHECK BEFORE ROLLING
+- Determine whether models are individually eligible, then check their weapon Range and the target's Combat Tag.
+- Full Cover, Direct Cover, High Ground Cover, and Flying interactions are governed by distinct illustrated rules.
+- Because this section is diagram-heavy, consult the original PDF pp. 45–52 for exact terrain/visibility cases.
+=================================================================
+Scoring & Cleanup
+Citation: §8.9–8.10 · pp. 69–72; §12.6 · p. 93
+Mission Marker control and next-round initiative
+
+WHO CAN CONTEST?
+- A Unit must be on the battlefield, In Coherency, and have at least one model within 3 inches with LoS to the Marker on the same elevation.
+- Flying Units cannot contest or control Mission Markers.
+- Sum **Current Supply**, not model counts, for eligible contesting Units.
+
+CONTROL
+- Higher summed Supply wins. A tie is Contested; it does not transfer an existing controller's ownership.
+- **Sticky control:** a controlled Marker stays owned after friendly Units leave until the opponent takes it with a higher contesting Supply total.
+- Scoring Victory Points follows each Mission Card, not a universal fixed VP value.
+
+CLEANUP
+- Check end-of-game conditions, then end-of-round effects.
+- Remove ordinary markers/tokens; keep STAY IN PLAY, Damage Markers, Mission Markers, and Faction Indicators representing control.
+- Refresh Exhausted Faction and Tactical Cards. Player with fewer VP gets next Round's First Player Marker; ties require a roll-off.
+=================================================================
+Abilities, Reactions & Cards
+Citation: §2.7 · pp. 29–30; §10.1–10.5.2 · pp. 79–81
+Timing windows, resource payments, and frequency
+
+ACTIVE / PASSIVE / REACTION
+- **Active:** use only when the Unit is activated, immediately before declaring its action or after it fully resolves; not during the action.
+- **Passive:** continuously applies when conditions are met; no activation is needed.
+- **Reaction:** declare at the exact triggering event; missed timing cannot be used retroactively.
+
+LIMITS
+- A named Active or Reaction ability is generally once per Round per Unit, unless REPEATABLE or another rule says otherwise.
+- Each player may resolve **one Reaction per Activation**. When both respond to the same trigger, the Active Player resolves theirs first.
+- Reserves Units normally cannot use Active, Passive, or Reaction abilities unless a rule specifically allows it.
+
+RESOURCES
+- Terran uses **CP**; Zerg uses **BM**; Protoss uses **PE** in this PDF.
+- Exhaust Ready faction/tactical cards to pay full costs. Unused generated resource is lost; it cannot be banked for another ability.
+- An Exhausted card provides no resources or abilities until refreshed in Cleanup.
+=================================================================
+Army Building
+Citation: §9.1–9.3 · pp. 73–78; §5.2–5.6 · pp. 39–43
+Tags, slots, upgrades, missions and deployment
+
+FACTION & COSTS
+- Pick exactly one Faction Card. Every Faction Tag on a selected Unit or Tactical Card must appear on that Faction Card.
+- Use Minerals for Units and upgrades; Vespene Gas purchases Tactical Cards that add Army Slots.
+- Required slot type and count depend on each Unit's starting Supply and profile.
+
+UPGRADES
+- A normal purchased upgrade applies to the whole Unit; a SPECIALIST upgrade goes on a single nominated model.
+- Replacements remove the specified original weapon. Different SPECIALIST upgrades may be assigned to different models.
+- Resolve each differing weapon profile as a separate attack Batch.
+
+PREPARING
+- Follow the Mission / Deployment draft and Battlefield Setup rules; reference the Deployment Card for Entry Edges and Marker positions.
+- Use the official October 9, 2026 balance table for current points; the printed Core Rules appendix contains earlier values.
+=================================================================
+Keyword & Referee Lookup
+Citation: Part 11 · pp. 82–91; §12.7–12.9 · pp. 93–94
+Where to resolve detailed rules disputes
+
+SOURCE OF TRUTH
+- The PDF Keyword Glossary (Part 11) gives full definitions and takes priority over any short companion tooltip.
+- Use the numbered rule rather than a worked example when both discuss a mechanic.
+- For template weapons, unusual casualty cases, and unresolved disputes, consult the full rule and accompanying diagrams.
+
+EXISTING COMPANION DATA
+- Current clickable keyword tooltips are provided by the companion's faction datasets, which have not all been verified against the 2026 PDF.
+- If a keyword or card seems inconsistent with this reference, check the PDF page and record the discrepancy before a game.

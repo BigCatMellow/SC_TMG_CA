@@ -1,0 +1,168 @@
+CURRENT OCTOBER 2026 POINTS & SUPPLY
+Official Cost Table: https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Cost-Table-10.2026_EN.pdf
+The old rulebook appendix is NOT authoritative for current prices.
+
+=================================================================
+TERRAN — UNITS
+Marine
+  6 models: 170 Minerals, Supply 1
+  9 models: 220 Minerals, Supply 2
+  Upgrade AGG-12: 10/10 Minerals
+  Upgrade Bayonet: 20/30 Minerals
+  Upgrade Combat Shield: 20/30 Minerals
+  Upgrade Grenades - Frag: 10/10 Minerals
+  Upgrade Rocket Launcher: 40/40 Minerals
+  Upgrade Slugthrower: 10/20 Minerals
+Raynor's Raider (Marine)
+  6 models: 230 Minerals, Supply 1
+Marauder
+  2 models: 160 Minerals, Supply 1
+  4 models: 290 Minerals, Supply 2
+  Upgrade Kinetic Foam: 20/40 Minerals
+  Upgrade Laser Targeting Systems: 20/40 Minerals
+  Upgrade Veteran of Tarsonis: 20/40 Minerals
+Medic
+  3 models: 120 Minerals, Supply 1
+  Upgrade A-13 Flash Grenade Launcher: 20 Minerals
+  Upgrade Advanced Medic Facilities: 60 Minerals
+  Upgrade Stabilizer Medpacks: 20 Minerals
+Goliath
+  1 models: 180 Minerals, Supply 2
+  Upgrade Ares-Class Targeting System: 20 Minerals
+  Upgrade Haywire Missiles: 40 Minerals
+  Upgrade Scatter Missiles: 30 Minerals
+Jim Raynor
+  1 models: 280 Minerals, Supply 1
+  Upgrade C-14 Rifle: 0 Minerals
+Siege Tank [Wave 2]
+  1 models: 220 Minerals, Supply 2
+  Upgrade Mode Transformation: 20 Minerals
+  Upgrade Coordinated Strike: 20 Minerals
+  Upgrade Shaped Blast: 10 Minerals
+  Upgrade Smart Shells: 10 Minerals
+TACTICAL CARDS (VESPENE)
+  Barracks: 30 Gas
+  Barracks (Proxy): 40 Gas
+  Barracks (Tech Lab): 40 Gas
+  Supply Depot: 40 Gas
+  Factory: 35 Gas
+  Engineering Bay: 25 Gas
+  Armory: 30 Gas
+  Academy: 40 Gas
+  Orbital Command: 25 Gas
+  Dropship: 35 Gas
+  Factory (Tech Lab): 40 Gas
+=================================================================
+ZERG — UNITS
+Zergling
+  12 models: 150 Minerals, Supply 1
+  18 models: 210 Minerals, Supply 2
+  Upgrade Adrenal Glands: 20/20 Minerals
+  Upgrade Burrow Ambush: 20/30 Minerals
+  Upgrade Shredding Claws: 10/10 Minerals
+Raptor (Zergling)
+  12 models: 210 Minerals, Supply 1
+  18 models: 260 Minerals, Supply 2
+  Upgrade Adrenal Glands: 20/20 Minerals
+  Upgrade Burrow Ambush: 20/30 Minerals
+  Upgrade Shredding Claws: 10/10 Minerals
+Kerrigan's Raptor (Zergling)
+  6 models: 230 Minerals, Supply 1
+Swarmling (Zergling)
+  18 models: 210 Minerals, Supply 1
+  Upgrade Burrow Ambush: 20 Minerals
+Roach
+  3 models: 170 Minerals, Supply 1
+  Upgrade Burrow Ambush: 20 Minerals
+  Upgrade Glial Reconstitution: 10 Minerals
+  Upgrade Hydriodic Bile: 10 Minerals
+  Upgrade Tunneling Claws: 10 Minerals
+Vile (Roach)
+  3 models: 190 Minerals, Supply 1
+  Upgrade Burrow Ambush: 20 Minerals
+  Upgrade Glial Reconstitution: 10 Minerals
+  Upgrade Hydriodic Bile: 10 Minerals
+  Upgrade Tunneling Claws: 10 Minerals
+Corpser (Roach)
+  3 models: 220 Minerals, Supply 1
+  Upgrade Burrow Ambush: 20 Minerals
+  Upgrade Glial Reconstitution: 10 Minerals
+  Upgrade Hydriodic Bile: 10 Minerals
+  Upgrade Tunneling Claws: 10 Minerals
+Hydralisk
+  2 models: 140 Minerals, Supply 2
+  4 models: 260 Minerals, Supply 3
+  Upgrade Ancillary Carapace: 20/30 Minerals
+  Upgrade Burrow Ambush: 20/40 Minerals
+  Upgrade Grooved Spines: 20/30 Minerals
+  Upgrade Lurking: 10/10 Minerals
+Queen
+  1 models: 140 Minerals, Supply 1
+  Upgrade Creep Speed: 10 Minerals
+  Upgrade Domineering Presence: 10 Minerals
+Kerrigan
+  1 models: 250 Minerals, Supply 1
+Ravager [Wave 2]
+  1 models: 160 Minerals, Supply 1
+  2 models: 270 Minerals, Supply 2
+  Upgrade Bloated Bile Ducts: 20/40 Minerals
+  Upgrade Burrow Ambush: 20/40 Minerals
+  Upgrade Potent Bile: 20/40 Minerals
+TACTICAL CARDS (VESPENE)
+  Spawning Pool: 25 Gas
+  Spawning Pool (Six Pool): 35 Gas
+  Roach Warren: 25 Gas
+  Hydralisk Den: 30 Gas
+  Evolution Chamber: 25 Gas
+  Hatchery: 30 Gas
+  Lair: 35 Gas
+  Overseer: 25 Gas
+  Overlord: 35 Gas
+  Accelerating Creep: 0 Gas
+  Malignant Creep: 10 Gas
+  Cocoon: 30 Gas
+=================================================================
+PROTOSS — UNITS
+Zealot
+  3 models: 170 Minerals, Supply 2
+  Upgrade Leg Enhancements: 20 Minerals
+  Upgrade My Life for Aiur: 10 Minerals
+  Upgrade We Stand as One: 20 Minerals
+  Upgrade Zealous Round: 10 Minerals
+Praetor Guard (Zealot)
+  3 models: 260 Minerals, Supply 2
+Adept
+  4 models: 160 Minerals, Supply 1
+  Upgrade Glaive Strike: 20 Minerals
+  Upgrade Guidance: 10 Minerals
+  Upgrade Resonating Glaives: 20 Minerals
+Sentry
+  2 models: 130 Minerals, Supply 1
+  Upgrade Hallucination: 20 Minerals
+  Upgrade Solid-Field Projectors: 10 Minerals
+Stalker
+  1 models: 160 Minerals, Supply 1
+  2 models: 270 Minerals, Supply 2
+  Upgrade Fury of the Nerazim: 20/30 Minerals
+  Upgrade Path of Shadows: 20/40 Minerals
+Artanis
+  1 models: 270 Minerals, Supply 1
+Immortal [Wave 2]
+  1 models: 280 Minerals, Supply 2
+  Upgrade Shield Overcharge: 20 Minerals
+  Upgrade Left Phase Disruptor: 20 Minerals
+  Upgrade Right Phase Disruptor: 20 Minerals
+  Upgrade Fury Unyielding: 20 Minerals
+  Upgrade For the Ancients: 20 Minerals
+TACTICAL CARDS (VESPENE)
+  Gateway: 25 Gas
+  Warp Gate: 40 Gas
+  Gate Chronoboosted: 35 Gas
+  Observer: 25 Gas
+  Nexus: 40 Gas
+  Overcharged Nexus: 35 Gas
+  Power Field: 40 Gas
+  Forge: 30 Gas
+  Warp Prism: 35 Gas
+  Twilight Council: 40 Gas
+  Robotics Facility: 35 Gas

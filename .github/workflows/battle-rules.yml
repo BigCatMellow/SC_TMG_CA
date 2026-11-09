@@ -15,6 +15,8 @@ jobs:
         run: npm run test:rules
       - name: Verify October 2026 faction points, compositions and upgrades
         run: npm run test:appendix
+      - name: Check committed NotebookLM study sources
+        run: npm run test:study
       - name: Check faction data generator output
         run: npm run build:units
       - name: Ensure generated data is committed consistently
