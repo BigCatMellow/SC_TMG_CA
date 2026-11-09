@@ -7,6 +7,7 @@
     "build:missions": "node ./scripts/build-missions.mjs",
     "build:rules": "node ./scripts/build-rules.mjs",
     "build": "node ./scripts/build-all.mjs",
-    "test:rules": "node ./scripts/test-battle-rules.mjs"
+    "test:rules": "node ./scripts/test-battle-rules.mjs",
+    "test:appendix": "node ./scripts/test-appendix.mjs"
   }
 }
