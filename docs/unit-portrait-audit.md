@@ -44,7 +44,7 @@ Each image retains its original pixel data, unit ID, PDF page, and SHA-256 in [s
 | protoss | `stalker` | 106 / 108 | [JPEG](../portraits/pdf/protoss/stalker.jpg) |
 | protoss | `artanis` | 106 / 108 | [JPEG](../portraits/pdf/protoss/artanis.jpg) |
 
-The original [source PDF](https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf) has SHA-256 `27639c562e6db9777dd9ba984d0c9f9b581841ec30166848e021f893cd00ea54`. Re-extraction is reproducible with [scripts/extract-pdf-miniatures.py](../scripts/extract-pdf-miniatures.py). The script rejects changed source versions instead of silently substituting a similar image. The app’s [model-portraits.js](../model-portraits.js) maps photos to cards with existing artwork and external galleries kept as lower-priority fallbacks.
+The original [source PDF](https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf) has SHA-256 `27639c562e6db9777dd9ba984d0c9f9b581841ec30166848e021f893cd00ea54`. Re-extraction is reproducible with [scripts/extract-pdf-miniatures.py](../scripts/extract-pdf-miniatures.py). The script rejects changed source versions instead of silently substituting a similar image. The app’s [model-portraits.js](../model-portraits.js) maps photos to cards. Each card renders **one** image element anchored to the card's top edge: the model head stays framed in the collapsed header, and expanding the card reveals the rest of the same stationary miniature. Images are no longer CSS background stacks. If the primary image fails, that same element switches to the next existing image source (published fallback, then related local artwork where available).
 
 ## Remaining sources
 
