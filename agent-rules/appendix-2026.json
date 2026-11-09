@@ -540,9 +540,10 @@
     "Exact army composition options are only those listed, not arbitrary model counts within supply-bracket ranges.",
     "Supply profile tiers may list ranges to track casualties. This appendix separately lists starting permitted composition sizes.",
     "Cards and unit-specific abilities are not fully specified by cost tables; verify against physical/official Unit and Faction Cards.",
-    "The appendix lists Swarmling and Vile but current companion data has no full profiles; do not fabricate stats.",
+    "Swarmling and Vile (Roach) profiles have been added from the publisher's official Wave 1 Zerg card sheets.",
     "Latest official 2026-10-09 balance table controls costs, not older base PDF printed pages 96-107.",
-    "New Wave 2/3 units in updated publisher sheets are not automatically present in this companion; track coverage separately."
+    "New Wave 2/3 units in updated publisher sheets are not automatically present in this companion; track coverage separately.",
+    "The companion implements the original Wave 1 units with prices rebalanced to 2026-10-09. Newer-wave units/cards listed on the balance PDF are not all supported."
   ],
   "balance_source": {
     "name": "StarCraft-TMG-Cost-Table-10.2026_EN.pdf",
@@ -565,5 +566,10 @@
         8
       ]
     }
+  },
+  "card_sources": {
+    "terran": "https://starcraft-tmg.com/files/downloads/StarCraft-Terran-P2P-Card-Sheets-A4_EN.pdf",
+    "zerg": "https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-Card-Sheets-A4_EN.pdf",
+    "protoss": "https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-Card-Sheets-A4_EN.pdf"
   }
 }
