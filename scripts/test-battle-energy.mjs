@@ -28,7 +28,7 @@ for (const faction of units) {
   assert.ok(battleStart > 0 && battleEnd > battleStart, faction + ' battle markup boundaries');
   const battleHtml = html.slice(battleStart,battleEnd);
   for (const binding of [
-    'list="{{ battleCards }}"','{{ ab.name }}','{{ ab.description }}','{{ ab.meta }}',
+    'list="{{ battleCards }}"','{{ ab.name }}','list="{{ ab.segs }}"','{{ ab.phaseShort }}',
     'onClick="{{ tc.onExpand }}"','onClick="{{ tc.onResource }}"',
     'onClick="{{ tc.onAbility }}"','onClick="{{ tc.onReady }}"',
     'onClick="{{ finishResourcePayment }}"','{{ paymentTotal }} {{ paymentResource }}',

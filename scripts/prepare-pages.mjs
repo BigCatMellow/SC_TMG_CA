@@ -1,5 +1,5 @@
 // Publish only the runnable companion, not source PDFs, tests, docs or .git.
-import { copyFile, cp, mkdir, readdir, rm, writeFile } from 'node:fs/promises';
+import { copyFile, cp, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { deflateSync } from 'node:zlib';
 
 const root = new URL('../', import.meta.url);
@@ -14,7 +14,7 @@ const files = (await readdir(root, { withFileTypes: true }))
   .map(entry => entry.name);
 for (const name of files) await copyFile(new URL('../' + name, import.meta.url),
   new URL('../dist-pages/' + name, import.meta.url));
-for (const folder of ['uploads', 'portraits']) {
+for (const folder of ['uploads', 'portraits', 'vendor']) {
   await cp(new URL('../' + folder + '/', import.meta.url),
     new URL('../dist-pages/' + folder + '/', import.meta.url), { recursive: true });
 }
@@ -78,4 +78,32 @@ await mkdir(new URL('../dist-pages/icons/', import.meta.url), { recursive: true 
 for (const size of [192,512])
   await writeFile(new URL('../dist-pages/icons/icon-' + size + '.png', import.meta.url), makePng(size));
 
-console.log('Prepared GitHub Pages site:', files.length, 'root assets + portraits/uploads + app icons');
+// Offline cache list: every page, script, style and font, the faction logos and the
+// cutout portraits. Other images are cached the first time they are viewed.
+import { createHash } from 'node:crypto';
+import { readFile as readText } from 'node:fs/promises';
+async function walk(dir, prefix = '') {
+  const out = [];
+  for (const entry of await readdir(new URL(dir, dest), { withFileTypes: true })) {
+    const rel = prefix + entry.name;
+    if (entry.isDirectory()) out.push(...await walk(dir + entry.name + '/', rel + '/'));
+    else out.push(rel);
+  }
+  return out;
+}
+const everything = await walk('./');
+const precache = ['./', ...everything.filter(rel =>
+  (!rel.includes('/') && /\.(html|js|css|webmanifest)$/.test(rel) && rel !== 'sw.js') ||
+  rel.startsWith('vendor/') ||
+  /^uploads\/[a-z]+logo\.png$/.test(rel) ||
+  rel.startsWith('portraits/cutout/') ||
+  rel.startsWith('icons/')
+).filter(rel => !/^uploads\/.*\.html$/.test(rel)).sort()];
+const hash = createHash('sha256');
+for (const rel of precache.slice(1)) hash.update(rel).update(await readFile(new URL(rel, dest)));
+const sw = (await readText(new URL('sw.js', dest), 'utf8'))
+  .replace("const VERSION = 'dev';", "const VERSION = '" + hash.digest('hex').slice(0, 12) + "';")
+  .replace("const PRECACHE = ['./', 'index.html'];", 'const PRECACHE = ' + JSON.stringify(precache.map(encodeURI)) + ';');
+await writeFile(new URL('sw.js', dest), sw);
+
+console.log('Prepared GitHub Pages site:', files.length, 'root assets + portraits/uploads + app icons;', precache.length, 'files precached for offline');

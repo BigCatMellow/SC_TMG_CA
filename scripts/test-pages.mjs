@@ -8,8 +8,14 @@ const required = [
   'wave3-data.js','terran-data.js','protoss-data.js','zerg-data.js',
   'Rules.dc.html','Missions.dc.html','UnitDetail.dc.html',
   'Terran Army.dc.html','Zerg Army.dc.html','Protoss Army.dc.html',
-  'manifest.webmanifest','icons/icon-192.png','icons/icon-512.png'
+  'manifest.webmanifest','icons/icon-192.png','icons/icon-512.png',
+  'sw.js','vendor/fonts.css','vendor/react.production.min.js','vendor/react-dom.production.min.js',
+  'portraits/cutout/index.js'
 ];
+const swSource = await readFile(new URL('../dist-pages/sw.js', import.meta.url),'utf8');
+assert.ok(!swSource.includes("const VERSION = 'dev'"),'Service worker version must be stamped at deploy');
+assert.match(swSource, /vendor\/react\.production\.min\.js/, 'Offline cache must include React');
+assert.match(swSource, /Zerg%20Army\.dc\.html/, 'Offline cache must include faction screens');
 for (const path of required)
   assert.ok((await stat(new URL('../dist-pages/' + path, import.meta.url))).size > 0,
     'Missing deployed companion dependency ' + path);
