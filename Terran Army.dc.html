@@ -74,6 +74,8 @@
       </div>
     </div></div>
 
+    <!-- Resource totals: full at the top, one-line summary after scrolling. -->
+
     <!-- Deployment supply is a Battle-only live readout; tap to adjust in Troops. -->
     <sc-if value="{{ tabIsBattle }}" hint-placeholder-val="{{ false }}">
       <button class="{{ battleSupplyStripClass }}" onClick="{{ openBattleTroops }}" aria-label="{{ battleSupplyAria }}">
@@ -82,8 +84,6 @@
         <span class="{{ battleSupplyFreeClass }}">{{ battleSupplyRemaining }} <span>free</span></span>
       </button>
     </sc-if>
-
-    <!-- Resource totals: full at the top, one-line summary after scrolling. -->
     <sc-if value="{{ !tabIsBattle }}" hint-placeholder-val="{{ true }}">
       <div class="{{ resourceStripClass }}" aria-label="Army resource totals">
         <div class="sc-resource-cell" aria-label="Minerals">
