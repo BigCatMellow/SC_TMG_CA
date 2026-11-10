@@ -1392,11 +1392,6 @@ class Component extends DCLogic {
         accessibilityLabel: name + ' slots: ' + used + ' of ' + cap + ' used'
       };
     });
-    const slotPills = ['hero', 'elite', 'core', 'support', 'air'].filter(k => baseSlots[k] || usedSlots[k]).map(k => {
-      const over = usedSlots[k] > baseSlots[k];
-      return { label: k.slice(0, 1).toUpperCase() + k.slice(1, 3) + ' ' + usedSlots[k] + '/' + baseSlots[k], fg: over ? '#f08a8a' : '#a7aec2', bd: over ? 'rgba(240,74,74,0.4)' : 'var(--sc-border-input)' };
-    });
-
     const rosterWarnings = [];
     if (mOver) rosterWarnings.push('Minerals exceed the engagement limit by ' + (totals.minerals - scale.minerals) + '.');
     if (gOver) rosterWarnings.push('Vespene exceeds the engagement limit by ' + (totals.gas - scale.gas) + '.');
@@ -1420,36 +1415,6 @@ class Component extends DCLogic {
       if (t.unique && uniqueTactical.has(id)) rosterWarnings.push('Unique Tactical Card duplicated: ' + t.name + '.');
       if (t.unique) uniqueTactical.add(id);
     }
-
-    // roster groups
-    const roles = ['Hero', 'Elite', 'Core', 'Support', 'Other'];
-    const rosterGroups = roles.map(role => {
-      const entries = st.army.map(e => ({ e, unit: D.UNITS.find(u => u.id === e.unitId) })).filter(x => x.unit && x.unit.role === role);
-      if (!entries.length) return null;
-      const color = this.roleColor(role);
-      let cost = 0;
-      const items = entries.map(({ e, unit }) => {
-        const tier = unit.tiers[e.tierIdx];
-        const upgCost = (e.upgs || []).reduce((s, n) => {
-          const u = this.unitUpgList(unit).find(x => x.name === n);
-          return s + (u ? this.upgCostNum(u.cost, e.tierIdx) : 0);
-        }, 0);
-        cost += (tier.cost || 0) + upgCost;
-        const expanded = !!st.expArmy[e.key];
-        return {
-          name: unit.name, unique: !!unit.unique,
-          tierLabel: tier.tier + ' · ' + this.unitStartingModels(unit, e.tierIdx) + ' models' + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
-          cost: (tier.cost || 0) + upgCost, supply: tier.supply,
-          expanded, chev: expanded ? 90 : 0, ...this.portrait(unit),
-          borderColor: expanded ? 'rgba(242,200,96,0.45)' : 'var(--sc-border-neutral)',
-          detail: this.buildDetail(unit, e),
-          onToggle: () => this.setState(s2 => ({ expArmy: { ...s2.expArmy, [e.key]: !s2.expArmy[e.key] } })),
-          onRemove: (ev) => { ev.stopPropagation(); this.setState(s2 => ({ army: s2.army.filter(x => x.key !== e.key) }), () => this.save()); },
-          onChangeTier: (ev) => { ev.stopPropagation(); this.setState({ sheet: { type: 'tier', unitId: unit.id, mode: 'change', entryKey: e.key } }); }
-        };
-      });
-      return { role, color, count: items.length, cost, entries: items };
-    }).filter(Boolean);
 
     // battle tracking
     const battleUnits = st.army.map(e => {
@@ -1593,13 +1558,6 @@ class Component extends DCLogic {
           };
         })
       };
-    }).filter(Boolean);
-
-    // roster tactical strip
-    const rosterTactical = st.tactical.map(id => {
-      const t = D.TACTICAL_CARDS.find(x => x.id === id);
-      if (!t) return null;
-      return { name: t.name, summary: t.summary, cost: t.cost, onOpen: () => this.setState({ tab: 'tactics', expTac: { ...st.expTac, [t.id]: true } }) };
     }).filter(Boolean);
 
     // faction cards
@@ -1767,7 +1725,6 @@ class Component extends DCLogic {
       gotoLibrary: () => this.setState({ tab: 'library' }),
       exportArmySheet: () => this.exportArmySheet(),
       // saved rosters
-      savedRosterCountTag: st.savedRosters.length ? ' (' + st.savedRosters.length + ')' : '',
       openRosters: () => this.setState({ sheet: { type: 'rosters' }, newRosterName: '', confirmDeleteRosterId: null }),
       sheetRosters: !!(st.sheet && st.sheet.type === 'rosters'),
       rostersEmpty: st.savedRosters.length === 0,
