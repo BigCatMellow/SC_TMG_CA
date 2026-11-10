@@ -25,7 +25,10 @@ for (const faction of ['terran','zerg','protoss']) {
   const html = read(file);
   assert.ok(html.includes('src="model-portraits.js"'),file+' gallery load missing');
   assert.ok(html.indexOf('src="model-portraits.js"') > html.indexOf('src="wave3-data.js"'));
-  assert.equal((html.match(/<img src="\{\{ (?:en|u)\.portrait \}\}" onError="\{\{ (?:en|u)\.onPortraitError \}\}"/g)||[]).length, 3, file+' single-image views');
+  // The retired Roster view no longer duplicates model art; Battle and Library each show one.
+  assert.equal((html.match(/<img src="\{\{ (?:en|u)\.portrait \}\}" onError="\{\{ (?:en|u)\.onPortraitError \}\}"/g)||[]).length, 2, file+' single-image Battle and Library views');
+  assert.equal((html.match(/<img src="\{\{ u\.portrait \}\}" onError="\{\{ u\.onPortraitError \}\}"/g)||[]).length, 1, file+' Battle portrait');
+  assert.equal((html.match(/<img src="\{\{ en\.portrait \}\}" onError="\{\{ en\.onPortraitError \}\}"/g)||[]).length, 1, file+' Library portrait');
   assert.equal((html.match(/background-image:\{\{ (?:en|u)\.portraitBg \}\}/g)||[]).length, 0, file+' old layered backgrounds');
   const component = html.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)?.[1];
   assert.ok(component, file+' controller missing');
