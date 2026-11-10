@@ -1416,6 +1416,7 @@ class Component extends DCLogic {
       if (t.unique) uniqueTactical.add(id);
     }
 
+    const roles = ['Hero', 'Elite', 'Core', 'Support', 'Other'];
     // battle tracking
     const battleUnits = st.army.map(e => {
       const unit = D.UNITS.find(u => u.id === e.unitId);
