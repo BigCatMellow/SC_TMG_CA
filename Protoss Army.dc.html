@@ -75,6 +75,15 @@
     </div></div>
 
     <!-- Resource totals: full at the top, one-line summary after scrolling. -->
+
+    <!-- Deployment supply is a Battle-only live readout; tap to adjust in Troops. -->
+    <sc-if value="{{ tabIsBattle }}" hint-placeholder-val="{{ false }}">
+      <button class="{{ battleSupplyStripClass }}" onClick="{{ openBattleTroops }}" aria-label="{{ battleSupplyAria }}">
+        <span class="sc-battle-supply-label">Deployment supply</span>
+        <span class="sc-battle-supply-used">{{ battleSupplyUsed }} <span>used</span> / {{ battleSupplyAvailable }} <span>pool</span></span>
+        <span class="{{ battleSupplyFreeClass }}">{{ battleSupplyRemaining }} <span>free</span></span>
+      </button>
+    </sc-if>
     <sc-if value="{{ !tabIsBattle }}" hint-placeholder-val="{{ true }}">
       <div class="{{ resourceStripClass }}" aria-label="Army resource totals">
         <div class="sc-resource-cell" aria-label="Minerals">
@@ -121,21 +130,52 @@
     <div class="sc-battle-overview" aria-label="Battle overview">
       <button class="sc-battle-overview-card sc-battle-overview-card--tactical"
               onClick="{{ openBattleTactical }}" aria-label="Open Tactical cards and energy">
-        <span class="sc-battle-overview-kicker">Battle management</span>
-        <span class="sc-battle-overview-title">Tactical</span>
-        <span class="sc-battle-overview-value">{{ battleCardsReady }}<span class="sc-battle-overview-total"> / {{ battleCardsTotal }}</span></span>
-        <span class="sc-battle-overview-label">Cards ready</span>
-        <span class="sc-battle-overview-meta">{{ battleCardsExhausted }} exhausted · {{ paymentTotal }} {{ paymentResource }} payment</span>
-        <span class="sc-battle-overview-link">Manage cards &amp; energy <span aria-hidden="true">›</span></span>
+        <span class="sc-battle-overview-main">
+          <span class="sc-battle-overview-kicker">Battle management</span>
+          <span class="sc-battle-overview-title">Tactical</span>
+          <span class="sc-battle-overview-value">{{ battleCardsReady }}<span class="sc-battle-overview-total"> / {{ battleCardsTotal }}</span></span>
+          <span class="sc-battle-overview-label">Cards ready</span>
+          <span class="sc-battle-overview-meta">{{ battleCardsExhausted }} exhausted · {{ paymentTotal }} {{ paymentResource }} payment</span>
+          <span class="sc-battle-overview-link">Manage cards &amp; energy <span aria-hidden="true">›</span></span>
+        </span>
+        <span class="sc-battle-overview-side" aria-hidden="true">
+          <span class="sc-battle-preview-heading">Card status <span>Ready / Total</span></span>
+          <sc-for list="{{ tacticalPreview }}" as="item" hint-placeholder-count="4">
+            <span class="{{ item.className }}">
+              <span class="sc-battle-preview-name">{{ item.name }}</span>
+              <span class="sc-battle-preview-count">{{ item.ready }}/{{ item.total }}</span>
+            </span>
+          </sc-for>
+          <sc-if value="{{ tacticalPreviewHasMore }}" hint-placeholder-val="{{ false }}">
+            <span class="sc-battle-preview-more">+{{ tacticalPreviewMore }} more cards</span>
+          </sc-if>
+        </span>
       </button>
       <button class="sc-battle-overview-card sc-battle-overview-card--troops"
               onClick="{{ openBattleTroops }}" aria-label="Open Troops deployment and casualties">
-        <span class="sc-battle-overview-kicker">Battle management</span>
-        <span class="sc-battle-overview-title">Troops</span>
-        <span class="sc-battle-overview-value">{{ battleTroopsOnTable }}<span class="sc-battle-overview-total"> / {{ battleTroopsTotal }}</span></span>
-        <span class="sc-battle-overview-label">Units on table</span>
-        <span class="sc-battle-overview-meta">{{ battleModelsRemaining }}/{{ battleModelsTotal }} models · {{ battleSupplyRemaining }} supply left</span>
-        <span class="sc-battle-overview-link">Manage units &amp; supply <span aria-hidden="true">›</span></span>
+        <span class="sc-battle-overview-main">
+          <span class="sc-battle-overview-kicker">Battle management</span>
+          <span class="sc-battle-overview-title">Troops</span>
+          <span class="sc-battle-overview-value">{{ battleTroopsOnTable }}<span class="sc-battle-overview-total"> / {{ battleTroopsTotal }}</span></span>
+          <span class="sc-battle-overview-label">Units on table</span>
+          <span class="sc-battle-overview-meta">{{ battleModelsRemaining }}/{{ battleModelsTotal }} models · {{ battleSupplyRemaining }} supply left</span>
+          <span class="sc-battle-overview-link">Manage units &amp; supply <span aria-hidden="true">›</span></span>
+        </span>
+        <span class="sc-battle-overview-side" aria-hidden="true">
+          <span class="sc-battle-preview-heading">Army roster <span>Units</span></span>
+          <sc-if value="{{ battleTroopsEmpty }}" hint-placeholder-val="{{ false }}">
+            <span class="sc-battle-preview-empty">No units yet — add them in Library</span>
+          </sc-if>
+          <sc-for list="{{ troopPreview }}" as="item" hint-placeholder-count="4">
+            <span class="{{ item.className }}">
+              <span class="sc-battle-preview-name">{{ item.name }}</span>
+              <span class="sc-battle-preview-count">×{{ item.count }}</span>
+            </span>
+          </sc-for>
+          <sc-if value="{{ troopPreviewHasMore }}" hint-placeholder-val="{{ false }}">
+            <span class="sc-battle-preview-more">+{{ troopPreviewMore }} more unit types</span>
+          </sc-if>
+        </span>
       </button>
     </div>
 
@@ -1622,6 +1662,43 @@ class Component extends DCLogic {
         st.tacticalTapped.includes(key), copyLabel);
     }).filter(Boolean);
     const battleCards = [battleFaction, ...battleTactical];
+    // Live compact Battle previews use the same state as the management sheets.
+    // Copies of a Tactical Card are grouped, and a fully exhausted card type
+    // is faded rather than disappearing from the list.
+    const tacticalPreviewMap = new Map();
+    for (const card of battleCards) {
+      const item = tacticalPreviewMap.get(card.id) || {
+        name: card.name, total: 0, ready: 0
+      };
+      item.total++;
+      if (!card.tapped) item.ready++;
+      tacticalPreviewMap.set(card.id, item);
+    }
+    const tacticalPreviewAll = [...tacticalPreviewMap.values()];
+    const tacticalPreview = tacticalPreviewAll.slice(0, 8).map(item => ({
+      ...item,
+      className: item.ready ? 'sc-battle-preview-row' :
+        'sc-battle-preview-row sc-battle-preview-row--exhausted'
+    }));
+    const troopPreviewMap = new Map();
+    for (const unit of battleUnits) {
+      const item = troopPreviewMap.get(unit.name) || {
+        name: unit.name, count: 0, onTable: 0, modelsRemaining: 0
+      };
+      item.count++;
+      item.modelsRemaining += unit.remaining;
+      if (unit.deployed && !unit.wipedOut) item.onTable++;
+      troopPreviewMap.set(unit.name, item);
+    }
+    const troopPreviewAll = [...troopPreviewMap.values()];
+    const troopPreview = troopPreviewAll.slice(0, 8).map(item => ({
+      ...item,
+      className: item.modelsRemaining === 0 ?
+        'sc-battle-preview-row sc-battle-preview-row--exhausted' :
+        item.onTable ? 'sc-battle-preview-row sc-battle-preview-row--deployed' :
+          'sc-battle-preview-row sc-battle-preview-row--reserve'
+    }));
+
     const anyTapped = st.tacticalTapped.length > 0 || st.factionTappedId === faction.id;
     const paymentTotal = (st.paymentCards || []).reduce((sum, p) => sum + p.amount, 0);
     const paymentResource = (faction.resource || '').match(/\b(CP|BM|PE)\b/)?.[1] || '';
@@ -1870,6 +1947,20 @@ class Component extends DCLogic {
       hasRosterWarnings: rosterWarnings.length > 0, rosterWarnings,
       // battle
       battleEmpty: battleUnits.length === 0, battleGroups,
+      battleSupplyStripClass: st.resourcesCompact ? 'sc-battle-supply-strip sc-battle-supply-strip--compact' : 'sc-battle-supply-strip',
+      battleSupplyFreeClass: battleSupplyUsed > st.battleSupplyAvailable ?
+        'sc-battle-supply-free sc-battle-supply-free--over' : 'sc-battle-supply-free',
+      battleSupplyAria: 'Deployment supply: ' + battleSupplyUsed + ' used of ' +
+        st.battleSupplyAvailable + '; ' + battleSupplyRemaining +
+        ' remaining. Open Troops management.',
+      tacticalPreview,
+      tacticalPreviewMore: Math.max(0, tacticalPreviewAll.length - tacticalPreview.length),
+      tacticalPreviewHasMore: tacticalPreviewAll.length > tacticalPreview.length,
+      troopPreview,
+      troopPreviewMore: Math.max(0, troopPreviewAll.length - troopPreview.length),
+      troopPreviewHasMore: troopPreviewAll.length > troopPreview.length,
+      battleTroopsEmpty: troopPreviewAll.length === 0,
+
       battleCardsTotal: battleCards.length,
       battleCardsReady: battleCards.filter(card => !card.tapped).length,
       battleCardsExhausted: battleCards.filter(card => card.tapped).length,
