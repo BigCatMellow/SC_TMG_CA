@@ -1,0 +1,68 @@
+name: Deploy Companion Website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.html'
+      - '*.js'
+      - '*.css'
+      - 'uploads/**'
+      - 'portraits/**'
+      - 'manifest.webmanifest'
+      - 'scripts/prepare-pages.mjs'
+      - '.github/workflows/deploy-pages.yml'
+  pull_request:
+    paths:
+      - '*.html'
+      - '*.js'
+      - '*.css'
+      - 'uploads/**'
+      - 'portraits/**'
+      - 'manifest.webmanifest'
+      - 'scripts/prepare-pages.mjs'
+      - '.github/workflows/deploy-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: companion-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Prepare Pages assets
+        run: node scripts/prepare-pages.mjs
+      - name: Verify site integrity
+        run: node scripts/test-pages.mjs
+      - name: Upload Pages artifact
+        if: github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist-pages
+
+  deploy:
+    if: github.event_name != 'pull_request'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Deploy Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
