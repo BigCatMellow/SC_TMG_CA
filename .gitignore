@@ -3,3 +3,6 @@ agent-rules/generated/
 
 # Generated installable GitHub Pages site
 /dist-pages/
+
+# Screenshots generated during automated responsive checks
+/artifacts/
