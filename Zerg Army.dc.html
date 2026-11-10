@@ -1419,6 +1419,7 @@ class Component extends DCLogic {
     }
     if (selectedCreepCount !== 1) rosterWarnings.push('Select exactly one Zerg Creep Card (currently ' + selectedCreepCount + ').');
 
+    const roles = ['Hero', 'Elite', 'Core', 'Support', 'Other'];
     // battle tracking
     const battleUnits = st.army.map(e => {
       const unit = D.UNITS.find(u => u.id === e.unitId);
