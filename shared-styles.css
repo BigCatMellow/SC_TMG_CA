@@ -801,3 +801,188 @@ input::placeholder { color: #5b6275; }
 @media (prefers-reduced-motion: reduce) {
   .sc-resource-strip { transition: none; }
 }
+
+/* ===== Unit art: breakout Library cards, opened-card banner, model viewer =====
+   Cutout minis stand on the card and rise --sc-lib-rise above it. The list gap is
+   always larger than the rise, so a model never overlaps the card above it. */
+.sc-lib-list {
+  --sc-lib-rise: 28px;
+  display: grid;
+  gap: 34px;
+  padding-top: 32px;
+}
+.sc-lib-card { position: relative; }
+.sc-lib-card-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--sc-card-bg);
+  border: 1px solid var(--sc-border-neutral);
+  clip-path: var(--sc-corner-12);
+  pointer-events: none;
+}
+.sc-lib-card--cutout .sc-lib-card-bg {
+  background: radial-gradient(70px 34px at calc(100% - 120px) 100%, var(--fc-primary-45), transparent), var(--sc-card-bg);
+}
+.sc-lib-card--open .sc-lib-card-bg { border-color: var(--fc-primary-45); }
+.sc-lib-head {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  min-height: 78px;
+}
+.sc-lib-head-text { position: relative; z-index: 2; flex: 1; min-width: 0; cursor: pointer; }
+.sc-lib-card--cutout .sc-lib-head-text { padding-right: 118px; }
+.sc-lib-actions { position: relative; z-index: 2; display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+.sc-lib-add:disabled {
+  background: #141824 !important;
+  border-color: #2a3040 !important;
+  color: #5b6378 !important;
+  cursor: default !important;
+}
+.sc-lib-view {
+  display: none;
+  height: 30px;
+  padding: 0 10px;
+  align-items: center;
+  gap: 5px;
+  background: rgba(5,6,10,0.72);
+  border: 1px solid var(--sc-border-input, #2e3446);
+  color: #c8cede;
+  font-family: Rajdhani, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+/* Framed fallback for photos without a cutout (external gallery shots). */
+.sc-lib-frame { position: absolute; inset: 0; overflow: hidden; pointer-events: none; clip-path: var(--sc-corner-12); }
+.sc-lib-frame-art { position: absolute; inset: 0; opacity: 0.5; overflow: hidden; }
+.sc-lib-frame-shade {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg,rgba(11,14,23,0.88) 20%,rgba(11,14,23,0.4) 46%,rgba(11,14,23,0.08) 72%,rgba(11,14,23,0.3) 100%);
+}
+/* Cutout figure */
+.sc-lib-figure {
+  position: absolute;
+  z-index: 3;
+  right: 58px;
+  top: calc(var(--sc-lib-rise) * -1);
+  bottom: 5px;
+  width: 124px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  background: none;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.sc-lib-figure img {
+  position: relative;
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,0.85)) drop-shadow(0 0 12px var(--fc-primary-45));
+}
+.sc-lib-floor {
+  position: absolute;
+  left: 10%;
+  right: 10%;
+  bottom: -3px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--fc-primary-45), transparent);
+}
+/* Opened card: the head becomes a banner and the figure scales up. */
+.sc-lib-card--open.sc-lib-card--cutout .sc-lib-card-bg {
+  background:
+    radial-gradient(48% 150px at 68% 190px, var(--fc-primary-45), transparent 72%),
+    linear-gradient(180deg, rgba(255,255,255,0.025), transparent 210px),
+    var(--sc-card-bg);
+}
+.sc-lib-card--open.sc-lib-card--cutout .sc-lib-head {
+  min-height: 204px;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 14px;
+}
+.sc-lib-card--open.sc-lib-card--cutout .sc-lib-head-text { flex: 0 0 auto; padding-right: 0; max-width: 52%; }
+.sc-lib-card--open.sc-lib-card--cutout .sc-lib-figure { right: 12px; top: -30px; bottom: 8px; width: 54%; }
+.sc-lib-card--open.sc-lib-card--cutout .sc-lib-floor { height: 22px; bottom: -6px; }
+.sc-lib-card--open.sc-lib-card--cutout .sc-lib-view { display: inline-flex; }
+.sc-lib-card--open .sc-lib-head .sc-lib-frame-art { opacity: 0.8; }
+.sc-lib-card--open.sc-lib-card--framed .sc-lib-head { min-height: 150px; align-items: flex-start; }
+.sc-lib-card--open.sc-lib-card--framed .sc-lib-view { display: inline-flex; }
+.sc-lib-card--open .sc-lib-frame {
+  clip-path: polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);
+}
+.sc-lib-body { position: relative; border-top: 1px solid #1f2430; padding: 12px; }
+
+/* Fullscreen model viewer */
+.sc-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 400;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(75% 50% at 50% 58%, var(--fc-primary-45), transparent 72%), #05060a;
+  color: #e9ecf2;
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+.sc-viewer-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; padding: 16px; }
+.sc-viewer-name { font-family: 'Chakra Petch', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: 0.04em; line-height: 1.15; }
+.sc-viewer-meta { margin-top: 3px; font-family: Rajdhani, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: #8a91a5; }
+.sc-viewer-btn {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  background: #141824;
+  border: 1px solid var(--sc-border-neutral);
+  color: #c8cede;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  clip-path: var(--sc-corner-9);
+}
+.sc-viewer-stage {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 12px;
+  overflow: hidden;
+  cursor: zoom-in;
+  touch-action: pan-y;
+}
+.sc-viewer-stage img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: 560px;
+  max-height: 640px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 30px var(--fc-primary-45));
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.sc-viewer-stage--zoom { display: block; overflow: auto; cursor: zoom-out; touch-action: pan-x pan-y; padding: 0; }
+.sc-viewer-stage--zoom img { max-width: none; max-height: none; width: 170%; height: auto; margin: 0 auto; }
+.sc-viewer-bot { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px 18px; }
+.sc-viewer-hint { flex: 1; text-align: center; font-family: Rajdhani, sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #8a91a5; }
+.sc-viewer-hint b { color: var(--fc-text-tint); font-weight: 700; }
+@media (prefers-reduced-motion: no-preference) {
+  .sc-viewer { animation: scViewerIn 160ms ease-out; }
+  @keyframes scViewerIn { from { opacity: 0; } to { opacity: 1; } }
+}

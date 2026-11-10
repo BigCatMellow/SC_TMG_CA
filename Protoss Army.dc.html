@@ -26,6 +26,7 @@
   <script src="protoss-data.js"></script>
   <script src="wave3-data.js"></script>
   <script src="model-portraits.js"></script>
+  <script src="portraits/cutout/index.js"></script>
   <script src="codex-examples.js"></script>
 </helmet>
 
@@ -396,12 +397,14 @@
             <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ grp.color }}">{{ grp.role }}</span>
             <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
           </div>
-          <div style="display:grid;gap:8px">
+          <div class="sc-lib-list">
             <sc-for list="{{ grp.entries }}" as="en" hint-placeholder-count="2">
-              <div style="position:relative;background:var(--sc-card-bg);border:1px solid {{ en.borderColor }};clip-path:var(--sc-corner-12)">
-                <sc-if value="{{ en.portrait }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;pointer-events:none;opacity:0.5;overflow:hidden"><img src="{{ en.portrait }}" onError="{{ en.onPortraitError }}" alt="" aria-hidden="true" style="{{ en.portraitImgStyle }}"></span><span style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(11,14,23,0.88) 20%,rgba(11,14,23,0.4) 46%,rgba(11,14,23,0.08) 72%,rgba(11,14,23,0.3) 100%)"></span></sc-if>
-                <div style="position:relative;display:flex;align-items:center;gap:10px;padding:12px;min-height:44px">
-                  <div onClick="{{ en.onToggle }}" role="button" style="position:relative;flex:1;min-width:0;cursor:pointer">
+              <div class="{{ en.cardClass }}">
+                <div class="sc-lib-card-bg"></div>
+                <div class="sc-lib-head">
+                  <sc-if value="{{ en.framed }}" hint-placeholder-val="{{ false }}"><span class="sc-lib-frame"><span class="sc-lib-frame-art"><img src="{{ en.portrait }}" onError="{{ en.onPortraitError }}" alt="" aria-hidden="true" style="{{ en.portraitImgStyle }}"></span><span class="sc-lib-frame-shade"></span></span></sc-if>
+                  <sc-if value="{{ en.cutout }}" hint-placeholder-val="{{ false }}"><button onClick="{{ en.onFigure }}" class="sc-lib-figure" aria-label="{{ en.figureLabel }}"><span class="sc-lib-floor"></span><img src="{{ en.cutout }}" onError="{{ en.onCutoutError }}" alt="" loading="lazy"></button></sc-if>
+                  <div onClick="{{ en.onToggle }}" role="button" class="sc-lib-head-text">
                     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
                       <span style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ en.name }}</span>
                       <sc-if value="{{ en.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
@@ -413,10 +416,13 @@
                       </sc-for>
                     </div>
                   </div>
-                  <button onClick="{{ en.onAdd }}" disabled="{{ !en.recruitable }}" title="{{ !en.recruitable ? 'Not recruitable under this faction or summoned only' : 'Add Unit' }}" aria-label="Add unit" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:rgba(180,130,30,0.16);border:1px solid rgba(242,200,96,0.45);color:#fae9c0;font-size:20px;cursor:pointer;clip-path:var(--sc-corner-9)">+</button>
+                  <div class="sc-lib-actions">
+                    <button onClick="{{ en.onAdd }}" disabled="{{ !en.recruitable }}" title="{{ en.addTitle }}" aria-label="{{ en.addTitle }}" class="sc-lib-add" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:rgba(180,130,30,0.16);border:1px solid rgba(242,200,96,0.45);color:#fae9c0;font-size:20px;cursor:pointer;clip-path:var(--sc-corner-9)">{{ en.addLabel }}</button>
+                    <sc-if value="{{ en.viewSrc }}" hint-placeholder-val="{{ false }}"><button onClick="{{ en.onView }}" class="sc-lib-view" aria-label="View {{ en.name }} model fullscreen">&#10530; View</button></sc-if>
+                  </div>
                 </div>
                 <sc-if value="{{ en.expanded }}" hint-placeholder-val="{{ false }}">
-                  <div style="position:relative;border-top:1px solid #1f2430;padding:12px">
+                  <div class="sc-lib-body">
                     <dc-import name="UnitDetail" detail="{{ en.detail }}" hint-size="100%,300px"></dc-import>
                   </div>
                 </sc-if>
@@ -579,6 +585,27 @@
       </sc-for>
     </div>
   </div>
+
+  <!-- ============ MODEL VIEWER ============ -->
+  <sc-if value="{{ viewerOpen }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-viewer" role="dialog" aria-modal="true" aria-label="{{ viewer.name }} model">
+      <div class="sc-viewer-top">
+        <div style="min-width:0">
+          <div class="sc-viewer-name">{{ viewer.name }}</div>
+          <div class="sc-viewer-meta">{{ viewer.meta }}</div>
+        </div>
+        <button onClick="{{ closeViewer }}" class="sc-viewer-btn" aria-label="Close viewer">&#10005;</button>
+      </div>
+      <div onClick="{{ toggleViewerZoom }}" class="{{ viewer.stageClass }}" data-sc-viewer-stage="1">
+        <img src="{{ viewer.src }}" alt="{{ viewer.name }} miniature" draggable="false">
+      </div>
+      <div class="sc-viewer-bot">
+        <button onClick="{{ viewerPrev }}" class="sc-viewer-btn" aria-label="Previous unit">&#8249;</button>
+        <div class="sc-viewer-hint"><b>{{ viewer.position }}</b> &#183; {{ viewer.hint }}</div>
+        <button onClick="{{ viewerNext }}" class="sc-viewer-btn" aria-label="Next unit">&#8250;</button>
+      </div>
+    </div>
+  </sc-if>
 
   <!-- ============ KEYWORD / TAG SHEET ============ -->
   <sc-if value="{{ sheetKeyword }}" hint-placeholder-val="{{ false }}">
@@ -819,13 +846,35 @@ class Component extends DCLogic {
     codexQ: '',
     savedRosters: [], // [{id, name, savedAt, army, tactical, tacticalTapped, battleSupplyAvailable, scaleId, factionId}]
     newRosterName: '',
-    confirmDeleteRosterId: null
+    confirmDeleteRosterId: null,
+    viewer: null     // {index, zoom}; transient model viewer, never saved
   };
 
   componentDidMount() {
     this._onResourceScroll = () => this.updateResourceStrip();
     window.addEventListener('scroll', this._onResourceScroll, { passive: true });
     this._onResourceScroll();
+    this._cutoutFailed = {};
+    this._onViewerKey = (ev) => {
+      if (!this.state.viewer) return;
+      if (ev.key === 'Escape') this.closeViewer();
+      else if (ev.key === 'ArrowLeft') this.stepViewer(-1);
+      else if (ev.key === 'ArrowRight') this.stepViewer(1);
+    };
+    this._onViewerTouchStart = (ev) => {
+      if (!this.state.viewer || ev.touches.length !== 1) { this._swipe = null; return; }
+      this._swipe = { x: ev.touches[0].clientX, y: ev.touches[0].clientY };
+    };
+    this._onViewerTouchEnd = (ev) => {
+      const start = this._swipe; this._swipe = null;
+      if (!start || !this.state.viewer || this.state.viewer.zoom) return;
+      const t = ev.changedTouches[0];
+      const dx = t.clientX - start.x, dy = t.clientY - start.y;
+      if (Math.abs(dx) > 50 && Math.abs(dy) < 70) { this._swiped = Date.now(); this.stepViewer(dx < 0 ? 1 : -1); }
+    };
+    window.addEventListener('keydown', this._onViewerKey);
+    window.addEventListener('touchstart', this._onViewerTouchStart, { passive: true });
+    window.addEventListener('touchend', this._onViewerTouchEnd, { passive: true });
     this._poll = setInterval(() => {
       if (window.SCTMG_PROTOSS) {
         clearInterval(this._poll);
@@ -837,6 +886,45 @@ class Component extends DCLogic {
   componentWillUnmount() {
     clearInterval(this._poll);
     window.removeEventListener('scroll', this._onResourceScroll);
+    window.removeEventListener('keydown', this._onViewerKey);
+    window.removeEventListener('touchstart', this._onViewerTouchStart);
+    window.removeEventListener('touchend', this._onViewerTouchEnd);
+    if (this.state.viewer) document.body.style.overflow = '';
+  }
+
+  // ---- model viewer ----
+  viewerUnits() {
+    const D = window.SCTMG_PROTOSS;
+    const order = ['Hero', 'Elite', 'Core', 'Support', 'Air', 'Other'];
+    const units = D.UNITS.slice().sort((a, b) => order.indexOf(a.role) - order.indexOf(b.role));
+    return units.map(u => ({ u, art: this.portrait(u) })).filter(x => x.art.viewSrc);
+  }
+  openViewer(unitId) {
+    const index = this.viewerUnits().findIndex(x => x.u.id === unitId);
+    if (index < 0) return;
+    document.body.style.overflow = 'hidden';
+    this.setState({ viewer: { index, zoom: false } });
+  }
+  closeViewer() {
+    document.body.style.overflow = '';
+    this.setState({ viewer: null });
+  }
+  stepViewer(d) {
+    const n = this.viewerUnits().length;
+    if (!n) return;
+    this.setState(s2 => s2.viewer ? { viewer: { index: (s2.viewer.index + d + n) % n, zoom: false } } : null);
+  }
+  toggleViewerZoom() {
+    if (this._swiped && Date.now() - this._swiped < 400) return;
+    this.setState(s2 => s2.viewer ? { viewer: { ...s2.viewer, zoom: !s2.viewer.zoom } } : null, () => {
+      const stage = document.querySelector('[data-sc-viewer-stage]');
+      if (stage && this.state.viewer && this.state.viewer.zoom) {
+        requestAnimationFrame(() => {
+          stage.scrollLeft = (stage.scrollWidth - stage.clientWidth) / 2;
+          stage.scrollTop = (stage.scrollHeight - stage.clientHeight) / 2;
+        });
+      }
+    });
   }
 
   updateResourceStrip() {
@@ -1725,11 +1813,24 @@ class Component extends DCLogic {
         role, color: this.roleColor(role),
         entries: units.map(u => {
           const expanded = !!st.expLib[u.id];
+          const inArmy = armyIds.includes(u.id);
+          const art = this.portrait(u);
+          const cutout = art.cutout && !(this._cutoutFailed || {})[art.cutout] ? art.cutout : '';
+          const recruitable = u.role !== 'Other' && u.tiers.some(t => t.cost > 0)
+            && (!u.factionTag || u.factionTag === faction.name)
+            && !(u.unique && st.army.some(e => e.unitId === u.id));
           return {
-            name: u.name, unique: !!u.unique, inArmy: armyIds.includes(u.id), ...this.portrait(u),
-            expanded, borderColor: expanded ? 'rgba(242,200,96,0.45)' : 'var(--sc-border-neutral)',
+            name: u.name, unique: !!u.unique, inArmy, ...art,
+            cutout, framed: !!art.portrait && !cutout, expanded,
+            cardClass: 'sc-lib-card' + (cutout ? ' sc-lib-card--cutout' : art.portrait ? ' sc-lib-card--framed' : '') + (expanded ? ' sc-lib-card--open' : ''),
+            figureLabel: expanded ? 'View ' + u.name + ' model fullscreen' : 'Show ' + u.name + ' details',
+            onFigure: (ev) => { ev.stopPropagation(); if (expanded) this.openViewer(u.id); else this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: true } })); },
+            onView: (ev) => { ev.stopPropagation(); this.openViewer(u.id); },
+            onCutoutError: () => { this._cutoutFailed[art.cutout] = true; this.setState({}); },
+            addLabel: (u.unique && inArmy) ? '\u2713' : '+',
+            addTitle: (u.unique && inArmy) ? 'Already in army' : recruitable ? 'Add unit' : 'Not recruitable under this faction or summoned only',
             tags: (u.tags || []).map(t => ({ name: t, onOpen: (ev) => { ev.stopPropagation(); this.openTag(t); } })),
-            detail: expanded ? this.buildDetail(u, null) : null,
+            detail: expanded ? { ...this.buildDetail(u, null), tags: [] } : null,
             onToggle: () => this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: !s2.expLib[u.id] } })),
             recruitable: u.role !== 'Other' && u.tiers.some(t => t.cost > 0) && (!u.factionTag || u.factionTag === faction.name),
             onAdd: (ev) => { ev.stopPropagation(); this.addUnit(u); }
@@ -1918,8 +2019,24 @@ class Component extends DCLogic {
       this.setState(s2 => ({ play: { ...s2.play, [field]: Math.max(field === 'round' ? 1 : 0, s2.play[field] + d) } }), () => this.savePlay());
     };
 
+    const viewerList = st.viewer ? this.viewerUnits() : [];
+    const viewerItem = st.viewer ? viewerList[st.viewer.index] : null;
+
     return {
       ready: true,
+      viewerOpen: !!viewerItem,
+      viewer: viewerItem ? {
+        name: viewerItem.u.name,
+        meta: 'Protoss \u00b7 ' + viewerItem.u.role,
+        src: viewerItem.art.viewSrc,
+        stageClass: 'sc-viewer-stage' + (st.viewer.zoom ? ' sc-viewer-stage--zoom' : ''),
+        position: (st.viewer.index + 1) + ' / ' + viewerList.length,
+        hint: st.viewer.zoom ? 'Tap to fit' : 'Tap to zoom'
+      } : null,
+      closeViewer: () => this.closeViewer(),
+      viewerPrev: (ev) => { ev && ev.stopPropagation(); this.stepViewer(-1); },
+      viewerNext: (ev) => { ev && ev.stopPropagation(); this.stepViewer(1); },
+      toggleViewerZoom: () => this.toggleViewerZoom(),
       factionName: faction.name,
       // play hud
       round: st.play.round, phaseName: ph.name, phaseColor: ph.color,

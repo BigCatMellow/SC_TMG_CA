@@ -35,3 +35,18 @@ sentences in the previous hand-tuned `rules-data.js` had been lightly trimmed fo
 (e.g. "Bring units onto the table..." vs. the source's "Movement is for bringing units onto the
 table..."). That polish doesn't exist in the source HTML, so it won't reappear on rebuild unless
 you tighten the wording in `uploads/rules.html` itself.
+
+## Unit art cutouts
+
+The Library's breakout cards use transparent "cutout" portraits in `portraits/cutout/`,
+mapped from each original portrait src by `portraits/cutout/index.js`. Units without a
+cutout fall back to the original framed photo automatically.
+
+```
+pip install "rembg[cpu]" pillow
+python3 scripts/cutout-portraits.py            # local publisher JPEGs
+python3 scripts/cutout-portraits.py --remote   # also the external gallery images
+```
+
+Re-run after adding a portrait to `model-portraits.js`; existing cutouts are kept unless
+`--force` is passed. Group photos may need a crop box in the script's `CROPS` table.
