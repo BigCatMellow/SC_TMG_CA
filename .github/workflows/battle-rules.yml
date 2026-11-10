@@ -33,6 +33,8 @@ jobs:
         run: npm run test:resource-header
       - name: Verify Battle card abilities and resource payment tracking
         run: npm run test:battle-energy
+      - name: Verify Tactical and Troops battle summary modals
+        run: npm run test:battle-dashboard
       - name: Verify merged army tabs and engagement size selection
         run: npm run test:unified-army
       - name: Verify Codex example explanations and modal navigation
