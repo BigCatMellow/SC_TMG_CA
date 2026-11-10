@@ -402,7 +402,12 @@ window.SCTMG_MAKE_PORTRAIT = function(faction, unitId, localPortraits) {
   }
 
   const first = sources[0];
+  // Transparent cutout (scripts/cutout-portraits.py) for the first source that has one.
+  const cutouts = window.SCTMG_PORTRAIT_CUTOUTS || {};
+  const cutout = sources.map(item => cutouts[item.src]).find(Boolean) || '';
   return {
+    cutout,
+    viewSrc: cutout || first.src,
     portrait: first.src,
     portraitBg: "url('" + first.src.replace(/'/g, '%27') + "')",
     portraitSize: first.size,
