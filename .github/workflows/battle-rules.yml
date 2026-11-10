@@ -35,6 +35,8 @@ jobs:
         run: npm run test:battle-energy
       - name: Verify merged army tabs and engagement size selection
         run: npm run test:unified-army
+      - name: Verify Codex example explanations and modal navigation
+        run: npm run test:codex-examples
       - name: Check committed NotebookLM study sources
         run: npm run test:study
       - name: Check faction data generator output

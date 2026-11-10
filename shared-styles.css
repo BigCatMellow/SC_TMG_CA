@@ -144,6 +144,152 @@ input::placeholder { color: #5b6275; }
 .sc-slot-strip--compact .sc-slot-role-short { display: inline; }
 .sc-slot-strip--compact .sc-slot-usage { font-size: 11px; }
 
+
+/* Codex worked examples: a single mobile-first sheet for all three factions.
+   The regular glossary definition remains visible, and full official text wins. */
+.sc-codex-example-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 38px;
+  margin-top: 9px;
+  padding: 7px 11px;
+  border: 1px solid var(--fc-primary-45, rgba(56,211,232,.42));
+  background: var(--fc-bg-10, rgba(56,211,232,.08));
+  color: var(--fc-text-tint, #c8cede);
+  font: 700 12px Rajdhani, sans-serif;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  cursor: pointer;
+  clip-path: var(--sc-corner-8);
+}
+.sc-codex-example-link--sheet {
+  width: 100%;
+  margin-top: 15px;
+  min-height: 44px;
+}
+.sc-example-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 330;
+  background: rgba(4,5,8,.78);
+}
+.sc-example-position {
+  position: fixed;
+  inset: 0;
+  z-index: 340;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  pointer-events: none;
+}
+.sc-example-dialog {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 480px;
+  max-height: calc(100dvh - 18px - env(safe-area-inset-top));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  pointer-events: auto;
+  background: #141824;
+  border: 1px solid var(--fc-primary-45, rgba(56,211,232,.42));
+  border-bottom: none;
+  border-radius: 16px 16px 0 0;
+  padding: 14px 16px calc(18px + env(safe-area-inset-bottom));
+  box-shadow: 0 -18px 50px rgba(0,0,0,.5);
+  animation: scSheetUp .2s ease;
+}
+.sc-example-handle {
+  width: 36px;
+  height: 3px;
+  margin: 0 auto 16px;
+  background: #41485b;
+  border-radius: 2px;
+}
+.sc-example-eyebrow, .sc-example-section-title, .sc-example-source-label {
+  color: var(--fc-text-tint, #b6edf3);
+  font: 700 11px Rajdhani, sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.sc-example-title {
+  color: #e9ecf2;
+  font: 700 22px 'Chakra Petch', sans-serif;
+  line-height: 1.22;
+  margin: 3px 0 14px;
+}
+.sc-example-section-title { margin: 15px 0 5px; }
+.sc-example-text {
+  color: #c8cede;
+  font-size: 13px;
+  line-height: 1.56;
+  overflow-wrap: anywhere;
+}
+.sc-example-scenario {
+  padding: 11px 12px;
+  background: #0e121e;
+  border-left: 2px solid var(--fc-primary-solid, #38d3e8);
+  color: #e9ecf2;
+  font-size: 13px;
+  line-height: 1.52;
+}
+.sc-example-steps {
+  display: grid;
+  gap: 9px;
+  margin-top: 8px;
+}
+.sc-example-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.sc-example-number {
+  flex: 0 0 22px;
+  min-width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  background: var(--fc-bg-10, rgba(56,211,232,.08));
+  border: 1px solid var(--fc-primary-45, rgba(56,211,232,.42));
+  color: var(--fc-text-tint, #b6edf3);
+  font: 700 12px Rajdhani, sans-serif;
+}
+.sc-example-takeaway {
+  margin-top: 15px;
+  border: 1px solid #343d51;
+  padding: 10px 12px;
+  color: #d9dfeb;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.sc-example-takeaway strong {
+  display: block;
+  font: 700 11px Rajdhani, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--fc-text-tint, #b6edf3);
+  margin-bottom: 2px;
+}
+.sc-example-source-label { margin-top: 16px; }
+.sc-example-source { color: #b4bdd0; font-size: 12px; line-height: 1.5; margin: 5px 0; }
+.sc-example-disclaimer { color: #8a91a5; font-size: 11px; line-height: 1.4; margin-top: 8px; }
+.sc-example-close {
+  width: 100%;
+  min-height: 44px;
+  margin-top: 16px;
+  background: #1a1f2e;
+  color: #c8cede;
+  border: 1px solid var(--sc-border-input);
+  font: 700 12px Rajdhani, sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sc-example-dialog { animation: none; }
+}
+
 /* Extra header action keeps the faction subtitle within its available space. */
 .sc-title-row .sc-title-faction {
   min-width: 0;
