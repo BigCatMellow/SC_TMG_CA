@@ -9,10 +9,10 @@ const styles = read('shared-styles.css');
 assert.match(styles, /\.sc-resource-strip--compact\s*\{\s*height:\s*26px;/);
 assert.match(styles, /\.sc-resource-strip\s*\{[\s\S]*?height:\s*50px;/);
 assert.match(styles, /prefers-reduced-motion/);
-assert.match(styles, /\\.sc-slot-strip\\s*\\{[\\s\\S]*?height:\\s*39px;/);
-assert.match(styles, /\\.sc-slot-strip--compact\\s*\\{\\s*height:\\s*24px;/);
-assert.match(styles, /grid-template-columns:\\s*repeat\\(5,\\s*minmax\\(0,\\s*1fr\\)\\)/);
-assert.match(styles, /\\.sc-slot-strip--compact \\.sc-slot-role-long\\s*\\{\\s*display:\\s*none;/);
+assert.match(styles, /\.sc-slot-strip\s*\{[\s\S]*?height:\s*39px;/);
+assert.match(styles, /\.sc-slot-strip--compact\s*\{\s*height:\s*24px;/);
+assert.match(styles, /grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\)/);
+assert.match(styles, /\.sc-slot-strip--compact \.sc-slot-role-long\s*\{\s*display:\s*none;/);
 assert.match(styles, /\.sc-title-row \.sc-title-faction\s*\{[\s\S]*?text-overflow: ellipsis;/);
 for (const [name,value] of Object.entries({
   '--sc-title-pad-top':'2px',
@@ -101,7 +101,7 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   assert.ok(resourcePosition >= 0 && slotPosition > resourcePosition && slotPosition < rosterPosition,
     faction + ' army slots must be directly below mineral/gas/supply in the header');
   assert.ok(html.slice(resourcePosition,slotPosition).includes('</div>'), faction + ' resources intact');
-  assert.match(html.slice(slotPosition,rosterPosition), /<sc-for list="\\{\\{ roleSlots \\}\\}" as="sl"/);
+  assert.match(html.slice(slotPosition,rosterPosition), /<sc-for list="\{\{ roleSlots \}\}" as="sl"/);
   for (const label of ['{{ sl.name }}', '{{ sl.short }}', '{{ sl.used }}', '{{ sl.cap }}',
     'color:{{ sl.fg }}', '{{ sl.accessibilityLabel }}'])
     assert.ok(html.slice(slotPosition,rosterPosition).includes(label),
