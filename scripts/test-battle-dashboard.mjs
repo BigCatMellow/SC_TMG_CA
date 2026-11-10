@@ -18,8 +18,13 @@ assert.match(styles,/\.sc-battle-overview-card\s*\{[^}]*grid-template-columns:\s
   'Battle cards have an embedded right-hand preview');
 assert.match(styles,/\.sc-battle-preview-row--exhausted\s*\{\s*opacity:\s*\.38;/,
   'Unavailable tactical cards must fade rather than disappear');
-assert.match(styles,/\.sc-battle-supply-strip--compact\s*\{/,
-  'Deployment supply readout must share header scroll compact state');
+assert.match(styles,/\.sc-battle-supply-strip--compact\s*\{\s*min-height:\s*44px;/,
+  'Compact deployment supply stays at least 44px tall');
+assert.match(styles,/\.sc-battle-supply-strip\s*\{[^}]*min-height:\s*56px;/s,
+  'Normal deployment supply uses a legible 56px bar');
+for (const selector of ['.sc-battle-supply-stat-label', '.sc-battle-supply-stat-number',
+  '.sc-battle-supply-heading', '.sc-battle-supply-free--over'])
+  assert.ok(styles.includes(selector),'Supply HUD CSS missing: '+selector);
 assert.match(styles,/overflow-y:\s*auto/,'long roster and card lists can scroll inside sheet');
 assert.match(styles,/overscroll-behavior:\s*contain/,'modal scrolling stays inside sheet');
 const world={alert(){},scrollY:0,scrollTo(){},addEventListener(){},removeEventListener(){}};
@@ -55,10 +60,17 @@ for(const faction of ['terran','zerg','protoss']){
      file+' Battle-only supply row missing '+binding);
  }
  for(const token of ['list="{{ tacticalPreview }}"','list="{{ troopPreview }}"',
-   '{{ item.name }}','{{ item.ready }}','{{ item.total }}','{{ item.count }}',
+   '{{ item.name }}','{{ item.ready }}','{{ item.total }}','{{ item.modelsRemaining }}',
    'tacticalPreviewHasMore','troopPreviewHasMore','battleTroopsEmpty']){
    assert.ok(inline.includes(token),file+' missing dynamic summary preview: '+token);
  }
+ assert.ok(inline.includes('Army roster <span>Models</span>'),
+   file+' roster preview must explicitly label model counts, not unit-card counts');
+ assert.ok(!inline.includes('×{{ item.count }}'),
+   file+' must not display roster entry count as miniature count');
+ for (const label of ['Deployment','Supply','Used','Pool','Free'])
+   assert.ok(header.includes('>'+label+'</span>'),
+     file+' supply HUD missing clearly labeled '+label+' field');
  const tacticalPos=inline.indexOf('sc-battle-overview-card--tactical');
  const troopsPos=inline.indexOf('sc-battle-overview-card--troops');
  assert.ok(tacticalPos>=0 && troopsPos>tacticalPos,
@@ -174,6 +186,21 @@ for(const faction of ['terran','zerg','protoss']){
  view().openBattleTroops();
  assert.equal(view().sheetBattleTactical,false);
  assert.equal(view().sheetBattleTroops,true);
+ // Regression: tier-2 Zerglings have twelve models, not one roster-card.
+ if (faction==='zerg') {
+   const zergling=c.D().UNITS.find(u=>u.id==='zergling');
+   assert.ok(zergling,'The Zergling fixture exists');
+   const t2=zergling.tiers.findIndex(t=>t.tier==='T2');
+   assert.ok(t2>=0,'The T2 Zergling tier exists');
+   assert.equal(c.unitStartingModels(zergling,t2),12);
+   c.state.army=[{key:'zergling-check',unitId:zergling.id,tierIdx:t2,
+     upgs:[],modelsLost:0,deployed:false}];
+   assert.equal(view().troopPreview[0].name,'Zergling');
+   assert.equal(view().troopPreview[0].modelsRemaining,12);
+   c.setModelsLost('zergling-check',1);
+   assert.equal(view().troopPreview[0].modelsRemaining,11);
+   c.state.army=[];
+ }
  // Troops summary tracks the SAME model state used by existing battle cards.
  const D=c.D();
  const unit=D.UNITS.find(u=>u.role!=='Other'&&u.tiers?.some(t=>t.cost>0));
@@ -189,6 +216,8 @@ for(const faction of ['terran','zerg','protoss']){
  assert.equal(view().troopPreview.length,1);
  assert.equal(view().troopPreview[0].name,unit.name);
  assert.equal(view().troopPreview[0].count,1);
+ assert.equal(view().troopPreview[0].modelsRemaining,original,
+   'Troop preview shows individual miniatures for a roster entry');
  assert.equal(view().troopPreview[0].onTable,0);
  assert.match(view().troopPreview[0].className,/--reserve$/);
  // Same unit name is summarized into one row with a visible count.
@@ -198,6 +227,8 @@ for(const faction of ['terran','zerg','protoss']){
  }];
  assert.equal(view().troopPreview.length,1);
  assert.equal(view().troopPreview[0].count,2);
+ assert.equal(view().troopPreview[0].modelsRemaining,original*2,
+   'Two identical units add their miniature counts, not two roster entries');
  assert.equal(view().troopPreview[0].onTable,0);
  // Restore the single-unit fixture used by the remainder of the old tests.
  c.state.army=c.state.army.filter(e=>e.key==='battle-summary-test');
@@ -217,6 +248,8 @@ for(const faction of ['terran','zerg','protoss']){
    Math.max(0,prevPool+1-view().battleSupplyUsed));
  troop().onLossDown(ev);
  assert.equal(view().battleModelsRemaining,original-1,'Casualty summary updates');
+ assert.equal(view().troopPreview[0].modelsRemaining,original-1,
+   'Troop preview decreases automatically when a miniature is lost');
  assert.equal(view().battleTroopsTotal,1);
  assert.ok(saves>0,'Combat changes remain saved');
  // Editing remains safe by default; opening and closing sheet resets edit state.
