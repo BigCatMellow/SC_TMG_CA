@@ -350,11 +350,12 @@ input::placeholder { color: #5b6275; }
   padding: 14px;
 }
 .sc-battle-overview-card {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+  align-items: stretch;
+  gap: 12px;
   min-width: 0;
-  min-height: 176px;
+  min-height: 190px;
   text-align: left;
   padding: 14px 12px 12px;
   border: 1px solid var(--sc-border-neutral);
@@ -363,6 +364,138 @@ input::placeholder { color: #5b6275; }
   clip-path: var(--sc-corner-12);
   cursor: pointer;
 }
+
+/* Battle-only supply strip sits below the original scoreboard, with a
+   compact version tied to the existing scroll-collapse state. */
+.sc-battle-supply-strip {
+  box-sizing: border-box;
+  width: calc(100% - 28px);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  min-height: 34px;
+  margin: 0 14px 2px;
+  padding: 5px 12px;
+  background: #0c111b;
+  border: 1px solid #27344a;
+  color: #c8cede;
+  cursor: pointer;
+  text-align: left;
+  clip-path: var(--sc-corner-8);
+}
+.sc-battle-supply-label {
+  flex: 1 1 auto;
+  font: 700 11px Rajdhani, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: #9da8bf;
+}
+.sc-battle-supply-used {
+  flex: 0 0 auto;
+  color: #d0d8e6;
+  font: 700 13px 'Chakra Petch', sans-serif;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.sc-battle-supply-used span {
+  font: 600 10px Rajdhani, sans-serif;
+  text-transform: uppercase;
+  color: #7f8ba2;
+}
+.sc-battle-supply-free {
+  flex: 0 0 auto;
+  color: #5fd98d;
+  font: 700 13px 'Chakra Petch', sans-serif;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.sc-battle-supply-free span {
+  font: 700 10px Rajdhani, sans-serif;
+  text-transform: uppercase;
+}
+.sc-battle-supply-free--over { color: #f08a8a; }
+.sc-battle-supply-strip--compact { min-height: 26px; padding: 3px 10px; }
+.sc-battle-supply-strip--compact .sc-battle-supply-label { font-size: 10px; }
+.sc-battle-supply-strip--compact .sc-battle-supply-used,
+.sc-battle-supply-strip--compact .sc-battle-supply-free { font-size: 12px; }
+
+/* Within each full-width summary, a short live roster makes the previously
+   empty right half useful. The entire card remains one click target. */
+.sc-battle-overview-main {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+}
+.sc-battle-overview-main .sc-battle-overview-meta { margin-top: 9px; }
+.sc-battle-overview-main .sc-battle-overview-link { margin-top: auto; padding-top: 9px; }
+.sc-battle-overview-side {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  min-width: 0;
+  gap: 2px;
+  border-left: 1px solid rgba(123,139,167,.2);
+  padding-left: 12px;
+}
+.sc-battle-preview-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 4px;
+  margin-bottom: 4px;
+  color: #a0aec2;
+  font: 700 10px Rajdhani, sans-serif;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.sc-battle-preview-heading span { color: #657186; font-size: 9px; letter-spacing: 0; }
+.sc-battle-preview-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 17px;
+  width: 100%;
+  min-width: 0;
+  color: #d8e3ef;
+  font: 600 11px Rajdhani, sans-serif;
+  line-height: 1.2;
+}
+.sc-battle-preview-row::before {
+  content: '';
+  flex: 0 0 4px;
+  width: 4px;
+  height: 4px;
+  border-radius: 100%;
+  background: #66ddea;
+}
+.sc-battle-preview-row--deployed::before { background: #5fd98d; }
+.sc-battle-preview-row--reserve::before { background: #77859d; }
+.sc-battle-preview-row--reserve { color: #b2bfd1; }
+.sc-battle-preview-row--exhausted { opacity: .38; }
+.sc-battle-preview-row--exhausted::before { background: #68758a; }
+.sc-battle-preview-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+.sc-battle-preview-count {
+  flex: 0 0 auto;
+  color: inherit;
+  font: 700 11px 'Chakra Petch', sans-serif;
+  font-variant-numeric: tabular-nums;
+}
+.sc-battle-preview-more, .sc-battle-preview-empty {
+  color: #8896ab;
+  font: 600 11px Rajdhani, sans-serif;
+  line-height: 1.35;
+}
+.sc-battle-preview-more { padding: 3px 0 0 10px; }
+.sc-battle-preview-empty { padding: 10px 0; }
+
 .sc-battle-overview-card--tactical {
   border-color: rgba(56,211,232,.42);
   background: linear-gradient(165deg, rgba(22,67,75,.34), #0b0e17 68%);
@@ -502,8 +635,12 @@ input::placeholder { color: #5b6275; }
 }
 @media (max-width: 340px) {
   .sc-battle-overview { gap: 8px; padding: 10px; }
-  .sc-battle-overview-card { padding: 12px 9px 10px; }
+  .sc-battle-overview-card { gap: 8px; padding: 12px 9px 10px; }
   .sc-battle-overview-meta { font-size: 10px; }
+  .sc-battle-overview-side { padding-left: 8px; }
+  .sc-battle-preview-heading span { display: none; }
+  .sc-battle-supply-strip { gap: 5px; padding: 4px 8px; }
+  .sc-battle-supply-label { font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sc-battle-panel-overlay, .sc-battle-panel-dialog { animation: none; }
