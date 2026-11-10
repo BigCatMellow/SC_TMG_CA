@@ -11,6 +11,8 @@ for(const cls of [
  '.sc-battle-overview-card--troops','.sc-battle-panel-overlay',
  '.sc-battle-panel-dialog','.sc-battle-panel-scroll','.sc-battle-panel-close'
 ]) assert.ok(styles.includes(cls),'missing summary/modal CSS '+cls);
+assert.match(styles,/\.sc-battle-overview\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s,
+  'Battle Tactical and Troops cards should stack full-width');
 assert.match(styles,/max-height:\s*calc\(100dvh/,'sheets fit usable phone viewport');
 assert.match(styles,/overflow-y:\s*auto/,'long roster and card lists can scroll inside sheet');
 assert.match(styles,/overscroll-behavior:\s*contain/,'modal scrolling stays inside sheet');
@@ -30,6 +32,10 @@ for(const faction of ['terran','zerg','protoss']){
  const troops=battle.slice(battle.indexOf('    <sc-if value="{{ sheetBattleTroops }}"'));
  assert.equal((inline.match(/class="sc-battle-overview-card sc-battle-overview-card--/g)||[]).length,2,
    file+' only two summary cards');
+ const tacticalPos=inline.indexOf('sc-battle-overview-card--tactical');
+ const troopsPos=inline.indexOf('sc-battle-overview-card--troops');
+ assert.ok(tacticalPos>=0 && troopsPos>tacticalPos,
+   file+' Tactical summary must appear above Troops summary');
  for(const binding of ['openBattleTactical','openBattleTroops','battleCardsReady','battleCardsTotal',
    'battleCardsExhausted','paymentTotal','paymentResource','battleTroopsOnTable','battleTroopsTotal',
    'battleModelsRemaining','battleModelsTotal','battleSupplyRemaining'])
