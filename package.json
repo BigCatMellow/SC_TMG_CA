@@ -14,6 +14,8 @@
     "test:wave3": "node ./scripts/test-wave3.mjs",
     "test:portraits": "node ./scripts/test-portraits.mjs",
     "test:resource-header": "node ./scripts/test-resource-header.mjs",
-    "test:battle-energy": "node ./scripts/test-battle-energy.mjs"
+    "test:battle-energy": "node ./scripts/test-battle-energy.mjs",
+    "build:site": "node scripts/prepare-pages.mjs",
+    "test:site": "node scripts/prepare-pages.mjs && node scripts/test-pages.mjs"
   }
 }
