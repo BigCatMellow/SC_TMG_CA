@@ -9,6 +9,10 @@ const styles = read('shared-styles.css');
 assert.match(styles, /\.sc-resource-strip--compact\s*\{\s*height:\s*26px;/);
 assert.match(styles, /\.sc-resource-strip\s*\{[\s\S]*?height:\s*50px;/);
 assert.match(styles, /prefers-reduced-motion/);
+assert.match(styles, /\.sc-slot-strip\s*\{[\s\S]*?height:\s*39px;/);
+assert.match(styles, /\.sc-slot-strip--compact\s*\{\s*height:\s*24px;/);
+assert.match(styles, /grid-template-columns:\s*repeat\(5,\s*minmax\(0,\s*1fr\)\)/);
+assert.match(styles, /\.sc-slot-strip--compact \.sc-slot-role-long\s*\{\s*display:\s*none;/);
 assert.match(styles, /\.sc-title-row \.sc-title-faction\s*\{[\s\S]*?text-overflow: ellipsis;/);
 for (const [name,value] of Object.entries({
   '--sc-title-pad-top':'2px',
@@ -91,6 +95,17 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   const html = read(faction[0].toUpperCase() + faction.slice(1) + ' Army.dc.html');
   assert.equal((html.match(/class="\{\{ resourceStripClass \}\}"/g) || []).length, 1, faction + ' resource row');
   assert.ok(html.includes('<sc-if value="{{ !tabIsBattle }}"'), faction + ' battle HUD stays separate');
+  const resourcePosition = html.indexOf('class="{{ resourceStripClass }}"');
+  const slotPosition = html.indexOf('class="{{ slotStripClass }}"');
+  const rosterPosition = html.indexOf('<!-- ============ ROSTER TAB ============ -->');
+  assert.ok(resourcePosition >= 0 && slotPosition > resourcePosition && slotPosition < rosterPosition,
+    faction + ' army slots must be directly below mineral/gas/supply in the header');
+  assert.ok(html.slice(resourcePosition,slotPosition).includes('</div>'), faction + ' resources intact');
+  assert.match(html.slice(slotPosition,rosterPosition), /<sc-for list="\{\{ roleSlots \}\}" as="sl"/);
+  for (const label of ['{{ sl.name }}', '{{ sl.short }}', '{{ sl.used }}', '{{ sl.cap }}',
+    'color:{{ sl.fg }}', '{{ sl.accessibilityLabel }}'])
+    assert.ok(html.slice(slotPosition,rosterPosition).includes(label),
+      faction + ' role slot binding missing: ' + label);
   for (const label of ['Minerals', 'Vespene', 'Supply'])
     assert.ok(html.includes('class="sc-resource-label-long">' + label + '</span>'), faction + ' ' + label + ' total');
   for (const label of ['M', 'G', 'S'])
@@ -178,11 +193,58 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   controller.save = () => {};
   controller._secEls = {};
   controller.state = { ...controller.state, ready: true, army: [], tactical: [] };
+  const D = controller.D();
+  const roles = ['hero','elite','core','support','air'];
+  const slots = () => controller.renderVals().roleSlots;
+  const firstSlots = slots();
+  assert.deepEqual(firstSlots.map(x => x.name), ['Hero','Elite','Core','Support','Air'],
+    faction + ' all five role counts in fixed order');
+  const factionCard = D.FACTION_CARDS.find(x => x.id === controller.state.factionId) || D.FACTION_CARDS[0];
+  for (const role of roles) {
+    const actual = firstSlots.find(x => x.name.toLowerCase() === role);
+    assert.equal(actual.used,0,faction + ' empty army ' + role + ' used');
+    assert.equal(actual.cap, factionCard.slots?.[role] || 0,
+      faction + ' faction card base slot cap for ' + role);
+    assert.equal(actual.accessibilityLabel, actual.name + ' slots: 0 of ' + actual.cap + ' used');
+  }
+  // Tactical cards add role allowances to the selected faction's base limits.
+  const grantingCard = D.TACTICAL_CARDS.find(t => Object.values(t.slots || {}).some(v => v > 0));
+  if (grantingCard) {
+    controller.state.tactical = [grantingCard.id];
+    const updated = slots();
+    for (const role of roles) {
+      assert.equal(updated.find(x => x.name.toLowerCase() === role).cap,
+        (factionCard.slots?.[role] || 0) + (grantingCard.slots?.[role] || 0),
+        faction + ' tactical bonus for ' + role);
+    }
+    controller.state.tactical = [];
+  }
+  // Unit tier supply consumes the correct role; exceeding capacity turns its value red.
+  const unit = D.UNITS.find(u => roles.includes(u.role.toLowerCase())
+    && u.tiers?.some(t => (t.supply || 0) > 0 && (t.cost || 0) > 0));
+  assert.ok(unit, faction + ' purchasable unit with a role and supply');
+  const tierIdx = unit.tiers.findIndex(t => (t.supply || 0) > 0 && (t.cost || 0) > 0);
+  const role = unit.role.toLowerCase();
+  const unitEntry = index => ({
+    key:'slot-test-' + index,unitId:unit.id,tierIdx,upgs:[],modelsLost:0,deployed:false
+  });
+  controller.state.army = [unitEntry(0)];
+  assert.equal(slots().find(x => x.name.toLowerCase() === role).used,
+    unit.tiers[tierIdx].supply, faction + ' used slots for unit composition');
+  const allowance = factionCard.slots?.[role] || 0;
+  const extraCopies = Math.floor(allowance / unit.tiers[tierIdx].supply) + 1;
+  controller.state.army = Array.from({length:extraCopies},(_,i)=>unitEntry(i));
+  const exceeded = slots().find(x => x.name.toLowerCase() === role);
+  assert.ok(exceeded.used > exceeded.cap, faction + ' test fixture exceeds capacity');
+  assert.equal(exceeded.fg,'#f08a8a', faction + ' excessive role usage is highlighted');
+  controller.state.army = [];
   const css = () => controller.renderVals().resourceStripClass;
+  const slotCss = () => controller.renderVals().slotStripClass;
   const boardCss = () => controller.renderVals().scoreboardClass;
   const titleCss = () => controller.renderVals().titleHeaderClass;
 
   assert.equal(css(), 'sc-resource-strip', faction + ' resources start expanded');
+  assert.equal(slotCss(), 'sc-slot-strip', faction + ' slots start expanded');
   assert.equal(boardCss(), 'sc-scoreboard', faction + ' original scoreboard at top');
   assert.equal(titleCss(), 'sc-title-row', faction + ' original title at top');
   for (const tab of ['roster', 'battle', 'library', 'tactics']) {
@@ -202,25 +264,29 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   world.scrollY = 100;
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip', faction + ' does not collapse on minor scroll');
+  assert.equal(slotCss(), 'sc-slot-strip', faction + ' slots unchanged on minor scroll');
   assert.equal(boardCss(), 'sc-scoreboard', faction + ' scoreboard unchanged on minor scroll');
   assert.equal(titleCss(), 'sc-title-row', faction + ' title unchanged on minor scroll');
   world.scrollY = 145;
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip sc-resource-strip--compact', faction + ' collapses');
+  assert.equal(slotCss(), 'sc-slot-strip sc-slot-strip--compact', faction + ' slots collapse');
   assert.equal(boardCss(), 'sc-scoreboard sc-scoreboard--compact', faction + ' scoreboard collapses');
   assert.equal(titleCss(), 'sc-title-row sc-title-row--compact', faction + ' title collapses');
   world.scrollY = 90;
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip sc-resource-strip--compact', faction + ' hysteresis');
+  assert.equal(slotCss(), 'sc-slot-strip sc-slot-strip--compact', faction + ' slot hysteresis');
   assert.equal(boardCss(), 'sc-scoreboard sc-scoreboard--compact', faction + ' scoreboard hysteresis');
   assert.equal(titleCss(), 'sc-title-row sc-title-row--compact', faction + ' title hysteresis');
   world.scrollY = 64;
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip', faction + ' re-expands near top');
+  assert.equal(slotCss(), 'sc-slot-strip', faction + ' slots re-expand near top');
   assert.equal(boardCss(), 'sc-scoreboard', faction + ' scoreboard re-expands near top');
   assert.equal(titleCss(), 'sc-title-row', faction + ' title re-expands near top');
 
   controller.componentWillUnmount();
   assert.equal(listeners.size, 0, faction + ' cleans up scroll listener');
 }
-console.log('Original title and scoreboard styles preserved; synchronized compact headers pass for all factions');
+console.log('Army role slots, original HUD styling and synchronized compact headers pass for all factions');

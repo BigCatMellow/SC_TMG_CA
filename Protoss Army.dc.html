@@ -89,6 +89,18 @@
           <div class="sc-resource-value" style="color:#f2c860">{{ supplyUsed }}</div>
         </div>
       </div>
+      <!-- Role slots come from the selected faction and tactical cards. -->
+      <div class="{{ slotStripClass }}" aria-label="Army role slot limits">
+        <sc-for list="{{ roleSlots }}" as="sl" hint-placeholder-count="5">
+          <div class="sc-slot-cell" title="{{ sl.accessibilityLabel }}" aria-label="{{ sl.accessibilityLabel }}">
+            <span class="sc-slot-role">
+              <span class="sc-slot-role-long">{{ sl.name }}</span>
+              <span class="sc-slot-role-short" aria-hidden="true">{{ sl.short }}</span>
+            </span>
+            <span class="sc-slot-usage" style="color:{{ sl.fg }}">{{ sl.used }}<span class="sc-slot-cap">/{{ sl.cap }}</span></span>
+          </div>
+        </sc-for>
+      </div>
     </sc-if>
 
   </div>
@@ -1464,6 +1476,16 @@ class Component extends DCLogic {
       const u = D.UNITS.find(x => x.id === e.unitId);
       if (u && usedSlots[u.role.toLowerCase()] !== undefined) usedSlots[u.role.toLowerCase()] += (u.tiers[e.tierIdx]?.supply || 0);
     });
+    const roleSlots = ['hero', 'elite', 'core', 'support', 'air'].map(role => {
+      const used = usedSlots[role] || 0;
+      const cap = baseSlots[role] || 0;
+      const name = role.charAt(0).toUpperCase() + role.slice(1);
+      return {
+        name, short: name.charAt(0), used, cap,
+        fg: used > cap ? '#f08a8a' : '#c8cede',
+        accessibilityLabel: name + ' slots: ' + used + ' of ' + cap + ' used'
+      };
+    });
     const slotPills = ['hero', 'elite', 'core', 'support', 'air'].filter(k => baseSlots[k] || usedSlots[k]).map(k => {
       const over = usedSlots[k] > baseSlots[k];
       return { label: k.slice(0, 1).toUpperCase() + k.slice(1, 3) + ' ' + usedSlots[k] + '/' + baseSlots[k], fg: over ? '#f08a8a' : '#a7aec2', bd: over ? 'rgba(240,74,74,0.4)' : 'var(--sc-border-input)' };
@@ -1809,11 +1831,12 @@ class Component extends DCLogic {
       tabs,
       tabIsRoster: st.tab === 'roster', tabIsBattle: st.tab === 'battle', tabIsLibrary: st.tab === 'library', tabIsTactics: st.tab === 'tactics',
       resourceStripClass: st.resourcesCompact ? 'sc-resource-strip sc-resource-strip--compact' : 'sc-resource-strip',
+      slotStripClass: st.resourcesCompact ? 'sc-slot-strip sc-slot-strip--compact' : 'sc-slot-strip',
       scoreboardClass: st.resourcesCompact ? 'sc-scoreboard sc-scoreboard--compact' : 'sc-scoreboard',
       titleHeaderClass: st.resourcesCompact ? 'sc-title-row sc-title-row--compact' : 'sc-title-row',
       tabIsFaction: st.tab === 'faction', tabIsCodex: st.tab === 'codex',
       // roster
-      scales, slotPills,
+      scales, slotPills, roleSlots,
       rosterEmpty: st.army.length === 0, rosterGroups,
       hasRosterWarnings: rosterWarnings.length > 0, rosterWarnings,
       hasTactical: rosterTactical.length > 0, rosterTactical, tacticalCount: rosterTactical.length,
