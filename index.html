@@ -30,10 +30,118 @@
     @keyframes scCaret { 0%,49% { opacity: 1; } 50%,100% { opacity: 0; } }
     @keyframes scLed { 0%,100% { opacity: 1; box-shadow: 0 0 10px currentColor; } 50% { opacity: 0.45; box-shadow: 0 0 3px currentColor; } }
     @keyframes scSpine { 0%,100% { transform: translateY(0); opacity: 0.9; } 50% { transform: translateY(26px); opacity: 0.5; } }
+
+    /* Home screen only: preserve the original panels, fit common phone viewports. */
+    .sc-home {
+      height: 100dvh;
+      min-height: 0 !important;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden !important;
+    }
+    .sc-home-system {
+      flex: 0 0 auto;
+      padding: calc(7px + env(safe-area-inset-top)) 14px 6px !important;
+    }
+    .sc-home-main {
+      flex: 1 1 auto;
+      min-height: 0;
+      display: grid;
+      grid-template-rows: auto auto auto minmax(0,1fr) auto auto auto;
+      gap: clamp(4px,.8dvh,9px);
+      padding: clamp(6px,1dvh,12px) 14px max(8px,env(safe-area-inset-bottom)) !important;
+    }
+    .sc-home-title, .sc-home-ops, .sc-home-footer {
+      margin: 0 !important;
+      min-height: 0;
+    }
+    .sc-home-title > div[aria-hidden="true"],
+    .sc-home-title > div:nth-child(2) { font-size: min(28px,7vw) !important; }
+    .sc-home-title > div:last-child { margin-top: 2px !important; }
+    .sc-home-ops-header { padding: 5px 12px !important; }
+    .sc-home-ops-data > div { padding: 6px 5px 8px !important; }
+    .sc-home-ops-data > div:nth-child(1) > div:last-child { font-size: 24px !important; }
+    .sc-home-ops-data > div:nth-child(2) > div:nth-child(2) { font-size: 16px !important; }
+    .sc-home-ops-data > div:nth-child(3) > div:last-child { font-size: 22px !important; }
+    .sc-home-ops-data > div:nth-child(2) > div:last-child { margin-top: 3px !important; }
+    .sc-home-section-title { padding: 0 2px !important; min-height: 18px; }
+    .sc-home-section-title > span:first-child { font-size: 12px !important; }
+    .sc-home-factions {
+      min-height: 0;
+      height: 100%;
+      grid-template-rows: repeat(3,minmax(0,1fr));
+      gap: clamp(4px,.7dvh,8px) !important;
+      margin: 0 !important;
+    }
+    .sc-home-faction-link, .sc-home-faction-link > span { height: 100%; min-height: 0; }
+    .sc-home-faction-card { height: 100%; min-height: 0 !important; }
+    .sc-home-faction-content { padding: 5px 12px 5px 17px !important; }
+    .sc-home-faction-content > span:first-child { font-size: 9px !important; }
+    .sc-home-faction-content > span:nth-child(2) { font-size: 25px !important; }
+    .sc-home-faction-meta { gap: 6px !important; margin-top: 4px !important; }
+    .sc-home-faction-meta > span { font-size: 10px !important; }
+    .sc-home-faction-meta > span:nth-child(-n+2) { padding: 2px 6px !important; }
+    .sc-home-manual {
+      min-height: 0;
+      gap: 8px !important;
+      grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+    }
+    .sc-home-manual-link {
+      min-width: 0;
+      min-height: 0;
+      display: grid !important;
+      align-content: center;
+      grid-template-columns: 23px minmax(0,1fr);
+      grid-template-rows: auto auto;
+      column-gap: 8px;
+      padding: 8px 10px !important;
+    }
+    .sc-home-manual-link > svg {
+      width: 22px;
+      height: 22px;
+      margin: 0 !important;
+      grid-row: 1 / 3;
+      align-self: center;
+    }
+    .sc-home-manual-link > span:not([style*="position:absolute"]) { min-width: 0; }
+    .sc-home-manual-link > span[style*="font-family"] { font-size: 14px !important; }
+    .sc-home-manual-desc {
+      font-size: 10px !important;
+      line-height: 1.2 !important;
+      margin-top: 2px !important;
+    }
+    .sc-home-footer { margin-top: 0 !important; }
+    .sc-home-footer > span:nth-child(2) {
+      font-size: 9px !important;
+      letter-spacing: .12em !important;
+    }
+    @media (max-height: 700px) {
+      .sc-home-main { gap: 4px; padding-top: 4px !important; }
+      .sc-home-title > div:last-child { display: none !important; }
+      .sc-home-faction-content { padding-top: 3px !important; padding-bottom: 3px !important; }
+      .sc-home-faction-meta { margin-top: 2px !important; }
+      .sc-home-ops-header { padding: 4px 10px !important; }
+      .sc-home-ops-data > div { padding-top: 4px !important; padding-bottom: 5px !important; }
+      .sc-home-manual-link { padding-top: 6px !important; padding-bottom: 6px !important; }
+      .sc-home-footer { display: none !important; }
+    }
+    @media (max-height: 590px) {
+      .sc-home-faction-meta > span:last-child { display: none !important; }
+      .sc-home-manual-desc { display: none !important; }
+      .sc-home-faction-content > span:nth-child(2) { font-size: 21px !important; }
+      .sc-home-manual-link { min-height: 40px; }
+    }
+    /* Landscape and very short heights must remain accessible, never clip links. */
+    @media (max-height: 470px) {
+      .sc-home { height: auto; min-height: 100dvh !important; overflow: auto !important; }
+      .sc-home-main { display: block; }
+      .sc-home-main > * { margin-bottom: 6px !important; }
+      .sc-home-factions { height: auto; grid-template-rows: repeat(3,minmax(65px,auto)); }
+    }
   </style>
 </helmet>
 
-<div style="max-width:480px;margin:0 auto;min-height:100dvh;background-color:#05060a;background-image:radial-gradient(120% 55% at 50% -10%, rgba(88,28,135,0.22), transparent 62%),radial-gradient(1.2px 1.2px at 24px 38px, rgba(190,200,235,0.3), transparent),radial-gradient(1px 1px at 110px 92px, rgba(190,200,235,0.18), transparent),radial-gradient(1.4px 1.4px at 68px 150px, rgba(190,200,235,0.12), transparent);background-size:auto,190px 190px,240px 240px,300px 300px;color:#e9ecf2;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;font-size:15px;line-height:1.5;position:relative;overflow:hidden" data-screen-label="Command Center">
+<div class="sc-home" style="max-width:480px;margin:0 auto;min-height:100dvh;background-color:#05060a;background-image:radial-gradient(120% 55% at 50% -10%, rgba(88,28,135,0.22), transparent 62%),radial-gradient(1.2px 1.2px at 24px 38px, rgba(190,200,235,0.3), transparent),radial-gradient(1px 1px at 110px 92px, rgba(190,200,235,0.18), transparent),radial-gradient(1.4px 1.4px at 68px 150px, rgba(190,200,235,0.12), transparent);background-size:auto,190px 190px,240px 240px,300px 300px;color:#e9ecf2;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;font-size:15px;line-height:1.5;position:relative;overflow:hidden" data-screen-label="Command Center">
 
   <!-- ambient page scanline -->
   <div style="position:absolute;left:0;right:0;top:0;height:90px;background:linear-gradient(180deg,transparent,rgba(147,180,255,0.025),transparent);animation:scScan 9s linear infinite;pointer-events:none;z-index:5"></div>
@@ -96,17 +204,17 @@
   </sc-if>
 
   <!-- ============ SYSTEM BAR ============ -->
-  <div style="display:flex;align-items:center;gap:8px;padding:calc(12px + env(safe-area-inset-top)) 18px 10px;border-bottom:1px solid rgba(43,49,69,0.6)">
+  <div class="sc-home-system" style="display:flex;align-items:center;gap:8px;padding:calc(12px + env(safe-area-inset-top)) 18px 10px;border-bottom:1px solid rgba(43,49,69,0.6)">
     <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:#5b6275">Adjutant // Tactical Interface</span>
     <span style="flex:1"></span>
     <span style="width:7px;height:7px;border-radius:50%;background:#35c76b;color:#35c76b;animation:scLed 2.2s infinite"></span>
     <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#35c76b">Online</span>
   </div>
 
-  <div style="padding:20px 16px calc(30px + env(safe-area-inset-bottom))">
+  <div class="sc-home-main" style="padding:20px 16px calc(30px + env(safe-area-inset-bottom))">
 
     <!-- ============ TITLE ============ -->
-    <div style="position:relative;margin-bottom:20px;animation:scRise 0.5s ease both">
+    <div class="sc-home-title" style="position:relative;margin-bottom:20px;animation:scRise 0.5s ease both">
       <div aria-hidden="true" style="position:absolute;top:3px;left:3px;font-family:'Chakra Petch',sans-serif;font-size:min(32px,7.6vw);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;line-height:1.1;color:transparent;-webkit-text-stroke:1px rgba(147,110,247,0.16);pointer-events:none;white-space:nowrap">Command Center</div>
       <div style="position:relative;font-family:'Chakra Petch',sans-serif;font-size:min(32px,7.6vw);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;line-height:1.1;color:#e9ecf2;white-space:nowrap">Command Center</div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:6px">
@@ -116,16 +224,16 @@
     </div>
 
     <!-- ============ LIVE OPS READOUT ============ -->
-    <div style="position:relative;margin-bottom:24px;animation:scRise 0.5s 0.06s ease both">
+    <div class="sc-home-ops" style="position:relative;margin-bottom:24px;animation:scRise 0.5s 0.06s ease both">
       <div style="position:relative;background:linear-gradient(180deg,rgba(147,51,234,0.5),rgba(43,49,69,0.5));clip-path:var(--sc-corner-12);padding:1px">
         <div style="background:var(--sc-card-bg);clip-path:var(--sc-corner-12)">
-          <div style="display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid rgba(43,49,69,0.7)">
+          <div class="sc-home-ops-header" style="display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid rgba(43,49,69,0.7)">
             <span style="width:6px;height:6px;background:{{ phaseColor }};box-shadow:0 0 9px {{ phaseColor }};animation:scPulse 2s infinite"></span>
             <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.26em;text-transform:uppercase;color:#8a91a5">Live Operation</span>
             <span style="flex:1"></span>
             <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ statusColor }}">{{ statusLabel }}</span>
           </div>
-          <div style="display:grid;grid-template-columns:1fr 1.4fr 1.1fr">
+          <div class="sc-home-ops-data" style="display:grid;grid-template-columns:1fr 1.4fr 1.1fr">
             <div style="padding:12px 8px 14px;text-align:center;border-right:1px solid rgba(43,49,69,0.7)">
               <div style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.22em;text-transform:uppercase;color:#5b6275;margin-bottom:2px">Round</div>
               <div style="font-family:'Chakra Petch',sans-serif;font-size:30px;font-weight:700;color:#e9ecf2;line-height:1;text-shadow:0 0 16px rgba(176,110,247,0.35)">{{ round }}</div>
@@ -149,24 +257,24 @@
     </div>
 
     <!-- ============ FACTION PANELS ============ -->
-    <div style="display:flex;align-items:center;gap:8px;padding:0 2px 12px;animation:scRise 0.5s 0.1s ease both">
+    <div class="sc-home-section-title" style="display:flex;align-items:center;gap:8px;padding:0 2px 12px;animation:scRise 0.5s 0.1s ease both">
       <span style="font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#e9ecf2">Factions</span>
       <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-input),transparent)"></span>
       <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#5b6275">3 Rosters</span>
     </div>
 
-    <div style="display:grid;gap:12px;margin-bottom:26px">
+    <div class="sc-home-factions" style="display:grid;gap:12px;margin-bottom:26px">
 
       <!-- ZERG -->
-      <a href="Zerg Army.dc.html" style="position:relative;display:block;text-decoration:none;color:#e9ecf2;animation:scRise 0.5s 0.14s ease both">
+      <a class="sc-home-faction-link" href="Zerg Army.dc.html" style="position:relative;display:block;text-decoration:none;color:#e9ecf2;animation:scRise 0.5s 0.14s ease both">
         <span style="display:block;background:linear-gradient(120deg,rgba(176,110,247,0.65),rgba(88,28,135,0.25) 40%,rgba(43,49,69,0.5));clip-path:var(--sc-corner-16);padding:1px">
-          <span style="position:relative;display:flex;align-items:center;min-height:128px;overflow:hidden;background-color:#0b0e17;background-image:radial-gradient(90% 130% at 88% 12%, rgba(147,51,234,0.4), transparent 58%),radial-gradient(70% 100% at 8% 100%, rgba(88,28,135,0.35), transparent 55%);clip-path:var(--sc-corner-16)">
+          <span class="sc-home-faction-card" style="position:relative;display:flex;align-items:center;min-height:128px;overflow:hidden;background-color:#0b0e17;background-image:radial-gradient(90% 130% at 88% 12%, rgba(147,51,234,0.4), transparent 58%),radial-gradient(70% 100% at 8% 100%, rgba(88,28,135,0.35), transparent 55%);clip-path:var(--sc-corner-16)">
             <span style="position:absolute;right:-30px;top:50%;width:188px;height:212px;transform:translateY(-50%) rotate(10deg);pointer-events:none;opacity:0.2;background:linear-gradient(150deg,#e9d5ff,#9333ea 70%);mask-image:url('uploads/zerglogo.png');-webkit-mask-image:url('uploads/zerglogo.png');mask-size:contain;-webkit-mask-size:contain;mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat;mask-position:center;-webkit-mask-position:center"></span>
             <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#9333ea,#4c1d95);overflow:hidden"><span style="position:absolute;left:0;width:100%;height:22px;background:#e9d5ff;opacity:0.8;animation:scSpine 2.6s ease-in-out infinite"></span></span>
-            <span style="position:relative;flex:1;min-width:0;padding:18px 16px 18px 20px">
+            <span class="sc-home-faction-content" style="position:relative;flex:1;min-width:0;padding:18px 16px 18px 20px">
               <span style="display:block;font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:#a78bda">The Swarm</span>
               <span style="display:block;font-family:'Chakra Petch',sans-serif;font-size:30px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;line-height:1.15;text-shadow:0 0 22px rgba(176,110,247,0.45)">Zerg</span>
-              <span style="display:flex;align-items:center;gap:8px;margin-top:8px">
+              <span class="sc-home-faction-meta" style="display:flex;align-items:center;gap:8px;margin-top:8px">
                 <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(147,51,234,0.16);border:1px solid rgba(176,110,247,0.4);color:#c99af7">10 Units</span>
                 <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(147,51,234,0.16);border:1px solid rgba(176,110,247,0.4);color:#c99af7">11 Tactics</span>
                 <span style="display:flex;align-items:center;gap:5px;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5fd98d"><span style="width:6px;height:6px;border-radius:50%;background:#35c76b;color:#35c76b;animation:scLed 2.2s infinite"></span>Ready</span>
@@ -178,15 +286,15 @@
       </a>
 
       <!-- TERRAN -->
-      <a href="Terran Army.dc.html" style="position:relative;display:block;text-decoration:none;color:#e9ecf2;animation:scRise 0.5s 0.18s ease both">
+      <a class="sc-home-faction-link" href="Terran Army.dc.html" style="position:relative;display:block;text-decoration:none;color:#e9ecf2;animation:scRise 0.5s 0.18s ease both">
         <span style="display:block;background:linear-gradient(120deg,rgba(98,169,247,0.6),rgba(30,64,175,0.25) 40%,rgba(43,49,69,0.5));clip-path:var(--sc-corner-16);padding:1px">
-          <span style="position:relative;display:flex;align-items:center;min-height:128px;overflow:hidden;background-color:#0b0e17;background-image:repeating-linear-gradient(0deg,rgba(98,169,247,0.045) 0 1px,transparent 1px 12px),radial-gradient(1.4px 1.4px at 14px 14px, rgba(98,169,247,0.2), transparent),linear-gradient(105deg,rgba(30,64,175,0.34),transparent 65%);background-size:auto,30px 30px,auto;clip-path:var(--sc-corner-16)">
+          <span class="sc-home-faction-card" style="position:relative;display:flex;align-items:center;min-height:128px;overflow:hidden;background-color:#0b0e17;background-image:repeating-linear-gradient(0deg,rgba(98,169,247,0.045) 0 1px,transparent 1px 12px),radial-gradient(1.4px 1.4px at 14px 14px, rgba(98,169,247,0.2), transparent),linear-gradient(105deg,rgba(30,64,175,0.34),transparent 65%);background-size:auto,30px 30px,auto;clip-path:var(--sc-corner-16)">
             <span style="position:absolute;right:-26px;top:50%;width:200px;height:195px;transform:translateY(-50%) rotate(-6deg);pointer-events:none;opacity:0.19;background:linear-gradient(150deg,#dbeafe,#2563eb 72%);mask-image:url('uploads/terranlogo.png');-webkit-mask-image:url('uploads/terranlogo.png');mask-size:contain;-webkit-mask-size:contain;mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat;mask-position:center;-webkit-mask-position:center"></span>
             <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#2563eb,#1e3a8a);overflow:hidden"><span style="position:absolute;left:0;width:100%;height:22px;background:#dbeafe;opacity:0.8;animation:scSpine 3.1s ease-in-out infinite"></span></span>
-            <span style="position:relative;flex:1;min-width:0;padding:18px 16px 18px 20px">
+            <span class="sc-home-faction-content" style="position:relative;flex:1;min-width:0;padding:18px 16px 18px 20px">
               <span style="display:block;font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:#7ea9d9">The Dominion</span>
               <span style="display:block;font-family:'Chakra Petch',sans-serif;font-size:30px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;line-height:1.15;text-shadow:0 0 22px rgba(98,169,247,0.4)">Terran</span>
-              <span style="display:flex;align-items:center;gap:8px;margin-top:8px">
+              <span class="sc-home-faction-meta" style="display:flex;align-items:center;gap:8px;margin-top:8px">
                 <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(37,99,235,0.14);border:1px solid rgba(98,169,247,0.4);color:#8ec3fa">7 Units</span>
                 <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(37,99,235,0.14);border:1px solid rgba(98,169,247,0.4);color:#8ec3fa">10 Tactics</span>
                 <span style="display:flex;align-items:center;gap:5px;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5fd98d"><span style="width:6px;height:6px;border-radius:50%;background:#35c76b;color:#35c76b;animation:scLed 2.6s infinite"></span>Ready</span>
@@ -198,16 +306,16 @@
       </a>
 
       <!-- PROTOSS -->
-      <a href="Protoss Army.dc.html" style="position:relative;display:block;text-decoration:none;color:#e9ecf2;animation:scRise 0.5s 0.22s ease both">
+      <a class="sc-home-faction-link" href="Protoss Army.dc.html" style="position:relative;display:block;text-decoration:none;color:#e9ecf2;animation:scRise 0.5s 0.22s ease both">
         <span style="display:block;background:linear-gradient(120deg,rgba(242,200,96,0.55),rgba(120,90,20,0.25) 40%,rgba(43,49,69,0.5));clip-path:var(--sc-corner-16);padding:1px">
-          <span style="position:relative;display:flex;align-items:center;min-height:128px;overflow:hidden;background-color:#0b0e17;background-image:conic-gradient(from 210deg at 82% 28%, rgba(242,200,96,0.2), transparent 22%, rgba(242,200,96,0.08) 48%, transparent 72%, rgba(242,200,96,0.2)),linear-gradient(105deg,rgba(120,90,20,0.3),transparent 62%);clip-path:var(--sc-corner-16)">
+          <span class="sc-home-faction-card" style="position:relative;display:flex;align-items:center;min-height:128px;overflow:hidden;background-color:#0b0e17;background-image:conic-gradient(from 210deg at 82% 28%, rgba(242,200,96,0.2), transparent 22%, rgba(242,200,96,0.08) 48%, transparent 72%, rgba(242,200,96,0.2)),linear-gradient(105deg,rgba(120,90,20,0.3),transparent 62%);clip-path:var(--sc-corner-16)">
             <span style="position:absolute;inset:7px;border:1px solid rgba(242,200,96,0.16);pointer-events:none;clip-path:var(--sc-corner-12)"></span>
             <span style="position:absolute;right:-8px;top:50%;width:118px;height:230px;transform:translateY(-50%) rotate(8deg);pointer-events:none;opacity:0.22;background:linear-gradient(150deg,#fdf3d7,#d4a537 72%);mask-image:url('uploads/protosslogo.png');-webkit-mask-image:url('uploads/protosslogo.png');mask-size:contain;-webkit-mask-size:contain;mask-repeat:no-repeat;-webkit-mask-repeat:no-repeat;mask-position:center;-webkit-mask-position:center"></span>
             <span style="position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#d4a537,#8a6a1a);overflow:hidden"><span style="position:absolute;left:0;width:100%;height:22px;background:#fdf3d7;opacity:0.8;animation:scSpine 2.9s ease-in-out infinite"></span></span>
-            <span style="position:relative;flex:1;min-width:0;padding:18px 16px 18px 20px">
+            <span class="sc-home-faction-content" style="position:relative;flex:1;min-width:0;padding:18px 16px 18px 20px">
               <span style="display:block;font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:#cfb06a">The Firstborn</span>
               <span style="display:block;font-family:'Chakra Petch',sans-serif;font-size:30px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;line-height:1.15;text-shadow:0 0 22px rgba(242,200,96,0.38)">Protoss</span>
-              <span style="display:flex;align-items:center;gap:8px;margin-top:8px">
+              <span class="sc-home-faction-meta" style="display:flex;align-items:center;gap:8px;margin-top:8px">
                 <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(180,130,30,0.14);border:1px solid rgba(242,200,96,0.4);color:#f6d98c">7 Units</span>
                 <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(180,130,30,0.14);border:1px solid rgba(242,200,96,0.4);color:#f6d98c">13 Tactics</span>
                 <span style="display:flex;align-items:center;gap:5px;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5fd98d"><span style="width:6px;height:6px;border-radius:50%;background:#35c76b;color:#35c76b;animation:scLed 2.4s infinite"></span>Ready</span>
@@ -220,37 +328,37 @@
     </div>
 
     <!-- ============ FIELD MANUAL ============ -->
-    <div style="display:flex;align-items:center;gap:8px;padding:0 2px 12px;animation:scRise 0.5s 0.26s ease both">
+    <div class="sc-home-section-title" style="display:flex;align-items:center;gap:8px;padding:0 2px 12px;animation:scRise 0.5s 0.26s ease both">
       <span style="font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#e9ecf2">Field Manual</span>
       <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-input),transparent)"></span>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+    <div class="sc-home-manual" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
 
       <!-- Rules -->
-      <a href="Rules.dc.html" style="position:relative;display:block;padding:16px 14px;text-decoration:none;color:#e9ecf2;background:var(--sc-card-bg);border:1px solid #232939;animation:scRise 0.5s 0.3s ease both">
+      <a class="sc-home-manual-link" href="Rules.dc.html" style="position:relative;display:block;padding:16px 14px;text-decoration:none;color:#e9ecf2;background:var(--sc-card-bg);border:1px solid #232939;animation:scRise 0.5s 0.3s ease both">
         <span style="position:absolute;top:-1px;left:-1px;width:11px;height:11px;border-top:2px solid #38d3e8;border-left:2px solid #38d3e8"></span>
         <span style="position:absolute;top:-1px;right:-1px;width:11px;height:11px;border-top:2px solid #38d3e8;border-right:2px solid #38d3e8"></span>
         <span style="position:absolute;bottom:-1px;left:-1px;width:11px;height:11px;border-bottom:2px solid #38d3e8;border-left:2px solid #38d3e8"></span>
         <span style="position:absolute;bottom:-1px;right:-1px;width:11px;height:11px;border-bottom:2px solid #38d3e8;border-right:2px solid #38d3e8"></span>
         <svg width="26" height="26" viewBox="0 0 16 16" fill="none" style="display:block;color:#38d3e8;margin-bottom:10px;filter:drop-shadow(0 0 8px rgba(56,211,232,0.5))"><path d="M3 2.5h7.5A2.5 2.5 0 0113 5v8.5H5.5A2.5 2.5 0 013 11V2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M6 5.5h4M6 8h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg>
         <span style="display:block;font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">Rules</span>
-        <span style="display:block;font-size:11.5px;color:#8a91a5;line-height:1.5;margin-top:3px">Phases, actions, keywords & judge calls</span>
+        <span style="display:block;font-size:11.5px;color:#8a91a5;line-height:1.5;margin-top:3px" class="sc-home-manual-desc">Phases, actions, keywords & judge calls</span>
       </a>
 
       <!-- War Room -->
-      <a href="Missions.dc.html" style="position:relative;display:block;padding:16px 14px;text-decoration:none;color:#e9ecf2;background:var(--sc-card-bg);border:1px solid #232939;animation:scRise 0.5s 0.34s ease both">
+      <a class="sc-home-manual-link" href="Missions.dc.html" style="position:relative;display:block;padding:16px 14px;text-decoration:none;color:#e9ecf2;background:var(--sc-card-bg);border:1px solid #232939;animation:scRise 0.5s 0.34s ease both">
         <span style="position:absolute;top:-1px;left:-1px;width:11px;height:11px;border-top:2px solid #35c76b;border-left:2px solid #35c76b"></span>
         <span style="position:absolute;top:-1px;right:-1px;width:11px;height:11px;border-top:2px solid #35c76b;border-right:2px solid #35c76b"></span>
         <span style="position:absolute;bottom:-1px;left:-1px;width:11px;height:11px;border-bottom:2px solid #35c76b;border-left:2px solid #35c76b"></span>
         <span style="position:absolute;bottom:-1px;right:-1px;width:11px;height:11px;border-bottom:2px solid #35c76b;border-right:2px solid #35c76b"></span>
         <svg width="26" height="26" viewBox="0 0 16 16" fill="none" style="display:block;color:#35c76b;margin-bottom:10px;filter:drop-shadow(0 0 8px rgba(53,199,107,0.5))"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"></circle><circle cx="8" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4"></circle><path d="M8 2v2.5M8 11.5V14M2 8h2.5M11.5 8H14" stroke="currentColor" stroke-width="1.4"></path></svg>
         <span style="display:block;font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase">War Room</span>
-        <span style="display:block;font-size:11.5px;color:#8a91a5;line-height:1.5;margin-top:3px">Missions, maps & battle setup</span>
+        <span style="display:block;font-size:11.5px;color:#8a91a5;line-height:1.5;margin-top:3px" class="sc-home-manual-desc">Missions, maps & battle setup</span>
       </a>
     </div>
 
     <!-- footer -->
-    <div style="display:flex;align-items:center;gap:10px;margin-top:28px;animation:scRise 0.5s 0.4s ease both">
+    <div class="sc-home-footer" style="display:flex;align-items:center;gap:10px;margin-top:28px;animation:scRise 0.5s 0.4s ease both">
       <span style="flex:1;height:1px;background:linear-gradient(90deg,transparent,#232939)"></span>
       <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.26em;text-transform:uppercase;color:#3a4154">Adjutant v5 · Unofficial fan companion</span>
       <span style="flex:1;height:1px;background:linear-gradient(90deg,#232939,transparent)"></span>

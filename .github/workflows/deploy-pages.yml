@@ -45,6 +45,16 @@ jobs:
         run: node scripts/prepare-pages.mjs
       - name: Verify site integrity
         run: node scripts/test-pages.mjs
+      - name: Verify Command Center fits mobile viewport
+        run: node scripts/test-home-viewport.mjs
+      - name: Upload mobile layout screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: command-center-mobile-screenshots
+          path: artifacts/home-*.png
+          if-no-files-found: warn
+          retention-days: 7
       - name: Upload Pages artifact
         if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
