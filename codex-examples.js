@@ -152,7 +152,7 @@ window.SCTMG_CODEX_EXAMPLES = [
     ],
     takeaway: 'Control is sticky; equal Supply is not enough to capture a marker already controlled.',
     source: 'Core Rules §8.9–8.10 · pp. 69–72',
-    keywords: ['FLYING', 'BURROWED'], tags: ['Flying']
+    keywords: ['FLYING'], tags: ['Flying']
   },
   {
     id: 'reaction-timing',
