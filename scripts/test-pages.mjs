@@ -4,7 +4,7 @@ import { join } from 'node:path';
 
 const base = new URL('../dist-pages/', import.meta.url);
 const required = [
-  'index.html','support.js','shared-styles.css','model-portraits.js',
+  'index.html','support.js','shared-styles.css','model-portraits.js','codex-examples.js',
   'wave3-data.js','terran-data.js','protoss-data.js','zerg-data.js',
   'Rules.dc.html','Missions.dc.html','UnitDetail.dc.html',
   'Terran Army.dc.html','Zerg Army.dc.html','Protoss Army.dc.html',
@@ -33,6 +33,7 @@ for (const faction of ['terran','zerg','protoss']) {
   const html = await readFile(new URL('../dist-pages/' + file, import.meta.url),'utf8');
   assert.match(html, /shared-styles\.css/);
   assert.match(html, /support\.js/);
+  assert.match(html, /codex-examples\.js/,file+' shared Codex example data must be referenced');
   assert.match(html, /sc-if/);
 }
 let imageCount=0;
