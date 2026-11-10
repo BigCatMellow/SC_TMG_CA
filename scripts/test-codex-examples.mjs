@@ -92,7 +92,7 @@ for(const faction of ['terran','zerg','protoss']){
   assert.ok(pay && pay.hasExample && typeof pay.onExample==='function');
   pay.onExample();
   assert.equal(view().sheetExample,true,name+' open worked example from Codex');
-  assert.equal(view().sheetTitle,'',name+' worked example must not open keyword sheet');
+  assert.equal(view().sheetKeyword,false,name+' worked example must not open keyword sheet');
   assert.equal(view().exampleTitle,'Paying for an Ability');
   assert.equal(view().exampleSteps.length,3);
   assert.equal(view().exampleSource,entries[0].source);
