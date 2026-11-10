@@ -92,6 +92,58 @@ input::placeholder { color: #5b6275; }
 .sc-resource-strip--compact .sc-resource-cap { font-size: 9px; }
 
 
+/* Army role slots share the resource bar's scroll-collapse state.
+   All five roles stay visible, including those with a 0/0 allowance. */
+.sc-slot-strip {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  height: 39px;
+  overflow: hidden;
+  border-top: 1px solid #1c2130;
+  border-bottom: 1px solid #1c2130;
+  background: #090c15;
+  transition: height 180ms ease;
+}
+.sc-slot-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  gap: 1px;
+  padding: 2px 1px;
+}
+.sc-slot-cell:not(:last-child) { border-right: 1px solid #1c2130; }
+.sc-slot-role {
+  font-family: Rajdhani, sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  line-height: 1.2;
+  text-transform: uppercase;
+  color: #8a91a5;
+}
+.sc-slot-role-short { display: none; }
+.sc-slot-usage {
+  font-family: 'Chakra Petch', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+.sc-slot-cap { color: #6f7890; }
+.sc-slot-strip--compact { height: 24px; }
+.sc-slot-strip--compact .sc-slot-cell {
+  flex-direction: row;
+  gap: 3px;
+  padding: 2px 1px;
+}
+.sc-slot-strip--compact .sc-slot-role { font-size: 9px; letter-spacing: 0; }
+.sc-slot-strip--compact .sc-slot-role-long { display: none; }
+.sc-slot-strip--compact .sc-slot-role-short { display: inline; }
+.sc-slot-strip--compact .sc-slot-usage { font-size: 11px; }
+
 /* Extra header action keeps the faction subtitle within its available space. */
 .sc-title-row .sc-title-faction {
   min-width: 0;
