@@ -18,6 +18,7 @@
     "build:site": "node scripts/prepare-pages.mjs",
     "test:site": "node scripts/prepare-pages.mjs && node scripts/test-pages.mjs",
     "test:home-viewport": "node scripts/test-home-viewport.mjs",
-    "test:unified-army": "node ./scripts/test-unified-army-tabs.mjs"
+    "test:unified-army": "node ./scripts/test-unified-army-tabs.mjs",
+    "test:codex-examples": "node ./scripts/test-codex-examples.mjs"
   }
 }
