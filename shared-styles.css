@@ -340,6 +340,175 @@ input::placeholder { color: #5b6275; }
 }
 
 
+
+/* Battle dashboard: only two high-level cards occupy the tab.
+   Existing interactive card/unit detail UI is housed in modal sheets. */
+.sc-battle-overview {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  padding: 14px;
+}
+.sc-battle-overview-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  min-height: 176px;
+  text-align: left;
+  padding: 14px 12px 12px;
+  border: 1px solid var(--sc-border-neutral);
+  background: var(--sc-card-bg);
+  color: #e9ecf2;
+  clip-path: var(--sc-corner-12);
+  cursor: pointer;
+}
+.sc-battle-overview-card--tactical {
+  border-color: rgba(56,211,232,.42);
+  background: linear-gradient(165deg, rgba(22,67,75,.34), #0b0e17 68%);
+  --sc-summary-accent: #66ddea;
+}
+.sc-battle-overview-card--troops {
+  border-color: var(--fc-primary-45, rgba(176,110,247,.42));
+  background: linear-gradient(165deg, var(--fc-bg-10, rgba(147,51,234,.1)), #0b0e17 68%);
+  --sc-summary-accent: var(--fc-text-tint, #c8cede);
+}
+.sc-battle-overview-kicker {
+  color: #8a91a5;
+  font: 700 9px Rajdhani, sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.sc-battle-overview-title {
+  margin: 4px 0 5px;
+  color: var(--sc-summary-accent);
+  font: 700 clamp(19px, 5.3vw, 24px) 'Chakra Petch', sans-serif;
+  line-height: 1.1;
+}
+.sc-battle-overview-value {
+  color: #e9ecf2;
+  font: 700 29px 'Chakra Petch', sans-serif;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+.sc-battle-overview-total { font-size: 16px; color: #a7aec2; }
+.sc-battle-overview-label {
+  color: #a7aec2;
+  font: 700 11px Rajdhani, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.sc-battle-overview-meta {
+  color: #a7aec2;
+  font: 600 11px Rajdhani, sans-serif;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+  margin: 9px 0 auto;
+}
+.sc-battle-overview-link {
+  color: var(--sc-summary-accent);
+  font: 700 11px Rajdhani, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-top: 9px;
+}
+.sc-battle-overview-link span { font-size: 15px; }
+.sc-battle-overview-card:focus-visible, .sc-battle-panel-close:focus-visible {
+  outline: 2px solid var(--sc-summary-accent, #66ddea);
+  outline-offset: 2px;
+}
+.sc-battle-panel-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 240;
+  background: rgba(4,5,8,.76);
+  animation: scFade .15s ease;
+}
+.sc-battle-panel-position {
+  position: fixed;
+  inset: 0;
+  z-index: 250;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  pointer-events: none;
+}
+.sc-battle-panel-dialog {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 480px;
+  min-height: 0;
+  max-height: calc(100dvh - 16px - env(safe-area-inset-top));
+  overflow: hidden;
+  background: #141824;
+  color: #e9ecf2;
+  border: 1px solid var(--fc-primary-45, rgba(56,211,232,.42));
+  border-bottom: none;
+  border-radius: 14px 14px 0 0;
+  box-shadow: 0 -18px 55px rgba(0,0,0,.55);
+  pointer-events: auto;
+  animation: scSheetUp .2s ease;
+}
+.sc-battle-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 0 0 auto;
+  gap: 10px;
+  padding: 14px 14px 12px;
+  border-bottom: 1px solid #2b3145;
+}
+.sc-battle-panel-heading {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 2px;
+}
+.sc-battle-panel-kicker {
+  color: #8a91a5;
+  font: 700 10px Rajdhani, sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.sc-battle-panel-title {
+  color: var(--fc-text-tint, #c8cede);
+  font: 700 21px 'Chakra Petch', sans-serif;
+  line-height: 1.2;
+}
+.sc-battle-panel-subtitle { color: #a7aec2; font: 600 11px Rajdhani, sans-serif; }
+.sc-battle-panel-close {
+  flex: 0 0 auto;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 11px;
+  color: #c8cede;
+  background: #1a1f2e;
+  border: 1px solid var(--sc-border-input);
+  font: 700 12px Rajdhani, sans-serif;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.sc-battle-panel-close span { font-size: 18px; line-height: 1; }
+.sc-battle-panel-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  padding: 14px 14px calc(18px + env(safe-area-inset-bottom));
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+@media (max-width: 340px) {
+  .sc-battle-overview { gap: 8px; padding: 10px; }
+  .sc-battle-overview-card { padding: 12px 9px 10px; }
+  .sc-battle-overview-meta { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sc-battle-panel-overlay, .sc-battle-panel-dialog { animation: none; }
+}
+
 /* In-battle cards reuse the companion's neutral panels and faction accents.
    Viewing an ability never exhausts it: only explicit action buttons do. */
 .sc-battle-payment {
