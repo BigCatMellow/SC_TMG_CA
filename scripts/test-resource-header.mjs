@@ -97,14 +97,14 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   assert.ok(html.includes('<sc-if value="{{ !tabIsBattle }}"'), faction + ' battle HUD stays separate');
   const resourcePosition = html.indexOf('class="{{ resourceStripClass }}"');
   const slotPosition = html.indexOf('class="{{ slotStripClass }}"');
-  const rosterPosition = html.indexOf('<!-- ============ ROSTER TAB ============ -->');
-  assert.ok(resourcePosition >= 0 && slotPosition > resourcePosition && slotPosition < rosterPosition,
+  const battlePosition = html.indexOf('<!-- ============ BATTLE TAB ============ -->');
+  assert.ok(resourcePosition >= 0 && slotPosition > resourcePosition && slotPosition < battlePosition,
     faction + ' army slots must be directly below mineral/gas/supply in the header');
   assert.ok(html.slice(resourcePosition,slotPosition).includes('</div>'), faction + ' resources intact');
-  assert.match(html.slice(slotPosition,rosterPosition), /<sc-for list="\{\{ roleSlots \}\}" as="sl"/);
+  assert.match(html.slice(slotPosition,battlePosition), /<sc-for list="\{\{ roleSlots \}\}" as="sl"/);
   for (const label of ['{{ sl.name }}', '{{ sl.short }}', '{{ sl.used }}', '{{ sl.cap }}',
     'color:{{ sl.fg }}', '{{ sl.accessibilityLabel }}'])
-    assert.ok(html.slice(slotPosition,rosterPosition).includes(label),
+    assert.ok(html.slice(slotPosition,battlePosition).includes(label),
       faction + ' role slot binding missing: ' + label);
   for (const label of ['Minerals', 'Vespene', 'Supply'])
     assert.ok(html.includes('class="sc-resource-label-long">' + label + '</span>'), faction + ' ' + label + ' total');
@@ -247,7 +247,7 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   assert.equal(slotCss(), 'sc-slot-strip', faction + ' slots start expanded');
   assert.equal(boardCss(), 'sc-scoreboard', faction + ' original scoreboard at top');
   assert.equal(titleCss(), 'sc-title-row', faction + ' original title at top');
-  for (const tab of ['roster', 'battle', 'library', 'tactics']) {
+  for (const tab of ['faction', 'battle', 'library', 'tactics', 'codex']) {
     controller.state.tab = tab;
     const before = controller.state.tab;
     const action = controller.renderVals().openRosters;

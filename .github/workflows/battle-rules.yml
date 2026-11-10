@@ -33,6 +33,8 @@ jobs:
         run: npm run test:resource-header
       - name: Verify Battle card abilities and resource payment tracking
         run: npm run test:battle-energy
+      - name: Verify merged army tabs and engagement size selection
+        run: npm run test:unified-army
       - name: Check committed NotebookLM study sources
         run: npm run test:study
       - name: Check faction data generator output
