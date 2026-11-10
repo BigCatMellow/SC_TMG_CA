@@ -79,9 +79,22 @@
     <!-- Deployment supply is a Battle-only live readout; tap to adjust in Troops. -->
     <sc-if value="{{ tabIsBattle }}" hint-placeholder-val="{{ false }}">
       <button class="{{ battleSupplyStripClass }}" onClick="{{ openBattleTroops }}" aria-label="{{ battleSupplyAria }}">
-        <span class="sc-battle-supply-label">Deployment supply</span>
-        <span class="sc-battle-supply-used">{{ battleSupplyUsed }} <span>used</span> / {{ battleSupplyAvailable }} <span>pool</span></span>
-        <span class="{{ battleSupplyFreeClass }}">{{ battleSupplyRemaining }} <span>free</span></span>
+        <span class="sc-battle-supply-heading">
+          <span class="sc-battle-supply-kicker">Deployment</span>
+          <span class="sc-battle-supply-label">Supply</span>
+        </span>
+        <span class="sc-battle-supply-stat">
+          <span class="sc-battle-supply-stat-label">Used</span>
+          <span class="sc-battle-supply-stat-number">{{ battleSupplyUsed }}</span>
+        </span>
+        <span class="sc-battle-supply-stat">
+          <span class="sc-battle-supply-stat-label">Pool</span>
+          <span class="sc-battle-supply-stat-number">{{ battleSupplyAvailable }}</span>
+        </span>
+        <span class="sc-battle-supply-stat">
+          <span class="sc-battle-supply-stat-label">Free</span>
+          <span class="{{ battleSupplyFreeClass }}">{{ battleSupplyRemaining }}</span>
+        </span>
       </button>
     </sc-if>
     <sc-if value="{{ !tabIsBattle }}" hint-placeholder-val="{{ true }}">
@@ -162,14 +175,14 @@
           <span class="sc-battle-overview-link">Manage units &amp; supply <span aria-hidden="true">›</span></span>
         </span>
         <span class="sc-battle-overview-side" aria-hidden="true">
-          <span class="sc-battle-preview-heading">Army roster <span>Units</span></span>
+          <span class="sc-battle-preview-heading">Army roster <span>Models</span></span>
           <sc-if value="{{ battleTroopsEmpty }}" hint-placeholder-val="{{ false }}">
             <span class="sc-battle-preview-empty">No units yet — add them in Library</span>
           </sc-if>
           <sc-for list="{{ troopPreview }}" as="item" hint-placeholder-count="4">
             <span class="{{ item.className }}">
               <span class="sc-battle-preview-name">{{ item.name }}</span>
-              <span class="sc-battle-preview-count">×{{ item.count }}</span>
+              <span class="sc-battle-preview-count">{{ item.modelsRemaining }}</span>
             </span>
           </sc-for>
           <sc-if value="{{ troopPreviewHasMore }}" hint-placeholder-val="{{ false }}">

@@ -370,55 +370,72 @@ input::placeholder { color: #5b6275; }
 .sc-battle-supply-strip {
   box-sizing: border-box;
   width: calc(100% - 28px);
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, .8fr));
   align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  min-height: 34px;
+  gap: 0;
+  min-height: 56px;
   margin: 0 14px 2px;
-  padding: 5px 12px;
+  padding: 5px 8px;
   background: #0c111b;
-  border: 1px solid #27344a;
-  color: #c8cede;
+  border: 1px solid #314563;
+  color: #d5dfed;
   cursor: pointer;
   text-align: left;
   clip-path: var(--sc-corner-8);
 }
+.sc-battle-supply-heading {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0;
+  padding-left: 3px;
+}
+.sc-battle-supply-kicker {
+  color: #8796ae;
+  font: 700 9px Rajdhani, sans-serif;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
 .sc-battle-supply-label {
-  flex: 1 1 auto;
-  font: 700 11px Rajdhani, sans-serif;
-  letter-spacing: .08em;
+  color: #d0dcec;
+  font: 700 15px Rajdhani, sans-serif;
+  letter-spacing: .06em;
   text-transform: uppercase;
-  color: #9da8bf;
 }
-.sc-battle-supply-used {
-  flex: 0 0 auto;
-  color: #d0d8e6;
-  font: 700 13px 'Chakra Petch', sans-serif;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
+.sc-battle-supply-stat {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  border-left: 1px solid #283449;
 }
-.sc-battle-supply-used span {
-  font: 600 10px Rajdhani, sans-serif;
-  text-transform: uppercase;
-  color: #7f8ba2;
-}
-.sc-battle-supply-free {
-  flex: 0 0 auto;
-  color: #5fd98d;
-  font: 700 13px 'Chakra Petch', sans-serif;
-  white-space: nowrap;
-  font-variant-numeric: tabular-nums;
-}
-.sc-battle-supply-free span {
+.sc-battle-supply-stat-label {
+  color: #9eabc0;
   font: 700 10px Rajdhani, sans-serif;
   text-transform: uppercase;
+  letter-spacing: .09em;
 }
+.sc-battle-supply-stat-number,
+.sc-battle-supply-free {
+  display: block;
+  font: 700 19px 'Chakra Petch', sans-serif;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.1;
+  color: #e2eaf5;
+}
+.sc-battle-supply-free { color: #5fd98d; }
 .sc-battle-supply-free--over { color: #f08a8a; }
-.sc-battle-supply-strip--compact { min-height: 26px; padding: 3px 10px; }
-.sc-battle-supply-strip--compact .sc-battle-supply-label { font-size: 10px; }
-.sc-battle-supply-strip--compact .sc-battle-supply-used,
-.sc-battle-supply-strip--compact .sc-battle-supply-free { font-size: 12px; }
+/* Preserve a legible, full-height touch target after scrolling. */
+.sc-battle-supply-strip--compact { min-height: 44px; padding: 3px 8px; }
+.sc-battle-supply-strip--compact .sc-battle-supply-kicker { font-size: 8px; }
+.sc-battle-supply-strip--compact .sc-battle-supply-label { font-size: 13px; }
+.sc-battle-supply-strip--compact .sc-battle-supply-stat-label { font-size: 9px; }
+.sc-battle-supply-strip--compact .sc-battle-supply-stat-number,
+.sc-battle-supply-strip--compact .sc-battle-supply-free { font-size: 16px; }
 
 /* Within each full-width summary, a short live roster makes the previously
    empty right half useful. The entire card remains one click target. */
