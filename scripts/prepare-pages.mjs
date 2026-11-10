@@ -37,7 +37,7 @@ function chunk(type, data) {
 function inPolygon(x, y, corners) {
   let inside = false;
   for (let i = 0, j = corners.length - 1; i < corners.length; j = i++) {
-    const [xi, yi] = corners[i], [xj, yj];
+    const [xi, yi] = corners[i], [xj, yj] = corners[j];
     if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
   }
   return inside;
