@@ -381,8 +381,9 @@
                 <div class="sc-lib-head">
                   <sc-if value="{{ en.framed }}" hint-placeholder-val="{{ false }}"><span class="sc-lib-frame"><span class="sc-lib-frame-art"><img src="{{ en.portrait }}" onError="{{ en.onPortraitError }}" alt="" aria-hidden="true" style="{{ en.portraitImgStyle }}"></span><span class="sc-lib-frame-shade"></span></span></sc-if>
                   <sc-if value="{{ en.cutout }}" hint-placeholder-val="{{ false }}"><button onClick="{{ en.onFigure }}" class="sc-lib-figure" aria-label="{{ en.figureLabel }}"><span class="sc-lib-floor"></span><img src="{{ en.cutout }}" onError="{{ en.onCutoutError }}" alt="" loading="lazy"></button></sc-if>
-                  <div onClick="{{ en.onToggle }}" role="button" class="sc-lib-head-text">
+                  <div onClick="{{ en.onToggle }}" role="button" aria-expanded="{{ en.expanded }}" class="sc-lib-head-text">
                     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
+                      <svg class="sc-lib-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                       <span style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ en.name }}</span>
                       <sc-if value="{{ en.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
                       <sc-if value="{{ en.inArmy }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(53,199,107,0.14);border:1px solid rgba(53,199,107,0.4);color:#5fd98d">Mustered</span></sc-if>
@@ -396,6 +397,7 @@
                   <div class="sc-lib-actions">
                     <button onClick="{{ en.onAdd }}" disabled="{{ !en.recruitable }}" title="{{ en.addTitle }}" aria-label="{{ en.addTitle }}" class="sc-lib-add" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:rgba(147,51,234,0.16);border:1px solid rgba(176,110,247,0.45);color:#d9bafc;font-size:20px;cursor:pointer;clip-path:var(--sc-corner-9)">{{ en.addLabel }}</button>
                     <sc-if value="{{ en.viewSrc }}" hint-placeholder-val="{{ false }}"><button onClick="{{ en.onView }}" class="sc-lib-view" aria-label="View {{ en.name }} model fullscreen">&#10530; View</button></sc-if>
+                    <button onClick="{{ en.onToggle }}" class="sc-lib-close" aria-label="Close {{ en.name }} details"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 10l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Close</button>
                   </div>
                 </div>
                 <sc-if value="{{ en.expanded }}" hint-placeholder-val="{{ false }}">
@@ -1867,7 +1869,7 @@ class Component extends DCLogic {
             addTitle: (u.unique && inArmy) ? 'Already in army' : recruitable ? 'Add unit' : 'Not recruitable under this faction or summoned only',
             tags: (u.tags || []).map(t => ({ name: t, onOpen: (ev) => { ev.stopPropagation(); this.openTag(t); } })),
             detail: expanded ? { ...this.buildDetail(u, null), tags: [] } : null,
-            onToggle: () => this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: !s2.expLib[u.id] } })),
+            onToggle: (ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: !s2.expLib[u.id] } })); },
             recruitable,
             onAdd: (ev) => { ev.stopPropagation(); this.addUnit(u); }
           };

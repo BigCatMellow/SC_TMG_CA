@@ -1139,3 +1139,26 @@ input::placeholder { color: #5b6275; }
 }
 .sc-title-row:not(.sc-title-row--compact) .sc-title-faction-name { line-height: 1.05 !important; }
 .sc-title-row:not(.sc-title-row--compact) .sc-title-faction { max-width: 100%; }
+
+/* Library cards: a visible way to collapse an opened card. */
+.sc-lib-chev { order: 99; flex: 0 0 auto; color: #7c8398; transition: transform .18s; }
+.sc-lib-card--open .sc-lib-chev { transform: rotate(180deg); color: var(--fc-text-tint, #c99af7); }
+.sc-lib-close {
+  display: none;
+  height: 30px;
+  padding: 0 10px;
+  align-items: center;
+  gap: 5px;
+  background: rgba(5,6,10,0.72);
+  border: 1px solid var(--sc-border-input, #2e3446);
+  color: #c8cede;
+  font-family: Rajdhani, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.sc-lib-card--open .sc-lib-close { display: inline-flex; }
+.sc-lib-card--open .sc-lib-actions { z-index: 4; }
+.sc-lib-card--open.sc-lib-card--cutout .sc-lib-figure { width: 50%; right: 8px; }
