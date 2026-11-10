@@ -14,6 +14,12 @@ for(const cls of [
 assert.match(styles,/\.sc-battle-overview\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*1fr\)/s,
   'Battle Tactical and Troops cards should stack full-width');
 assert.match(styles,/max-height:\s*calc\(100dvh/,'sheets fit usable phone viewport');
+assert.match(styles,/\.sc-battle-overview-card\s*\{[^}]*grid-template-columns:\s*minmax\(0,\s*\.9fr\)\s+minmax\(0,\s*1\.1fr\)/s,
+  'Battle cards have an embedded right-hand preview');
+assert.match(styles,/\.sc-battle-preview-row--exhausted\s*\{\s*opacity:\s*\.38;/,
+  'Unavailable tactical cards must fade rather than disappear');
+assert.match(styles,/\.sc-battle-supply-strip--compact\s*\{/,
+  'Deployment supply readout must share header scroll compact state');
 assert.match(styles,/overflow-y:\s*auto/,'long roster and card lists can scroll inside sheet');
 assert.match(styles,/overscroll-behavior:\s*contain/,'modal scrolling stays inside sheet');
 const world={alert(){},scrollY:0,scrollTo(){},addEventListener(){},removeEventListener(){}};
@@ -32,6 +38,27 @@ for(const faction of ['terran','zerg','protoss']){
  const troops=battle.slice(battle.indexOf('    <sc-if value="{{ sheetBattleTroops }}"'));
  assert.equal((inline.match(/class="sc-battle-overview-card sc-battle-overview-card--/g)||[]).length,2,
    file+' only two summary cards');
+ const header=html.slice(html.indexOf('<!-- play HUD, scoreboard layout'),
+   html.indexOf('<!-- ============ BATTLE TAB ============ -->'));
+ const scoreboard=header.indexOf('class="{{ scoreboardClass }}"');
+ const supplyStrip=header.indexOf('class="{{ battleSupplyStripClass }}"');
+ const resources=header.indexOf('class="{{ resourceStripClass }}"');
+ assert.ok(scoreboard>=0 && supplyStrip>scoreboard && resources>supplyStrip,
+   file+' supply readout must sit between scoreboard and build resources');
+ assert.ok(header.slice(scoreboard,supplyStrip).includes('</div></div>'),
+   file+' original scoreboard remains intact');
+ assert.ok(header.includes('<sc-if value="{{ tabIsBattle }}"'),
+   file+' supply strip should only appear in Battle');
+ for(const binding of ['battleSupplyUsed','battleSupplyAvailable','battleSupplyRemaining',
+   'battleSupplyFreeClass','battleSupplyAria','openBattleTroops']){
+   assert.ok(header.includes('{{ '+binding+' }}') || header.includes('onClick="{{ '+binding+' }}"'),
+     file+' Battle-only supply row missing '+binding);
+ }
+ for(const token of ['list="{{ tacticalPreview }}"','list="{{ troopPreview }}"',
+   '{{ item.name }}','{{ item.ready }}','{{ item.total }}','{{ item.count }}',
+   'tacticalPreviewHasMore','troopPreviewHasMore','battleTroopsEmpty']){
+   assert.ok(inline.includes(token),file+' missing dynamic summary preview: '+token);
+ }
  const tacticalPos=inline.indexOf('sc-battle-overview-card--tactical');
  const troopsPos=inline.indexOf('sc-battle-overview-card--troops');
  assert.ok(tacticalPos>=0 && troopsPos>tacticalPos,
@@ -89,6 +116,19 @@ for(const faction of ['terran','zerg','protoss']){
  assert.equal(view().battleCardsReady,1);
  assert.equal(view().battleCardsExhausted,0);
  assert.equal(view().paymentTotal,0);
+ assert.equal(view().tacticalPreview.length,1,'Faction Card should appear in tactical preview');
+ assert.equal(view().tacticalPreview[0].name,view().battleFaction.name);
+ assert.equal(view().tacticalPreview[0].ready,1);
+ assert.equal(view().tacticalPreview[0].total,1);
+ assert.equal(view().battleTroopsEmpty,true);
+ assert.equal(view().troopPreview.length,0);
+ assert.equal(view().battleSupplyUsed,0);
+ assert.equal(view().battleSupplyRemaining,view().battleSupplyAvailable);
+ assert.match(view().battleSupplyAria,/Deployment supply:/);
+ assert.equal(view().battleSupplyStripClass,'sc-battle-supply-strip');
+ c.state.resourcesCompact=true;
+ assert.equal(view().battleSupplyStripClass,'sc-battle-supply-strip sc-battle-supply-strip--compact');
+ c.state.resourcesCompact=false;
  // Available even for an empty army; no energy/actions should disappear.
  view().openBattleTactical();
  assert.equal(view().sheetBattleTactical,true);
@@ -96,6 +136,9 @@ for(const faction of ['terran','zerg','protoss']){
  view().battleFaction.onResource();
  assert.equal(view().battleCardsReady,0);
  assert.equal(view().battleCardsExhausted,1);
+ assert.equal(view().tacticalPreview[0].ready,0);
+ assert.match(view().tacticalPreview[0].className,/--exhausted$/,
+   'Exhausted card must dim on Battle overview');
  assert.ok(view().paymentTotal>0,'Resource payment updates dashboard without closing modal');
  view().finishResourcePayment();
  assert.equal(view().paymentTotal,0,'Pending resources are not banked');
@@ -103,6 +146,27 @@ for(const faction of ['terran','zerg','protoss']){
  view().refreshTactical();
  assert.equal(view().battleCardsReady,1);
  assert.equal(view().battleCardsExhausted,0);
+ assert.equal(view().tacticalPreview[0].ready,1);
+ assert.doesNotMatch(view().tacticalPreview[0].className,/--exhausted/);
+ // Same tactical card selected twice should have one line with correct ready count.
+ const duplicateCard=c.D().TACTICAL_CARDS.find(t=>!t.unique && t.resource);
+ assert.ok(duplicateCard,faction+' nonunique tactical card available');
+ c.state.tactical=[duplicateCard.id,duplicateCard.id];
+ assert.equal(view().battleCardsTotal,3);
+ assert.equal(view().tacticalPreview.length,2);
+ let aggregate=view().tacticalPreview.find(t=>t.name===duplicateCard.name);
+ assert.equal(aggregate.total,2);
+ assert.equal(aggregate.ready,2);
+ view().battleTactical[0].onResource();
+ aggregate=view().tacticalPreview.find(t=>t.name===duplicateCard.name);
+ assert.equal(aggregate.ready,1);
+ assert.equal(aggregate.total,2);
+ view().battleTactical[1].onResource();
+ aggregate=view().tacticalPreview.find(t=>t.name===duplicateCard.name);
+ assert.equal(aggregate.ready,0);
+ assert.match(aggregate.className,/--exhausted$/);
+ view().refreshTactical();
+ c.state.tactical=[];
  view().closeBattlePanel();
  assert.equal(view().sheetBattleTactical,false);
  // Switching between panels opens exactly one.
@@ -122,9 +186,35 @@ for(const faction of ['terran','zerg','protoss']){
  assert.equal(view().battleTroopsTotal,1);
  assert.equal(view().battleTroopsOnTable,0);
  assert.equal(view().battleModelsRemaining,original);
+ assert.equal(view().troopPreview.length,1);
+ assert.equal(view().troopPreview[0].name,unit.name);
+ assert.equal(view().troopPreview[0].count,1);
+ assert.equal(view().troopPreview[0].onTable,0);
+ assert.match(view().troopPreview[0].className,/--reserve$/);
+ // Same unit name is summarized into one row with a visible count.
+ c.state.army=[...c.state.army,{
+   key:'battle-summary-copy',unitId:unit.id,tierIdx,upgs:[],
+   modelsLost:0,deployed:false
+ }];
+ assert.equal(view().troopPreview.length,1);
+ assert.equal(view().troopPreview[0].count,2);
+ assert.equal(view().troopPreview[0].onTable,0);
+ // Restore the single-unit fixture used by the remainder of the old tests.
+ c.state.army=c.state.army.filter(e=>e.key==='battle-summary-test');
  const ev={stopPropagation(){}};
  troop().onToggleDeployed(ev);
  assert.equal(view().battleTroopsOnTable,1,'Deployment summary updates');
+ assert.equal(view().troopPreview[0].onTable,1);
+ assert.match(view().troopPreview[0].className,/--deployed$/);
+ assert.equal(view().battleSupplyUsed,troop().supply);
+ assert.equal(view().battleSupplyRemaining,
+   Math.max(0,view().battleSupplyAvailable-view().battleSupplyUsed));
+ const prevPool=view().battleSupplyAvailable;
+ view().battleSupplyUp();
+ assert.equal(view().battleSupplyAvailable,prevPool+1,
+   'Deployment supply adjustment should update header readout');
+ assert.equal(view().battleSupplyRemaining,
+   Math.max(0,prevPool+1-view().battleSupplyUsed));
  troop().onLossDown(ev);
  assert.equal(view().battleModelsRemaining,original-1,'Casualty summary updates');
  assert.equal(view().battleTroopsTotal,1);
@@ -149,6 +239,8 @@ for(const faction of ['terran','zerg','protoss']){
  troop().onRemove(ev);
  assert.equal(view().battleTroopsTotal,0);
  assert.equal(view().battleEmpty,true);
+ assert.equal(view().battleTroopsEmpty,true);
+ assert.equal(view().troopPreview.length,0);
  assert.equal(view().sheetBattleTroops,true,'Empty-state library link remains accessible');
  view().gotoLibrary();
  assert.equal(c.state.tab,'library');
