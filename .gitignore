@@ -1,2 +1,5 @@
 # Locally generated source-citable agent reference indexes
 agent-rules/generated/
+
+# Generated installable GitHub Pages site
+/dist-pages/
