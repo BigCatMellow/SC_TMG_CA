@@ -117,43 +117,41 @@
         </div>
       </sc-if>
 
-    <div style="padding:14px">
+    <!-- Two concise Battle summaries; details and controls live in their sheets. -->
+    <div class="sc-battle-overview" aria-label="Battle overview">
+      <button class="sc-battle-overview-card sc-battle-overview-card--tactical"
+              onClick="{{ openBattleTactical }}" aria-label="Open Tactical cards and energy">
+        <span class="sc-battle-overview-kicker">Battle management</span>
+        <span class="sc-battle-overview-title">Tactical</span>
+        <span class="sc-battle-overview-value">{{ battleCardsReady }}<span class="sc-battle-overview-total"> / {{ battleCardsTotal }}</span></span>
+        <span class="sc-battle-overview-label">Cards ready</span>
+        <span class="sc-battle-overview-meta">{{ battleCardsExhausted }} exhausted · {{ paymentTotal }} {{ paymentResource }} payment</span>
+        <span class="sc-battle-overview-link">Manage cards &amp; energy <span aria-hidden="true">›</span></span>
+      </button>
+      <button class="sc-battle-overview-card sc-battle-overview-card--troops"
+              onClick="{{ openBattleTroops }}" aria-label="Open Troops deployment and casualties">
+        <span class="sc-battle-overview-kicker">Battle management</span>
+        <span class="sc-battle-overview-title">Troops</span>
+        <span class="sc-battle-overview-value">{{ battleTroopsOnTable }}<span class="sc-battle-overview-total"> / {{ battleTroopsTotal }}</span></span>
+        <span class="sc-battle-overview-label">Units on table</span>
+        <span class="sc-battle-overview-meta">{{ battleModelsRemaining }}/{{ battleModelsTotal }} models · {{ battleSupplyRemaining }} supply left</span>
+        <span class="sc-battle-overview-link">Manage units &amp; supply <span aria-hidden="true">›</span></span>
+      </button>
+    </div>
 
-      <sc-if value="{{ !battleEmpty }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
-          <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#8a91a5">Your Army</span>
-          <button onClick="{{ toggleArmyEdit }}" aria-pressed="{{ editArmy }}" style="min-height:36px;padding:6px 12px;background:{{ editArmyBg }};border:1px solid {{ editArmyBorder }};color:{{ editArmyColor }};font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;clip-path:var(--sc-corner-8)">{{ editArmyLabel }}</button>
-        </div>
-      </sc-if>
-
-      <!-- empty state -->
-      <sc-if value="{{ battleEmpty }}" hint-placeholder-val="{{ false }}">
-        <div style="padding:36px 20px;text-align:center;border:1px dashed var(--sc-border-input);background:rgba(18,21,31,0.6)">
-          <div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#c8cede;margin-bottom:6px">No units to track</div>
-          <div style="font-size:13px;color:#8a91a5;margin-bottom:16px">Add units from the Library, then track deployment, losses, and card abilities here.</div>
-          <button onClick="{{ gotoLibrary }}" style="height:44px;padding:0 20px;background:rgba(180,130,30,0.2);border:1px solid rgba(242,200,96,0.5);color:#fae9c0;font-family:Rajdhani,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;clip-path:var(--sc-corner-8)">Open Library ▸</button>
-        </div>
-      </sc-if>
-
-      <sc-if value="{{ !battleEmpty }}" hint-placeholder-val="{{ false }}">
-        <!-- supply summary -->
-        <div style="margin-bottom:16px;padding:9px 10px;background:var(--sc-card-bg);border:1px solid var(--sc-border-input);clip-path:var(--sc-corner-10);display:flex;align-items:center;gap:10px">
-          <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
-            <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8a91a5;white-space:nowrap">Deploy Supply</span>
-            <button onClick="{{ battleSupplyDown }}" style="width:26px;height:26px;flex:0 0 auto;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:14px;cursor:pointer">−</button>
-            <span style="font-family:'Chakra Petch',sans-serif;font-size:17px;font-weight:700;color:#e9ecf2;min-width:20px;text-align:center">{{ battleSupplyAvailable }}</span>
-            <button onClick="{{ battleSupplyUp }}" style="width:26px;height:26px;flex:0 0 auto;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:14px;cursor:pointer">+</button>
+    <sc-if value="{{ sheetBattleTactical }}" hint-placeholder-val="{{ false }}">
+      <div class="sc-battle-panel-overlay" onClick="{{ closeBattlePanel }}"></div>
+      <div class="sc-battle-panel-position">
+        <section class="sc-battle-panel-dialog" role="dialog" aria-modal="true" aria-label="Tactical management">
+          <div class="sc-battle-panel-header">
+            <div class="sc-battle-panel-heading">
+              <span class="sc-battle-panel-kicker">Battle management</span>
+              <span class="sc-battle-panel-title">Tactical</span>
+              <span class="sc-battle-panel-subtitle">Faction & tactical cards · energy payments</span>
+            </div>
+            <button class="sc-battle-panel-close" onClick="{{ closeBattlePanel }}" aria-label="Close Tactical panel">Done <span aria-hidden="true">×</span></button>
           </div>
-          <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(23,27,40,0.7);border:1px solid #232939;flex:0 0 auto">
-            <span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#8a91a5">Used</span>
-            <span style="font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:#e9ecf2">{{ battleSupplyUsed }}</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(23,27,40,0.7);border:1px solid #232939;flex:0 0 auto">
-            <span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#8a91a5">Left</span>
-            <span style="font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:#5fd98d">{{ battleSupplyRemaining }}</span>
-          </div>
-        </div>
-
+          <div class="sc-battle-panel-scroll">
         <!-- Card abilities and a one-ability resource payment helper.
              Resources are generated/spent immediately; they cannot be banked. -->
         <div style="margin-bottom:16px">
@@ -221,6 +219,60 @@
           </div>
         </div>
 
+
+          </div>
+        </section>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ sheetBattleTroops }}" hint-placeholder-val="{{ false }}">
+      <div class="sc-battle-panel-overlay" onClick="{{ closeBattlePanel }}"></div>
+      <div class="sc-battle-panel-position">
+        <section class="sc-battle-panel-dialog" role="dialog" aria-modal="true" aria-label="Troops management">
+          <div class="sc-battle-panel-header">
+            <div class="sc-battle-panel-heading">
+              <span class="sc-battle-panel-kicker">Battle management</span>
+              <span class="sc-battle-panel-title">Troops</span>
+              <span class="sc-battle-panel-subtitle">Deployment · casualties · army editing</span>
+            </div>
+            <button class="sc-battle-panel-close" onClick="{{ closeBattlePanel }}" aria-label="Close Troops panel">Done <span aria-hidden="true">×</span></button>
+          </div>
+          <div class="sc-battle-panel-scroll">
+      <sc-if value="{{ !battleEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
+          <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#8a91a5">Your Army</span>
+          <button onClick="{{ toggleArmyEdit }}" aria-pressed="{{ editArmy }}" style="min-height:36px;padding:6px 12px;background:{{ editArmyBg }};border:1px solid {{ editArmyBorder }};color:{{ editArmyColor }};font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;clip-path:var(--sc-corner-8)">{{ editArmyLabel }}</button>
+        </div>
+      </sc-if>
+
+      <!-- empty state -->
+      <sc-if value="{{ battleEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="padding:36px 20px;text-align:center;border:1px dashed var(--sc-border-input);background:rgba(18,21,31,0.6)">
+          <div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#c8cede;margin-bottom:6px">No units to track</div>
+          <div style="font-size:13px;color:#8a91a5;margin-bottom:16px">Add units from the Library, then track deployment, losses, and card abilities here.</div>
+          <button onClick="{{ gotoLibrary }}" style="height:44px;padding:0 20px;background:rgba(180,130,30,0.2);border:1px solid rgba(242,200,96,0.5);color:#fae9c0;font-family:Rajdhani,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;clip-path:var(--sc-corner-8)">Open Library ▸</button>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ !battleEmpty }}" hint-placeholder-val="{{ false }}">
+        <!-- supply summary -->
+        <div style="margin-bottom:16px;padding:9px 10px;background:var(--sc-card-bg);border:1px solid var(--sc-border-input);clip-path:var(--sc-corner-10);display:flex;align-items:center;gap:10px">
+          <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
+            <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8a91a5;white-space:nowrap">Deploy Supply</span>
+            <button onClick="{{ battleSupplyDown }}" style="width:26px;height:26px;flex:0 0 auto;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:14px;cursor:pointer">−</button>
+            <span style="font-family:'Chakra Petch',sans-serif;font-size:17px;font-weight:700;color:#e9ecf2;min-width:20px;text-align:center">{{ battleSupplyAvailable }}</span>
+            <button onClick="{{ battleSupplyUp }}" style="width:26px;height:26px;flex:0 0 auto;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:14px;cursor:pointer">+</button>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(23,27,40,0.7);border:1px solid #232939;flex:0 0 auto">
+            <span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#8a91a5">Used</span>
+            <span style="font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:#e9ecf2">{{ battleSupplyUsed }}</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(23,27,40,0.7);border:1px solid #232939;flex:0 0 auto">
+            <span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#8a91a5">Left</span>
+            <span style="font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:#5fd98d">{{ battleSupplyRemaining }}</span>
+          </div>
+        </div>
+
         <!-- units -->
         <sc-for list="{{ battleGroups }}" as="grp" hint-placeholder-count="2">
           <div style="margin-bottom:16px">
@@ -255,15 +307,16 @@
                       <button onClick="{{ u.onLossUp }}" style="width:28px;height:28px;background:rgba(180,130,30,0.18);border:1px solid rgba(242,200,96,0.4);color:#fae9c0;font-size:14px;cursor:pointer">+</button>
                     </div>
                   </div>
-                  <sc-if value="{{ u.expanded }}" hint-placeholder-val="{{ false }}">
-                    <div style="position:relative;border-top:1px solid #1f2430;padding:12px">
-                      <dc-import name="UnitDetail" detail="{{ u.detail }}" hint-size="100%,300px"></dc-import>
                       <sc-if value="{{ editArmy }}" hint-placeholder-val="{{ false }}">
                         <div style="display:flex;gap:8px;margin-top:12px">
                           <button onClick="{{ u.onChangeTier }}" style="flex:1;min-height:40px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Change Tier</button>
                           <button onClick="{{ u.onRemove }}" style="flex:1;min-height:40px;background:rgba(240,74,74,0.1);border:1px solid rgba(240,74,74,0.35);color:#f08a8a;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Remove</button>
                         </div>
                       </sc-if>
+                  <sc-if value="{{ u.expanded }}" hint-placeholder-val="{{ false }}">
+                    <div style="position:relative;border-top:1px solid #1f2430;padding:12px">
+                      <dc-import name="UnitDetail" detail="{{ u.detail }}" hint-size="100%,300px"></dc-import>
+
                     </div>
                   </sc-if>
                 </div>
@@ -272,7 +325,12 @@
           </div>
         </sc-for>
       </sc-if>
-    </div>
+
+          </div>
+        </section>
+      </div>
+    </sc-if>
+
   </sc-if>
 
   <!-- ============ LIBRARY TAB ============ -->
@@ -688,6 +746,7 @@ class Component extends DCLogic {
     resourcesCompact: false,
     tab: 'faction',
     editArmy: false,
+    battlePanel: null, // 'tactical' | 'troops'; transient UI, never saved
     play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0 },
     scaleId: 'standard',
     factionId: 'daelaam',
@@ -1742,7 +1801,7 @@ class Component extends DCLogic {
         bg: active ? 'rgba(180,130,30,0.1)' : 'transparent',
         fg: active ? '#f6d98c' : '#7c8398',
         tick: active ? '#f2c860' : 'transparent',
-        onSelect: () => { this.setState({ tab: t.id, editArmy: false }); window.scrollTo(0, 0); }
+        onSelect: () => { this.setState({ tab: t.id, editArmy: false, battlePanel: null }); window.scrollTo(0, 0); }
       };
     });
 
@@ -1811,6 +1870,18 @@ class Component extends DCLogic {
       hasRosterWarnings: rosterWarnings.length > 0, rosterWarnings,
       // battle
       battleEmpty: battleUnits.length === 0, battleGroups,
+      battleCardsTotal: battleCards.length,
+      battleCardsReady: battleCards.filter(card => !card.tapped).length,
+      battleCardsExhausted: battleCards.filter(card => card.tapped).length,
+      battleTroopsTotal: battleUnits.length,
+      battleTroopsOnTable: battleUnits.filter(u => u.deployed && !u.wipedOut).length,
+      battleModelsRemaining: battleUnits.reduce((total, u) => total + u.remaining, 0),
+      battleModelsTotal: battleUnits.reduce((total, u) => total + u.startingModels, 0),
+      sheetBattleTactical: st.tab === 'battle' && st.battlePanel === 'tactical',
+      sheetBattleTroops: st.tab === 'battle' && st.battlePanel === 'troops',
+      openBattleTactical: () => this.setState({ battlePanel: 'tactical', editArmy: false }),
+      openBattleTroops: () => this.setState({ battlePanel: 'troops', editArmy: false }),
+      closeBattlePanel: () => this.setState({ battlePanel: null, editArmy: false }),
       editArmy: st.editArmy, editArmyLabel: st.editArmy ? 'Done Editing' : 'Edit Army',
       editArmyBg: st.editArmy ? 'rgba(56,211,232,0.13)' : '#1a1f2e',
       editArmyBorder: st.editArmy ? 'rgba(56,211,232,0.6)' : 'var(--sc-border-input)',
@@ -1822,7 +1893,7 @@ class Component extends DCLogic {
       paymentTotal, paymentResource, hasPendingPayment: paymentTotal > 0,
       finishResourcePayment: () => this.finishResourcePayment(),
       refreshTactical: () => this.refreshTactical(),
-      gotoLibrary: () => this.setState({ tab: 'library' }),
+      gotoLibrary: () => this.setState({ tab: 'library', battlePanel: null, editArmy: false }),
       exportArmySheet: () => this.exportArmySheet(),
       // saved rosters
       openRosters: () => this.setState({ sheet: { type: 'rosters' }, newRosterName: '', confirmDeleteRosterId: null }),
