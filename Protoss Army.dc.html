@@ -105,124 +105,6 @@
 
   </div>
 
-  <!-- ============ ROSTER TAB ============ -->
-  <sc-if value="{{ tabIsRoster }}" hint-placeholder-val="{{ true }}">
-      <sc-if value="{{ hasRosterWarnings }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-bottom:12px;padding:10px 12px;border:1px solid rgba(240,74,74,.5);background:rgba(240,74,74,.08)">
-          <div style="font-family:Rajdhani,sans-serif;font-size:13px;letter-spacing:.06em;font-weight:700;color:#f08a8a">Roster needs correction before battle</div>
-          <sc-for list="{{ rosterWarnings }}" as="warning" hint-placeholder-count="2">
-            <div style="font-size:12px;color:#f6b3b3;line-height:1.5;padding-top:4px">{{ warning }}</div>
-          </sc-for>
-        </div>
-      </sc-if>
-
-    <div style="padding:14px">
-
-      <!-- scale + faction row -->
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        <div style="flex:1;display:flex;background:var(--sc-card-bg);border:1px solid var(--sc-border-neutral);padding:3px;gap:2px">
-          <sc-for list="{{ scales }}" as="sc" hint-placeholder-count="3">
-            <button onClick="{{ sc.onSelect }}" style="flex:1;height:36px;border:none;background:{{ sc.bg }};color:{{ sc.fg }};font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">{{ sc.name }}</button>
-          </sc-for>
-        </div>
-      </div>
-
-      <!-- brood (faction) selector strip -->
-      <button onClick="{{ gotoFaction }}" style="width:100%;display:flex;align-items:center;gap:10px;padding:10px 12px;margin-bottom:12px;background:linear-gradient(90deg,rgba(180,130,30,0.14),rgba(180,130,30,0.03));border:1px solid rgba(242,200,96,0.35);color:#e9ecf2;cursor:pointer;text-align:left;clip-path:var(--sc-corner-10)">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="flex:0 0 auto;color:#f2c860"><path d="M8 1l2 4 4 1-3 3 .8 4L8 11l-3.8 2 .8-4-3-3 4-1 2-4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path></svg>
-        <span style="flex:1;min-width:0">
-          <span style="display:block;font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5">Nexus Card</span>
-          <span style="display:block;font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.04em">{{ factionName }}</span>
-        </span>
-        <span style="display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end">
-          <sc-for list="{{ slotPills }}" as="sp" hint-placeholder-count="4">
-            <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;padding:3px 7px;background:var(--sc-card-bg);border:1px solid {{ sp.bd }};color:{{ sp.fg }}">{{ sp.label }}</span>
-          </sc-for>
-        </span>
-      </button>
-
-      <!-- empty state -->
-      <sc-if value="{{ rosterEmpty }}" hint-placeholder-val="{{ false }}">
-        <div style="padding:36px 20px;text-align:center;border:1px dashed var(--sc-border-input);background:rgba(18,21,31,0.6)">
-          <div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#c8cede;margin-bottom:6px">No units mustered</div>
-          <div style="font-size:13px;color:#8a91a5;margin-bottom:16px">The Golden Armada stands ready, Hierarch. Add units from the Library to begin forging your host.</div>
-          <button onClick="{{ gotoLibrary }}" style="height:44px;padding:0 20px;background:rgba(180,130,30,0.2);border:1px solid rgba(242,200,96,0.5);color:#fae9c0;font-family:Rajdhani,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;clip-path:var(--sc-corner-8)">Open Library ▸</button>
-        </div>
-      </sc-if>
-
-      <!-- roster groups -->
-      <sc-for list="{{ rosterGroups }}" as="grp" hint-placeholder-count="2">
-        <div style="margin-bottom:16px">
-          <div style="display:flex;align-items:center;gap:8px;padding:0 2px 8px">
-            <span style="width:8px;height:8px;background:{{ grp.color }};clip-path:var(--sc-diamond)"></span>
-            <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ grp.color }}">{{ grp.role }}</span>
-            <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
-            <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;color:#8a91a5">{{ grp.count }} · {{ grp.cost }}m</span>
-          </div>
-          <div style="display:grid;gap:8px">
-            <sc-for list="{{ grp.entries }}" as="en" hint-placeholder-count="2">
-              <div style="position:relative;background:var(--sc-card-bg);border:1px solid {{ en.borderColor }};clip-path:var(--sc-corner-12)">
-                <sc-if value="{{ en.portrait }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;pointer-events:none;opacity:0.5;overflow:hidden"><img src="{{ en.portrait }}" onError="{{ en.onPortraitError }}" alt="" aria-hidden="true" style="{{ en.portraitImgStyle }}"></span><span style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(11,14,23,0.88) 20%,rgba(11,14,23,0.4) 46%,rgba(11,14,23,0.08) 72%,rgba(11,14,23,0.3) 100%)"></span></sc-if>
-                <div onClick="{{ en.onToggle }}" role="button" style="position:relative;display:flex;align-items:center;gap:10px;padding:12px;cursor:pointer;min-height:44px">
-                  <div style="position:relative;flex:1;min-width:0">
-                    <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
-                      <span style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ en.name }}</span>
-                      <sc-if value="{{ en.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
-                    </div>
-                    <div style="font-size:12px;color:#8a91a5;margin-top:1px">{{ en.tierLabel }}</div>
-                  </div>
-                  <div style="position:relative;text-align:right;flex:0 0 auto">
-                    <div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;color:#f2c14e;line-height:1.2">{{ en.cost }}</div>
-                    <div style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#8a91a5">Sup {{ en.supply }}</div>
-                  </div>
-                  <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="position:relative;flex:0 0 auto;transform:rotate({{ en.chev }}deg);transition:transform 0.18s"><path d="M6 4l4 4-4 4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                </div>
-                <sc-if value="{{ en.expanded }}" hint-placeholder-val="{{ false }}">
-                  <div style="position:relative;border-top:1px solid #1f2430;padding:12px">
-                    <dc-import name="UnitDetail" detail="{{ en.detail }}" hint-size="100%,300px"></dc-import>
-                    <div style="display:flex;gap:8px;margin-top:12px">
-                      <button onClick="{{ en.onChangeTier }}" style="flex:1;height:40px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Change Tier</button>
-                      <button onClick="{{ en.onRemove }}" style="flex:1;height:40px;background:rgba(240,74,74,0.1);border:1px solid rgba(240,74,74,0.35);color:#f08a8a;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Remove</button>
-                    </div>
-                  </div>
-                </sc-if>
-              </div>
-            </sc-for>
-          </div>
-        </div>
-      </sc-for>
-
-      <!-- tactical summary on roster -->
-      <sc-if value="{{ hasTactical }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-bottom:16px">
-          <div style="display:flex;align-items:center;gap:8px;padding:0 2px 8px">
-            <span style="width:8px;height:8px;background:#38d3e8;clip-path:var(--sc-diamond)"></span>
-            <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#38d3e8">Tactical Cards</span>
-            <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
-            <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;color:#8a91a5">{{ tacticalCount }} · {{ gasUsed }}g</span>
-          </div>
-          <div style="display:grid;gap:6px">
-            <sc-for list="{{ rosterTactical }}" as="tc" hint-placeholder-count="2">
-              <button onClick="{{ tc.onOpen }}" style="display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;background:var(--sc-card-bg);border:1px solid var(--sc-border-neutral);color:#e9ecf2;cursor:pointer;text-align:left">
-                <span style="flex:1;font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;letter-spacing:0.03em">{{ tc.name }}</span>
-                <span style="font-size:12px;color:#8a91a5">{{ tc.summary }}</span>
-                <span style="font-family:Rajdhani,sans-serif;font-size:13px;font-weight:700;color:#38d3e8;flex:0 0 auto">{{ tc.cost }}g</span>
-              </button>
-            </sc-for>
-          </div>
-        </div>
-      </sc-if>
-
-      <!-- export / saved rosters -->
-      <div style="display:flex;gap:8px">
-        <sc-if value="{{ !rosterEmpty }}" hint-placeholder-val="{{ false }}">
-          <button onClick="{{ exportArmySheet }}" style="flex:1;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer">Export Army Sheet</button>
-        </sc-if>
-        <button onClick="{{ openRosters }}" style="flex:1;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer">Saved Rosters{{ savedRosterCountTag }}</button>
-      </div>
-    </div>
-  </sc-if>
-
   <!-- ============ BATTLE TAB ============ -->
   <sc-if value="{{ tabIsBattle }}" hint-placeholder-val="{{ false }}">
       <sc-if value="{{ hasRosterWarnings }}" hint-placeholder-val="{{ false }}">
@@ -236,11 +118,18 @@
 
     <div style="padding:14px">
 
+      <sc-if value="{{ !battleEmpty }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
+          <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#8a91a5">Your Army</span>
+          <button onClick="{{ toggleArmyEdit }}" aria-pressed="{{ editArmy }}" style="min-height:36px;padding:6px 12px;background:{{ editArmyBg }};border:1px solid {{ editArmyBorder }};color:{{ editArmyColor }};font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;clip-path:var(--sc-corner-8)">{{ editArmyLabel }}</button>
+        </div>
+      </sc-if>
+
       <!-- empty state -->
       <sc-if value="{{ battleEmpty }}" hint-placeholder-val="{{ false }}">
         <div style="padding:36px 20px;text-align:center;border:1px dashed var(--sc-border-input);background:rgba(18,21,31,0.6)">
           <div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#c8cede;margin-bottom:6px">No units to track</div>
-          <div style="font-size:13px;color:#8a91a5;margin-bottom:16px">Muster units in the Roster tab first, then track losses and deployment here during play.</div>
+          <div style="font-size:13px;color:#8a91a5;margin-bottom:16px">Add units from the Library, then track deployment, losses, and card abilities here.</div>
           <button onClick="{{ gotoLibrary }}" style="height:44px;padding:0 20px;background:rgba(180,130,30,0.2);border:1px solid rgba(242,200,96,0.5);color:#fae9c0;font-family:Rajdhani,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;clip-path:var(--sc-corner-8)">Open Library ▸</button>
         </div>
       </sc-if>
@@ -368,6 +257,12 @@
                   <sc-if value="{{ u.expanded }}" hint-placeholder-val="{{ false }}">
                     <div style="position:relative;border-top:1px solid #1f2430;padding:12px">
                       <dc-import name="UnitDetail" detail="{{ u.detail }}" hint-size="100%,300px"></dc-import>
+                      <sc-if value="{{ editArmy }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;gap:8px;margin-top:12px">
+                          <button onClick="{{ u.onChangeTier }}" style="flex:1;min-height:40px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Change Tier</button>
+                          <button onClick="{{ u.onRemove }}" style="flex:1;min-height:40px;background:rgba(240,74,74,0.1);border:1px solid rgba(240,74,74,0.35);color:#f08a8a;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Remove</button>
+                        </div>
+                      </sc-if>
                     </div>
                   </sc-if>
                 </div>
@@ -480,6 +375,16 @@
   <!-- ============ BROOD (FACTION) TAB ============ -->
   <sc-if value="{{ tabIsFaction }}" hint-placeholder-val="{{ false }}">
     <div style="padding:14px">
+      <div style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5;margin:0 2px 8px">Engagement Size</div>
+      <!-- engagement size: moved from retired Roster tab -->
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <div style="flex:1;display:flex;background:var(--sc-card-bg);border:1px solid var(--sc-border-neutral);padding:3px;gap:2px">
+          <sc-for list="{{ scales }}" as="sc" hint-placeholder-count="3">
+            <button onClick="{{ sc.onSelect }}" style="flex:1;height:36px;border:none;background:{{ sc.bg }};color:{{ sc.fg }};font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">{{ sc.name }}</button>
+          </sc-for>
+        </div>
+      </div>
+
       <div style="font-size:13px;color:#8a91a5;margin:0 2px 12px">Your Nexus Card defines base unit slots and grants faction abilities. Exactly one is active.</div>
       <div style="display:grid;gap:10px">
         <sc-for list="{{ factionCards }}" as="fc" hint-placeholder-count="2">
@@ -550,7 +455,7 @@
       <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="5">
         <button onClick="{{ tb.onSelect }}" style="flex:1;height:60px;border:none;background:{{ tb.bg }};color:{{ tb.fg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;position:relative">
           <span style="position:absolute;top:0;left:20%;right:20%;height:2px;background:{{ tb.tick }}"></span>
-          <span style="display:grid;place-items:center;width:20px;height:20px"><sc-if value="{{ tb.isRoster }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1.5l5 2.6v4.2c0 3-2.2 5.3-5 6.2-2.8-.9-5-3.2-5-6.2V4.1L8 1.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isBattle }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 14V2M4 2h8l-2 3 2 3H4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isLibrary }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="2" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect></svg></sc-if><sc-if value="{{ tb.isTactics }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"></circle><circle cx="8" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4"></circle><path d="M8 2v2.5M8 11.5V14M2 8h2.5M11.5 8H14" stroke="currentColor" stroke-width="1.4"></path></svg></sc-if><sc-if value="{{ tb.isFaction }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4 4 1-3 3 .8 4L8 11l-3.8 2 .8-4-3-3 4-1 2-4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isCodex }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h7.5A2.5 2.5 0 0113 5v8.5H5.5A2.5 2.5 0 013 11V2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M6 5.5h4M6 8h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if></span>
+          <span style="display:grid;place-items:center;width:20px;height:20px"><sc-if value="{{ tb.isBattle }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 14V2M4 2h8l-2 3 2 3H4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isLibrary }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="2" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect></svg></sc-if><sc-if value="{{ tb.isTactics }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"></circle><circle cx="8" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4"></circle><path d="M8 2v2.5M8 11.5V14M2 8h2.5M11.5 8H14" stroke="currentColor" stroke-width="1.4"></path></svg></sc-if><sc-if value="{{ tb.isFaction }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4 4 1-3 3 .8 4L8 11l-3.8 2 .8-4-3-3 4-1 2-4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isCodex }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h7.5A2.5 2.5 0 0113 5v8.5H5.5A2.5 2.5 0 013 11V2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M6 5.5h4M6 8h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if></span>
           <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase">{{ tb.label }}</span>
         </button>
       </sc-for>
@@ -739,7 +644,8 @@ class Component extends DCLogic {
   state = {
     ready: false,
     resourcesCompact: false,
-    tab: 'roster',
+    tab: 'faction',
+    editArmy: false,
     play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0 },
     scaleId: 'standard',
     factionId: 'daelaam',
@@ -1574,7 +1480,13 @@ class Component extends DCLogic {
         modelLossLabel: remaining + ' / ' + startingModels + ' models',
         onLossDown: (ev) => { ev.stopPropagation(); this.setModelsLost(e.key, 1); },
         onLossUp: (ev) => { ev.stopPropagation(); this.setModelsLost(e.key, -1); },
-        onToggleDeployed: (ev) => { ev.stopPropagation(); this.toggleDeployed(e.key); }
+        onToggleDeployed: (ev) => { ev.stopPropagation(); this.toggleDeployed(e.key); },
+        onRemove: (ev) => { ev.stopPropagation(); this.setState(s2 => ({
+          army: s2.army.filter(x => x.key !== e.key)
+        }), () => this.save()); },
+        onChangeTier: (ev) => { ev.stopPropagation(); this.setState({
+          sheet: { type: 'tier', unitId: unit.id, mode: 'change', entryKey: e.key }
+        }); }
       };
     }).filter(Boolean);
     const battleSupplyUsed = battleUnits.reduce((s, u) => s + (u.deployed ? u.supply : 0), 0);
@@ -1762,17 +1674,17 @@ class Component extends DCLogic {
     // tabs
     const tabDefs = [
       { id: 'faction', label: 'Nexus' }, { id: 'library', label: 'Library' }, { id: 'tactics', label: 'Tactics' },
-      { id: 'roster', label: 'Roster' }, { id: 'battle', label: 'Battle' }, { id: 'codex', label: 'Codex' }
+      { id: 'battle', label: 'Battle' }, { id: 'codex', label: 'Codex' }
     ];
     const tabs = tabDefs.map(t => {
       const active = st.tab === t.id;
       return {
         label: t.label,
-        isRoster: t.id === 'roster', isBattle: t.id === 'battle', isLibrary: t.id === 'library', isTactics: t.id === 'tactics', isFaction: t.id === 'faction', isCodex: t.id === 'codex',
+        isBattle: t.id === 'battle', isLibrary: t.id === 'library', isTactics: t.id === 'tactics', isFaction: t.id === 'faction', isCodex: t.id === 'codex',
         bg: active ? 'rgba(180,130,30,0.1)' : 'transparent',
         fg: active ? '#f6d98c' : '#7c8398',
         tick: active ? '#f2c860' : 'transparent',
-        onSelect: () => { this.setState({ tab: t.id }); window.scrollTo(0, 0); }
+        onSelect: () => { this.setState({ tab: t.id, editArmy: false }); window.scrollTo(0, 0); }
       };
     });
 
@@ -1829,19 +1741,23 @@ class Component extends DCLogic {
       supplyUsed: totals.supply,
       // tabs
       tabs,
-      tabIsRoster: st.tab === 'roster', tabIsBattle: st.tab === 'battle', tabIsLibrary: st.tab === 'library', tabIsTactics: st.tab === 'tactics',
+      tabIsBattle: st.tab === 'battle', tabIsLibrary: st.tab === 'library', tabIsTactics: st.tab === 'tactics',
       resourceStripClass: st.resourcesCompact ? 'sc-resource-strip sc-resource-strip--compact' : 'sc-resource-strip',
       slotStripClass: st.resourcesCompact ? 'sc-slot-strip sc-slot-strip--compact' : 'sc-slot-strip',
       scoreboardClass: st.resourcesCompact ? 'sc-scoreboard sc-scoreboard--compact' : 'sc-scoreboard',
       titleHeaderClass: st.resourcesCompact ? 'sc-title-row sc-title-row--compact' : 'sc-title-row',
       tabIsFaction: st.tab === 'faction', tabIsCodex: st.tab === 'codex',
       // roster
-      scales, slotPills, roleSlots,
-      rosterEmpty: st.army.length === 0, rosterGroups,
+      scales, roleSlots,
+      rosterEmpty: st.army.length === 0,
       hasRosterWarnings: rosterWarnings.length > 0, rosterWarnings,
-      hasTactical: rosterTactical.length > 0, rosterTactical, tacticalCount: rosterTactical.length,
       // battle
       battleEmpty: battleUnits.length === 0, battleGroups,
+      editArmy: st.editArmy, editArmyLabel: st.editArmy ? 'Done Editing' : 'Edit Army',
+      editArmyBg: st.editArmy ? 'rgba(56,211,232,0.13)' : '#1a1f2e',
+      editArmyBorder: st.editArmy ? 'rgba(56,211,232,0.6)' : 'var(--sc-border-input)',
+      editArmyColor: st.editArmy ? '#b6edf3' : '#c8cede',
+      toggleArmyEdit: () => this.setState(s2 => ({ editArmy: !s2.editArmy })),
       battleSupplyAvailable: st.battleSupplyAvailable, battleSupplyUsed, battleSupplyRemaining,
       battleSupplyUp: () => this.bumpBattleSupply(1), battleSupplyDown: () => this.bumpBattleSupply(-1),
       hasBattleTactical: battleTactical.length > 0, battleTactical, battleFaction, battleCards, anyTapped,
@@ -1849,7 +1765,6 @@ class Component extends DCLogic {
       finishResourcePayment: () => this.finishResourcePayment(),
       refreshTactical: () => this.refreshTactical(),
       gotoLibrary: () => this.setState({ tab: 'library' }),
-      gotoFaction: () => this.setState({ tab: 'faction' }),
       exportArmySheet: () => this.exportArmySheet(),
       // saved rosters
       savedRosterCountTag: st.savedRosters.length ? ' (' + st.savedRosters.length + ')' : '',
