@@ -8,10 +8,9 @@
 <body>
 <x-dc>
 <helmet>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#05060a">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Chakra+Petch:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./vendor/fonts.css">
   <link rel="stylesheet" href="./shared-styles.css">
   <style>
     :root {
@@ -48,8 +47,9 @@
           <div class="sc-title-faction" style="font-family:Rajdhani,sans-serif;font-size:var(--sc-title-faction-size,12px);font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:#62a9f7">{{ factionName }}</div>
         </div>
       </div>
-      <button onClick="{{ openRosters }}" aria-label="Army management" title="Army management: export, save and load rosters" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#c8cede;background:#141824;border:1px solid var(--sc-border-neutral);cursor:pointer;clip-path:var(--sc-corner-8)">
-        <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8m0 0L5 7m3 3l3-3M3 12.5h10" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <sc-if value="{{ hasRosterWarnings }}" hint-placeholder-val="{{ false }}"><button onClick="{{ openIssues }}" class="sc-issue-chip" aria-label="{{ rosterIssueCount }} roster issues"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.2L14.5 13.5h-13L8 2.2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><path d="M8 6.5v3.2M8 11.6v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>{{ rosterIssueCount }}</button></sc-if>
+      <button onClick="{{ openRosters }}" aria-label="Rosters: save, load and export" title="Rosters: save, load and export" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#c8cede;background:#141824;border:1px solid var(--sc-border-neutral);cursor:pointer;clip-path:var(--sc-corner-8)">
+        <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="5.5" width="11" height="8" stroke="currentColor" stroke-width="1.5"></rect><path d="M4.5 3.5h7M6.5 1.8h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
       </button>
       <button onClick="{{ openSearch }}" aria-label="Search everything" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#c8cede;background:#141824;border:1px solid var(--sc-border-neutral);cursor:pointer;clip-path:var(--sc-corner-8)">
         <svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.4" stroke="currentColor" stroke-width="1.6"></circle><path d="M10.4 10.4L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
@@ -114,7 +114,7 @@
         </div>
       </div>
       <!-- Role slots come from the selected faction and tactical cards. -->
-      <div class="{{ slotStripClass }}" aria-label="Army role slot limits">
+      <div class="{{ slotStripClass }}" aria-label="Army role slot limits" style="grid-template-columns:repeat({{ slotCols }},minmax(0,1fr))">
         <sc-for list="{{ roleSlots }}" as="sl" hint-placeholder-count="5">
           <div class="sc-slot-cell" title="{{ sl.accessibilityLabel }}" aria-label="{{ sl.accessibilityLabel }}">
             <span class="sc-slot-role">
@@ -132,10 +132,13 @@
   <!-- ============ BATTLE TAB ============ -->
   <sc-if value="{{ tabIsBattle }}" hint-placeholder-val="{{ false }}">
       <sc-if value="{{ hasRosterWarnings }}" hint-placeholder-val="{{ false }}">
-        <div style="margin-bottom:12px;padding:10px 12px;border:1px solid rgba(240,74,74,.5);background:rgba(240,74,74,.08)">
-          <div style="font-family:Rajdhani,sans-serif;font-size:13px;letter-spacing:.06em;font-weight:700;color:#f08a8a">Roster needs correction before battle</div>
-          <sc-for list="{{ rosterWarnings }}" as="warning" hint-placeholder-count="2">
-            <div style="font-size:12px;color:#f6b3b3;line-height:1.5;padding-top:4px">{{ warning }}</div>
+        <div class="sc-roster-alert" role="alert">
+          <div class="sc-roster-alert-title">Roster needs correction before battle</div>
+          <sc-for list="{{ rosterIssues }}" as="issue" hint-placeholder-count="2">
+            <div class="sc-roster-alert-row">
+              <span class="sc-roster-alert-text">{{ issue.text }}</span>
+              <button onClick="{{ issue.onFix }}" class="sc-roster-alert-fix">{{ issue.fixLabel }}</button>
+            </div>
           </sc-for>
         </div>
       </sc-if>
@@ -162,32 +165,6 @@
           </sc-for>
           <sc-if value="{{ tacticalPreviewHasMore }}" hint-placeholder-val="{{ false }}">
             <span class="sc-battle-preview-more">+{{ tacticalPreviewMore }} more cards</span>
-          </sc-if>
-        </span>
-      </button>
-      <button class="sc-battle-overview-card sc-battle-overview-card--troops"
-              onClick="{{ openBattleTroops }}" aria-label="Open Troops deployment and casualties">
-        <span class="sc-battle-overview-main">
-          <span class="sc-battle-overview-kicker">Battle management</span>
-          <span class="sc-battle-overview-title">Troops</span>
-          <span class="sc-battle-overview-value">{{ battleTroopsOnTable }}<span class="sc-battle-overview-total"> / {{ battleTroopsTotal }}</span></span>
-          <span class="sc-battle-overview-label">Units on table</span>
-          <span class="sc-battle-overview-meta">{{ battleModelsRemaining }}/{{ battleModelsTotal }} models · {{ battleSupplyRemaining }} supply left</span>
-          <span class="sc-battle-overview-link">Manage units &amp; supply <span aria-hidden="true">›</span></span>
-        </span>
-        <span class="sc-battle-overview-side" aria-hidden="true">
-          <span class="sc-battle-preview-heading">Army roster <span>Models</span></span>
-          <sc-if value="{{ battleTroopsEmpty }}" hint-placeholder-val="{{ false }}">
-            <span class="sc-battle-preview-empty">No units yet — add them in Library</span>
-          </sc-if>
-          <sc-for list="{{ troopPreview }}" as="item" hint-placeholder-count="4">
-            <span class="{{ item.className }}">
-              <span class="sc-battle-preview-name">{{ item.name }}</span>
-              <span class="sc-battle-preview-count">{{ item.modelsRemaining }}</span>
-            </span>
-          </sc-for>
-          <sc-if value="{{ troopPreviewHasMore }}" hint-placeholder-val="{{ false }}">
-            <span class="sc-battle-preview-more">+{{ troopPreviewMore }} more unit types</span>
           </sc-if>
         </span>
       </button>
@@ -225,7 +202,14 @@
                 <button onClick="{{ finishResourcePayment }}" class="sc-battle-payment-finish">Finish payment</button>
               </sc-if>
             </div>
-            <div class="sc-battle-payment-hint">Exhaust Ready cards to pay a single ability. Unused energy is lost, not saved for later.</div>
+            <div class="sc-battle-payment-target">
+              <span class="sc-battle-payment-caption">Ability cost</span>
+              <button onClick="{{ paymentTargetDown }}" class="sc-mini-step" aria-label="Lower ability cost">−</button>
+              <span class="sc-battle-payment-target-value">{{ paymentTarget }}</span>
+              <button onClick="{{ paymentTargetUp }}" class="sc-mini-step" aria-label="Raise ability cost">+</button>
+              <span class="{{ paymentStatusClass }}">{{ paymentStatus }}</span>
+            </div>
+            <div class="sc-battle-payment-hint">1 · Set the cost &nbsp;2 · Exhaust Ready cards to pay &nbsp;3 · Resolve the ability, then Finish. Unused energy is lost, not saved.</div>
           </div>
           <div style="display:grid;gap:8px">
             <sc-for list="{{ battleCards }}" as="tc" hint-placeholder-count="3">
@@ -247,25 +231,28 @@
                   <div class="sc-battle-card-abilities">
                     <sc-for list="{{ tc.abilities }}" as="ab" hint-placeholder-count="2">
                       <div class="sc-battle-card-ability">
-                        <div class="sc-battle-card-ability-meta">{{ ab.meta }}</div>
-                        <div class="sc-battle-card-ability-name">{{ ab.name }}</div>
-                        <div class="sc-battle-card-ability-description">{{ ab.description }}</div>
+                        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px">
+                          <span class="sc-phase-chip" style="background:{{ ab.phBg }};color:{{ ab.phFg }}">{{ ab.phaseShort }}</span>
+                          <span class="sc-battle-card-ability-name">{{ ab.name }}</span>
+                          <span style="font-size:11px;color:#8a91a5">{{ ab.type }}</span>
+                        </div>
+                        <div class="sc-battle-card-ability-description"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-kw-link">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
                       </div>
                     </sc-for>
                   </div>
                 </sc-if>
                 <div class="sc-battle-card-actions">
-                  <sc-if value="{{ !tc.tapped && tc.hasResource }}" hint-placeholder-val="{{ true }}">
-                    <button onClick="{{ tc.onResource }}" class="sc-battle-card-action sc-battle-card-action--resource">Exhaust for {{ tc.resource }}</button>
+                  <sc-if value="{{ tc.showResource }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ tc.onResource }}" class="sc-battle-card-action sc-battle-card-action--resource" aria-label="Exhaust {{ tc.name }} to pay {{ tc.resource }}">Exhaust · pay {{ tc.resource }}</button>
                   </sc-if>
-                  <sc-if value="{{ !tc.tapped && tc.canUseAbility }}" hint-placeholder-val="{{ true }}">
-                    <button onClick="{{ tc.onAbility }}" class="sc-battle-card-action">Exhaust for ability</button>
+                  <sc-if value="{{ tc.showAbility }}" hint-placeholder-val="{{ true }}">
+                    <button onClick="{{ tc.onAbility }}" class="sc-battle-card-action" aria-label="Exhaust {{ tc.name }} to use its ability">Exhaust · use ability</button>
                   </sc-if>
                   <sc-if value="{{ tc.tapped }}" hint-placeholder-val="{{ false }}">
                     <button onClick="{{ tc.onReady }}" class="sc-battle-card-action">Ready card</button>
                   </sc-if>
-                  <sc-if value="{{ !tc.hasResource && !tc.canUseAbility && !tc.tapped }}" hint-placeholder-val="{{ false }}">
-                    <span class="sc-battle-card-passive">Passive effects: no exhaustion needed</span>
+                  <sc-if value="{{ tc.showPassive }}" hint-placeholder-val="{{ false }}">
+                    <span class="sc-battle-card-passive">Passive only · nothing to exhaust</span>
                   </sc-if>
                 </div>
               </div>
@@ -279,19 +266,8 @@
       </div>
     </sc-if>
 
-    <sc-if value="{{ sheetBattleTroops }}" hint-placeholder-val="{{ false }}">
-      <div class="sc-battle-panel-overlay" onClick="{{ closeBattlePanel }}"></div>
-      <div class="sc-battle-panel-position">
-        <section class="sc-battle-panel-dialog" role="dialog" aria-modal="true" aria-label="Troops management">
-          <div class="sc-battle-panel-header">
-            <div class="sc-battle-panel-heading">
-              <span class="sc-battle-panel-kicker">Battle management</span>
-              <span class="sc-battle-panel-title">Troops</span>
-              <span class="sc-battle-panel-subtitle">Deployment · casualties · army editing</span>
-            </div>
-            <button class="sc-battle-panel-close" onClick="{{ closeBattlePanel }}" aria-label="Close Troops panel">Done <span aria-hidden="true">×</span></button>
-          </div>
-          <div class="sc-battle-panel-scroll">
+    <!-- Troops live directly on the Battle tab: deployment, casualties and army edits. -->
+    <section class="sc-battle-troops" id="sc-battle-troops" aria-label="Troops">
       <sc-if value="{{ !battleEmpty }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
           <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#8a91a5">Your Army</span>
@@ -343,7 +319,7 @@
                     <div style="position:relative;flex:1;min-width:0">
                       <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
                         <span style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ u.name }}</span>
-                        <sc-if value="{{ u.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
+                        <sc-if value="{{ u.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
                       </div>
                       <div style="font-size:12px;color:#8a91a5;margin-top:1px">{{ u.tierLabel }}</div>
                     </div>
@@ -354,11 +330,14 @@
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="position:relative;flex:0 0 auto;transform:rotate({{ u.chev }}deg);transition:transform 0.18s"><path d="M6 4l4 4-4 4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                   </div>
                   <div style="position:relative;display:flex;align-items:center;gap:8px;padding:0 12px 12px">
-                    <button onClick="{{ u.onToggleDeployed }}" style="height:30px;padding:0 10px;background:{{ u.deployBg }};border:1px solid {{ u.deployBd }};color:{{ u.deployFg }};font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">{{ u.deployLabel }}</button>
-                    <div style="flex:1;display:flex;align-items:center;justify-content:space-between;gap:6px;padding:6px 8px;background:rgba(22,26,39,0.75);backdrop-filter:blur(2px);border:1px solid var(--sc-border-input)">
-                      <button onClick="{{ u.onLossDown }}" style="width:28px;height:28px;background:rgba(26,31,46,0.85);border:1px solid var(--sc-border-input);color:#c8cede;font-size:14px;cursor:pointer">−</button>
-                      <span style="font-family:'Chakra Petch',sans-serif;font-size:13px;font-weight:700;color:#e9ecf2">{{ u.modelLossLabel }}</span>
-                      <button onClick="{{ u.onLossUp }}" style="width:28px;height:28px;background:rgba(37,99,235,0.18);border:1px solid rgba(98,169,247,0.4);color:#bcd9fd;font-size:14px;cursor:pointer">+</button>
+                    <div class="sc-deploy-switch" role="group" aria-label="Deployment">
+                      <button onClick="{{ u.onSetReserve }}" aria-pressed="{{ u.inReserve }}" class="{{ u.reserveClass }}">{{ u.reserveLabel }}</button>
+                      <button onClick="{{ u.onSetDeployed }}" aria-pressed="{{ u.deployed }}" disabled="{{ u.deployDisabled }}" title="{{ u.deployTitle }}" class="{{ u.deployClass }}">Deployed</button>
+                    </div>
+                    <div class="sc-model-stepper">
+                      <button onClick="{{ u.onLossDown }}" disabled="{{ u.noneLeft }}" aria-label="Remove a model (casualty)" class="sc-model-step">−</button>
+                      <span class="sc-model-count"><b>{{ u.remaining }}</b> / {{ u.startingModels }} <small>alive</small></span>
+                      <button onClick="{{ u.onLossUp }}" disabled="{{ u.atFull }}" aria-label="Restore a model" class="sc-model-step sc-model-step--up" style="width:28px;height:28px;background:rgba(37,99,235,0.18);border:1px solid rgba(98,169,247,0.4);color:#bcd9fd;font-size:14px;cursor:pointer">+</button>
                     </div>
                   </div>
                       <sc-if value="{{ editArmy }}" hint-placeholder-val="{{ false }}">
@@ -380,10 +359,7 @@
         </sc-for>
       </sc-if>
 
-          </div>
-        </section>
-      </div>
-    </sc-if>
+    </section>
 
   </sc-if>
 
@@ -396,6 +372,7 @@
             <span style="width:8px;height:8px;background:{{ grp.color }};clip-path:var(--sc-diamond)"></span>
             <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ grp.color }}">{{ grp.role }}</span>
             <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
+            <sc-if value="{{ grp.hasSlots }}" hint-placeholder-val="{{ false }}"><span class="{{ grp.slotClass }}" title="{{ grp.slotTitle }}">{{ grp.slotText }}</span></sc-if>
           </div>
           <div class="sc-lib-list">
             <sc-for list="{{ grp.entries }}" as="en" hint-placeholder-count="2">
@@ -407,12 +384,12 @@
                   <div onClick="{{ en.onToggle }}" role="button" class="sc-lib-head-text">
                     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
                       <span style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ en.name }}</span>
-                      <sc-if value="{{ en.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
-                      <sc-if value="{{ en.inArmy }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;background:rgba(53,199,107,0.14);border:1px solid rgba(53,199,107,0.4);color:#5fd98d">Mustered</span></sc-if>
+                      <sc-if value="{{ en.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
+                      <sc-if value="{{ en.inArmy }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(53,199,107,0.14);border:1px solid rgba(53,199,107,0.4);color:#5fd98d">Mustered</span></sc-if>
                     </div>
                     <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
                       <sc-for list="{{ en.tags }}" as="tg" hint-placeholder-count="3">
-                        <button onClick="{{ tg.onOpen }}" style="font-size:10px;font-weight:600;letter-spacing:0.04em;padding:2px 7px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#a7aec2;cursor:pointer;border-radius:2px">{{ tg.name }}</button>
+                        <button onClick="{{ tg.onOpen }}" style="font-size:11px;font-weight:600;letter-spacing:0.03em;padding:2px 7px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#a7aec2;cursor:pointer;border-radius:2px">{{ tg.name }}</button>
                       </sc-for>
                     </div>
                   </div>
@@ -452,7 +429,7 @@
                   <div onClick="{{ tc.onToggle }}" role="button" style="flex:1;min-width:0;cursor:pointer">
                     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
                       <span style="font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ tc.name }}</span>
-                      <sc-if value="{{ tc.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
+                      <sc-if value="{{ tc.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
                     </div>
                     <div style="font-size:12px;color:#8a91a5;margin-top:2px">{{ tc.summary }}</div>
                     <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:5px">
@@ -463,22 +440,27 @@
                       </sc-for>
                     </div>
                   </div>
+                  <sc-if value="{{ tc.single }}" hint-placeholder-val="{{ false }}">
+                    <button onClick="{{ tc.onSelectToggle }}" aria-pressed="{{ tc.inArmy }}" disabled="{{ tc.toggleDisabled }}" class="{{ tc.toggleClass }}">{{ tc.toggleLabel }}</button>
+                  </sc-if>
+                  <sc-if value="{{ !tc.single }}" hint-placeholder-val="{{ true }}">
                   <div style="display:flex;align-items:center;gap:4px;flex:0 0 auto">
                      <button onClick="{{ tc.onRemove }}" disabled="{{ tc.count === 0 }}" aria-label="Remove one copy" style="height:44px;width:34px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:20px;cursor:pointer">−</button>
                      <span style="min-width:20px;text-align:center;font-family:Rajdhani,sans-serif;font-weight:700;color:#e9ecf2;font-size:16px">{{ tc.count }}</span>
                      <button onClick="{{ tc.onAdd }}" disabled="{{ !tc.canAdd }}" aria-label="Add one copy" style="height:44px;width:34px;background:rgba(37,99,235,0.16);border:1px solid rgba(98,169,247,0.45);color:#bcd9fd;font-size:20px;cursor:pointer">+</button>
                    </div>
+                  </sc-if>
                 </div>
                 <sc-if value="{{ tc.expanded }}" hint-placeholder-val="{{ false }}">
                   <div style="position:relative;border-top:1px solid #1f2430;padding:12px;display:grid;gap:10px">
                     <sc-for list="{{ tc.abilities }}" as="ab" hint-placeholder-count="2">
                       <div>
                         <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px">
-                          <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:{{ ab.phBg }};color:{{ ab.phFg }}">{{ ab.phase }}</span>
+                          <span class="sc-phase-chip" style="background:{{ ab.phBg }};color:{{ ab.phFg }}">{{ ab.phase }}</span>
                           <span style="font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;color:#e9ecf2">{{ ab.name }}</span>
                           <span style="font-size:11px;color:#8a91a5">{{ ab.type }}</span>
                         </div>
-                        <div style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:#8ec3fa;border-bottom:1px dotted rgba(98,169,247,0.6);font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
+                        <div style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-kw-link">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
                       </div>
                     </sc-for>
                   </div>
@@ -524,11 +506,11 @@
               <sc-for list="{{ fc.abilities }}" as="ab" hint-placeholder-count="3">
                 <div>
                   <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px">
-                    <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:{{ ab.phBg }};color:{{ ab.phFg }}">{{ ab.phase }}</span>
+                    <span class="sc-phase-chip" style="background:{{ ab.phBg }};color:{{ ab.phFg }}">{{ ab.phase }}</span>
                     <span style="font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;color:#e9ecf2">{{ ab.name }}</span>
                     <span style="font-size:11px;color:#8a91a5">{{ ab.type }}</span>
                   </div>
-                  <div style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:#8ec3fa;border-bottom:1px dotted rgba(98,169,247,0.6);font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
+                  <div style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-kw-link">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
                 </div>
               </sc-for>
             </div>
@@ -557,7 +539,7 @@
               <div style="padding:10px 12px;background:var(--sc-card-bg);border:1px solid var(--sc-border-neutral)">
                 <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:2px">
                   <span style="font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;letter-spacing:0.06em;color:#e9ecf2">{{ kw.name }}</span>
-                  <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#8a91a5">{{ kw.type }}</span>
+                  <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#8a91a5">{{ kw.type }}</span>
                 </div>
                 <div style="font-size:13px;color:#b9bfd0;line-height:1.55">{{ kw.description }}</div>
                 <sc-if value="{{ kw.hasExample }}" hint-placeholder-val="{{ false }}">
@@ -731,11 +713,30 @@
     </div>
   </sc-if>
 
+  <!-- ============ ROSTER ISSUES SHEET ============ -->
+  <sc-if value="{{ sheetIssues }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,5,8,0.65);animation:scFade 0.15s ease"></div>
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:310;display:flex;justify-content:center;pointer-events:none">
+      <div role="dialog" aria-modal="true" aria-label="Roster issues" style="width:100%;max-width:480px;max-height:80vh;overflow-y:auto;pointer-events:auto;background:#141824;border:1px solid rgba(240,74,74,0.45);border-bottom:none;padding:16px 16px calc(20px + env(safe-area-inset-bottom));animation:scSheetUp 0.2s ease;clip-path:var(--sc-corner-14-top)">
+        <div style="width:36px;height:3px;background:var(--sc-border-input);margin:0 auto 14px;border-radius:2px"></div>
+        <div class="sc-roster-alert-title" style="margin-bottom:8px">{{ rosterIssueTitle }}</div>
+        <sc-for list="{{ rosterIssues }}" as="issue" hint-placeholder-count="2">
+          <div class="sc-roster-alert-row">
+            <span class="sc-roster-alert-text">{{ issue.text }}</span>
+            <button onClick="{{ issue.onFix }}" class="sc-roster-alert-fix">{{ issue.fixLabel }}</button>
+          </div>
+        </sc-for>
+        <button onClick="{{ closeSheet }}" style="margin-top:14px;width:100%;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Close</button>
+      </div>
+    </div>
+  </sc-if>
+
   <!-- ============ ROUND TRACKER SHEET ============ -->
   <sc-if value="{{ sheetPlay }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,5,8,0.65);animation:scFade 0.15s ease"></div>
-    <div style="position:fixed;left:0;right:0;top:0;z-index:310;display:flex;justify-content:center;pointer-events:none">
-      <div style="width:100%;max-width:480px;pointer-events:auto;background:#141824;border:1px solid rgba(98,169,247,0.4);border-top:none;padding:calc(14px + env(safe-area-inset-top)) 16px 16px;animation:scSheetDown 0.2s ease;clip-path:var(--sc-corner-14-bottom)">
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:310;display:flex;justify-content:center;pointer-events:none">
+      <div style="width:100%;max-width:480px;pointer-events:auto;background:#141824;border:1px solid var(--fc-primary-45);border-bottom:none;padding:16px 16px calc(20px + env(safe-area-inset-bottom));animation:scSheetUp 0.2s ease;clip-path:var(--sc-corner-14-top)">
+        <div style="width:36px;height:3px;background:var(--sc-border-input);margin:0 auto 14px;border-radius:2px"></div>
         <div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5;margin-bottom:12px">Round Tracker</div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
           <div style="display:flex;align-items:center;gap:8px">
@@ -771,7 +772,6 @@
         </div>
         <button onClick="{{ resetPlay }}" style="margin-top:10px;width:100%;height:34px;background:none;border:1px dashed var(--sc-border-input);color:#8a91a5;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Reset Tracker</button>
         <button onClick="{{ closeSheet }}" style="margin-top:8px;width:100%;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Done</button>
-        <div style="width:36px;height:3px;background:var(--sc-border-input);margin:14px auto 0;border-radius:2px"></div>
       </div>
     </div>
   </sc-if>
@@ -836,6 +836,7 @@ class Component extends DCLogic {
     tacticalTapped: [], // [ids currently tapped/exhausted]
     factionTappedId: null, // currently exhausted Faction Card
     paymentCards: [], // transient resource output for one ability payment (never banked)
+    paymentTarget: 0, // transient cost of the ability being paid; never saved
     expBattleCards: {}, // expanded Faction and Tactical Card ability details
     battleSupplyAvailable: 4,
     expArmy: {},
@@ -941,6 +942,7 @@ class Component extends DCLogic {
     try {
       const play = JSON.parse(localStorage.getItem('sctmg_play') || 'null');
       if (play) this.state.play = { round: play.round || 1, phase: play.phase || 0, vpYou: play.vpYou || 0, vpFoe: play.vpFoe || 0 };
+      localStorage.setItem('sctmg_last_faction', 'terran');
       const saved = JSON.parse(localStorage.getItem('sctmg_terran_v1') || 'null');
       if (saved) {
         this.state.army = (saved.army || []).filter(e => this.D().UNITS.find(u => u.id === e.unitId))
@@ -973,6 +975,7 @@ class Component extends DCLogic {
         this.state.factionId = this.D().FACTION_CARDS[0].id;
       }
       if (this.state.factionTappedId !== this.state.factionId) this.state.factionTappedId = null;
+      if (play && ['skirmish', 'standard', 'grand'].includes(play.battleSize)) this.state.scaleId = play.battleSize;
       const list = JSON.parse(localStorage.getItem('sctmg_terran_rosters_v1') || '[]');
       this.state.savedRosters = Array.isArray(list) ? list : [];
     } catch (e) { console.error(e); }
@@ -984,7 +987,11 @@ class Component extends DCLogic {
     } catch (e) {}
   }
   savePlay() {
-    try { localStorage.setItem('sctmg_play', JSON.stringify(this.state.play)); } catch (e) {}
+    // Merge so War Room picks (mission, map) and the shared battle size survive.
+    try {
+      const prev = JSON.parse(localStorage.getItem('sctmg_play') || 'null') || {};
+      localStorage.setItem('sctmg_play', JSON.stringify({ ...prev, ...this.state.play, battleSize: this.state.scaleId }));
+    } catch (e) {}
   }
   saveRosterList() {
     try { localStorage.setItem('sctmg_terran_rosters_v1', JSON.stringify(this.state.savedRosters)); } catch (e) {}
@@ -1136,10 +1143,10 @@ class Component extends DCLogic {
   // ---------- phase helpers ----------
   phaseDefs() {
     return [
-      { name: 'Movement', short: 'Move', color: '#4f8df9' },
+      { name: 'Movement', short: 'Movement', color: '#4f8df9' },
       { name: 'Assault', short: 'Assault', color: '#f9822f' },
       { name: 'Combat', short: 'Combat', color: '#f04a4a' },
-      { name: 'Scoring', short: 'Score', color: '#35c76b' }
+      { name: 'Scoring', short: 'Scoring', color: '#35c76b' }
     ];
   }
   portrait(u) {
@@ -1236,6 +1243,10 @@ class Component extends DCLogic {
     return match ? Number(match[1]) : 0;
   }
 
+  cardHasUsableAbility(abilities) {
+    return abilities.some(a => /\b(Active|Reaction)\b/i.test(a.type || '')
+      && !/do not exhaust this card/i.test(a.description || ''));
+  }
   battleCardView(card, key, kind, tapped, copyLabel = '') {
     const abilities = Array.isArray(card.abilities) ? card.abilities : [];
     const resourceAmount = this.resourceYield(card);
@@ -1252,10 +1263,16 @@ class Component extends DCLogic {
       abilities: abilities.map(a => ({
         phase: a.phase || 'Any Phase', type: a.type || '',
         meta: [a.phase || 'Any Phase', a.type || ''].filter(Boolean).join(' · '),
-        name: a.name || '', description: a.description || ''
+        name: a.name || '', description: a.description || '',
+        phaseShort: (a.phase || 'Any Phase').replace(' Phase', ''),
+        ...this.phaseBadge(a.phase || 'Any Phase'),
+        segs: this.segs(a.description || '')
       })),
       canUseAbility: abilities.some(a => /\b(Active|Reaction)\b/i.test(a.type || '')
         && !/do not exhaust this card/i.test(a.description || '')),
+      showResource: !tapped && resourceAmount > 0,
+      showAbility: !tapped && this.cardHasUsableAbility(abilities),
+      showPassive: !tapped && resourceAmount <= 0 && !this.cardHasUsableAbility(abilities),
       onExpand: () => this.setState(st => ({
         expBattleCards: { ...st.expBattleCards, [key]: !st.expBattleCards[key] }
       })),
@@ -1315,12 +1332,12 @@ class Component extends DCLogic {
 
   finishResourcePayment() {
     // Unused output is lost; cards stay exhausted until explicitly readied.
-    this.setState({ paymentCards: [] });
+    this.setState({ paymentCards: [], paymentTarget: 0 });
   }
 
   refreshTactical() {
     // Only use at Cleanup or when another rule explicitly readies these cards.
-    this.setState({ tacticalTapped: [], factionTappedId: null, paymentCards: [] },
+    this.setState({ tacticalTapped: [], factionTappedId: null, paymentCards: [], paymentTarget: 0 },
       () => this.save());
   }
   bumpBattleSupply(d) {
@@ -1683,7 +1700,8 @@ class Component extends DCLogic {
       const u = D.UNITS.find(x => x.id === e.unitId);
       if (u && usedSlots[u.role.toLowerCase()] !== undefined) usedSlots[u.role.toLowerCase()] += (u.tiers[e.tierIdx]?.supply || 0);
     });
-    const roleSlots = ['hero', 'elite', 'core', 'support', 'air'].map(role => {
+    const roleSlots = ['hero', 'elite', 'core', 'support', 'air'].filter(role =>
+      (baseSlots[role] || 0) > 0 || (usedSlots[role] || 0) > 0).map(role => {
       const used = usedSlots[role] || 0;
       const cap = baseSlots[role] || 0;
       const name = role.charAt(0).toUpperCase() + role.slice(1);
@@ -1737,7 +1755,7 @@ class Component extends DCLogic {
       const expanded = !!st.expArmy[e.key];
       return {
         key: e.key, role: unit.role, name: unit.name, unique: !!unit.unique,
-        tierLabel: tier.tier + ' · ' + this.unitStartingModels(unit, e.tierIdx) + ' models' + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
+        tierLabel: tier.tier + ' · ' + startingModels + (startingModels === 1 ? ' model' : ' models') + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
         cost: (tier.cost || 0) + upgCost,
         ...this.portrait(unit),
         borderColor: expanded ? 'rgba(98,169,247,0.45)' : 'var(--sc-border-neutral)',
@@ -1751,6 +1769,9 @@ class Component extends DCLogic {
         onLossDown: (ev) => { ev.stopPropagation(); this.setModelsLost(e.key, 1); },
         onLossUp: (ev) => { ev.stopPropagation(); this.setModelsLost(e.key, -1); },
         onToggleDeployed: (ev) => { ev.stopPropagation(); this.toggleDeployed(e.key); },
+        onSetReserve: (ev) => { ev.stopPropagation(); if (e.deployed) this.toggleDeployed(e.key); },
+        onSetDeployed: (ev) => { ev.stopPropagation(); if (!e.deployed) this.toggleDeployed(e.key); },
+        noneLeft: remaining <= 0, atFull: remaining >= startingModels,
         onRemove: (ev) => { ev.stopPropagation(); this.setState(s2 => ({
           army: s2.army.filter(x => x.key !== e.key)
         }), () => this.save()); },
@@ -1768,7 +1789,13 @@ class Component extends DCLogic {
         deployBg: u.deployed ? 'rgba(53,199,107,0.16)' : 'transparent',
         deployBd: u.deployed ? 'rgba(53,199,107,0.45)' : (u.wipedOut ? 'var(--sc-border-neutral)' : (battleSupplyRemaining >= u.supply ? 'var(--sc-border-input)' : 'rgba(240,74,74,0.35)')),
         deployFg: u.deployed ? '#5fd98d' : (u.wipedOut ? '#5b6275' : '#c8cede'),
-        deployLabel: u.deployed ? 'On Table' : (u.wipedOut ? 'Wiped Out' : 'In Reserves')
+        deployLabel: u.deployed ? 'On Table' : (u.wipedOut ? 'Wiped Out' : 'In Reserves'),
+        inReserve: !u.deployed,
+        reserveLabel: u.wipedOut && !u.deployed ? 'Wiped out' : 'Reserve',
+        reserveClass: 'sc-deploy-opt' + (!u.deployed ? ' sc-deploy-opt--on' : '') + (u.wipedOut ? ' sc-deploy-opt--dead' : ''),
+        deployClass: 'sc-deploy-opt' + (u.deployed ? ' sc-deploy-opt--on sc-deploy-opt--table' : ''),
+        deployDisabled: !u.deployed && (u.wipedOut || battleSupplyRemaining < u.supply),
+        deployTitle: u.deployed ? 'On the table' : (u.wipedOut ? 'No models left' : (battleSupplyRemaining < u.supply ? 'Needs ' + u.supply + ' supply, ' + battleSupplyRemaining + ' free' : 'Deploy for ' + u.supply + ' supply'))
       }));
       if (!entries.length) return null;
       return { role, color: this.roleColor(role), entries };
@@ -1836,8 +1863,14 @@ class Component extends DCLogic {
     const libraryGroups = roles.map(role => {
       const units = D.UNITS.filter(u => u.role === role);
       if (!units.length) return null;
+      const roleKey = role.toLowerCase();
+      const slotUsed = usedSlots[roleKey] || 0, slotCap = baseSlots[roleKey] || 0;
       return {
         role, color: this.roleColor(role),
+        hasSlots: usedSlots[roleKey] !== undefined && (slotCap > 0 || slotUsed > 0),
+        slotText: slotUsed + ' / ' + slotCap + ' slots' + (slotUsed > slotCap ? ' · over by ' + (slotUsed - slotCap) : ''),
+        slotTitle: role + ' slots used (by supply) of the limit from your faction and tactical cards',
+        slotClass: 'sc-lib-slots' + (slotUsed > slotCap ? ' sc-lib-slots--over' : slotUsed === slotCap ? ' sc-lib-slots--full' : ''),
         entries: units.map(u => {
           const expanded = !!st.expLib[u.id];
           const inArmy = armyIds.includes(u.id);
@@ -1877,13 +1910,35 @@ class Component extends DCLogic {
       const cards = D.TACTICAL_CARDS.filter(t => (t.category || 'general') === cat);
       if (!cards.length) return null;
       return {
-        name: catNames[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1)),
+        name: (catNames[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1))) + (cat === 'creep' ? ' · choose one' : ''),
         cards: cards.map(t => {
           const count = st.tactical.filter(id => id === t.id).length;
           const inArmy = count > 0;
           const expanded = !!st.expTac[t.id];
           return {
-            name: t.name, unique: !!t.unique, summary: t.summary, cost: t.cost, count, canAdd: !t.unique || count === 0,
+            name: t.name, unique: !!t.unique, summary: t.summary, cost: t.cost, count, inArmy,
+            single: !!t.unique || t.category === 'creep',
+            toggleLabel: inArmy ? '\u2713 Added' : (t.category === 'creep' ? 'Choose' : 'Add'),
+            toggleClass: 'sc-tac-toggle' + (inArmy ? ' sc-tac-toggle--on' : ''),
+            toggleDisabled: !inArmy && !!t.factionTag && t.factionTag !== faction.name,
+            onSelectToggle: (ev) => {
+              ev.stopPropagation();
+              this.setState(s2 => {
+                if (s2.tactical.includes(t.id)) {
+                  const keys = s2.tactical.map((id, i) => id === t.id ? t.id + '#' + s2.tactical.slice(0, i).filter(x => x === t.id).length : null).filter(Boolean);
+                  return { tactical: s2.tactical.filter(id => id !== t.id),
+                    tacticalTapped: s2.tacticalTapped.filter(k => !keys.includes(k)),
+                    paymentCards: (s2.paymentCards || []).filter(p => !keys.includes(p.key)) };
+                }
+                const selectedFaction = D.FACTION_CARDS.find(fc => fc.id === s2.factionId) || D.FACTION_CARDS[0];
+                if (t.factionTag && t.factionTag !== selectedFaction.name) return {};
+                // Creep is choose-one: picking a new Creep Card replaces the old one.
+                const isCreep = id => D.TACTICAL_CARDS.find(card => card.id === id)?.category === 'creep';
+                const tactical = t.category === 'creep' ? s2.tactical.filter(id => !isCreep(id)) : s2.tactical.slice();
+                return { tactical: [...tactical, t.id],
+                  tacticalTapped: s2.tacticalTapped.filter(k => tactical.includes(k.split('#')[0])) };
+              }, () => this.save());
+            }, canAdd: !t.unique || count === 0,
             resource: t.resource || false, expanded, ...this.tacticalPortrait(t),
             borderColor: inArmy ? 'rgba(56,211,232,0.45)' : (expanded ? 'rgba(98,169,247,0.45)' : 'var(--sc-border-neutral)'),
             slotPills: Object.entries(t.slots || {}).map(([k, v]) => '+' + v + ' ' + k),
@@ -2041,7 +2096,7 @@ class Component extends DCLogic {
       name: s.name,
       bg: s.id === st.scaleId ? 'rgba(37,99,235,0.22)' : 'transparent',
       fg: s.id === st.scaleId ? '#bcd9fd' : '#8a91a5',
-      onSelect: () => this.setState({ scaleId: s.id }, () => this.save())
+      onSelect: () => this.setState({ scaleId: s.id }, () => { this.save(); this.savePlay(); })
     }));
 
     const bump = (field, d) => (ev) => {
@@ -2098,13 +2153,22 @@ class Component extends DCLogic {
       tabIsBattle: st.tab === 'battle', tabIsLibrary: st.tab === 'library', tabIsTactics: st.tab === 'tactics',
       resourceStripClass: st.resourcesCompact ? 'sc-resource-strip sc-resource-strip--compact' : 'sc-resource-strip',
       slotStripClass: st.resourcesCompact ? 'sc-slot-strip sc-slot-strip--compact' : 'sc-slot-strip',
-      scoreboardClass: st.resourcesCompact ? 'sc-scoreboard sc-scoreboard--compact' : 'sc-scoreboard',
+      scoreboardClass: 'sc-scoreboard sc-scoreboard--compact',
       titleHeaderClass: st.resourcesCompact ? 'sc-title-row sc-title-row--compact' : 'sc-title-row',
       tabIsFaction: st.tab === 'faction', tabIsCodex: st.tab === 'codex',
       // roster
-      scales, roleSlots,
+      scales, roleSlots, slotCols: Math.max(1, roleSlots.length),
       rosterEmpty: st.army.length === 0,
       hasRosterWarnings: rosterWarnings.length > 0, rosterWarnings,
+      rosterIssueCount: rosterWarnings.length,
+      rosterIssueTitle: rosterWarnings.length + (rosterWarnings.length === 1 ? ' roster issue' : ' roster issues'),
+      rosterIssues: rosterWarnings.map(text => {
+        const tab = /Creep|Tactical Card|^Card /.test(text) ? 'tactics' : (/faction\.$|requires the/.test(text) && /Brood|Command|Nexus/.test(text) ? 'faction' : 'library');
+        return { text, fixLabel: tab === 'tactics' ? 'Tactics ›' : tab === 'faction' ? 'Faction ›' : 'Library ›',
+          onFix: () => { this.setState({ tab, sheet: null, battlePanel: null }); window.scrollTo(0, 0); } };
+      }),
+      openIssues: () => this.setState({ sheet: { type: 'issues' } }),
+      sheetIssues: !!(st.sheet && st.sheet.type === 'issues'),
       // battle
       battleEmpty: battleUnits.length === 0, battleGroups,
       battleSupplyStripClass: st.resourcesCompact ? 'sc-battle-supply-strip sc-battle-supply-strip--compact' : 'sc-battle-supply-strip',
@@ -2112,7 +2176,7 @@ class Component extends DCLogic {
         'sc-battle-supply-free sc-battle-supply-free--over' : 'sc-battle-supply-free',
       battleSupplyAria: 'Deployment supply: ' + battleSupplyUsed + ' used of ' +
         st.battleSupplyAvailable + '; ' + battleSupplyRemaining +
-        ' remaining. Open Troops management.',
+        ' remaining. Jump to Troops.',
       tacticalPreview,
       tacticalPreviewMore: Math.max(0, tacticalPreviewAll.length - tacticalPreview.length),
       tacticalPreviewHasMore: tacticalPreviewAll.length > tacticalPreview.length,
@@ -2129,9 +2193,12 @@ class Component extends DCLogic {
       battleModelsRemaining: battleUnits.reduce((total, u) => total + u.remaining, 0),
       battleModelsTotal: battleUnits.reduce((total, u) => total + u.startingModels, 0),
       sheetBattleTactical: st.tab === 'battle' && st.battlePanel === 'tactical',
-      sheetBattleTroops: st.tab === 'battle' && st.battlePanel === 'troops',
+      sheetBattleTroops: false,
       openBattleTactical: () => this.setState({ battlePanel: 'tactical', editArmy: false }),
-      openBattleTroops: () => this.setState({ battlePanel: 'troops', editArmy: false }),
+      openBattleTroops: () => this.setState({ tab: 'battle', battlePanel: null }, () => {
+        const el = typeof document !== 'undefined' && document.getElementById('sc-battle-troops');
+        if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }),
       closeBattlePanel: () => this.setState({ battlePanel: null, editArmy: false }),
       editArmy: st.editArmy, editArmyLabel: st.editArmy ? 'Done Editing' : 'Edit Army',
       editArmyBg: st.editArmy ? 'rgba(56,211,232,0.13)' : '#1a1f2e',
@@ -2141,7 +2208,15 @@ class Component extends DCLogic {
       battleSupplyAvailable: st.battleSupplyAvailable, battleSupplyUsed, battleSupplyRemaining,
       battleSupplyUp: () => this.bumpBattleSupply(1), battleSupplyDown: () => this.bumpBattleSupply(-1),
       hasBattleTactical: battleTactical.length > 0, battleTactical, battleFaction, battleCards, anyTapped,
-      paymentTotal, paymentResource, hasPendingPayment: paymentTotal > 0,
+      paymentTotal, paymentResource, hasPendingPayment: paymentTotal > 0 || st.paymentTarget > 0,
+      paymentTarget: st.paymentTarget,
+      paymentTargetUp: () => this.setState(s2 => ({ paymentTarget: Math.min(9, s2.paymentTarget + 1) })),
+      paymentTargetDown: () => this.setState(s2 => ({ paymentTarget: Math.max(0, s2.paymentTarget - 1) })),
+      paymentStatus: st.paymentTarget > 0
+        ? (paymentTotal >= st.paymentTarget ? 'Paid in full' : (st.paymentTarget - paymentTotal) + ' ' + paymentResource + ' to go')
+        : 'Optional',
+      paymentStatusClass: 'sc-battle-payment-status' + (st.paymentTarget > 0
+        ? (paymentTotal >= st.paymentTarget ? ' sc-battle-payment-status--done' : ' sc-battle-payment-status--due') : ''),
       finishResourcePayment: () => this.finishResourcePayment(),
       refreshTactical: () => this.refreshTactical(),
       gotoLibrary: () => this.setState({ tab: 'library', battlePanel: null, editArmy: false }),

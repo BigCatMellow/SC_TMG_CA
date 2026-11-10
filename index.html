@@ -12,10 +12,9 @@
 <body>
 <x-dc>
 <helmet>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#05060a">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Chakra+Petch:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./vendor/fonts.css">
   <link rel="stylesheet" href="./shared-styles.css">
   <style>
     ::selection { background: rgba(147,51,234,0.4); }
@@ -139,6 +138,10 @@
       .sc-home-factions { height: auto; grid-template-rows: repeat(3,minmax(65px,auto)); }
     }
   </style>
+  <script src="zerg-data.js"></script>
+  <script src="terran-data.js"></script>
+  <script src="protoss-data.js"></script>
+  <script src="wave3-data.js"></script>
 </helmet>
 
 <div class="sc-home" style="max-width:480px;margin:0 auto;min-height:100dvh;background-color:#05060a;background-image:radial-gradient(120% 55% at 50% -10%, rgba(88,28,135,0.22), transparent 62%),radial-gradient(1.2px 1.2px at 24px 38px, rgba(190,200,235,0.3), transparent),radial-gradient(1px 1px at 110px 92px, rgba(190,200,235,0.18), transparent),radial-gradient(1.4px 1.4px at 68px 150px, rgba(190,200,235,0.12), transparent);background-size:auto,190px 190px,240px 240px,300px 300px;color:#e9ecf2;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;font-size:15px;line-height:1.5;position:relative;overflow:hidden" data-screen-label="Command Center">
@@ -207,8 +210,8 @@
   <div class="sc-home-system" style="display:flex;align-items:center;gap:8px;padding:calc(12px + env(safe-area-inset-top)) 18px 10px;border-bottom:1px solid rgba(43,49,69,0.6)">
     <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.24em;text-transform:uppercase;color:#5b6275">Adjutant // Tactical Interface</span>
     <span style="flex:1"></span>
-    <span style="width:7px;height:7px;border-radius:50%;background:#35c76b;color:#35c76b;animation:scLed 2.2s infinite"></span>
-    <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#35c76b">Online</span>
+    <span style="width:7px;height:7px;border-radius:50%;background:{{ netColor }};color:{{ netColor }};animation:scLed 2.2s infinite"></span>
+    <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:{{ netColor }}">{{ netLabel }}</span>
   </div>
 
   <div class="sc-home-main" style="padding:20px 16px calc(30px + env(safe-area-inset-bottom))">
@@ -260,7 +263,7 @@
     <div class="sc-home-section-title" style="display:flex;align-items:center;gap:8px;padding:0 2px 12px;animation:scRise 0.5s 0.1s ease both">
       <span style="font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#e9ecf2">Factions</span>
       <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-input),transparent)"></span>
-      <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#5b6275">3 Rosters</span>
+      <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.2em;text-transform:uppercase;color:#5b6275">3 Factions</span>
     </div>
 
     <div class="sc-home-factions" style="display:grid;gap:12px;margin-bottom:26px">
@@ -274,10 +277,10 @@
             <span class="sc-home-faction-content" style="position:relative;flex:1;min-width:0;padding:18px 16px 18px 20px">
               <span style="display:block;font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:#a78bda">The Swarm</span>
               <span style="display:block;font-family:'Chakra Petch',sans-serif;font-size:30px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;line-height:1.15;text-shadow:0 0 22px rgba(176,110,247,0.45)">Zerg</span>
-              <span class="sc-home-faction-meta" style="display:flex;align-items:center;gap:8px;margin-top:8px">
-                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(147,51,234,0.16);border:1px solid rgba(176,110,247,0.4);color:#c99af7">10 Units</span>
-                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(147,51,234,0.16);border:1px solid rgba(176,110,247,0.4);color:#c99af7">11 Tactics</span>
-                <span style="display:flex;align-items:center;gap:5px;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5fd98d"><span style="width:6px;height:6px;border-radius:50%;background:#35c76b;color:#35c76b;animation:scLed 2.2s infinite"></span>Ready</span>
+              <span class="sc-home-faction-meta" style="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap">
+                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(147,51,234,0.16);border:1px solid rgba(176,110,247,0.4);color:#c99af7;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ zerg.chipA }}</span>
+                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(147,51,234,0.16);border:1px solid rgba(176,110,247,0.4);color:#c99af7">{{ zerg.chipB }}</span>
+                <span style="display:flex;align-items:center;gap:5px;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:{{ zerg.statusColor }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ zerg.statusColor }};color:{{ zerg.statusColor }};animation:{{ zerg.led }} 2.2s infinite"></span>{{ zerg.status }}</span>
               </span>
             </span>
             <svg width="18" height="18" viewBox="0 0 16 16" fill="none" style="position:relative;flex:0 0 auto;margin-right:16px;color:#c99af7"><path d="M5 3l6 5-6 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -294,10 +297,10 @@
             <span class="sc-home-faction-content" style="position:relative;flex:1;min-width:0;padding:18px 16px 18px 20px">
               <span style="display:block;font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:#7ea9d9">The Dominion</span>
               <span style="display:block;font-family:'Chakra Petch',sans-serif;font-size:30px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;line-height:1.15;text-shadow:0 0 22px rgba(98,169,247,0.4)">Terran</span>
-              <span class="sc-home-faction-meta" style="display:flex;align-items:center;gap:8px;margin-top:8px">
-                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(37,99,235,0.14);border:1px solid rgba(98,169,247,0.4);color:#8ec3fa">7 Units</span>
-                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(37,99,235,0.14);border:1px solid rgba(98,169,247,0.4);color:#8ec3fa">10 Tactics</span>
-                <span style="display:flex;align-items:center;gap:5px;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5fd98d"><span style="width:6px;height:6px;border-radius:50%;background:#35c76b;color:#35c76b;animation:scLed 2.6s infinite"></span>Ready</span>
+              <span class="sc-home-faction-meta" style="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap">
+                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(37,99,235,0.14);border:1px solid rgba(98,169,247,0.4);color:#8ec3fa;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ terran.chipA }}</span>
+                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(37,99,235,0.14);border:1px solid rgba(98,169,247,0.4);color:#8ec3fa">{{ terran.chipB }}</span>
+                <span style="display:flex;align-items:center;gap:5px;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:{{ terran.statusColor }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ terran.statusColor }};color:{{ terran.statusColor }};animation:{{ terran.led }} 2.6s infinite"></span>{{ terran.status }}</span>
               </span>
             </span>
             <svg width="18" height="18" viewBox="0 0 16 16" fill="none" style="position:relative;flex:0 0 auto;margin-right:16px;color:#8ec3fa"><path d="M5 3l6 5-6 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -315,10 +318,10 @@
             <span class="sc-home-faction-content" style="position:relative;flex:1;min-width:0;padding:18px 16px 18px 20px">
               <span style="display:block;font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.3em;text-transform:uppercase;color:#cfb06a">The Firstborn</span>
               <span style="display:block;font-family:'Chakra Petch',sans-serif;font-size:30px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;line-height:1.15;text-shadow:0 0 22px rgba(242,200,96,0.38)">Protoss</span>
-              <span class="sc-home-faction-meta" style="display:flex;align-items:center;gap:8px;margin-top:8px">
-                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(180,130,30,0.14);border:1px solid rgba(242,200,96,0.4);color:#f6d98c">7 Units</span>
-                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(180,130,30,0.14);border:1px solid rgba(242,200,96,0.4);color:#f6d98c">13 Tactics</span>
-                <span style="display:flex;align-items:center;gap:5px;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5fd98d"><span style="width:6px;height:6px;border-radius:50%;background:#35c76b;color:#35c76b;animation:scLed 2.4s infinite"></span>Ready</span>
+              <span class="sc-home-faction-meta" style="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap">
+                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(180,130,30,0.14);border:1px solid rgba(242,200,96,0.4);color:#f6d98c;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ protoss.chipA }}</span>
+                <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:2px 8px;background:rgba(180,130,30,0.14);border:1px solid rgba(242,200,96,0.4);color:#f6d98c">{{ protoss.chipB }}</span>
+                <span style="display:flex;align-items:center;gap:5px;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:{{ protoss.statusColor }}"><span style="width:6px;height:6px;border-radius:50%;background:{{ protoss.statusColor }};color:{{ protoss.statusColor }};animation:{{ protoss.led }} 2.4s infinite"></span>{{ protoss.status }}</span>
               </span>
             </span>
             <svg width="18" height="18" viewBox="0 0 16 16" fill="none" style="position:relative;flex:0 0 auto;margin-right:16px;color:#f6d98c"><path d="M5 3l6 5-6 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -369,13 +372,49 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { splash: !localStorage.getItem('sctmg_intro_seen'), leaving: false, play: null };
+  state = { splash: !localStorage.getItem('sctmg_intro_seen'), leaving: false, play: null, online: true, data: false };
 
   componentDidMount() {
     try { this.setState({ play: JSON.parse(localStorage.getItem('sctmg_play') || 'null') }); } catch (e) {}
     if (this.state.splash) this._auto = setTimeout(() => this.dismiss(), 3000);
+    this._net = () => this.setState({ online: navigator.onLine !== false });
+    window.addEventListener('online', this._net);
+    window.addEventListener('offline', this._net);
+    this._net();
+    this._poll = setInterval(() => {
+      if (window.SCTMG_ZERG && window.SCTMG_TERRAN && window.SCTMG_PROTOSS) {
+        clearInterval(this._poll);
+        this.setState({ data: true });
+      }
+    }, 50);
   }
-  componentWillUnmount() { clearTimeout(this._auto); clearTimeout(this._out); }
+  componentWillUnmount() {
+    clearTimeout(this._auto); clearTimeout(this._out); clearInterval(this._poll);
+    window.removeEventListener('online', this._net);
+    window.removeEventListener('offline', this._net);
+  }
+
+  // Saved army summary per faction, or the catalogue size when nothing is saved yet.
+  factionSummary(key, D, last) {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem('sctmg_' + key + '_v5') || 'null'); } catch (e) {}
+    const army = (saved && Array.isArray(saved.army)) ? saved.army : [];
+    const cards = (saved && Array.isArray(saved.tactical)) ? saved.tactical.length : 0;
+    if (army.length) {
+      const fc = D && (D.FACTION_CARDS.find(c => c.id === saved.factionId) || D.FACTION_CARDS[0]);
+      return {
+        chipA: fc ? fc.name : 'Saved army',
+        chipB: army.length + (army.length === 1 ? ' unit' : ' units') + ' · ' + cards + (cards === 1 ? ' card' : ' cards'),
+        status: last ? 'Continue' : 'Saved',
+        statusColor: '#5fd98d', led: 'scLed'
+      };
+    }
+    return {
+      chipA: D ? D.UNITS.length + ' Units' : 'Units',
+      chipB: D ? D.TACTICAL_CARDS.length + ' Tactics' : 'Tactics',
+      status: 'New army', statusColor: '#8a91a5', led: 'none'
+    };
+  }
 
   dismiss() {
     if (!this.state.splash || this.state.leaving) return;
@@ -397,7 +436,15 @@ class Component extends DCLogic {
     const ph = phases[p.phase] || phases[0];
     const hasGame = !!play && (play.round > 1 || play.phase > 0 || play.vpYou > 0 || play.vpFoe > 0);
 
+    let last = null;
+    try { last = localStorage.getItem('sctmg_last_faction'); } catch (e) {}
+    const data = this.state.data;
     return {
+      netLabel: this.state.online ? 'Online' : 'Offline',
+      netColor: this.state.online ? '#35c76b' : '#f2c14e',
+      zerg: this.factionSummary('zerg', data && window.SCTMG_ZERG, last === 'zerg'),
+      terran: this.factionSummary('terran', data && window.SCTMG_TERRAN, last === 'terran'),
+      protoss: this.factionSummary('protoss', data && window.SCTMG_PROTOSS, last === 'protoss'),
       splashVisible: this.state.splash,
       splashAnim: this.state.leaving ? 'scSplashOut 0.45s ease both' : 'scFade 0.3s ease',
       dismissSplash: () => this.dismiss(),

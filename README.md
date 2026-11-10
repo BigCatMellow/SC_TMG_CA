@@ -19,6 +19,6 @@ The GitHub Pages deployment serves this repository's current root `index.html` a
 
 On Android Chrome, open that URL and choose **Add to Home screen / Install app** to launch the companion in a standalone window. This uses Chrome's storage, so named rosters remain in that browser profile.
 
-For an Android APK, the separate [HTML2APK `starcraft-tmg` project](https://github.com/BigCatMellow/html2apk/tree/main/apps/starcraft-tmg) provides a lightweight Capacitor shell that loads the same live website. The APK and browser installation have separate local roster storage. Always export rosters before clearing app data or uninstalling. The web and APK versions require network access.
+For an Android APK, the separate [HTML2APK `starcraft-tmg` project](https://github.com/BigCatMellow/html2apk/tree/main/apps/starcraft-tmg) provides a lightweight Capacitor shell that loads the same live website. The APK and browser installation have separate local roster storage. Always export rosters before clearing app data or uninstalling. After the first visit the web app works offline: React and the fonts are bundled in `vendor/`, and a service worker (`sw.js`, stamped by `scripts/prepare-pages.mjs`) caches every screen. External gallery portraits are cached once viewed.
 
 Check the [Pages workflow](https://github.com/BigCatMellow/SC_TMG_CA/actions/workflows/deploy-pages.yml) if the site is unavailable or a new change is not visible. The repository's GitHub Pages source must be set to **GitHub Actions**.

@@ -8,10 +8,9 @@
 <body>
 <x-dc>
 <helmet>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <meta name="theme-color" content="#05060a">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Chakra+Petch:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./vendor/fonts.css">
   <link rel="stylesheet" href="./shared-styles.css">
   <style>
     ::selection { background: rgba(53,199,107,0.35); }
@@ -47,7 +46,7 @@
       </div>
       <div style="display:flex;align-items:center;gap:6px;padding:8px 12px;border-left:1px solid #232939">
         <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.14em;color:#8a91a5">VP</span>
-        <span style="font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:#5fd98d">{{ vpYou }}</span>
+        <span style="font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:#c99af7">{{ vpYou }}</span>
         <span style="color:#5b6275;font-size:12px">:</span>
         <span style="font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:#c8cede">{{ vpFoe }}</span>
         <svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="margin-left:2px"><path d="M4 6l4 4 4-4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
@@ -134,6 +133,7 @@
   <sc-if value="{{ tabIsMissions }}" hint-placeholder-val="{{ false }}">
     <div style="padding:14px">
       <div style="font-size:12.5px;color:#8a91a5;margin:0 2px 12px">{{ missionCount }} missions for {{ sizeName }} · tap the ring to select</div>
+      <sc-if value="{{ noSizeContent }}" hint-placeholder-val="{{ false }}"><div style="padding:16px 12px;margin-bottom:10px;border:1px dashed var(--sc-border-input);color:#8a91a5;font-size:13px">No {{ sizeName }} missions or maps are in the current data. Pick Skirmish or Standard to browse missions.</div></sc-if>
       <div style="display:grid;gap:10px">
         <sc-for list="{{ missions }}" as="mi" hint-placeholder-count="3">
           <div style="background:var(--sc-card-bg);border:1px solid {{ mi.bd }};clip-path:var(--sc-corner-12)">
@@ -269,8 +269,9 @@
   <!-- ============ ROUND TRACKER SHEET ============ -->
   <sc-if value="{{ trackerOpen }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeTracker }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,5,8,0.65);animation:scFade 0.15s ease"></div>
-    <div style="position:fixed;left:0;right:0;top:0;z-index:310;display:flex;justify-content:center;pointer-events:none">
-      <div style="width:100%;max-width:480px;pointer-events:auto;background:#141824;border:1px solid rgba(53,199,107,0.4);border-top:none;padding:calc(14px + env(safe-area-inset-top)) 16px 16px;animation:scSheetDown 0.2s ease;clip-path:var(--sc-corner-14-bottom)">
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:310;display:flex;justify-content:center;pointer-events:none">
+      <div style="width:100%;max-width:480px;pointer-events:auto;background:#141824;border:1px solid rgba(53,199,107,0.4);border-bottom:none;padding:16px 16px calc(20px + env(safe-area-inset-bottom));animation:scSheetUp 0.2s ease;clip-path:var(--sc-corner-14-top)">
+        <div style="width:36px;height:3px;background:var(--sc-border-input);margin:0 auto 14px;border-radius:2px"></div>
         <div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5;margin-bottom:12px">Round Tracker</div>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
           <div style="display:flex;align-items:center;gap:8px">
@@ -305,7 +306,6 @@
           </div>
         </div>
         <button onClick="{{ closeTracker }}" style="margin-top:12px;width:100%;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Done</button>
-        <div style="width:36px;height:3px;background:var(--sc-border-input);margin:14px auto 0;border-radius:2px"></div>
       </div>
     </div>
   </sc-if>
@@ -343,6 +343,8 @@ class Component extends DCLogic {
             this.state.selectedMapId = saved.selectedMapId || null;
             if (saved.activeTab && ['setup', 'missions', 'maps'].includes(saved.activeTab)) this.state.activeTab = saved.activeTab;
           }
+          // Battle size is shared with the army screens.
+          if (play && ['skirmish', 'standard', 'grand'].includes(play.battleSize)) this.state.battleSize = play.battleSize;
           // an explicit ?tab= link (e.g. from the Battle tab badge) overrides whatever tab was last left open
           const tabParam = new URLSearchParams(location.search).get('tab');
           if (tabParam && ['setup', 'missions', 'maps'].includes(tabParam)) this.state.activeTab = tabParam;
@@ -354,7 +356,19 @@ class Component extends DCLogic {
   componentWillUnmount() { clearInterval(this._poll); }
 
   D() { return window.SCTMG_MISSIONS; }
-  savePlay() { try { localStorage.setItem('sctmg_play', JSON.stringify(this.state.play)); } catch (e) {} }
+  savePlay() {
+    try {
+      const prev = JSON.parse(localStorage.getItem('sctmg_play') || 'null') || {};
+      localStorage.setItem('sctmg_play', JSON.stringify({ ...prev, ...this.state.play, battleSize: this.state.battleSize }));
+    } catch (e) {}
+  }
+  sizeInfo(id) {
+    return {
+      skirmish: { name: 'Skirmish', board: '36" × 36"', boardShort: '36×36', minerals: '1,000', mineralsRaw: '1000', gas: '100' },
+      standard: { name: 'Standard', board: '54" × 36"', boardShort: '54×36', minerals: '2,000', mineralsRaw: '2000', gas: '200' },
+      grand: { name: 'Grand', board: '72" × 36"', boardShort: '72×36', minerals: 'No cap', mineralsRaw: '∞', gas: 'No cap' }
+    }[id || this.state.battleSize] || null;
+  }
   save() {
     try {
       const st = this.state;
@@ -365,7 +379,7 @@ class Component extends DCLogic {
     // mission + map selection are shared with the Army screens' Battle tab + Army Sheet, so merge them into the shared play state
     try {
       const play = JSON.parse(localStorage.getItem('sctmg_play') || 'null') || { round: 1, phase: 0, vpYou: 0, vpFoe: 0 };
-      localStorage.setItem('sctmg_play', JSON.stringify({ ...play, missionId: this.state.selectedMissionId, mapId: this.state.selectedMapId }));
+      localStorage.setItem('sctmg_play', JSON.stringify({ ...play, missionId: this.state.selectedMissionId, mapId: this.state.selectedMapId, battleSize: this.state.battleSize }));
     } catch (e) {}
   }
 
@@ -423,7 +437,8 @@ class Component extends DCLogic {
     const mp = this.D().MAPS.find(x => x.id === st.selectedMapId);
     const std = st.battleSize === 'standard';
     let t = '==============================\nSTARCRAFT TMG — BATTLE SETUP\n==============================\n\n';
-    t += 'Battle Size: ' + (std ? 'STANDARD (54" x 36")' : 'SKIRMISH (36" x 36")') + '\nMinerals: ' + (std ? '2,000' : '1,000') + '\nGas: ' + (std ? '200' : '100') + '\n\n';
+    const si = this.sizeInfo();
+    t += 'Battle Size: ' + si.name.toUpperCase() + ' (' + si.board + ')' + '\nMinerals: ' + si.minerals + '\nGas: ' + si.gas + '\n\n';
     if (m) {
       t += 'MISSION: ' + m.name + '\nGame Length: ' + m.gameLength + ' Rounds · Supply ' + m.supply + ' (+' + m.perRound + '/round)\n\nPARAMETERS:\n';
       m.parameters.forEach(p => t += '• ' + p + '\n');
@@ -536,7 +551,7 @@ class Component extends DCLogic {
     const std = st.battleSize === 'standard';
     const html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">' +
       '<title>SC:TMG Battle Sheet</title><style>' + this.printSheetCss() + '</style></head><body>' +
-      '<div class="page-header"><h1>Battle Sheet</h1><span class="faction-tag">SC:TMG · ' + (std ? 'STANDARD' : 'SKIRMISH') + ' · ' + (std ? '2,000 MIN / 200 GAS' : '1,000 MIN / 100 GAS') + '</span></div>' +
+      '<div class="page-header"><h1>Battle Sheet</h1><span class="faction-tag">SC:TMG · ' + this.sizeInfo().name.toUpperCase() + ' · ' + this.sizeInfo().minerals.toUpperCase() + ' MIN / ' + this.sizeInfo().gas.toUpperCase() + ' GAS</span></div>' +
       '<div class="section-header"><h2>Mission' + (m ? ': ' + this.printEsc(m.name.toUpperCase()) : '') + '</h2><span class="faction-tag">' + (m ? this.printEsc(m.gameLength) + ' rounds' : 'not selected') + '</span></div>' +
       this.printMissionHtml(m) +
       '<div class="section-header" style="border-bottom-color:#4f8df9"><h2>Map' + (mp ? ': ' + this.printEsc(mp.name.toUpperCase()) : '') + '</h2><span class="faction-tag">' + (mp ? this.printEsc(mp.size) : 'not selected') + '</span></div>' +
@@ -552,10 +567,10 @@ class Component extends DCLogic {
     if (!st.ready) return { ready: false };
     const D = this.D();
     const phDefs = [
-      { name: 'Movement', short: 'Move', color: '#4f8df9' },
+      { name: 'Movement', short: 'Movement', color: '#4f8df9' },
       { name: 'Assault', short: 'Assault', color: '#f9822f' },
       { name: 'Combat', short: 'Combat', color: '#f04a4a' },
-      { name: 'Scoring', short: 'Score', color: '#35c76b' }
+      { name: 'Scoring', short: 'Scoring', color: '#35c76b' }
     ];
     const ph = phDefs[st.play.phase] || phDefs[0];
     const std = st.battleSize === 'standard';
@@ -670,8 +685,9 @@ class Component extends DCLogic {
       })),
       tabIsSetup: st.activeTab === 'setup', tabIsMissions: st.activeTab === 'missions', tabIsMaps: st.activeTab === 'maps',
       sizes: [
+        { id: 'skirmish', name: 'Skirmish', desc: '36" × 36" · 1,000 minerals' },
         { id: 'standard', name: 'Standard', desc: '54" × 36" · 2,000 minerals' },
-        { id: 'skirmish', name: 'Skirmish', desc: '36" × 36" · 1,000 minerals' }
+        { id: 'grand', name: 'Grand', desc: '72" × 36" · no points cap' }
       ].map(sz => ({
         name: sz.name, desc: sz.desc,
         bg: st.battleSize === sz.id ? 'linear-gradient(180deg,rgba(53,199,107,0.12),#12151f 70%)' : '#12151f',
@@ -679,8 +695,9 @@ class Component extends DCLogic {
         fg: st.battleSize === sz.id ? '#8fe6ae' : '#c8cede',
         onSelect: () => this.setSize(sz.id)
       })),
-      sumMinerals: std ? '2000' : '1000', sumGas: std ? '200' : '100', sumBoard: std ? '54×36' : '36×36',
-      sizeName: std ? 'Standard' : 'Skirmish',
+      sumMinerals: this.sizeInfo().mineralsRaw, sumGas: st.battleSize === 'grand' ? '∞' : this.sizeInfo().gas, sumBoard: this.sizeInfo().boardShort,
+      sizeName: this.sizeInfo().name,
+      noSizeContent: missions.length === 0,
       slots,
       hasAnyPick: !!(selM || selMap),
       randomBoth: () => { this.randomMission(); this.randomMap(); },

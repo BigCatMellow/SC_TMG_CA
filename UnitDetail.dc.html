@@ -22,7 +22,7 @@
   <div style="display:grid;grid-template-columns:repeat({{ statCols }},1fr);gap:5px">
     <sc-for list="{{ stats }}" as="stt" hint-placeholder-count="5">
       <div style="text-align:center;padding:7px 2px;background:rgba(23,27,40,0.7);;border:1px solid #232939">
-        <div style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.14em;color:#8a91a5">{{ stt.k }}</div>
+        <div style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;color:#8a91a5">{{ stt.k }}</div>
         <div style="font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;color:#e9ecf2;line-height:1.25">{{ stt.v }}</div>
       </div>
     </sc-for>
@@ -40,7 +40,7 @@
           <div style="display:flex;gap:4px;flex-wrap:wrap">
             <sc-for list="{{ wp.chips }}" as="ch" hint-placeholder-count="7">
               <span style="display:inline-flex;align-items:baseline;gap:4px;padding:3px 7px;background:#12151f;border:1px solid #232939">
-                <span style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.1em;color:#5b6275">{{ ch.k }}</span>
+                <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.06em;color:#7c8398">{{ ch.k }}</span>
                 <span style="font-family:Rajdhani,sans-serif;font-size:13px;font-weight:700;color:#c8cede">{{ ch.v }}</span>
               </span>
             </sc-for>
@@ -52,6 +52,19 @@
       </sc-for>
     </div>
   </sc-if>
+
+  <!-- abbreviation legend -->
+  <div>
+    <button onClick="{{ toggleLegend }}" aria-expanded="{{ legendOpen }}" style="background:none;border:0;padding:4px 0;color:var(--fc-text-tint, #c99af7);font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">{{ legendLabel }}</button>
+    <sc-if value="{{ legendOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin-top:6px;padding:10px;background:#12151f;border:1px solid #232939;font-size:12px;line-height:1.4">
+        <sc-for list="{{ legend }}" as="lg" hint-placeholder-count="6">
+          <span style="font-family:Rajdhani,sans-serif;font-weight:700;color:#c8cede;letter-spacing:0.06em">{{ lg.k }}</span>
+          <span style="color:#9aa1b4">{{ lg.v }}</span>
+        </sc-for>
+      </div>
+    </sc-if>
+  </div>
 
   <!-- abilities -->
   <sc-for list="{{ abilityGroups }}" as="ag" hint-placeholder-count="2">
@@ -107,6 +120,7 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;: {&quot;width&quot;: 400, &quot;height&quot;: 500}, &quot;detail&quot;: {&quot;editor&quot;: null, &quot;tsType&quot;: &quot;object&quot;, &quot;default&quot;: null}}">
 class Component extends DCLogic {
+  state = { legend: false };
   renderVals() {
     const d = this.props.detail || {};
     const stats = d.stats || [];
@@ -128,7 +142,26 @@ class Component extends DCLogic {
       hasWeapons: (d.weapons || []).length > 0,
       abilityGroups: d.abilityGroups || [],
       upgrades,
-      hasUpgrades: upgrades.length > 0
+      hasUpgrades: upgrades.length > 0,
+      legendOpen: this.state.legend,
+      legendLabel: this.state.legend ? 'Hide abbreviations' : 'What do SPD, RoA, S.DIE mean?',
+      toggleLegend: (ev) => { if (ev) ev.stopPropagation(); this.setState(s => ({ legend: !s.legend })); },
+      legend: [
+        { k: 'SPD', v: 'Speed: how far the Leading Model moves, in inches' },
+        { k: 'EVD', v: 'Evade: defensive roll, when the Unit is eligible' },
+        { k: 'ARM', v: 'Armour: defensive roll against hits' },
+        { k: 'SHD', v: 'Shield points' },
+        { k: 'HP', v: 'Hit points per model' },
+        { k: 'SIZE', v: 'Model size' },
+        { k: 'RNG', v: 'Range in inches; E means Engagement Range (melee)' },
+        { k: 'TGT', v: 'What the weapon can target (Ground, Air, All)' },
+        { k: 'RoA', v: 'Rate of Attack: dice each model adds to the Attack Pool' },
+        { k: 'HIT', v: 'Roll needed to hit' },
+        { k: 'SURGE', v: 'Combat Tag on the target that triggers Surge' },
+        { k: 'S.DIE', v: 'Surge Die added to the attack' },
+        { k: 'DMG', v: 'Damage per successful hit' },
+        { k: 'BM / CP / PE', v: 'Faction ability resource, paid by exhausting cards' }
+      ]
     };
   }
 }

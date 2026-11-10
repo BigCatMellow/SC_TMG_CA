@@ -1591,6 +1591,10 @@
   }
 
   // src/index.ts
+  // Self-hosted copies (identical bytes, same SRI) so the app runs offline; unpkg is the fallback.
+  var SC_BASE = document.currentScript && document.currentScript.src ? document.currentScript.src.replace(/[^/]*$/, "") : "./";
+  var REACT_LOCAL_URL = SC_BASE + "vendor/react.production.min.js";
+  var REACT_DOM_LOCAL_URL = SC_BASE + "vendor/react-dom.production.min.js";
   var REACT_URL = "https://unpkg.com/react@18.3.1/umd/react.production.min.js";
   var REACT_SRI = "sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z";
   var REACT_DOM_URL = "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js";
@@ -1616,12 +1620,22 @@
   function loadReactUmd() {
     const w = window;
     if (w.React && w.ReactDOM) return Promise.resolve();
-    return Promise.all([
+    const local = () => loadScript(REACT_LOCAL_URL, REACT_SRI).then(() => loadScript(REACT_DOM_LOCAL_URL, REACT_DOM_SRI));
+    const cdn = () => Promise.all([
       loadScript(REACT_URL, REACT_SRI),
       loadScript(REACT_DOM_URL, REACT_DOM_SRI)
-    ]).then(() => void 0);
+    ]);
+    return local().catch(() => (w.React && w.ReactDOM) ? void 0 : cdn()).then(() => void 0);
+  }
+  function registerOffline() {
+    try {
+      if (!("serviceWorker" in navigator) || !/^https?:$/.test(location.protocol)) return;
+      if (location.hostname === "localhost" || location.hostname === "127.0.0.1") return;
+      navigator.serviceWorker.register(SC_BASE + "sw.js").catch(() => {});
+    } catch (e) {}
   }
   function init() {
+    registerOffline();
     const runtime = createRuntime(document);
     let rootName = "Root";
     const baseCss = document.createElement("style");

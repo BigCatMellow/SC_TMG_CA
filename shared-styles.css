@@ -58,7 +58,7 @@ input::placeholder { color: #5b6275; }
 .sc-resource-cell:not(:last-child) { border-right: 1px solid #1c2130; }
 .sc-resource-label {
   font-family: Rajdhani, sans-serif;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: .18em;
   text-transform: uppercase;
@@ -116,7 +116,7 @@ input::placeholder { color: #5b6275; }
 .sc-slot-cell:not(:last-child) { border-right: 1px solid #1c2130; }
 .sc-slot-role {
   font-family: Rajdhani, sans-serif;
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 700;
   letter-spacing: .08em;
   line-height: 1.2;
@@ -394,7 +394,7 @@ input::placeholder { color: #5b6275; }
 }
 .sc-battle-supply-kicker {
   color: #8796ae;
-  font: 700 9px Rajdhani, sans-serif;
+  font: 700 10px Rajdhani, sans-serif;
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -466,7 +466,7 @@ input::placeholder { color: #5b6275; }
   letter-spacing: .07em;
   text-transform: uppercase;
 }
-.sc-battle-preview-heading span { color: #657186; font-size: 9px; letter-spacing: 0; }
+.sc-battle-preview-heading span { color: #7c8398; font-size: 10px; letter-spacing: 0; }
 .sc-battle-preview-row {
   display: flex;
   align-items: center;
@@ -525,7 +525,7 @@ input::placeholder { color: #5b6275; }
 }
 .sc-battle-overview-kicker {
   color: #8a91a5;
-  font: 700 9px Rajdhani, sans-serif;
+  font: 700 10px Rajdhani, sans-serif;
   letter-spacing: .12em;
   text-transform: uppercase;
 }
@@ -720,7 +720,7 @@ input::placeholder { color: #5b6275; }
 }
 .sc-battle-card-kind {
   display: block;
-  font: 700 9px Rajdhani, sans-serif;
+  font: 700 10px Rajdhani, sans-serif;
   text-transform: uppercase;
   letter-spacing: .13em;
   color: #8a91a5;
@@ -986,3 +986,156 @@ input::placeholder { color: #5b6275; }
   .sc-viewer { animation: scViewerIn 160ms ease-out; }
   @keyframes scViewerIn { from { opacity: 0; } to { opacity: 1; } }
 }
+
+/* ===== UI review pass ===== */
+/* Header: the brood name gets the room the kicker used to take. */
+.sc-title-kicker { display: none; }
+
+/* Roster issues chip in the title row */
+.sc-issue-chip {
+  height: 40px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+  background: rgba(240,74,74,0.12);
+  border: 1px solid rgba(240,74,74,0.5);
+  color: #f6a3a3;
+  font: 700 14px 'Chakra Petch', sans-serif;
+  cursor: pointer;
+  clip-path: var(--sc-corner-8);
+}
+
+/* Roster alert: inset card like everything else, each issue jumps to its fix */
+.sc-roster-alert {
+  margin: 14px 14px 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(240,74,74,0.5);
+  background: rgba(240,74,74,0.08);
+  clip-path: var(--sc-corner-10);
+}
+.sc-roster-alert-title { font: 700 14px Rajdhani, sans-serif; letter-spacing: .04em; color: #f08a8a; }
+.sc-roster-alert-row { display: flex; align-items: center; gap: 10px; padding-top: 8px; }
+.sc-roster-alert-text { flex: 1; min-width: 0; font-size: 13px; line-height: 1.45; color: #f6c1c1; }
+.sc-roster-alert-fix {
+  flex: 0 0 auto;
+  min-height: 32px;
+  padding: 0 10px;
+  background: rgba(240,74,74,0.14);
+  border: 1px solid rgba(240,74,74,0.45);
+  color: #f6b3b3;
+  font: 700 12px Rajdhani, sans-serif;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* Battle tab: Tactical summary is compact; Troops live inline below it. */
+.sc-battle-overview-card--tactical { min-height: 0; }
+.sc-battle-panel-title { color: #38d3e8; }
+.sc-battle-troops { padding: 2px 14px 14px; scroll-margin-top: 150px; }
+
+.sc-deploy-switch { display: inline-flex; flex: 0 0 auto; border: 1px solid var(--sc-border-input); background: rgba(10,12,17,0.6); }
+.sc-deploy-opt {
+  height: 34px;
+  padding: 0 10px;
+  border: 0;
+  background: transparent;
+  color: #8a91a5;
+  font: 700 12px Rajdhani, sans-serif;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.sc-deploy-opt + .sc-deploy-opt { border-left: 1px solid var(--sc-border-input); }
+.sc-deploy-opt--on { background: #232a3c; color: #e9ecf2; }
+.sc-deploy-opt--table { background: rgba(53,199,107,0.18); color: #7fe0a4; }
+.sc-deploy-opt--dead { color: #6b7286; }
+.sc-deploy-opt:disabled { color: #4d5468; cursor: not-allowed; }
+
+.sc-model-stepper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  padding: 4px 6px;
+  background: rgba(22,26,39,0.75);
+  border: 1px solid var(--sc-border-input);
+}
+.sc-model-step {
+  width: 34px;
+  height: 34px;
+  background: rgba(26,31,46,0.85);
+  border: 1px solid var(--sc-border-input);
+  color: #c8cede;
+  font-size: 16px;
+  cursor: pointer;
+}
+.sc-model-step:disabled { opacity: .35; cursor: default; }
+.sc-model-count { font: 700 13px 'Chakra Petch', sans-serif; color: #a7aec2; white-space: nowrap; }
+.sc-model-count b { color: #e9ecf2; font-size: 16px; }
+.sc-model-count small { font: 700 11px Rajdhani, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #8a91a5; }
+
+/* Ability payment: set the cost, then pay */
+.sc-battle-payment-target { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.sc-mini-step {
+  width: 32px;
+  height: 32px;
+  background: #1a1f2e;
+  border: 1px solid var(--sc-border-input);
+  color: #c8cede;
+  font-size: 16px;
+  cursor: pointer;
+}
+.sc-battle-payment-target-value { min-width: 18px; text-align: center; font: 700 18px 'Chakra Petch', sans-serif; color: #e9ecf2; }
+.sc-battle-payment-status { margin-left: auto; font: 700 12px Rajdhani, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #8a91a5; }
+.sc-battle-payment-status--due { color: #f2c14e; }
+.sc-battle-payment-status--done { color: #5fd98d; }
+
+/* Shared phase chip + keyword link (Brood, Tactics and the Tactical panel match) */
+.sc-phase-chip {
+  font: 700 11px Rajdhani, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 2px 6px;
+}
+.sc-kw-link {
+  color: var(--fc-text-tint, #c99af7);
+  border-bottom: 1px dotted var(--fc-primary-60, rgba(176,110,247,0.6));
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Library: slot use per role */
+.sc-lib-slots { font: 700 12px Rajdhani, sans-serif; letter-spacing: .06em; color: #8a91a5; white-space: nowrap; }
+.sc-lib-slots--full { color: #c8cede; }
+.sc-lib-slots--over { color: #f08a8a; }
+
+/* Tactics: choose-one / unique cards use a toggle */
+.sc-tac-toggle {
+  min-width: 92px;
+  height: 44px;
+  padding: 0 12px;
+  background: var(--fc-bg-10, rgba(147,51,234,0.1));
+  border: 1px solid var(--fc-primary-45, rgba(176,110,247,0.45));
+  color: var(--fc-text-tint, #d9bafc);
+  font: 700 13px Rajdhani, sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  clip-path: var(--sc-corner-9);
+}
+.sc-tac-toggle--on { background: rgba(53,199,107,0.16); border-color: rgba(53,199,107,0.5); color: #7fe0a4; }
+.sc-tac-toggle:disabled { background: #141824; border-color: #2a3040; color: #5b6378; cursor: default; }
+
+/* Full-size title: stack the brood name under the faction so it never truncates. */
+.sc-title-row:not(.sc-title-row--compact) { --sc-title-heading-size: 21px; }
+.sc-title-row:not(.sc-title-row--compact) div:has(> .sc-title-faction-name) {
+  flex-direction: column;
+  align-items: flex-start !important;
+  gap: 1px !important;
+}
+.sc-title-row:not(.sc-title-row--compact) .sc-title-faction-name { line-height: 1.05 !important; }
+.sc-title-row:not(.sc-title-row--compact) .sc-title-faction { max-width: 100%; }

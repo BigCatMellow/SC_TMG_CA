@@ -124,7 +124,7 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   }
   assert.equal(originalScoreboardHash(scoreboard), originalScoreboardHashes[faction],
     faction + ' scoreboard styling differs from original layout');
-  assert.ok(html.includes('scoreboardClass: st.resourcesCompact ?'), faction + ' scroll state binding');
+  assert.ok(html.includes("scoreboardClass: 'sc-scoreboard sc-scoreboard--compact'"), faction + ' one-row scoreboard, same as Rules and War Room');
   // Only the class and reversible sizing variables may change in the title row.
   assert.equal((html.match(/class="\{\{ titleHeaderClass \}\}"/g) || []).length, 1,
     faction + ' single title header');
@@ -133,9 +133,13 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   assert.ok(titleStart >= 0 && titleEnd > titleStart, faction + ' title region boundaries');
   let title = html.slice(titleStart, titleEnd);
   // The new management button is the sole permitted addition to the original title markup.
-  const newButton = title.match(/      <button onClick="\{\{ openRosters \}\}" aria-label="Army management"[\s\S]*?<\/button>\n/);
+  // The roster issues chip is the only other addition, and only shows when there are issues.
+  const issueChip = title.match(/      <sc-if value="\{\{ hasRosterWarnings \}\}"[^\n]*?<\/sc-if>\n/);
+  assert.ok(issueChip && issueChip[0].includes('onClick="{{ openIssues }}"'), faction + ' roster issues chip in title row');
+  title = title.replace(issueChip[0], '');
+  const newButton = title.match(/      <button onClick="\{\{ openRosters \}\}" aria-label="Rosters: save, load and export"[\s\S]*?<\/button>\n/);
   assert.ok(newButton, faction + ' management button beside Search');
-  assert.equal((title.match(/aria-label="Army management"/g) || []).length, 1, faction + ' one header management action');
+  assert.equal((title.match(/onClick="\{\{ openRosters \}\}"/g) || []).length, 1, faction + ' one header management action');
   assert.ok(title.indexOf(newButton[0]) < title.indexOf('onClick="{{ openSearch }}"'),
     faction + ' management icon must appear immediately before Search');
   assert.match(newButton[0], /width:40px;height:40px;/, faction + ' full-size icon hit target');
@@ -197,10 +201,13 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   const roles = ['hero','elite','core','support','air'];
   const slots = () => controller.renderVals().roleSlots;
   const firstSlots = slots();
-  assert.deepEqual(firstSlots.map(x => x.name), ['Hero','Elite','Core','Support','Air'],
-    faction + ' all five role counts in fixed order');
   const factionCard = D.FACTION_CARDS.find(x => x.id === controller.state.factionId) || D.FACTION_CARDS[0];
-  for (const role of roles) {
+  // Empty 0/0 roles are hidden; the rest keep the fixed order.
+  const shownRoles = roles.filter(r => (factionCard.slots?.[r] || 0) > 0);
+  assert.deepEqual(firstSlots.map(x => x.name.toLowerCase()), shownRoles,
+    faction + ' role counts in fixed order, empty roles hidden');
+  assert.equal(controller.renderVals().slotCols, Math.max(1, shownRoles.length), faction + ' slot strip column count');
+  for (const role of shownRoles) {
     const actual = firstSlots.find(x => x.name.toLowerCase() === role);
     assert.equal(actual.used,0,faction + ' empty army ' + role + ' used');
     assert.equal(actual.cap, factionCard.slots?.[role] || 0,
@@ -212,7 +219,7 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   if (grantingCard) {
     controller.state.tactical = [grantingCard.id];
     const updated = slots();
-    for (const role of roles) {
+    for (const role of roles.filter(r => (factionCard.slots?.[r] || 0) + (grantingCard.slots?.[r] || 0) > 0)) {
       assert.equal(updated.find(x => x.name.toLowerCase() === role).cap,
         (factionCard.slots?.[role] || 0) + (grantingCard.slots?.[role] || 0),
         faction + ' tactical bonus for ' + role);
@@ -245,7 +252,7 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
 
   assert.equal(css(), 'sc-resource-strip', faction + ' resources start expanded');
   assert.equal(slotCss(), 'sc-slot-strip', faction + ' slots start expanded');
-  assert.equal(boardCss(), 'sc-scoreboard', faction + ' original scoreboard at top');
+  assert.equal(boardCss(), 'sc-scoreboard sc-scoreboard--compact', faction + ' one-row scoreboard at top');
   assert.equal(titleCss(), 'sc-title-row', faction + ' original title at top');
   for (const tab of ['faction', 'battle', 'library', 'tactics', 'codex']) {
     controller.state.tab = tab;
@@ -265,7 +272,7 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip', faction + ' does not collapse on minor scroll');
   assert.equal(slotCss(), 'sc-slot-strip', faction + ' slots unchanged on minor scroll');
-  assert.equal(boardCss(), 'sc-scoreboard', faction + ' scoreboard unchanged on minor scroll');
+  assert.equal(boardCss(), 'sc-scoreboard sc-scoreboard--compact', faction + ' scoreboard unchanged on minor scroll');
   assert.equal(titleCss(), 'sc-title-row', faction + ' title unchanged on minor scroll');
   world.scrollY = 145;
   listeners.get('scroll').cb();
@@ -283,7 +290,7 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   listeners.get('scroll').cb();
   assert.equal(css(), 'sc-resource-strip', faction + ' re-expands near top');
   assert.equal(slotCss(), 'sc-slot-strip', faction + ' slots re-expand near top');
-  assert.equal(boardCss(), 'sc-scoreboard', faction + ' scoreboard re-expands near top');
+  assert.equal(boardCss(), 'sc-scoreboard sc-scoreboard--compact', faction + ' scoreboard stays one row');
   assert.equal(titleCss(), 'sc-title-row', faction + ' title re-expands near top');
 
   controller.componentWillUnmount();
