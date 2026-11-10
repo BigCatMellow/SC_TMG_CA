@@ -26,6 +26,7 @@
   <script src="protoss-data.js"></script>
   <script src="wave3-data.js"></script>
   <script src="model-portraits.js"></script>
+  <script src="codex-examples.js"></script>
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
@@ -424,7 +425,7 @@
     <div style="padding:14px">
       <div style="display:flex;align-items:center;gap:8px;padding:0 12px;background:var(--sc-card-bg);border:1px solid var(--sc-border-neutral);margin-bottom:14px">
         <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex:0 0 auto"><circle cx="7" cy="7" r="4.4" stroke="#8a91a5" stroke-width="1.6"></circle><path d="M10.4 10.4L14 14" stroke="#8a91a5" stroke-width="1.6" stroke-linecap="round"></path></svg>
-        <input value="{{ codexQ }}" onChange="{{ onCodexInput }}" placeholder="Filter keywords and tags…" style="flex:1;background:none;border:none;color:#e9ecf2;font-size:15px;padding:12px 0;font-family:inherit">
+        <input value="{{ codexQ }}" onChange="{{ onCodexInput }}" placeholder="Filter worked rules, keywords and tags…" style="flex:1;background:none;border:none;color:#e9ecf2;font-size:15px;padding:12px 0;font-family:inherit">
       </div>
       <sc-for list="{{ codexGroups }}" as="grp" hint-placeholder-count="2">
         <div style="margin-bottom:16px">
@@ -441,6 +442,12 @@
                   <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#8a91a5">{{ kw.type }}</span>
                 </div>
                 <div style="font-size:13px;color:#b9bfd0;line-height:1.55">{{ kw.description }}</div>
+                <sc-if value="{{ kw.hasExample }}" hint-placeholder-val="{{ false }}">
+                  <button onClick="{{ kw.onExample }}" class="sc-codex-example-link" aria-label="See example: {{ kw.name }}">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M3 3.5h8.5a1.5 1.5 0 0 1 1.5 1.5v8H4.5A1.5 1.5 0 0 0 3 14V3.5zm0 0V14" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M6 6.5h4M6 9h3" stroke="currentColor" stroke-width="1.2"></path></svg>
+                    See Example
+                  </button>
+                </sc-if>
               </div>
             </sc-for>
           </div>
@@ -473,8 +480,43 @@
           <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#8a91a5">{{ sheetMeta }}</span>
         </div>
         <div style="font-size:14px;color:#c8cede;line-height:1.6">{{ sheetBody }}</div>
+        <sc-if value="{{ sheetHasExample }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ openSheetExample }}" class="sc-codex-example-link sc-codex-example-link--sheet">See Worked Example</button>
+        </sc-if>
         <button onClick="{{ closeSheet }}" style="margin-top:16px;width:100%;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Close</button>
       </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ WORKED RULE EXAMPLE SHEET ============ -->
+  <sc-if value="{{ sheetExample }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeExample }}" class="sc-example-overlay"></div>
+    <div class="sc-example-position">
+      <section class="sc-example-dialog" role="dialog" aria-modal="true" aria-label="{{ exampleTitle }}">
+        <div class="sc-example-handle"></div>
+        <div class="sc-example-eyebrow">Codex / Worked Example</div>
+        <div class="sc-example-title">{{ exampleTitle }}</div>
+        <div class="sc-example-section-title">Rule summary</div>
+        <div class="sc-example-text">{{ exampleSummary }}</div>
+        <div class="sc-example-section-title">In plain English</div>
+        <div class="sc-example-text">{{ examplePlain }}</div>
+        <div class="sc-example-section-title">Example situation</div>
+        <div class="sc-example-scenario">{{ exampleScenario }}</div>
+        <div class="sc-example-section-title">What happens</div>
+        <div class="sc-example-steps">
+          <sc-for list="{{ exampleSteps }}" as="step" hint-placeholder-count="3">
+            <div class="sc-example-step">
+              <span class="sc-example-number">{{ step.number }}</span>
+              <span class="sc-example-text">{{ step.text }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div class="sc-example-takeaway"><strong>Key point</strong> {{ exampleTakeaway }}</div>
+        <div class="sc-example-source-label">Rules reference</div>
+        <div class="sc-example-source">{{ exampleSource }}</div>
+        <div class="sc-example-disclaimer">Teaching example only. Printed rules, specific card wording and official FAQ take precedence in a dispute.</div>
+        <button onClick="{{ closeExample }}" class="sc-example-close">{{ exampleCloseLabel }}</button>
+      </section>
     </div>
   </sc-if>
 
@@ -846,13 +888,48 @@ class Component extends DCLogic {
     return out;
   }
 
+  exampleEntries() {
+    // Safe fallback for standalone unit tests and older cached screens.
+    return Array.isArray(window.SCTMG_CODEX_EXAMPLES)
+      ? window.SCTMG_CODEX_EXAMPLES : [];
+  }
+  exampleForGlossary(name, kind) {
+    const target = String(name || '').toUpperCase();
+    const field = kind === 'tag' ? 'tags' : 'keywords';
+    return this.exampleEntries().find(e =>
+      (e[field] || []).some(term => String(term).toUpperCase() === target)) || null;
+  }
+  openExample(id) {
+    const entry = this.exampleEntries().find(e => e.id === id);
+    if (!entry) return;
+    this.setState(st => ({
+      sheet: {
+        type: 'example', id,
+        // Keyword/tool-tip sheets return to their definition after the example.
+        returnTo: st.sheet?.type === 'keyword' ? st.sheet : null
+      }
+    }));
+  }
+  closeExample() {
+    this.setState(st => ({
+      sheet: st.sheet?.type === 'example' ? st.sheet.returnTo || null : null
+    }));
+  }
   openKeyword(name) {
     const kw = this.D().KEYWORDS[name];
-    if (kw) this.setState({ sheet: { type: 'keyword', title: name, meta: kw.type + ' · Keyword', body: kw.description } });
+    const example = this.exampleForGlossary(name, 'keyword');
+    if (kw) this.setState({
+      sheet: { type: 'keyword', title: name, meta: kw.type + ' · Keyword',
+        body: kw.description, exampleId: example?.id || null }
+    });
   }
   openTag(name) {
     const tg = this.D().TAGS[name];
-    if (tg) this.setState({ sheet: { type: 'keyword', title: name, meta: tg.type, body: tg.description } });
+    const example = this.exampleForGlossary(name, 'tag');
+    if (tg) this.setState({
+      sheet: { type: 'keyword', title: name, meta: tg.type,
+        body: tg.description, exampleId: example?.id || null }
+    });
   }
 
   // ---------- phase helpers ----------
@@ -1575,12 +1652,34 @@ class Component extends DCLogic {
       };
     });
 
-    // codex
+    // Codex: optional curated worked examples, plus the original glossary.
     const cq = st.codexQ.trim().toLowerCase();
     const match = (n, d) => !cq || n.toLowerCase().includes(cq) || d.toLowerCase().includes(cq);
-    const kwEntries = Object.entries(D.KEYWORDS).filter(([n, d]) => match(n, d.description)).sort((a, b) => a[0].localeCompare(b[0])).map(([n, d]) => ({ name: n, type: d.type, description: d.description }));
-    const tagEntries = Object.entries(D.TAGS).filter(([n, d]) => match(n, d.description)).map(([n, d]) => ({ name: n, type: d.type, description: d.description }));
+    const examples = this.exampleEntries();
+    const ruleEntries = examples
+      .filter(e => match(e.title, [e.summary, e.plain, e.scenario, e.source,
+        ...(e.keywords || []), ...(e.tags || [])].join(' ')))
+      .map(e => ({
+        name: e.title, type: 'Rule guide', description: e.summary,
+        hasExample: true, onExample: () => this.openExample(e.id)
+      }));
+    const glossaryEntry = ([name, data], kind) => {
+      const example = this.exampleForGlossary(name, kind);
+      return {
+        name, type: data.type, description: data.description,
+        hasExample: !!example,
+        onExample: example ? () => this.openExample(example.id) : null
+      };
+    };
+    const kwEntries = Object.entries(D.KEYWORDS)
+      .filter(([n, d]) => match(n, d.description))
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(item => glossaryEntry(item, 'keyword'));
+    const tagEntries = Object.entries(D.TAGS)
+      .filter(([n, d]) => match(n, d.description))
+      .map(item => glossaryEntry(item, 'tag'));
     const codexGroups = [
+      ruleEntries.length ? { name: 'Worked Rules', entries: ruleEntries } : null,
       kwEntries.length ? { name: 'Keywords', entries: kwEntries } : null,
       tagEntries.length ? { name: 'Tags', entries: tagEntries } : null
     ].filter(Boolean);
@@ -1597,12 +1696,12 @@ class Component extends DCLogic {
       const kwHits = Object.entries(D.KEYWORDS).filter(([n, d]) => n.toLowerCase().includes(sq) || d.description.toLowerCase().includes(sq)).map(([n, d]) => ({
         kind: 'Keyword', badgeBg: 'rgba(56,211,232,0.14)', badgeFg: '#38d3e8',
         title: n, sub: d.description,
-        onOpen: () => this.setState({ searchOpen: false, sheet: { type: 'keyword', title: n, meta: d.type + ' · Keyword', body: d.description } })
+        onOpen: () => this.setState({ searchOpen: false }, () => this.openKeyword(n))
       }));
       const tagHits = Object.entries(D.TAGS).filter(([n, d]) => n.toLowerCase().includes(sq) || d.description.toLowerCase().includes(sq)).map(([n, d]) => ({
         kind: 'Tag', badgeBg: 'rgba(242,193,78,0.14)', badgeFg: '#f2c14e',
         title: n, sub: d.description,
-        onOpen: () => this.setState({ searchOpen: false, sheet: { type: 'keyword', title: n, meta: d.type, body: d.description } })
+        onOpen: () => this.setState({ searchOpen: false }, () => this.openTag(n))
       }));
       const tacHits = D.TACTICAL_CARDS.filter(t => t.name.toLowerCase().includes(sq) || (t.summary || '').toLowerCase().includes(sq)).map(t => ({
         kind: 'Tactic', badgeBg: 'rgba(53,199,107,0.14)', badgeFg: '#5fd98d',
@@ -1757,6 +1856,21 @@ class Component extends DCLogic {
       codexQ: st.codexQ, onCodexInput: (ev) => this.setState({ codexQ: ev.target.value }), codexGroups,
       // sheets
       sheetKeyword: !!(st.sheet && st.sheet.type === 'keyword'),
+      sheetHasExample: !!(st.sheet?.type === 'keyword' && st.sheet.exampleId),
+      openSheetExample: () => {
+        if (st.sheet?.type === 'keyword' && st.sheet.exampleId) this.openExample(st.sheet.exampleId);
+      },
+      sheetExample: !!(st.sheet?.type === 'example'),
+      exampleTitle: examples.find(e => e.id === st.sheet?.id)?.title || '',
+      exampleSummary: examples.find(e => e.id === st.sheet?.id)?.summary || '',
+      examplePlain: examples.find(e => e.id === st.sheet?.id)?.plain || '',
+      exampleScenario: examples.find(e => e.id === st.sheet?.id)?.scenario || '',
+      exampleSteps: (examples.find(e => e.id === st.sheet?.id)?.steps || [])
+        .map((text, index) => ({ number: index + 1, text })),
+      exampleTakeaway: examples.find(e => e.id === st.sheet?.id)?.takeaway || '',
+      exampleSource: examples.find(e => e.id === st.sheet?.id)?.source || '',
+      exampleCloseLabel: st.sheet?.returnTo ? 'Back to definition' : 'Close',
+      closeExample: () => this.closeExample(),
       sheetTitle: st.sheet ? st.sheet.title : '', sheetMeta: st.sheet ? st.sheet.meta : '', sheetBody: st.sheet ? st.sheet.body : '',
       sheetTier: !!(st.sheet && st.sheet.type === 'tier'),
       tierUnitName, tierOptions,
