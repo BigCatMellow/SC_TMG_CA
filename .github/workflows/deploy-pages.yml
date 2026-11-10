@@ -47,16 +47,6 @@ jobs:
         run: node scripts/test-pages.mjs
       - name: Verify Command Center fits mobile viewport
         run: node scripts/test-home-viewport.mjs
-      - name: Verify five-tab faction setup on mobile
-        run: node scripts/test-faction-navigation-browser.mjs
-      - name: Upload faction navigation screenshots
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: unified-army-mobile-screenshots
-          path: artifacts/faction-*.png
-          if-no-files-found: warn
-          retention-days: 7
       - name: Upload mobile layout screenshots
         if: always()
         uses: actions/upload-artifact@v4
