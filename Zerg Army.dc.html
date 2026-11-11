@@ -391,11 +391,11 @@
   <sc-if value="{{ tabIsLibrary }}" hint-placeholder-val="{{ false }}">
     <div style="padding:14px">
       <sc-for list="{{ libraryGroups }}" as="grp" hint-placeholder-count="3">
-        <div style="margin-bottom:16px" data-sec="{{ grp.role }}" data-sec-note="{{ grp.secNote }}">
-          <div style="display:flex;align-items:center;gap:8px;padding:0 2px 8px">
-            <span style="width:8px;height:8px;background:{{ grp.color }};clip-path:var(--sc-diamond)"></span>
-            <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ grp.color }}">{{ grp.role }}</span>
-            <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
+        <div class="sc-role-group" data-sec="{{ grp.role }}" data-sec-note="{{ grp.secNote }}">
+          <div class="sc-role-head" style="--role:{{ grp.color }}">
+            <span class="sc-role-mark" aria-hidden="true"></span>
+            <h2 class="sc-role-name">{{ grp.role }}</h2>
+            <span class="sc-role-rule" aria-hidden="true"></span>
             <sc-if value="{{ grp.hasSlots }}" hint-placeholder-val="{{ false }}"><span class="{{ grp.slotClass }}" title="{{ grp.slotTitle }}">{{ grp.slotText }}</span></sc-if>
           </div>
           <div class="sc-lib-list">
@@ -2461,7 +2461,7 @@ class Component extends DCLogic {
           const lockReason = u.role === 'Other' || !u.tiers.some(t => t.cost > 0) ? 'Summoned or placed by an ability'
             : u.factionTag && u.factionTag !== faction.name ? 'Requires ' + u.factionTag
             : noSlots && !inArmy ? 'No ' + role + ' slots with ' + faction.name
-            : needsSlotCard && !inArmy ? 'Needs a ' + role + ' slot: ' + slotGivers.slice(0, 2).map(t => t.name).join(' or ') : '';
+            : needsSlotCard && !inArmy ? 'Needs ' + (/^[AEIOU]/.test(role) ? 'an ' : 'a ') + role + ' slot: ' + slotGivers.slice(0, 2).map(t => t.name).join(' or ') : '';
           return {
             name: u.name, unique: !!u.unique, inArmy, ...art,
             cutout, framed: !!art.portrait && !cutout, expanded,
