@@ -3,6 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./resume.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -39,7 +40,7 @@
 
     <!-- title row -->
     <div class="{{ titleHeaderClass }}" style="display:flex;align-items:center;gap:var(--sc-title-gap,10px);padding:calc(var(--sc-title-pad-top,10px) + env(safe-area-inset-top)) 14px var(--sc-title-pad-bottom,8px)">
-      <a href="Command Center.dc.html" aria-label="Back to command center" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#8a91a5;text-decoration:none;background:#141824;border:1px solid var(--sc-border-neutral);clip-path:var(--sc-corner-8)">
+      <a href="index.html" aria-label="Back to command center" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#8a91a5;text-decoration:none;background:#141824;border:1px solid var(--sc-border-neutral);clip-path:var(--sc-corner-8)">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       </a>
       <div style="position:relative;flex:1;min-width:0">
@@ -1059,6 +1060,8 @@ class Component extends DCLogic {
       if (play) this.state.play = { round: play.round || 1, phase: play.phase || 0, vpYou: play.vpYou || 0, vpFoe: play.vpFoe || 0,
         markers: play.markers || {}, ownLostAtStart: play.ownLostAtStart || 0 };
       localStorage.setItem('sctmg_last_faction', 'terran');
+      const lastTab = localStorage.getItem('sctmg_terran_tab');
+      if (['faction', 'library', 'tactics', 'battle', 'codex'].includes(lastTab)) this.state.tab = lastTab;
       const saved = JSON.parse(localStorage.getItem('sctmg_terran_v1') || 'null');
       if (saved) {
         this.state.army = (saved.army || []).filter(e => this.D().UNITS.find(u => u.id === e.unitId))
@@ -2425,6 +2428,9 @@ class Component extends DCLogic {
         }));
       }
     }
+
+    // remember the open tab so reopening the app lands here
+    if (st.ready && this._savedTab !== st.tab) { this._savedTab = st.tab; try { localStorage.setItem('sctmg_terran_tab', st.tab); } catch (e) {} }
 
     // tabs
     const tabDefs = [
