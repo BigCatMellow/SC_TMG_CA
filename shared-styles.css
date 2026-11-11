@@ -1419,3 +1419,7 @@ input::placeholder { color: #5b6275; }
 .sc-plain-label { display: block; margin-bottom: 3px; font: 700 10px Rajdhani, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #6f97a0; }
 .sc-sheet-rules { font-size: 14px; line-height: 1.6; color: #c8cede; }
 .sc-sheet-rules .sc-plain-label { color: #7c8398; }
+
+/* Weapon block: name on the left edge, stats and surge indented under it */
+.sc-play-weapon { row-gap: 3px; }
+.sc-play-wstats, .sc-play-wsurge { flex-basis: 100%; padding-left: 14px; }
