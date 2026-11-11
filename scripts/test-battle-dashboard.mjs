@@ -28,7 +28,7 @@ for (const selector of ['.sc-battle-supply-stat-label', '.sc-battle-supply-stat-
 assert.match(styles,/overflow-y:\s*auto/,'long roster and card lists can scroll inside sheet');
 assert.match(styles,/overscroll-behavior:\s*contain/,'modal scrolling stays inside sheet');
 const world={alert(){},scrollY:0,scrollTo(){},addEventListener(){},removeEventListener(){}};
-for(const file of ['terran-data.js','zerg-data.js','protoss-data.js','wave3-data.js','model-portraits.js','codex-examples.js','missions-data.js'])
+for(const file of ['terran-data.js','zerg-data.js','protoss-data.js','wave3-data.js','model-portraits.js','codex-examples.js','missions-data.js','plain-english.js'])
  vm.runInNewContext(read(file),{window:world},{filename:file});
 for(const faction of ['terran','zerg','protoss']){
  const file=faction[0].toUpperCase()+faction.slice(1)+' Army.dc.html';
@@ -233,6 +233,10 @@ for(const faction of ['terran','zerg','protoss']){
    assert.equal(view().sheetKeyword,true);
    assert.equal(view().sheetBody,expectedAbilities[usableIdx].description);
    assert.match(view().sheetActionLabel,/use ability/);
+   assert.ok(view().sheetHasSegs,'ability text has tappable keywords');
+   const kw=view().sheetSegs.find(sg=>sg.kw);
+   if(kw){ kw.onOpen({stopPropagation(){}}); assert.equal(view().sheetCloseLabel,'Back'); view().closeSheet();
+     assert.equal(view().sheetBody,expectedAbilities[usableIdx].description,'Back returns to the ability'); }
    view().sheetAction();
    assert.equal(view().sheetKeyword,false);
    assert.equal(view().battleFaction.tapped,true,'Using the ability exhausts the card');

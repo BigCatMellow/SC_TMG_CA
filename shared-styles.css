@@ -1413,3 +1413,9 @@ input::placeholder { color: #5b6275; }
 .sc-unit-card.sc-lib-card--framed.sc-lib-card--open .sc-lib-head { min-height: 0; align-items: center; }
 .sc-unit-card.sc-lib-card--open .sc-lib-head .sc-lib-frame-art { opacity: 0.5; }
 .sc-unit-sup { background: #161a27; }
+
+/* Ability sheet: plain-English line above the exact rules text */
+.sc-plain { margin: 4px 0 12px; padding: 10px 12px; background: rgba(56,211,232,0.07); border-left: 3px solid #38d3e8; font-size: 15px; line-height: 1.5; color: #e9ecf2; }
+.sc-plain-label { display: block; margin-bottom: 3px; font: 700 10px Rajdhani, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #6f97a0; }
+.sc-sheet-rules { font-size: 14px; line-height: 1.6; color: #c8cede; }
+.sc-sheet-rules .sc-plain-label { color: #7c8398; }
