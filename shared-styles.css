@@ -1487,3 +1487,41 @@ input::placeholder { color: #5b6275; }
 }
 .sc-lock--hint { color: #8fb8c7; }
 .sc-lock--hint::before { content: "+ "; font-size: 11px; }
+
+/* ---- Floating "you are here" section tab (Library, Tactics, Battle, Codex) ---- */
+.sc-secnav {
+  position: fixed; z-index: 230;
+  right: max(14px, calc(50% - 240px + 14px));
+  bottom: calc(72px + env(safe-area-inset-bottom));
+  display: grid; grid-template-columns: auto auto; align-items: center; column-gap: 8px; row-gap: 5px;
+  min-height: 44px; padding: 8px 12px 7px;
+  background: rgba(20,24,36,0.94); backdrop-filter: blur(10px);
+  border: 1px solid var(--fc-primary-45, rgba(176,110,247,0.45));
+  box-shadow: 0 8px 24px rgba(0,0,0,0.55);
+  clip-path: var(--sc-corner-9);
+  color: #e9ecf2; cursor: pointer; text-align: left;
+  opacity: .45; transition: opacity .25s ease;
+}
+.sc-secnav--active { opacity: 1; }
+.sc-secnav-label { font: 700 13px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-secnav-pos { font: 700 11px 'Chakra Petch', sans-serif; color: #8a91a5; }
+.sc-secnav-track { grid-column: 1 / -1; height: 2px; background: #2a3040; }
+.sc-secnav-fill { display: block; height: 100%; background: var(--fc-primary-solid, #b06ef7); }
+.sc-secnav-scrim { position: fixed; inset: 0; z-index: 228; background: rgba(4,5,8,0.35); }
+.sc-secnav-menu {
+  position: fixed; z-index: 231;
+  right: max(14px, calc(50% - 240px + 14px));
+  bottom: calc(126px + env(safe-area-inset-bottom));
+  display: grid; min-width: 210px; max-height: 60vh; overflow-y: auto;
+  background: #141824; border: 1px solid var(--fc-primary-45, rgba(176,110,247,0.45));
+  box-shadow: 0 12px 30px rgba(0,0,0,0.6); animation: scFade .12s ease;
+}
+.sc-secnav-item { display: flex; align-items: center; justify-content: space-between; gap: 14px; min-height: 44px; padding: 0 14px; background: none; border: 0; border-bottom: 1px solid #1f2430; color: #c8cede; font: 700 13px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; text-align: left; cursor: pointer; }
+.sc-secnav-item:last-child { border-bottom: 0; }
+.sc-secnav-item small { font: 600 12px Rajdhani, sans-serif; letter-spacing: .04em; text-transform: none; color: #7c8398; }
+.sc-secnav-item--on { background: var(--fc-bg-10, rgba(147,51,234,0.1)); color: #e9ecf2; box-shadow: inset 3px 0 0 var(--fc-primary-solid, #b06ef7); }
+@media (orientation: landscape) and (max-height: 520px) {
+  .sc-secnav, .sc-secnav-menu { right: max(14px, calc(50% - 410px + 14px)); }
+  .sc-secnav { bottom: calc(56px + env(safe-area-inset-bottom)); }
+  .sc-secnav-menu { bottom: calc(108px + env(safe-area-inset-bottom)); }
+}
