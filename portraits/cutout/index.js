@@ -21,5 +21,19 @@ window.SCTMG_PORTRAIT_CUTOUTS = {
   "portraits/pdf/zerg/roach.jpg": "portraits/cutout/zerg/roach.webp",
   "portraits/pdf/zerg/swarmling.jpg": "portraits/cutout/zerg/swarmling.webp",
   "portraits/pdf/zerg/vile.jpg": "portraits/cutout/zerg/vile.webp",
-  "portraits/pdf/zerg/zergling.jpg": "portraits/cutout/zerg/zergling.webp"
+  "portraits/pdf/zerg/zergling.jpg": "portraits/cutout/zerg/zergling.webp",
+  "protoss/high-templar": "portraits/cutout/protoss/high-templar.webp",
+  "protoss/immortal": "portraits/cutout/protoss/immortal.webp",
+  "protoss/tassadar": "portraits/cutout/protoss/tassadar.webp",
+  "protoss/twilight-templar": "portraits/cutout/protoss/twilight-templar.webp",
+  "terran/holo-decoy": "portraits/cutout/terran/holo-decoy.webp",
+  "terran/nova-assault": "portraits/cutout/terran/nova-assault.webp",
+  "terran/nova-stealth": "portraits/cutout/terran/nova-stealth.webp",
+  "terran/raven": "portraits/cutout/terran/raven.webp",
+  "terran/siege-tank": "portraits/cutout/terran/siege-tank.webp",
+  "zerg/bile-launcher": "portraits/cutout/zerg/bile-launcher.webp",
+  "zerg/defiler": "portraits/cutout/zerg/defiler.webp",
+  "zerg/omega-worm": "portraits/cutout/zerg/omega-worm.webp",
+  "zerg/ravager": "portraits/cutout/zerg/ravager.webp",
+  "zerg/zagara": "portraits/cutout/zerg/zagara.webp"
 };
