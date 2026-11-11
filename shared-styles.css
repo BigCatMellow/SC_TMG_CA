@@ -1367,11 +1367,19 @@ input::placeholder { color: #5b6275; }
 
 /* Battle cards reuse the Library card. Everything inside sits above the frame layer. */
 .sc-lib-card > *:not(.sc-lib-card-bg) { position: relative; }
-.sc-battle-head { cursor: pointer; min-height: 70px; }
-.sc-battle-head .sc-lib-figure { right: 76px; width: 112px; pointer-events: none; }
-.sc-unit-card.sc-lib-card--cutout .sc-lib-head-text { padding-right: 112px; }
-.sc-unit-card--open .sc-lib-card-bg { border-color: var(--fc-primary-45); }
-.sc-unit-card--open .sc-lib-card-bg::after { opacity: 1; }
+.sc-unit-tier { font-size: 12px; color: #8a91a5; margin-top: 1px; }
+.sc-unit-sup {
+  width: 44px; height: 44px; flex: 0 0 auto;
+  display: grid; place-content: center; text-align: center;
+  background: var(--fc-bg-10); border: 1px solid var(--fc-primary-45);
+  clip-path: var(--sc-corner-9);
+  font: 700 17px 'Chakra Petch', sans-serif; color: #e9ecf2; line-height: 1;
+}
+.sc-unit-sup small { display: block; margin-top: 2px; font: 700 9px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #a7aec2; }
+.sc-unit-card .sc-play-body { border-top: 1px solid #1f2430; padding-top: 12px; padding-bottom: 12px; }
+.sc-unit-foot { position: relative; display: grid; gap: 8px; padding: 0 12px 12px; }
+.sc-lib-card--open .sc-unit-foot { padding-top: 0; }
+.sc-unit-controls { display: flex; align-items: center; gap: 8px; }
 
 /* One supply readout: the header strip; tap it for the pool sheet */
 .sc-pool-dot { display: inline-block; width: 6px; height: 6px; margin-left: 4px; background: #f5a524; border-radius: 50%; vertical-align: 1px; box-shadow: 0 0 6px #f5a524; }

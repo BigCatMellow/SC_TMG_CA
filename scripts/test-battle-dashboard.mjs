@@ -72,7 +72,7 @@ for(const faction of ['terran','zerg','protoss']){
  }
  for(const token of ['list="{{ u.play.weapons }}"','list="{{ u.play.abilities }}"','list="{{ u.play.stats }}"','onClick="{{ pa.onOpen }}"'])
    assert.ok(troops.includes(token),file+' unit play view missing '+token);
- for(const token of ['class="{{ u.cardClass }}"','<div class="sc-lib-card-bg"></div>','class="sc-lib-head sc-battle-head"','class="sc-lib-list"'])
+ for(const token of ['class="{{ u.cardClass }}"','<div class="sc-lib-card-bg"></div>','class="sc-lib-head"','list="{{ u.tags }}"','class="sc-unit-sup"','class="sc-lib-list"'])
    assert.ok(troops.includes(token),file+' battle cards should match Library cards: '+token);
  assert.ok(!troops.includes('{{ u.cost }}'),file+' mineral cost is not shown on battle cards');
  for(const sheet of ['sheetMission','sheetEndRound']) assert.ok(html.includes('{{ '+sheet+' }}'),file+' missing '+sheet);
