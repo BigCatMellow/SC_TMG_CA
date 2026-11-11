@@ -80,7 +80,7 @@
               <span style="font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;color:#e9ecf2">{{ ab.name }}</span>
               <span style="font-size:11px;color:#8a91a5">{{ ab.type }}</span>
             </div>
-            <div style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:var(--fc-text-tint,#c99af7);border-bottom:1px dotted var(--fc-primary-60,rgba(176,110,247,0.6));font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
+            <div class="sc-def" style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:var(--fc-text-tint,#c99af7);border-bottom:1px dotted var(--fc-primary-60,rgba(176,110,247,0.6));font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
           </div>
         </sc-for>
       </div>
@@ -108,7 +108,7 @@
                 <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;color:#f2c14e">{{ up.cost }}</span>
                 <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:1px 6px;background:{{ up.phBg }};color:{{ up.phFg }}">{{ up.phase }}</span>
               </span>
-              <span style="display:block;font-size:12px;color:#9aa1b4;line-height:1.5;margin-top:2px"><sc-for list="{{ up.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:var(--fc-text-tint,#c99af7);border-bottom:1px dotted var(--fc-primary-60,rgba(176,110,247,0.6));font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></span>
+              <span class="sc-def" style="display:block;font-size:12px;color:#9aa1b4;line-height:1.5;margin-top:2px"><sc-for list="{{ up.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:var(--fc-text-tint,#c99af7);border-bottom:1px dotted var(--fc-primary-60,rgba(176,110,247,0.6));font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></span>
             </span>
           </div>
         </sc-for>

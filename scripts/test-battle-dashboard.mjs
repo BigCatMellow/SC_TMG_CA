@@ -414,6 +414,11 @@ for(const faction of ['terran','zerg','protoss']){
      assert.equal(view().mineralsUsed,before+parseInt(paid.cost,10),'Buying an upgrade spends its tier cost'); }
    c.state.army=[];
  }
+ // Phone back closes the top overlay: sheet first (back to the ability it came from), then the panel.
+ c.state.battlePanel='tactical'; c.state.sheet={type:'keyword',title:'K',returnTo:{type:'keyword',title:'A'}};
+ c.closeTopOverlay(); assert.equal(c.state.sheet.title,'A','back returns to the ability sheet');
+ c.closeTopOverlay(); assert.equal(c.state.sheet,null);
+ c.closeTopOverlay(); assert.equal(c.state.battlePanel,null,'then closes the card panel');
  // Floating section tab: every long list marks its sections; the tab opens a jump menu.
  for(const token of ['data-sec="{{ grp.role }}"','data-sec="{{ grp.secLabel }}"','data-sec="Cards"','onClick="{{ toggleSecMenu }}"','onClick="{{ si.onJump }}"'])
    assert.ok(html.includes(token),faction+' section tab missing '+token);
