@@ -46,8 +46,14 @@ for(const faction of ['terran','zerg','protoss']){
  assert.equal((inline.match(/class="sc-battle-overview-card sc-battle-overview-card--/g)||[]).length,0,
    file+' no summary card: cards are tap-to-spend chips');
  for(const token of ['list="{{ cardChips }}"','onClick="{{ cc.onTap }}"','onClick="{{ openBattleTactical }}"',
-   'onClick="{{ openMission }}"','onClick="{{ openEndRound }}"','onClick="{{ battleSupplyDown }}"','onClick="{{ battleSupplyUp }}"'])
+   'onClick="{{ openMission }}"','onClick="{{ openEndRound }}"'])
    assert.ok(inline.includes(token),file+' play strip missing '+token);
+ // One supply recorder: the header strip opens the pool sheet; no second stepper inline.
+ assert.ok(!inline.includes('{{ battleSupplyDown }}'),file+' supply pool is adjusted in one place only');
+ const poolSheet=html.slice(html.indexOf('<sc-if value="{{ sheetPool }}"'),html.indexOf('<!-- ============ MISSION SHEET ============ -->'));
+ for(const token of ['onClick="{{ battleSupplyDown }}"','onClick="{{ battleSupplyUp }}"','onClick="{{ usePoolSuggestion }}"'])
+   assert.ok(poolSheet.includes(token),file+' pool sheet missing '+token);
+ assert.equal((html.match(/\{\{ battleSupplyDown \}\}/g)||[]).length,1,file+' exactly one pool stepper');
  const header=html.slice(html.indexOf('<!-- play HUD, scoreboard layout'),
    html.indexOf('<!-- ============ BATTLE TAB ============ -->'));
  const scoreboard=header.indexOf('class="{{ scoreboardClass }}"');
@@ -60,12 +66,14 @@ for(const faction of ['terran','zerg','protoss']){
  assert.ok(header.includes('<sc-if value="{{ tabIsBattle }}"'),
    file+' supply strip should only appear in Battle');
  for(const binding of ['battleSupplyUsed','battleSupplyAvailable','battleSupplyRemaining',
-   'battleSupplyFreeClass','battleSupplyAria','openBattleTroops']){
+   'battleSupplyFreeClass','battleSupplyAria','openPool']){
    assert.ok(header.includes('{{ '+binding+' }}') || header.includes('onClick="{{ '+binding+' }}"'),
      file+' Battle-only supply row missing '+binding);
  }
  for(const token of ['list="{{ u.play.weapons }}"','list="{{ u.play.abilities }}"','list="{{ u.play.stats }}"','onClick="{{ pa.onOpen }}"'])
    assert.ok(troops.includes(token),file+' unit play view missing '+token);
+ for(const token of ['class="{{ u.cardClass }}"','<div class="sc-lib-card-bg"></div>','class="sc-lib-head"','list="{{ u.tags }}"','class="sc-unit-sup"','class="sc-lib-list"'])
+   assert.ok(troops.includes(token),file+' battle cards should match Library cards: '+token);
  assert.ok(!troops.includes('{{ u.cost }}'),file+' mineral cost is not shown on battle cards');
  for(const sheet of ['sheetMission','sheetEndRound']) assert.ok(html.includes('{{ '+sheet+' }}'),file+' missing '+sheet);
  assert.ok(inline.includes('list="{{ rosterIssues }}"')&&inline.includes('onClick="{{ issue.onFix }}"'),
@@ -183,6 +191,10 @@ for(const faction of ['terran','zerg','protoss']){
  view().openBattleTactical();
  view().openBattleTroops();
  assert.equal(view().sheetBattleTactical,false);
+ view().openPool();
+ assert.equal(view().sheetPool,true);
+ view().closeSheet();
+ assert.equal(view().sheetPool,false);
  assert.equal(view().sheetBattleTroops,false);
  assert.equal(c.state.tab,'battle');
  // Card actions only show when they apply.
