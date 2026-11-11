@@ -81,7 +81,7 @@
 
     <!-- Deployment supply is a Battle-only live readout; tap to adjust in Troops. -->
     <sc-if value="{{ tabIsBattle }}" hint-placeholder-val="{{ false }}">
-      <button class="{{ battleSupplyStripClass }}" onClick="{{ openBattleTroops }}" aria-label="{{ battleSupplyAria }}">
+      <button class="{{ battleSupplyStripClass }}" onClick="{{ openPool }}" aria-label="{{ battleSupplyAria }}">
         <span class="sc-battle-supply-heading">
           <span class="sc-battle-supply-kicker">Deployment</span>
           <span class="sc-battle-supply-label">Supply</span>
@@ -92,7 +92,7 @@
         </span>
         <span class="sc-battle-supply-stat">
           <span class="sc-battle-supply-stat-label">Pool</span>
-          <span class="sc-battle-supply-stat-number">{{ battleSupplyAvailable }}</span>
+          <span class="sc-battle-supply-stat-number">{{ battleSupplyAvailable }}<span class="sc-pool-edit" aria-hidden="true">±</span><sc-if value="{{ poolDiffers }}" hint-placeholder-val="{{ false }}"><span class="sc-pool-dot" aria-hidden="true"></span></sc-if></span>
         </span>
         <span class="sc-battle-supply-stat">
           <span class="sc-battle-supply-stat-label">Free</span>
@@ -154,15 +154,6 @@
           <span class="sc-play-mission-title">{{ missionTitle }}</span>
           <span class="sc-play-mission-sub">{{ missionSub }}</span>
         </button>
-        <div class="sc-play-pool">
-          <span class="sc-play-kicker">Supply pool</span>
-          <div class="sc-play-pool-row">
-            <button onClick="{{ battleSupplyDown }}" class="sc-mini-step" aria-label="Lower supply pool">−</button>
-            <span class="sc-play-pool-value">{{ battleSupplyAvailable }}</span>
-            <button onClick="{{ battleSupplyUp }}" class="sc-mini-step" aria-label="Raise supply pool">+</button>
-          </div>
-          <sc-if value="{{ poolDiffers }}" hint-placeholder-val="{{ false }}"><button onClick="{{ usePoolSuggestion }}" class="sc-play-pool-use">Use mission {{ poolSuggestion }}</button></sc-if>
-        </div>
       </div>
       <button onClick="{{ openEndRound }}" class="sc-play-endround">{{ endRoundLabel }}</button>
 
@@ -297,12 +288,14 @@
               <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ grp.color }}">{{ grp.role }}</span>
               <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
             </div>
-            <div style="display:grid;gap:8px">
+            <div class="sc-lib-list">
               <sc-for list="{{ grp.entries }}" as="u" hint-placeholder-count="2">
-                <div style="position:relative;background:var(--sc-card-bg);border:1px solid {{ u.borderColor }};clip-path:var(--sc-corner-12)">
-                  <sc-if value="{{ u.portrait }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;pointer-events:none;opacity:0.5;overflow:hidden"><img src="{{ u.portrait }}" onError="{{ u.onPortraitError }}" alt="" aria-hidden="true" style="{{ u.portraitImgStyle }}"></span><span style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(11,14,23,0.88) 20%,rgba(11,14,23,0.4) 46%,rgba(11,14,23,0.08) 72%,rgba(11,14,23,0.3) 100%)"></span></sc-if>
-                  <div onClick="{{ u.onToggle }}" role="button" style="position:relative;display:flex;align-items:center;gap:10px;padding:12px;cursor:pointer;min-height:44px">
-                    <div style="position:relative;flex:1;min-width:0">
+                <div class="{{ u.cardClass }}">
+                  <div class="sc-lib-card-bg"></div>
+                  <div onClick="{{ u.onToggle }}" role="button" aria-expanded="{{ u.expanded }}" class="sc-lib-head sc-battle-head">
+                    <sc-if value="{{ u.framed }}" hint-placeholder-val="{{ false }}"><span class="sc-lib-frame"><span class="sc-lib-frame-art"><img src="{{ u.portrait }}" onError="{{ u.onPortraitError }}" alt="" aria-hidden="true" style="{{ u.portraitImgStyle }}"></span><span class="sc-lib-frame-shade"></span></span></sc-if>
+                    <sc-if value="{{ u.cutout }}" hint-placeholder-val="{{ false }}"><span class="sc-lib-figure" aria-hidden="true"><span class="sc-lib-floor"></span><img src="{{ u.cutout }}" onError="{{ u.onCutoutError }}" alt="" loading="lazy"></span></sc-if>
+                    <div class="sc-lib-head-text">
                       <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
                         <span style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ u.name }}</span>
                         <sc-if value="{{ u.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
@@ -712,6 +705,26 @@
         <input ref="{{ rosterFileRef }}" type="file" accept="application/json,.json" onChange="{{ importRosterFile }}" style="display:none">
         <button onClick="{{ triggerImport }}" style="margin-top:10px;width:100%;height:40px;flex:0 0 auto;background:none;border:1px dashed var(--sc-border-input);color:#8a91a5;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Import Roster File</button>
         <button onClick="{{ closeSheet }}" style="margin-top:8px;width:100%;height:44px;flex:0 0 auto;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Close</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ SUPPLY POOL SHEET ============ -->
+  <sc-if value="{{ sheetPool }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,5,8,0.65);animation:scFade 0.15s ease"></div>
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:310;display:flex;justify-content:center;pointer-events:none">
+      <div role="dialog" aria-modal="true" aria-label="Supply pool" class="sc-play-sheet">
+        <div class="sc-play-grab"></div>
+        <div class="sc-play-sheet-title">Supply pool</div>
+        <div class="sc-play-sheet-meta">{{ poolMeta }}</div>
+        <div class="sc-pool-big">
+          <button onClick="{{ battleSupplyDown }}" class="sc-pool-big-btn" aria-label="Lower supply pool">−</button>
+          <b>{{ battleSupplyAvailable }}</b>
+          <button onClick="{{ battleSupplyUp }}" class="sc-pool-big-btn" aria-label="Raise supply pool">+</button>
+        </div>
+        <div class="sc-pool-stats"><span>Used <b>{{ battleSupplyUsed }}</b></span><span>Free <b>{{ battleSupplyRemaining }}</b></span></div>
+        <sc-if value="{{ poolDiffers }}" hint-placeholder-val="{{ false }}"><button onClick="{{ usePoolSuggestion }}" class="sc-play-sheet-btn sc-play-sheet-btn--go">Use mission pool · {{ poolSuggestion }}</button></sc-if>
+        <button onClick="{{ closeSheet }}" class="sc-play-sheet-btn">Done</button>
       </div>
     </div>
   </sc-if>
@@ -1513,6 +1526,9 @@ class Component extends DCLogic {
       usePoolSuggestion: () => this.setState({ battleSupplyAvailable: suggestion }, () => this.save()),
       endRoundLabel: last ? 'Final round · save score' : 'End round ' + round + ' →',
       openEndRound: () => this.openEndRound(),
+      openPool: () => this.setState({ sheet: { type: 'pool' } }),
+      sheetPool: !!(st.sheet && st.sheet.type === 'pool'),
+      poolMeta: m ? (this.missionPool(round) == null ? m.name + ' · final round: no pool limit' : m.name + ' · round ' + round + ' pool is ' + suggestion + ' (' + m.supply + ' +' + m.perRound + ' per round)') : 'No mission picked: set the pool from your mission card',
       sheetEndRound: !!(st.sheet && st.sheet.type === 'endround'),
       endRoundTitle: last ? 'Final round' : 'End round ' + round,
       endRoundConfirm: last ? 'Save final score' : (m ? 'Apply score & start round ' + (round + 1) : 'Start round ' + (round + 1)),
@@ -2052,11 +2068,15 @@ class Component extends DCLogic {
         return s + (u ? this.upgCostNum(u.cost, e.tierIdx) : 0);
       }, 0);
       const expanded = !!st.expArmy[e.key];
+      const art = this.portrait(unit);
+      const battleCutout = art.cutout && !(this._cutoutFailed || {})[art.cutout] ? art.cutout : '';
       return {
         key: e.key, role: unit.role, name: unit.name, unique: !!unit.unique,
         tierLabel: tier.tier + ' · ' + startingModels + (startingModels === 1 ? ' model' : ' models') + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
         cost: (tier.cost || 0) + upgCost,
-        ...this.portrait(unit),
+        ...art, cutout: battleCutout, framed: !!art.portrait && !battleCutout,
+        cardClass: 'sc-lib-card sc-unit-card' + (battleCutout ? ' sc-lib-card--cutout' : art.portrait ? ' sc-lib-card--framed' : '') + (expanded ? ' sc-unit-card--open' : ''),
+        onCutoutError: () => { this._cutoutFailed[art.cutout] = true; this.setState({}); },
         borderColor: expanded ? 'rgba(242,200,96,0.45)' : 'var(--sc-border-neutral)',
         expanded, chev: expanded ? 90 : 0,
         detail: this.buildDetail(unit, e),
@@ -2482,7 +2502,7 @@ class Component extends DCLogic {
         'sc-battle-supply-free sc-battle-supply-free--over' : 'sc-battle-supply-free',
       battleSupplyAria: 'Deployment supply: ' + battleSupplyUsed + ' used of ' +
         st.battleSupplyAvailable + '; ' + battleSupplyRemaining +
-        ' remaining. Jump to Troops.',
+        ' remaining. Tap to adjust the supply pool.',
       tacticalPreview,
       tacticalPreviewMore: Math.max(0, tacticalPreviewAll.length - tacticalPreview.length),
       tacticalPreviewHasMore: tacticalPreviewAll.length > tacticalPreview.length,

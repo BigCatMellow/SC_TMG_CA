@@ -1364,3 +1364,20 @@ input::placeholder { color: #5b6275; }
 .sc-score-line--none { color: #6b7286; }
 .sc-score-lead { margin-top: 8px; color: #a7aec2; }
 .sc-score-lead--end { margin-top: 8px; color: #f2c14e; font-weight: 600; }
+
+/* Battle cards reuse the Library card. Everything inside sits above the frame layer. */
+.sc-lib-card > *:not(.sc-lib-card-bg) { position: relative; }
+.sc-battle-head { cursor: pointer; min-height: 70px; }
+.sc-battle-head .sc-lib-figure { right: 76px; width: 112px; pointer-events: none; }
+.sc-unit-card.sc-lib-card--cutout .sc-lib-head-text { padding-right: 112px; }
+.sc-unit-card--open .sc-lib-card-bg { border-color: var(--fc-primary-45); }
+.sc-unit-card--open .sc-lib-card-bg::after { opacity: 1; }
+
+/* One supply readout: the header strip; tap it for the pool sheet */
+.sc-pool-dot { display: inline-block; width: 6px; height: 6px; margin-left: 4px; background: #f5a524; border-radius: 50%; vertical-align: 1px; box-shadow: 0 0 6px #f5a524; }
+.sc-pool-edit { margin-left: 3px; font-size: .62em; color: #7c8398; vertical-align: 2px; }
+.sc-pool-big { display: flex; align-items: center; justify-content: center; gap: 22px; margin: 16px 0 8px; }
+.sc-pool-big b { min-width: 56px; text-align: center; font: 700 44px 'Chakra Petch', sans-serif; color: #e9ecf2; }
+.sc-pool-big-btn { width: 56px; height: 56px; background: #1a1f2e; border: 1px solid var(--sc-border-input); color: #c8cede; font-size: 26px; cursor: pointer; clip-path: var(--sc-corner-9); }
+.sc-pool-stats { display: flex; justify-content: center; gap: 22px; font: 700 12px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #8a91a5; }
+.sc-pool-stats b { margin-left: 4px; font: 700 15px 'Chakra Petch', sans-serif; color: #e9ecf2; letter-spacing: 0; }
