@@ -334,7 +334,7 @@ input::placeholder { color: #5b6275; }
   --sc-scoreboard-round-size: 14px;
   --sc-scoreboard-vp-size: 20px;
   --sc-scoreboard-colon-size: 16px;
-  --sc-scoreboard-phase-label-size: 8px;
+  --sc-scoreboard-phase-label-size: 9px;
   --sc-scoreboard-phase-size: 11px;
   --sc-scoreboard-phase-line-height: 1.1;
 }
@@ -833,7 +833,7 @@ input::placeholder { color: #5b6275; }
   min-height: 78px;
 }
 .sc-lib-head-text { position: relative; z-index: 2; flex: 1; min-width: 0; cursor: pointer; }
-.sc-lib-card--cutout .sc-lib-head-text { padding-right: 118px; }
+.sc-lib-card--cutout .sc-lib-head-text { padding-right: 104px; }
 .sc-lib-actions { position: relative; z-index: 2; display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
 .sc-lib-add:disabled {
   background: #141824 !important;
@@ -1141,7 +1141,7 @@ input::placeholder { color: #5b6275; }
 .sc-title-row:not(.sc-title-row--compact) .sc-title-faction { max-width: 100%; }
 
 /* Library cards: chevron shows open/closed; tapping the art toggles the card. */
-.sc-lib-chev { order: 99; flex: 0 0 auto; color: #7c8398; transition: transform .18s; }
+.sc-lib-chev { display: inline-block; margin-left: 6px; vertical-align: 1px; color: #7c8398; transition: transform .18s; }
 .sc-lib-card--open .sc-lib-chev { transform: rotate(180deg); color: var(--fc-text-tint, #c99af7); }
 .sc-lib-card--open .sc-lib-actions { z-index: 4; }
 .sc-lib-card--open.sc-lib-card--cutout .sc-lib-figure { width: 50%; right: 8px; }
@@ -1172,3 +1172,22 @@ input::placeholder { color: #5b6275; }
 .sc-lib-card-bg::after { right: 0; bottom: 0; border-right: 2px solid var(--fc-text-tint); border-bottom: 2px solid var(--fc-text-tint); opacity: 0.6; }
 .sc-lib-card--open .sc-lib-card-bg { border-color: var(--fc-primary-45); }
 .sc-lib-card--open .sc-lib-card-bg::after { opacity: 1; }
+
+/* Weapon stats: fixed 4-column grid so every weapon reads the same and nothing
+   wraps onto a line by itself. Row 1: RNG TGT RoA HIT. Row 2: SURGE (wide) S.DIE DMG. */
+.sc-wchips { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+.sc-wchip {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  padding: 5px 7px 6px;
+  background: #12151f;
+  border: 1px solid #232939;
+}
+.sc-wchip:nth-child(5) { grid-column: span 2; }
+.sc-wchip > span:first-child { line-height: 1.1; }
+.sc-wchip > span:last-child { line-height: 1.2; overflow-wrap: normal; word-break: normal; }
+/* View button: comfortable tap target */
+.sc-lib-view { height: 34px; }
+

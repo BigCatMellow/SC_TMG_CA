@@ -37,9 +37,9 @@
             <span style="font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ wp.name }}</span>
             <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:{{ wp.phBg }};color:{{ wp.phFg }}">{{ wp.phase }}</span>
           </div>
-          <div style="display:flex;gap:4px;flex-wrap:wrap">
+          <div class="sc-wchips">
             <sc-for list="{{ wp.chips }}" as="ch" hint-placeholder-count="7">
-              <span style="display:inline-flex;align-items:baseline;gap:4px;padding:3px 7px;background:#12151f;border:1px solid #232939">
+              <span class="sc-wchip">
                 <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.06em;color:#7c8398">{{ ch.k }}</span>
                 <span style="font-family:Rajdhani,sans-serif;font-size:13px;font-weight:700;color:#c8cede">{{ ch.v }}</span>
               </span>
@@ -55,7 +55,7 @@
 
   <!-- abbreviation legend -->
   <div>
-    <button onClick="{{ toggleLegend }}" aria-expanded="{{ legendOpen }}" style="background:none;border:0;padding:4px 0;color:var(--fc-text-tint, #c99af7);font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">{{ legendLabel }}</button>
+    <button onClick="{{ toggleLegend }}" aria-expanded="{{ legendOpen }}" style="background:none;border:0;padding:0;min-height:36px;color:var(--fc-text-tint, #c99af7);font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">{{ legendLabel }}</button>
     <sc-if value="{{ legendOpen }}" hint-placeholder-val="{{ false }}">
       <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;margin-top:6px;padding:10px;background:#12151f;border:1px solid #232939;font-size:12px;line-height:1.4">
         <sc-for list="{{ legend }}" as="lg" hint-placeholder-count="6">
@@ -160,7 +160,7 @@ class Component extends DCLogic {
         { k: 'SURGE', v: 'Combat Tag on the target that triggers Surge' },
         { k: 'S.DIE', v: 'Surge Die added to the attack' },
         { k: 'DMG', v: 'Damage per successful hit' },
-        { k: 'BM / CP / PE', v: 'Faction ability resource, paid by exhausting cards' }
+        { k: 'BM / CP / PE', v: 'Biomass (Zerg), Command Points (Terran), Psionic Energy (Protoss): paid by exhausting cards' }
       ]
     };
   }
