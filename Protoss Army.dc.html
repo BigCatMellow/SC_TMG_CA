@@ -34,10 +34,10 @@
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
-<div style="max-width:480px;margin:0 auto;min-height:100dvh;background-color:#05060a;background-image:radial-gradient(120% 55% at 50% -10%, rgba(120,90,20,0.30), transparent 62%),conic-gradient(from 200deg at 85% 0%, rgba(242,200,96,0.10), transparent 30%, transparent 72%, rgba(242,200,96,0.05)),radial-gradient(1.2px 1.2px at 24px 38px, rgba(190,200,235,0.25), transparent),radial-gradient(1px 1px at 110px 92px, rgba(190,200,235,0.15), transparent);background-size:auto,auto,190px 190px,240px 240px;color:#e9ecf2;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;font-size:15px;line-height:1.5;padding-bottom:calc(84px + env(safe-area-inset-bottom))" data-screen-label="Protoss Army">
+<div class="sc-app-col" style="max-width:480px;margin:0 auto;min-height:100dvh;background-color:#05060a;background-image:radial-gradient(120% 55% at 50% -10%, rgba(120,90,20,0.30), transparent 62%),conic-gradient(from 200deg at 85% 0%, rgba(242,200,96,0.10), transparent 30%, transparent 72%, rgba(242,200,96,0.05)),radial-gradient(1.2px 1.2px at 24px 38px, rgba(190,200,235,0.25), transparent),radial-gradient(1px 1px at 110px 92px, rgba(190,200,235,0.15), transparent);background-size:auto,auto,190px 190px,240px 240px;color:#e9ecf2;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;font-size:15px;line-height:1.5;padding-bottom:calc(84px + env(safe-area-inset-bottom))" data-screen-label="Protoss Army">
 
   <!-- ============ COMMAND HEADER (sticky) ============ -->
-  <div style="position:sticky;top:0;z-index:200;background:rgba(5,6,10,0.93);backdrop-filter:blur(14px);border-bottom:1px solid #232939;box-shadow:0 12px 28px rgba(0,0,0,0.5)">
+  <div class="sc-cmd-header" style="position:sticky;top:0;z-index:200;background:rgba(5,6,10,0.93);backdrop-filter:blur(14px);border-bottom:1px solid #232939;box-shadow:0 12px 28px rgba(0,0,0,0.5)">
 
     <!-- title row -->
     <div class="{{ titleHeaderClass }}" style="display:flex;align-items:center;gap:var(--sc-title-gap,10px);padding:calc(var(--sc-title-pad-top,10px) + env(safe-area-inset-top)) 14px var(--sc-title-pad-bottom,8px)">
@@ -193,8 +193,8 @@
           <div class="sc-battle-panel-header">
             <div class="sc-battle-panel-heading">
               <span class="sc-battle-panel-kicker">Battle management</span>
-              <span class="sc-battle-panel-title">Tactical</span>
-              <span class="sc-battle-panel-subtitle">Faction & tactical cards · energy payments</span>
+              <span class="sc-battle-panel-title">Cards</span>
+              <span class="sc-battle-panel-subtitle">Full card text · pay one ability with several cards</span>
             </div>
             <button class="sc-battle-panel-close" onClick="{{ closeBattlePanel }}" aria-label="Close Tactical panel">Done <span aria-hidden="true">×</span></button>
           </div>
@@ -307,7 +307,7 @@
                 <div class="{{ u.cardClass }}">
                   <div class="sc-lib-card-bg"></div>
                   <div class="sc-lib-head">
-                    <sc-if value="{{ u.framed }}" hint-placeholder-val="{{ false }}"><span class="sc-lib-frame"><span class="sc-lib-frame-art"><img src="{{ u.portrait }}" onError="{{ u.onPortraitError }}" alt="" aria-hidden="true" style="{{ u.portraitImgStyle }}"></span><span class="sc-lib-frame-shade"></span></span></sc-if>
+                    <sc-if value="{{ u.framed }}" hint-placeholder-val="{{ false }}"><span class="sc-lib-frame"><span class="sc-lib-frame-art"><img loading="lazy" src="{{ u.portrait }}" onError="{{ u.onPortraitError }}" alt="" aria-hidden="true" style="{{ u.portraitImgStyle }}"></span><span class="sc-lib-frame-shade"></span></span></sc-if>
                     <sc-if value="{{ u.cutout }}" hint-placeholder-val="{{ false }}"><button onClick="{{ u.onToggle }}" class="sc-lib-figure" aria-label="{{ u.figureLabel }}"><span class="sc-lib-floor"></span><img src="{{ u.cutout }}" onError="{{ u.onCutoutError }}" alt="" loading="lazy"></button></sc-if>
                     <div onClick="{{ u.onToggle }}" role="button" aria-expanded="{{ u.expanded }}" class="sc-lib-head-text">
                       <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
@@ -373,6 +373,16 @@
                       <button onClick="{{ u.onLossUp }}" disabled="{{ u.atFull }}" aria-label="Restore a model" class="sc-model-step sc-model-step--up">+</button>
                     </div>
                     </div>
+                    <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
+                      <div class="sc-dmg-row">
+                        <span class="sc-dmg-label">Damage<sc-if value="{{ u.shielded }}" hint-placeholder-val="{{ false }}"><span class="sc-dmg-shield">Shielded</span></sc-if></span>
+                        <div class="sc-model-stepper sc-dmg-stepper">
+                          <button onClick="{{ u.onDmgDown }}" disabled="{{ u.noDmg }}" aria-label="Heal 1 damage" class="sc-model-step">−</button>
+                          <span class="sc-model-count"><b>{{ u.dmg }}</b> / {{ u.dmgPool }} <small>{{ u.dmgUnit }}</small></span>
+                          <button onClick="{{ u.onDmgUp }}" aria-label="Add 1 damage" class="sc-model-step sc-model-step--up">+</button>
+                        </div>
+                      </div>
+                    </sc-if>
                   </div>
                 </div>
               </sc-for>
@@ -401,7 +411,7 @@
               <div class="{{ en.cardClass }}">
                 <div class="sc-lib-card-bg"></div>
                 <div class="sc-lib-head">
-                  <sc-if value="{{ en.framed }}" hint-placeholder-val="{{ false }}"><span class="sc-lib-frame"><span class="sc-lib-frame-art"><img src="{{ en.portrait }}" onError="{{ en.onPortraitError }}" alt="" aria-hidden="true" style="{{ en.portraitImgStyle }}"></span><span class="sc-lib-frame-shade"></span></span></sc-if>
+                  <sc-if value="{{ en.framed }}" hint-placeholder-val="{{ false }}"><span class="sc-lib-frame"><span class="sc-lib-frame-art"><img loading="lazy" src="{{ en.portrait }}" onError="{{ en.onPortraitError }}" alt="" aria-hidden="true" style="{{ en.portraitImgStyle }}"></span><span class="sc-lib-frame-shade"></span></span></sc-if>
                   <sc-if value="{{ en.cutout }}" hint-placeholder-val="{{ false }}"><button onClick="{{ en.onFigure }}" class="sc-lib-figure" aria-label="{{ en.figureLabel }}"><span class="sc-lib-floor"></span><img src="{{ en.cutout }}" onError="{{ en.onCutoutError }}" alt="" loading="lazy"></button></sc-if>
                   <div onClick="{{ en.onToggle }}" role="button" aria-expanded="{{ en.expanded }}" class="sc-lib-head-text">
                     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
@@ -500,7 +510,7 @@
   <!-- ============ BROOD (FACTION) TAB ============ -->
   <sc-if value="{{ tabIsFaction }}" hint-placeholder-val="{{ false }}">
     <div style="padding:14px">
-      <div style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5;margin:0 2px 8px">Engagement Size</div>
+      <div style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5;margin:0 2px 8px">Battle Size</div>
       <!-- engagement size: moved from retired Roster tab -->
       <div style="display:flex;gap:8px;margin-bottom:12px">
         <div style="flex:1;display:flex;background:var(--sc-card-bg);border:1px solid var(--sc-border-neutral);padding:3px;gap:2px">
@@ -582,9 +592,9 @@
 
   <!-- ============ BOTTOM TAB BAR ============ -->
   <div style="position:fixed;left:0;right:0;bottom:0;z-index:220;display:flex;justify-content:center;pointer-events:none">
-    <div style="width:100%;max-width:480px;pointer-events:auto;background:rgba(6,8,13,0.96);backdrop-filter:blur(14px);border-top:1px solid #232939;display:flex;padding-bottom:env(safe-area-inset-bottom)">
+    <div class="sc-tabbar" style="width:100%;max-width:480px;pointer-events:auto;background:rgba(6,8,13,0.96);backdrop-filter:blur(14px);border-top:1px solid #232939;display:flex;padding-bottom:env(safe-area-inset-bottom)">
       <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="5">
-        <button onClick="{{ tb.onSelect }}" style="flex:1;height:60px;border:none;background:{{ tb.bg }};color:{{ tb.fg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;position:relative">
+        <button onClick="{{ tb.onSelect }}" class="sc-tab-btn" style="flex:1;height:60px;border:none;background:{{ tb.bg }};color:{{ tb.fg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;position:relative">
           <span style="position:absolute;top:0;left:20%;right:20%;height:2px;background:{{ tb.tick }}"></span>
           <span style="display:grid;place-items:center;width:20px;height:20px"><sc-if value="{{ tb.isBattle }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 14V2M4 2h8l-2 3 2 3H4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isLibrary }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="2" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect></svg></sc-if><sc-if value="{{ tb.isTactics }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"></circle><circle cx="8" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4"></circle><path d="M8 2v2.5M8 11.5V14M2 8h2.5M11.5 8H14" stroke="currentColor" stroke-width="1.4"></path></svg></sc-if><sc-if value="{{ tb.isFaction }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4 4 1-3 3 .8 4L8 11l-3.8 2 .8-4-3-3 4-1 2-4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isCodex }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h7.5A2.5 2.5 0 0113 5v8.5H5.5A2.5 2.5 0 013 11V2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M6 5.5h4M6 8h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if></span>
           <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase">{{ tb.label }}</span>
@@ -604,7 +614,7 @@
         <button onClick="{{ closeViewer }}" class="sc-viewer-btn" aria-label="Close viewer">&#10005;</button>
       </div>
       <div onClick="{{ toggleViewerZoom }}" class="{{ viewer.stageClass }}" data-sc-viewer-stage="1">
-        <img src="{{ viewer.src }}" alt="{{ viewer.name }} miniature" draggable="false">
+        <img loading="lazy" src="{{ viewer.src }}" alt="{{ viewer.name }} miniature" draggable="false">
       </div>
       <div class="sc-viewer-bot">
         <button onClick="{{ viewerPrev }}" class="sc-viewer-btn" aria-label="Previous unit">&#8249;</button>
@@ -670,6 +680,10 @@
     </div>
   </sc-if>
 
+  <sc-if value="{{ undoOn }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-undo" role="status"><span>{{ undoText }}</span><button onClick="{{ undoRemove }}" class="sc-undo-btn">Undo</button></div>
+  </sc-if>
+
   <!-- ============ TIER PICKER SHEET ============ -->
   <sc-if value="{{ sheetTier }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,5,8,0.65);animation:scFade 0.15s ease"></div>
@@ -680,9 +694,9 @@
         <div style="font-family:Rajdhani,sans-serif;font-size:20px;font-weight:700;letter-spacing:0.04em;color:#e9ecf2;margin-bottom:12px">{{ tierUnitName }}</div>
         <div style="display:grid;gap:8px">
           <sc-for list="{{ tierOptions }}" as="tp" hint-placeholder-count="2">
-            <button onClick="{{ tp.onPick }}" style="display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:10px 14px;background:var(--sc-card-bg);border:1px solid rgba(242,200,96,0.35);color:#e9ecf2;cursor:pointer;text-align:left;clip-path:var(--sc-corner-10)">
+            <button onClick="{{ tp.onPick }}" class="{{ tp.cls }}" style="display:flex;align-items:center;gap:12px;width:100%;min-height:52px;padding:10px 14px;background:var(--sc-card-bg);border:1px solid rgba(242,200,96,0.35);color:#e9ecf2;cursor:pointer;text-align:left;clip-path:var(--sc-corner-10)">
               <span style="font-family:Rajdhani,sans-serif;font-size:18px;font-weight:700;color:#f2c860;flex:0 0 34px">{{ tp.tier }}</span>
-              <span style="flex:1;font-size:13px;color:#a7aec2">{{ tp.models }} models · Supply {{ tp.supply }}</span>
+              <span style="flex:1;font-size:13px;color:#a7aec2">{{ tp.modelsText }} · Supply {{ tp.supply }}<sc-if value="{{ tp.current }}" hint-placeholder-val="{{ false }}"> · <b class="sc-tier-cur">current</b></sc-if><sc-if value="{{ tp.slotNote }}" hint-placeholder-val="{{ false }}"><span class="sc-tier-slots">{{ tp.slotNote }}</span></sc-if></span>
               <span style="font-family:Rajdhani,sans-serif;font-size:17px;font-weight:700;color:#f2c14e">{{ tp.cost }}<span style="font-size:11px;color:#8a91a5">m</span></span>
             </button>
           </sc-for>
@@ -895,20 +909,20 @@
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:{{ trackerVpPad }};background:#161a27;border:1px solid var(--sc-border-input)">
-            <button onClick="{{ vpYouDown }}" style="width:{{ trackerVpBtn }}px;height:{{ trackerVpBtn }}px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
+            <button onClick="{{ vpYouDown }}" aria-label="Your VP down" style="width:{{ trackerVpBtn }}px;height:{{ trackerVpBtn }}px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
             <div style="text-align:center">
               <div style="font-family:Rajdhani,sans-serif;font-size:{{ trackerVpLabel }};font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#f2c860">You</div>
               <div style="font-family:'Chakra Petch',sans-serif;font-size:{{ trackerVpVal }};font-weight:700;color:#e9ecf2;line-height:1">{{ vpYou }}</div>
             </div>
-            <button onClick="{{ vpYouUp }}" style="width:{{ trackerVpBtn }}px;height:{{ trackerVpBtn }}px;background:rgba(180,130,30,0.18);border:1px solid rgba(242,200,96,0.4);color:#fae9c0;font-size:16px;cursor:pointer">+</button>
+            <button onClick="{{ vpYouUp }}" aria-label="Your VP up" style="width:{{ trackerVpBtn }}px;height:{{ trackerVpBtn }}px;background:rgba(180,130,30,0.18);border:1px solid rgba(242,200,96,0.4);color:#fae9c0;font-size:16px;cursor:pointer">+</button>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:{{ trackerVpPad }};background:#161a27;border:1px solid var(--sc-border-input)">
-            <button onClick="{{ vpFoeDown }}" style="width:{{ trackerVpBtn }}px;height:{{ trackerVpBtn }}px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
+            <button onClick="{{ vpFoeDown }}" aria-label="Enemy VP down" style="width:{{ trackerVpBtn }}px;height:{{ trackerVpBtn }}px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
             <div style="text-align:center">
               <div style="font-family:Rajdhani,sans-serif;font-size:{{ trackerVpLabel }};font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5">Enemy</div>
               <div style="font-family:'Chakra Petch',sans-serif;font-size:{{ trackerVpVal }};font-weight:700;color:#e9ecf2;line-height:1">{{ vpFoe }}</div>
             </div>
-            <button onClick="{{ vpFoeUp }}" style="width:{{ trackerVpBtn }}px;height:{{ trackerVpBtn }}px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">+</button>
+            <button onClick="{{ vpFoeUp }}" aria-label="Enemy VP up" style="width:{{ trackerVpBtn }}px;height:{{ trackerVpBtn }}px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">+</button>
           </div>
         </div>
         <button onClick="{{ resetPlay }}" style="margin-top:10px;width:100%;height:34px;background:none;border:1px dashed var(--sc-border-input);color:#8a91a5;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Reset Tracker</button>
@@ -1372,9 +1386,43 @@ class Component extends DCLogic {
         const unit = this.D().UNITS.find(u => u.id === e.unitId);
         const max = unit ? this.unitStartingModels(unit, e.tierIdx) : 0;
         const lost = Math.max(0, Math.min(max, (e.modelsLost || 0) + delta));
-        return { ...e, modelsLost: lost };
+        return { ...e, modelsLost: lost, dmg: 0 };
       })
     }), () => this.save());
+  }
+  // Total Damage on the unit. The first model's pool is HP + Shield while it lives;
+  // when damage fills a model's pool, that model is removed and the rest carries over.
+  setDamage(key, delta) {
+    this.setState(st => ({
+      army: st.army.map(e => {
+        if (e.key !== key) return e;
+        const unit = this.D().UNITS.find(u => u.id === e.unitId);
+        if (!unit) return e;
+        const max = this.unitStartingModels(unit, e.tierIdx);
+        const hp = Number(unit.stats && unit.stats.hp) || 1, shd = Number(unit.stats && unit.stats.shield) || 0;
+        let lost = e.modelsLost || 0;
+        if (lost >= max) return e;
+        let dmg = Math.max(0, (e.dmg || 0) + delta);
+        const pool = () => hp + (lost === 0 ? shd : 0);
+        while (dmg >= pool() && lost < max) { dmg -= pool(); lost++; }
+        if (lost >= max) dmg = 0;
+        return { ...e, dmg, modelsLost: lost };
+      })
+    }), () => this.save());
+  }
+  removeWithUndo(key, name) {
+    const idx = this.state.army.findIndex(x => x.key === key);
+    if (idx < 0) return;
+    const entry = this.state.army[idx];
+    clearTimeout(this._undoTimer);
+    this.setState(s2 => ({ army: s2.army.filter(x => x.key !== key), undo: { name, entry, idx } }), () => this.save());
+    this._undoTimer = setTimeout(() => this.setState({ undo: null }), 6000);
+  }
+  undoRemove() {
+    const u = this.state.undo;
+    if (!u) return;
+    clearTimeout(this._undoTimer);
+    this.setState(s2 => { const army = s2.army.slice(); army.splice(Math.min(u.idx, army.length), 0, u.entry); return { army, undo: null }; }, () => this.save());
   }
   toggleDeployed(key) {
     this.setState(st => ({
@@ -2075,7 +2123,7 @@ class Component extends DCLogic {
   }
   changeTier(entryKey, tierIdx) {
     this.setState(st => ({
-      army: st.army.map(e => e.key === entryKey ? { ...e, tierIdx } : e),
+      army: st.army.map(e => e.key === entryKey ? { ...e, tierIdx, modelsLost: 0, dmg: 0 } : e),
       sheet: null
     }), () => this.save());
   }
@@ -2186,15 +2234,23 @@ class Component extends DCLogic {
         supply: effTier ? (effTier.supply || 0) : 0,
         deployed: !!e.deployed,
         modelLossLabel: remaining + ' / ' + startingModels + ' models',
+        ...(() => {
+          const hp = Number(unit.stats && unit.stats.hp) || 1, shd = Number(unit.stats && unit.stats.shield) || 0;
+          const lostNow = e.modelsLost || 0, dmg = e.dmg || 0;
+          const pool = hp + (lostNow === 0 ? shd : 0);
+          return { tracksDamage: (hp > 1 || shd > 0) && remaining > 0, dmg, dmgPool: pool,
+            dmgUnit: lostNow === 0 && shd ? 'HP+SHD' : 'HP', noDmg: dmg <= 0,
+            shielded: shd > 0 && lostNow === 0 && dmg <= shd,
+            onDmgUp: (ev) => { ev.stopPropagation(); this.setDamage(e.key, 1); },
+            onDmgDown: (ev) => { ev.stopPropagation(); this.setDamage(e.key, -1); } };
+        })(),
         onLossDown: (ev) => { ev.stopPropagation(); this.setModelsLost(e.key, 1); },
         onLossUp: (ev) => { ev.stopPropagation(); this.setModelsLost(e.key, -1); },
         onToggleDeployed: (ev) => { ev.stopPropagation(); this.toggleDeployed(e.key); },
         onSetReserve: (ev) => { ev.stopPropagation(); if (e.deployed) this.toggleDeployed(e.key); },
         onSetDeployed: (ev) => { ev.stopPropagation(); if (!e.deployed) this.toggleDeployed(e.key); },
         noneLeft: remaining <= 0, atFull: remaining >= startingModels,
-        onRemove: (ev) => { ev.stopPropagation(); this.setState(s2 => ({
-          army: s2.army.filter(x => x.key !== e.key)
-        }), () => this.save()); },
+        onRemove: (ev) => { ev.stopPropagation(); this.removeWithUndo(e.key, unit.name); },
         onChangeTier: (ev) => { ev.stopPropagation(); this.setState({
           sheet: { type: 'tier', unitId: unit.id, mode: 'change', entryKey: e.key }
         }); }
@@ -2520,6 +2576,18 @@ class Component extends DCLogic {
         tierUnitName = unit.name;
         tierOptions = unit.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost !== null).map(x => ({
           tier: x.t.tier, models: String(this.unitStartingModels(unit, x.i)), supply: x.t.supply, cost: x.t.cost,
+          modelsText: this.unitStartingModels(unit, x.i) + (this.unitStartingModels(unit, x.i) === 1 ? ' model' : ' models'),
+          ...(() => {
+            const roleKey = unit.role.toLowerCase();
+            if (usedSlots[roleKey] === undefined) return { slotNote: '', cls: 'sc-tier-opt' };
+            const cur = st.sheet.mode === 'change' ? st.army.find(a => a.key === st.sheet.entryKey) : null;
+            const current = !!cur && cur.tierIdx === x.i;
+            const curSupply = cur ? ((unit.tiers[cur.tierIdx] || {}).supply || 0) : 0;
+            const after = (usedSlots[roleKey] || 0) - curSupply + (x.t.supply || 0);
+            const cap = baseSlots[roleKey] || 0;
+            return { current, slotNote: unit.role + ' slots ' + after + ' / ' + cap + (after > cap ? ' · over' : ''),
+              cls: 'sc-tier-opt' + (current ? ' sc-tier-opt--current' : '') + (after > cap ? ' sc-tier-opt--over' : '') };
+          })(),
           onPick: () => st.sheet.mode === 'change' ? this.changeTier(st.sheet.entryKey, x.i) : this.commitAdd(unit.id, x.i)
         }));
       }
@@ -2743,6 +2811,7 @@ class Component extends DCLogic {
       sheetTitle: st.sheet ? st.sheet.title : '', sheetMeta: st.sheet ? st.sheet.meta : '', sheetBody: st.sheet ? st.sheet.body : '',
       sheetTier: !!(st.sheet && st.sheet.type === 'tier'),
       tierUnitName, tierOptions,
+      undoOn: !!st.undo, undoText: st.undo ? st.undo.name + ' removed' : '', undoRemove: () => this.undoRemove(),
       sheetPlay: !!(st.sheet && st.sheet.type === 'play'),
       closeSheet: () => this.setState(s2 => ({ sheet: (s2.sheet && s2.sheet.returnTo) || null })),
       // search

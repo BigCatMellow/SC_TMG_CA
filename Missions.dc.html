@@ -41,23 +41,23 @@
         <span style="width:6px;height:6px;background:{{ phaseColor }};box-shadow:0 0 8px {{ phaseColor }};animation:scPulse 2s infinite;flex:0 0 auto"></span>
         <span style="font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.06em;color:#e9ecf2">R{{ round }}</span>
       </div>
-      <div style="flex:1;display:flex;align-items:center;gap:8px;padding:8px 12px;min-width:0">
-        <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5">Mission</span>
-        <span style="font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#c8cede;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ barMission }}</span>
-      </div>
-      <div style="display:flex;align-items:center;gap:6px;padding:8px 12px;border-left:1px solid #232939">
+      <div style="display:flex;align-items:center;gap:6px;padding:8px 12px">
         <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.14em;color:#8a91a5">VP</span>
         <span style="font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:#c99af7">{{ vpYou }}</span>
         <span style="color:#5b6275;font-size:12px">:</span>
         <span style="font-family:'Chakra Petch',sans-serif;font-size:16px;font-weight:700;color:#c8cede">{{ vpFoe }}</span>
         <svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="margin-left:2px"><path d="M4 6l4 4 4-4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       </div>
+      <div style="flex:1;display:flex;align-items:center;gap:8px;padding:8px 12px;min-width:0;border-left:1px solid #232939;justify-content:flex-end">
+        <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5">Mission</span>
+        <span style="font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#c8cede;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ barMission }}</span>
+      </div>
     </div></div>
 
     <!-- tabs -->
     <div style="display:flex;margin:0 14px 10px;background:var(--sc-card-bg);border:1px solid var(--sc-border-neutral);padding:3px;gap:2px">
       <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="3">
-        <button onClick="{{ tb.onSelect }}" style="flex:1;height:38px;border:none;background:{{ tb.bg }};color:{{ tb.fg }};font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">{{ tb.label }}</button>
+        <button onClick="{{ tb.onSelect }}" style="flex:1;height:44px;border:none;background:{{ tb.bg }};color:{{ tb.fg }};font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">{{ tb.label }}</button>
       </sc-for>
     </div>
   </div>
@@ -133,13 +133,13 @@
   <!-- ============ MISSIONS TAB ============ -->
   <sc-if value="{{ tabIsMissions }}" hint-placeholder-val="{{ false }}">
     <div style="padding:14px">
-      <div style="font-size:12.5px;color:#8a91a5;margin:0 2px 12px">{{ missionCount }} missions for {{ sizeName }} · tap the ring to select</div>
+      <div style="font-size:12.5px;color:#8a91a5;margin:0 2px 12px">{{ missionCount }} missions for {{ sizeName }} · tap the ring or open one to select</div>
       <sc-if value="{{ noSizeContent }}" hint-placeholder-val="{{ false }}"><div style="padding:16px 12px;margin-bottom:10px;border:1px dashed var(--sc-border-input);color:#8a91a5;font-size:13px">No {{ sizeName }} missions or maps are in the current data. Pick Skirmish or Standard to browse missions.</div></sc-if>
       <div style="display:grid;gap:10px">
         <sc-for list="{{ missions }}" as="mi" hint-placeholder-count="3">
           <div style="background:var(--sc-card-bg);border:1px solid {{ mi.bd }};clip-path:var(--sc-corner-12)">
             <div style="display:flex;align-items:center;gap:10px;padding:12px;min-height:44px">
-              <button onClick="{{ mi.onSelect }}" aria-label="Select mission" style="width:26px;height:26px;flex:0 0 auto;display:grid;place-items:center;background:none;border:1px solid {{ mi.dotBd }};border-radius:50%;cursor:pointer;padding:0"><span style="width:12px;height:12px;border-radius:50%;background:{{ mi.dot }}"></span></button>
+              <button onClick="{{ mi.onSelect }}" aria-label="{{ mi.selAria }}" aria-pressed="{{ mi.selected }}" style="width:44px;height:44px;margin:-9px -4px -9px -9px;flex:0 0 auto;display:grid;place-items:center;background:none;border:none;cursor:pointer;padding:0"><span style="width:26px;height:26px;display:grid;place-items:center;border:1px solid {{ mi.dotBd }};border-radius:50%"><span style="width:12px;height:12px;border-radius:50%;background:{{ mi.dot }}"></span></span></button>
               <div onClick="{{ mi.onToggle }}" role="button" style="flex:1;min-width:0;cursor:pointer">
                 <div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ mi.name }}</div>
                 <div style="font-size:12px;color:#8a91a5">{{ mi.meta }}</div>
@@ -158,6 +158,7 @@
             </div>
             <sc-if value="{{ mi.expanded }}" hint-placeholder-val="{{ false }}">
               <div style="border-top:1px solid #1f2430;padding:12px;display:grid;gap:10px">
+                <button onClick="{{ mi.onSelect }}" class="{{ mi.selCls }}">{{ mi.selLabel }}</button>
                 <div>
                   <div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5;margin-bottom:5px">Parameters</div>
                   <div style="display:grid;gap:4px">
@@ -198,12 +199,12 @@
   <!-- ============ MAPS TAB ============ -->
   <sc-if value="{{ tabIsMaps }}" hint-placeholder-val="{{ false }}">
     <div style="padding:14px">
-      <div style="font-size:12.5px;color:#8a91a5;margin:0 2px 12px">{{ mapCount }} deployment maps for {{ sizeName }} · tap the ring to select</div>
+      <div style="font-size:12.5px;color:#8a91a5;margin:0 2px 12px">{{ mapCount }} deployment maps for {{ sizeName }} · tap the ring or open one to select</div>
       <div style="display:grid;gap:10px">
         <sc-for list="{{ maps }}" as="mp" hint-placeholder-count="3">
           <div style="background:var(--sc-card-bg);border:1px solid {{ mp.bd }};clip-path:var(--sc-corner-12)">
             <div style="display:flex;align-items:center;gap:10px;padding:12px;min-height:44px">
-              <button onClick="{{ mp.onSelect }}" aria-label="Select map" style="width:26px;height:26px;flex:0 0 auto;display:grid;place-items:center;background:none;border:1px solid {{ mp.dotBd }};border-radius:50%;cursor:pointer;padding:0"><span style="width:12px;height:12px;border-radius:50%;background:{{ mp.dot }}"></span></button>
+              <button onClick="{{ mp.onSelect }}" aria-label="{{ mp.selAria }}" aria-pressed="{{ mp.selected }}" style="width:44px;height:44px;margin:-9px -4px -9px -9px;flex:0 0 auto;display:grid;place-items:center;background:none;border:none;cursor:pointer;padding:0"><span style="width:26px;height:26px;display:grid;place-items:center;border:1px solid {{ mp.dotBd }};border-radius:50%"><span style="width:12px;height:12px;border-radius:50%;background:{{ mp.dot }}"></span></span></button>
               <div onClick="{{ mp.onToggle }}" role="button" style="flex:1;min-width:0;cursor:pointer">
                 <div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ mp.name }}</div>
                 <div style="font-size:12px;color:#8a91a5">{{ mp.meta }}</div>
@@ -212,6 +213,7 @@
             </div>
             <sc-if value="{{ mp.expanded }}" hint-placeholder-val="{{ false }}">
               <div style="border-top:1px solid #1f2430;padding:12px;display:grid;gap:10px">
+                <button onClick="{{ mp.onSelect }}" class="{{ mp.selCls }}">{{ mp.selLabel }}</button>
                 <div>{{ mp.svgEl }}</div>
                 <div style="display:flex;gap:12px;flex-wrap:wrap">
                   <span style="display:flex;align-items:center;gap:5px;font-size:11.5px;color:#8a91a5"><span style="width:10px;height:10px;background:rgba(240,90,90,0.35);border:1px solid #f05a5a"></span>Red deploy</span>
@@ -277,9 +279,9 @@
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
           <div style="display:flex;align-items:center;gap:8px">
             <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5">Round</span>
-            <button onClick="{{ roundDown }}" style="width:34px;height:34px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
+            <button onClick="{{ roundDown }}" aria-label="Round down" style="width:44px;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
             <span style="font-family:'Chakra Petch',sans-serif;font-size:20px;font-weight:700;color:#e9ecf2;min-width:24px;text-align:center">{{ round }}</span>
-            <button onClick="{{ roundUp }}" style="width:34px;height:34px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">+</button>
+            <button onClick="{{ roundUp }}" aria-label="Round up" style="width:44px;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">+</button>
           </div>
           <button onClick="{{ nextPhase }}" style="height:34px;padding:0 14px;background:rgba(53,199,107,0.14);border:1px solid rgba(53,199,107,0.45);color:#8fe6ae;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;clip-path:var(--sc-corner-8)">Next Phase ▸</button>
         </div>
@@ -290,20 +292,20 @@
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px 10px;background:#161a27;border:1px solid var(--sc-border-input)">
-            <button onClick="{{ vpYouDown }}" style="width:38px;height:38px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
+            <button onClick="{{ vpYouDown }}" aria-label="Your VP down" style="width:44px;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
             <div style="text-align:center">
               <div style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#5fd98d">You</div>
               <div style="font-family:'Chakra Petch',sans-serif;font-size:22px;font-weight:700;color:#e9ecf2;line-height:1">{{ vpYou }}</div>
             </div>
-            <button onClick="{{ vpYouUp }}" style="width:38px;height:38px;background:rgba(53,199,107,0.12);border:1px solid rgba(53,199,107,0.4);color:#8fe6ae;font-size:16px;cursor:pointer">+</button>
+            <button onClick="{{ vpYouUp }}" aria-label="Your VP up" style="width:44px;height:44px;background:rgba(53,199,107,0.12);border:1px solid rgba(53,199,107,0.4);color:#8fe6ae;font-size:16px;cursor:pointer">+</button>
           </div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px 10px;background:#161a27;border:1px solid var(--sc-border-input)">
-            <button onClick="{{ vpFoeDown }}" style="width:38px;height:38px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
+            <button onClick="{{ vpFoeDown }}" aria-label="Enemy VP down" style="width:44px;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
             <div style="text-align:center">
               <div style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5">Enemy</div>
               <div style="font-family:'Chakra Petch',sans-serif;font-size:22px;font-weight:700;color:#e9ecf2;line-height:1">{{ vpFoe }}</div>
             </div>
-            <button onClick="{{ vpFoeUp }}" style="width:38px;height:38px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">+</button>
+            <button onClick="{{ vpFoeUp }}" aria-label="Enemy VP up" style="width:44px;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">+</button>
           </div>
         </div>
         <button onClick="{{ closeTracker }}" style="margin-top:12px;width:100%;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Done</button>
@@ -597,6 +599,8 @@ class Component extends DCLogic {
         expanded, chev: expanded ? 90 : 0,
         bd: sel ? 'rgba(53,199,107,0.5)' : (expanded ? '#3a4154' : 'var(--sc-border-neutral)'),
         dot: sel ? '#35c76b' : 'transparent', dotBd: sel ? '#35c76b' : '#3a4154',
+        selected: sel, selAria: sel ? 'Deselect ' + m.name : 'Select ' + m.name,
+        selLabel: sel ? '\u2713 Selected · tap to clear' : 'Use this mission', selCls: 'sc-wr-select' + (sel ? ' sc-wr-select--on' : ''),
         onSelect: (ev) => { ev.stopPropagation(); this.setState({ selectedMissionId: sel ? null : m.id }, () => this.save()); },
         onToggle: () => this.setState(s => ({ expM: { ...s.expM, [m.id]: !s.expM[m.id] } }))
       };
@@ -620,6 +624,8 @@ class Component extends DCLogic {
           bg: x.num === 5 ? '#f2c14e' : '#1a1f2e', fg: x.num === 5 ? '#0a0c11' : '#c8cede', bd: x.num === 5 ? '#f2c14e' : '#3a4154'
         })) : [],
         notes: mp.notes,
+        selected: sel, selAria: sel ? 'Deselect ' + mp.name : 'Select ' + mp.name,
+        selLabel: sel ? '\u2713 Selected · tap to clear' : 'Use this map', selCls: 'sc-wr-select' + (sel ? ' sc-wr-select--on' : ''),
         onSelect: (ev) => { ev.stopPropagation(); this.setState({ selectedMapId: sel ? null : mp.id }, () => this.save()); },
         onToggle: () => this.setState(s => ({ expMap: { ...s.expMap, [mp.id]: !s.expMap[mp.id] } }))
       };
