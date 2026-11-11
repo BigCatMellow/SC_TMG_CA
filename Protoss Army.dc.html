@@ -1315,14 +1315,12 @@ class Component extends DCLogic {
     ];
   }
   portrait(u) {
+    // Painted-miniature photos only: renders and concept art are not used.
     const P = {
-      artanis: { src: 'uploads/Artanis-card.png', size: 'auto 520px', pos: 'right -225px top -125px' },
+      artanis: { src: 'portraits/protoss/artanis.png', size: 'auto 288px', pos: 'right 0px top 4px' },
       adept: { src: 'portraits/protoss/adept.png', size: 'auto 288px', pos: 'right 6px top 5px' },
-      'praetor-guard': { src: 'portraits/protoss/praetor-guard.png', size: 'auto 288px', pos: 'right 44px top 5px' },
-      pylon: { src: 'portraits/protoss/pylon.png', size: 'auto 288px', pos: 'right -3px top 4px' },
       sentry: { src: 'portraits/protoss/sentry.png', size: 'auto 302px', pos: 'right 142px top 12px' },
-      stalker: { src: 'portraits/protoss/stalker.png', size: 'auto 288px', pos: 'right 49px top 5px' },
-      zealot: { src: 'portraits/protoss/zealot.png', size: 'auto 288px', pos: 'right 44px top 5px' }
+      stalker: { src: 'portraits/protoss/stalker.png', size: 'auto 288px', pos: 'right 49px top 5px' }
     };
     return window.SCTMG_MAKE_PORTRAIT('protoss', u.id, P);
   }

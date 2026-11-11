@@ -16,7 +16,8 @@ assert.equal(photoHashes.size, 22);
 let localPhotoCount = 0;
 assert.ok(config && config.version === 1);
 assert.deepEqual(Object.keys(config.factions).sort(), ['protoss','terran','zerg']);
-const expectedUnmapped = ['terran/auto-turret','terran/sabotage-drone'];
+// Units with no painted-miniature photo show no art (renders/concept art are not used).
+const expectedUnmapped = ['protoss/pylon','terran/auto-turret','terran/point-defense-drone','terran/sabotage-drone'];
 const unmapped = [];
 const stats = {};
 const controllers = {};
@@ -103,7 +104,7 @@ const img = { src: raynor.portrait, dataset: {}, style: { cssText: raynor.portra
 raynor.onPortraitError({ currentTarget: img });
 assert.equal(img.src, config.factions.terran['jim-raynor'].fallbackSrc);
 raynor.onPortraitError({ currentTarget: img });
-assert.equal(img.src, 'uploads/Raynor-card.png');
+assert.equal(img.src, 'portraits/terran/jim-raynor.png');
 raynor.onPortraitError({ currentTarget: img });
 assert.equal(img.style.display, 'none','exhausted sources must not render a broken icon');
 const raptor = controllers.zerg.portrait({ id: 'raptor' });
@@ -112,12 +113,20 @@ const raptorImage = { src: raptor.portrait, dataset: {}, style: { cssText: rapto
 raptor.onPortraitError({ currentTarget: raptorImage });
 assert.equal(raptorImage.src,'portraits/zerg/zergling.png','related sculpt is error-only fallback');
 assert.deepEqual(unmapped.sort(),expectedUnmapped,'unexpected missing model photos');
+// Only miniature photos: no game renders, card art or concept art anywhere in the army screens.
+const conceptArt=['uploads/','portraits/terran-tactics/','portraits/zerg/corpser.png','portraits/zerg/queen.png',
+  'portraits/protoss/praetor-guard.png','portraits/protoss/zealot.png','portraits/protoss/pylon.png',
+  'portraits/terran/point-defense-drone.png','portraits/terran/raynors-raider.png'];
+for (const faction of ['terran','zerg','protoss']) {
+  const html = read(faction[0].toUpperCase() + faction.slice(1) + ' Army.dc.html');
+  for (const path of conceptArt) assert.ok(!html.includes(path), faction + ' still uses concept/render art: ' + path);
+}
 assert.equal(Object.values(stats).reduce((n,x)=>n+x.total,0),43,'check audit when adding units');
-assert.equal(Object.values(stats).reduce((n,x)=>n+x.covered,0),41);
+assert.equal(Object.values(stats).reduce((n,x)=>n+x.covered,0),39);
 assert.equal(localPhotoCount,22,'all 22 original PDF miniatures must be displayed');
 assert.equal(pdfSource.pdf_sha256,'27639c562e6db9777dd9ba984d0c9f9b581841ec30166848e021f893cd00ea54');
 const terranHtml=read('Terran Army.dc.html');
 const queenHtml=read('Zerg Army.dc.html');
-assert.ok(terranHtml.includes('uploads/Raynor-card.png'),'Jim Raynor original fallback retained');
-assert.ok(queenHtml.includes('portraits/zerg/queen.png'),'Queen original fallback retained');
+assert.ok(terranHtml.includes('portraits/terran/jim-raynor.png'),'Jim Raynor photo fallback retained');
+assert.ok(queenHtml.includes('portraits/zerg/kerrigan.png'),'Kerrigan photo fallback retained');
 console.log('Model portraits:',JSON.stringify(stats),'missing:',unmapped);
