@@ -1,0 +1,39 @@
+name: Portrait cutouts
+
+# Downloads the publisher-hosted miniature photos, cuts each model out with rembg,
+# and pushes the results to the "portrait-cutouts-run" branch for review
+# (portraits-src/remote/preview.png shows each original next to its cutout).
+on:
+  workflow_dispatch:
+    inputs:
+      force:
+        description: Rebuild cutouts that already exist
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
+
+jobs:
+  cut:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install rembg
+        run: pip install "rembg[cpu]" pillow
+      - name: Cut out remote miniature photos
+        run: python3 scripts/cutout-portraits.py --remote ${{ inputs.force && '--force' || '' }}
+      - name: Push results for review
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B portrait-cutouts-run
+          git add portraits/cutout portraits-src/remote
+          git commit -m "Portrait cutouts from publisher photos (workflow run ${{ github.run_id }})" || echo "nothing to commit"
+          git push -f origin portrait-cutouts-run
