@@ -404,7 +404,8 @@ window.SCTMG_MAKE_PORTRAIT = function(faction, unitId, localPortraits) {
   const first = sources[0];
   // Transparent cutout (scripts/cutout-portraits.py) for the first source that has one.
   const cutouts = window.SCTMG_PORTRAIT_CUTOUTS || {};
-  const cutout = sources.map(item => cutouts[item.src]).find(Boolean) || '';
+  // Per-unit cutouts first: one publisher photo can hold several models, each cropped separately.
+  const cutout = cutouts[faction + '/' + unitId] || sources.map(item => cutouts[item.src]).find(Boolean) || '';
   return {
     cutout,
     viewSrc: cutout || first.src,
