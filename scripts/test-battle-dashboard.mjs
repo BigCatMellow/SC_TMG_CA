@@ -81,8 +81,10 @@ for(const faction of ['terran','zerg','protoss']){
    assert.ok(troops.includes(token),file+' battle cards should match Library cards: '+token);
  assert.ok(!troops.includes('{{ u.cost }}'),file+' mineral cost is not shown on battle cards');
  for(const sheet of ['sheetMission','sheetEndRound']) assert.ok(html.includes('{{ '+sheet+' }}'),file+' missing '+sheet);
- assert.ok(inline.includes('list="{{ rosterIssues }}"')&&inline.includes('onClick="{{ issue.onFix }}"'),
-   file+' roster alert lists each issue with a jump to its fix');
+ // Roster problems are one line on the Battle tab; the issue sheet lists each fix.
+ assert.ok(inline.includes('class="sc-roster-line"')&&inline.includes('onClick="{{ openIssues }}"'),file+' one-line roster alert');
+ assert.ok(html.includes('list="{{ rosterIssues }}"')&&html.includes('onClick="{{ issue.onFix }}"'),file+' issue sheet lists each fix');
+ assert.ok(!inline.includes('Fits ·')&&!html.includes("'Fits · needs '"),file+' no "Fits" line when a unit fits');
  for (const label of ['Deployment','Supply','Used','Pool','Free'])
    assert.ok(header.includes('>'+label+'</span>'),
      file+' supply HUD missing clearly labeled '+label+' field');
@@ -106,7 +108,7 @@ for(const faction of ['terran','zerg','protoss']){
  assert.equal((troops.match(/onClick="\{\{ u\.onChangeTier \}\}"/g)||[]).length,1,
    file+' tier control exactly once');
  assert.ok(troops.indexOf('<sc-if value="{{ editArmy }}"') <
-   troops.indexOf('<sc-if value="{{ u.expanded }}"'),
+   troops.indexOf('class="sc-play-body"'),
    file+' change tier and remove should be directly accessible in Edit Army mode');
  assert.ok(tactical.includes('role="dialog" aria-modal="true"'),file+' Tactical accessible modal');
  assert.ok(tactical.includes('onClick="{{ closeBattlePanel }}"'),file+' Tactical close control');
@@ -419,9 +421,9 @@ for(const faction of ['terran','zerg','protoss']){
  // ---- playtest fixes 2 ----
  {
    const DD2=c.D();
-   const big=DD2.UNITS.find(u=>u.tiers.some(t=>t.cost>0)&&!u.factionTag&&Number(u.stats&&u.stats.hp)>1);
+   const big=DD2.UNITS.find(u=>u.tiers.some(t=>t.cost>0&&String(t.models)==='1')&&!u.factionTag&&Number(u.stats&&u.stats.hp)>1);
    if(big){
-     const ti=big.tiers.findIndex(t=>t.cost>0);
+     const ti=big.tiers.findIndex(t=>t.cost>0&&String(t.models)==='1');
      c.state.army=[{key:'kd',unitId:big.id,tierIdx:ti,upgs:[],modelsLost:0,deployed:false}];
      let card=view().battleGroups.flatMap(g=>g.entries).find(u=>u.key==='kd');
      assert.ok(card.tracksDamage,big.name+' tracks damage');

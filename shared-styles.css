@@ -1525,3 +1525,8 @@ input::placeholder { color: #5b6275; }
   .sc-secnav { bottom: calc(56px + env(safe-area-inset-bottom)); }
   .sc-secnav-menu { bottom: calc(108px + env(safe-area-inset-bottom)); }
 }
+
+/* ---- Declutter ---- */
+.sc-roster-line { display: flex; align-items: center; gap: 8px; width: 100%; min-height: 44px; margin-bottom: 12px; padding: 0 14px; background: rgba(240,74,74,0.08); border: 1px solid rgba(240,74,74,0.35); color: #f08a8a; font: 700 13px Rajdhani, sans-serif; letter-spacing: .1em; text-transform: uppercase; text-align: left; cursor: pointer; }
+.sc-roster-line-go { margin-left: auto; color: #f5b3b3; }
+.sc-fc-peek { display: block; width: 100%; min-height: 40px; padding: 8px 12px; background: none; border: 0; border-top: 1px solid #1f2430; color: #8a91a5; font: 600 12px Rajdhani, sans-serif; letter-spacing: .04em; text-align: left; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
