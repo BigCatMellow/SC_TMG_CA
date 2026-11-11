@@ -804,12 +804,12 @@ input::placeholder { color: #5b6275; }
 
 /* ===== Unit art: breakout Library cards, opened-card banner, model viewer =====
    Cutout minis stand on the card and rise --sc-lib-rise above it. The list gap is
-   always larger than the rise, so a model never overlaps the card above it. */
+   well over the rise (18px clear), so a model never overlaps the card above it. */
 .sc-lib-list {
   --sc-lib-rise: 28px;
   display: grid;
-  gap: 34px;
-  padding-top: 32px;
+  gap: 46px;
+  padding-top: 38px;
 }
 .sc-lib-card { position: relative; }
 .sc-lib-card-bg {
@@ -1145,3 +1145,30 @@ input::placeholder { color: #5b6275; }
 .sc-lib-card--open .sc-lib-chev { transform: rotate(180deg); color: var(--fc-text-tint, #c99af7); }
 .sc-lib-card--open .sc-lib-actions { z-index: 4; }
 .sc-lib-card--open.sc-lib-card--cutout .sc-lib-figure { width: 50%; right: 8px; }
+
+/* Library cards: faction-tinted outline, soft top-left glow and HUD corner brackets
+   (matching the home screen's bracket buttons). Top-left and bottom-right are the
+   square corners of the clipped card, so the brackets sit flush. */
+.sc-lib-card-bg {
+  border-color: #3a3550;
+  border-color: color-mix(in srgb, var(--fc-text-tint) 32%, #272d3c);
+  background: radial-gradient(120% 90% at 0% 0%, var(--fc-bg-10), transparent 55%), var(--sc-card-bg);
+}
+.sc-lib-card--cutout .sc-lib-card-bg {
+  background:
+    radial-gradient(70px 34px at calc(100% - 120px) 100%, var(--fc-primary-45), transparent),
+    radial-gradient(120% 90% at 0% 0%, var(--fc-bg-10), transparent 55%),
+    var(--sc-card-bg);
+}
+.sc-lib-card-bg::before,
+.sc-lib-card-bg::after {
+  content: "";
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+}
+.sc-lib-card-bg::before { left: 0; top: 0; border-left: 2px solid var(--fc-text-tint); border-top: 2px solid var(--fc-text-tint); }
+.sc-lib-card-bg::after { right: 0; bottom: 0; border-right: 2px solid var(--fc-text-tint); border-bottom: 2px solid var(--fc-text-tint); opacity: 0.6; }
+.sc-lib-card--open .sc-lib-card-bg { border-color: var(--fc-primary-45); }
+.sc-lib-card--open .sc-lib-card-bg::after { opacity: 1; }
