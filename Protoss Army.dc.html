@@ -136,15 +136,7 @@
   <!-- ============ BATTLE TAB ============ -->
   <sc-if value="{{ tabIsBattle }}" hint-placeholder-val="{{ false }}">
       <sc-if value="{{ hasRosterWarnings }}" hint-placeholder-val="{{ false }}">
-        <div class="sc-roster-alert" role="alert">
-          <div class="sc-roster-alert-title">Roster needs correction before battle</div>
-          <sc-for list="{{ rosterIssues }}" as="issue" hint-placeholder-count="2">
-            <div class="sc-roster-alert-row">
-              <span class="sc-roster-alert-text">{{ issue.text }}</span>
-              <button onClick="{{ issue.onFix }}" class="sc-roster-alert-fix">{{ issue.fixLabel }}</button>
-            </div>
-          </sc-for>
-        </div>
+        <button onClick="{{ openIssues }}" class="sc-roster-line" role="alert"><span aria-hidden="true">&#9888;</span> {{ rosterIssueCount }} roster {{ rosterIssueWord }} <span class="sc-roster-line-go">Fix ›</span></button>
       </sc-if>
 
     <!-- Two concise Battle summaries; details and controls live in their sheets. -->
@@ -315,11 +307,11 @@
                         <sc-if value="{{ u.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
                       </div>
                       <div class="sc-unit-tier">{{ u.tierLabel }}</div>
-                      <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
+                      <sc-if value="{{ u.expanded }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
                         <sc-for list="{{ u.tags }}" as="tg" hint-placeholder-count="3">
                           <button onClick="{{ tg.onOpen }}" style="font-size:11px;font-weight:600;letter-spacing:0.02em;padding:4px 6px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#a7aec2;cursor:pointer;border-radius:2px">{{ tg.name }}</button>
                         </sc-for>
-                      </div>
+                      </div></sc-if>
                     </div>
                     <div class="sc-lib-actions">
                       <div class="sc-unit-sup" title="Supply">{{ u.supply }}<small>sup</small></div>
@@ -536,6 +528,8 @@
                 </div>
               </div>
             </div>
+            <sc-if value="{{ fc.canPeek }}" hint-placeholder-val="{{ false }}"><button onClick="{{ fc.onPeek }}" class="sc-fc-peek">{{ fc.peekLabel }}</button></sc-if>
+            <sc-if value="{{ fc.showAbilities }}" hint-placeholder-val="{{ true }}">
             <div style="border-top:1px solid #1f2430;padding:12px;display:grid;gap:10px">
               <sc-for list="{{ fc.abilities }}" as="ab" hint-placeholder-count="3">
                 <div>
@@ -548,6 +542,7 @@
                 </div>
               </sc-for>
             </div>
+            </sc-if>
           </div>
         </sc-for>
       </div>
@@ -2294,7 +2289,7 @@ class Component extends DCLogic {
           const hp = Number(unit.stats && unit.stats.hp) || 1, shd = Number(unit.stats && unit.stats.shield) || 0;
           const lostNow = e.modelsLost || 0, dmg = e.dmg || 0;
           const pool = hp + (lostNow === 0 ? shd : 0);
-          return { tracksDamage: (hp > 1 || shd > 0) && remaining > 0, dmg, dmgPool: pool,
+          return { tracksDamage: (hp > 1 || shd > 0) && remaining > 0 && (startingModels === 1 || dmg > 0), dmg, dmgPool: pool,
             dmgUnit: lostNow === 0 && shd ? 'HP+SHD' : 'HP', noDmg: dmg <= 0,
             shielded: shd > 0 && lostNow === 0 && dmg <= shd,
             onDmgUp: (ev) => { ev.stopPropagation(); this.setDamage(e.key, 1); },
@@ -2329,9 +2324,9 @@ class Component extends DCLogic {
         deployDisabled: !u.deployed && (u.wipedOut || battleSupplyRemaining < u.supply),
         deployTitle: u.deployed ? 'On the table' : (u.wipedOut ? 'No models left' : (battleSupplyRemaining < u.supply ? 'Needs ' + u.supply + ' supply, ' + battleSupplyRemaining + ' free' : 'Deploy for ' + u.supply + ' supply'))
       ,
-        fitText: u.deployed || u.wipedOut ? '' : (battleSupplyRemaining >= u.supply
-          ? 'Fits · needs ' + u.supply + ' of ' + battleSupplyRemaining + ' free supply'
-          : 'Needs ' + u.supply + ' supply · ' + (u.supply - battleSupplyRemaining) + ' short'),
+        // Only speak up when the unit can't be deployed; the Deployed button covers the rest.
+        fitText: u.deployed || u.wipedOut || battleSupplyRemaining >= u.supply ? ''
+          : 'Needs ' + u.supply + ' supply · ' + (u.supply - battleSupplyRemaining) + ' short',
         fitClass: 'sc-play-fit' + (battleSupplyRemaining >= u.supply ? ' sc-play-fit--ok' : ' sc-play-fit--short')
       });
     // Grouped by where the unit is, not its role: that is what changes during a game.
@@ -2537,6 +2532,10 @@ class Component extends DCLogic {
         dot: sel ? '#f2c860' : 'transparent', dotBd: sel ? '#f2c860' : '#3a4154',
         slotPills: Object.entries(fc.slots || {}).map(([k, v]) => v + ' ' + k),
         abilities: fc.abilities.map(a => ({ name: a.name, type: a.type, phase: a.phase.replace(' Phase', ''), ...this.phaseBadge(a.phase), segs: this.segs(a.description) })),
+        showAbilities: sel || !!(st.expFc || {})[fc.id],
+        peekLabel: (st.expFc || {})[fc.id] ? 'Hide abilities' : 'Read abilities · ' + fc.abilities.map(a => a.name).join(', '),
+        canPeek: !sel,
+        onPeek: (ev) => { ev.stopPropagation(); this.setState(s2 => ({ expFc: { ...(s2.expFc || {}), [fc.id]: !(s2.expFc || {})[fc.id] } })); },
         onSelect: () => this.setState({ factionId: fc.id, factionTappedId: null, paymentCards: [] }, () => this.save())
       };
     });
@@ -2761,6 +2760,7 @@ class Component extends DCLogic {
           onFix: () => { this.setState({ tab, sheet: null, battlePanel: null }); window.scrollTo(0, 0); } };
       }),
       openIssues: () => this.setState({ sheet: { type: 'issues' } }),
+      rosterIssueWord: rosterWarnings.length === 1 ? 'issue' : 'issues',
       sheetIssues: !!(st.sheet && st.sheet.type === 'issues'),
       // battle
       battleEmpty: battleUnits.length === 0, battleGroups,
