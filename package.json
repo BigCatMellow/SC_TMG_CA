@@ -22,6 +22,7 @@
     "test:codex-examples": "node ./scripts/test-codex-examples.mjs",
     "test:battle-dashboard": "node ./scripts/test-battle-dashboard.mjs",
     "test:scoring": "node scripts/test-mission-scoring.mjs",
-    "test:resume": "node scripts/test-resume.mjs"
+    "test:resume": "node scripts/test-resume.mjs",
+    "test:plain": "node scripts/test-plain-english.mjs"
   }
 }

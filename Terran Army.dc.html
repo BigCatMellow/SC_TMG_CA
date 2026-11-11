@@ -30,6 +30,7 @@
   <script src="missions-data.js"></script>
   <script src="mission-scoring.js"></script>
   <script src="codex-examples.js"></script>
+  <script src="plain-english.js"></script>
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
@@ -609,18 +610,20 @@
     <div style="position:fixed;left:0;right:0;bottom:0;z-index:310;display:flex;justify-content:center;pointer-events:none">
       <div style="width:100%;max-width:480px;pointer-events:auto;background:#141824;border:1px solid rgba(98,169,247,0.4);border-bottom:none;padding:16px 16px calc(20px + env(safe-area-inset-bottom));animation:scSheetUp 0.2s ease;clip-path:var(--sc-corner-14-top)">
         <div style="width:36px;height:3px;background:var(--sc-border-input);margin:0 auto 14px;border-radius:2px"></div>
-        <div style="display:flex;align-items:baseline;gap:10px;margin-bottom:6px">
+        <div style="display:flex;align-items:baseline;flex-wrap:wrap;column-gap:10px;row-gap:2px;margin-bottom:6px">
           <span style="font-family:Rajdhani,sans-serif;font-size:20px;font-weight:700;letter-spacing:0.08em;color:#8ec3fa">{{ sheetTitle }}</span>
           <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#8a91a5">{{ sheetMeta }}</span>
         </div>
-        <div style="font-size:14px;color:#c8cede;line-height:1.6">{{ sheetBody }}</div>
+        <sc-if value="{{ sheetPlain }}" hint-placeholder-val="{{ false }}"><div class="sc-plain"><span class="sc-plain-label">In plain English</span>{{ sheetPlain }}</div></sc-if>
+        <sc-if value="{{ sheetHasSegs }}" hint-placeholder-val="{{ false }}"><div class="sc-sheet-rules"><sc-if value="{{ sheetPlain }}" hint-placeholder-val="{{ false }}"><span class="sc-plain-label">Rules text</span></sc-if><sc-for list="{{ sheetSegs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-kw-link">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div></sc-if>
+        <sc-if value="{{ !sheetHasSegs }}" hint-placeholder-val="{{ true }}"><div style="font-size:14px;color:#c8cede;line-height:1.6">{{ sheetBody }}</div></sc-if>
         <sc-if value="{{ sheetHasExample }}" hint-placeholder-val="{{ false }}">
           <button onClick="{{ openSheetExample }}" class="sc-codex-example-link sc-codex-example-link--sheet">See Worked Example</button>
         </sc-if>
         <sc-if value="{{ sheetActionLabel }}" hint-placeholder-val="{{ false }}">
           <button onClick="{{ sheetAction }}" class="sc-play-sheet-btn sc-play-sheet-btn--go" style="margin-top:16px">{{ sheetActionLabel }}</button>
         </sc-if>
-        <button onClick="{{ closeSheet }}" style="margin-top:16px;width:100%;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Close</button>
+        <button onClick="{{ closeSheet }}" style="margin-top:16px;width:100%;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">{{ sheetCloseLabel }}</button>
       </div>
     </div>
   </sc-if>
@@ -1262,10 +1265,11 @@ class Component extends DCLogic {
   openKeyword(name) {
     const kw = this.D().KEYWORDS[name];
     const example = this.exampleForGlossary(name, 'keyword');
-    if (kw) this.setState({
+    if (kw) this.setState(st => ({
       sheet: { type: 'keyword', title: name, meta: kw.type + ' · Keyword',
-        body: kw.description, exampleId: example?.id || null }
-    });
+        body: kw.description, exampleId: example?.id || null,
+        returnTo: st.sheet && st.sheet.ability ? st.sheet : null }
+    }));
   }
   openTag(name) {
     const tg = this.D().TAGS[name];
@@ -1383,6 +1387,11 @@ class Component extends DCLogic {
     return abilities.some(a => /\b(Active|Reaction)\b/i.test(a.type || '')
       && !/do not exhaust this card/i.test(a.description || ''));
   }
+  // Optional one-line reading aid for tricky abilities (plain-english.js).
+  plainFor(name) {
+    return (window.SCTMG_PLAIN || {})[name] || '';
+  }
+
   // Abilities that only matter while building the army are noise mid-game.
   armyBuildingOnly(a) {
     return /^\s*during army building\b/i.test(a.description || '');
@@ -1539,8 +1548,9 @@ class Component extends DCLogic {
       const cost = this.abilityCost(a.type);
       abilities.push({ name: a.name, cost, ...this.phaseBadge(ph),
         aria: a.name + ', ' + (short[ph] || ph) + ' phase' + (cost ? ', costs ' + cost : '') + '. Read ability',
-        onOpen: (ev) => { ev.stopPropagation(); this.setState({ sheet: { type: 'keyword', title: a.name,
-          meta: (short[ph] || ph) + ' phase · ' + (a.type || ''), body: a.description || '', exampleId: null } }); } });
+        onOpen: (ev) => { ev.stopPropagation(); this.setState({ sheet: { type: 'keyword', title: a.name, ability: true,
+          meta: (short[ph] || ph) + ' phase · ' + (a.type || ''), body: a.description || '', exampleId: null,
+          plain: this.plainFor(a.name), segs: this.segs(a.description || '') } }); } });
     }));
     return { stats, weapons, abilities, hasAbilities: abilities.length > 0 };
   }
@@ -1556,8 +1566,9 @@ class Component extends DCLogic {
         const usable = !c.tapped && /\b(Active|Reaction)\b/i.test(a.type) && !/do not exhaust this card/i.test(a.description);
         return { name: a.name, phFg: a.phFg,
           aria: a.name + ', ' + a.phaseShort + ' phase. Read ability',
-          onOpen: () => this.setState({ sheet: { type: 'keyword', title: a.name,
+          onOpen: () => this.setState({ sheet: { type: 'keyword', title: a.name, ability: true,
             meta: c.name + ' · ' + a.phaseShort + ' · ' + a.type, body: a.description, exampleId: null,
+            plain: this.plainFor(a.name), segs: a.segs,
             actionLabel: usable ? 'Exhaust ' + c.name + ' · use ability' : '', actionKey: usable ? c.key : '' } }) };
       });
       return { name: c.name, kind: c.kind.replace(' Card', ''), cls, abilities, hasAbilities: abilities.length > 0,
@@ -2671,11 +2682,15 @@ class Component extends DCLogic {
       closeExample: () => this.closeExample(),
       sheetActionLabel: (st.sheet && st.sheet.type === 'keyword' && st.sheet.actionLabel) || '',
       sheetAction: () => { const k = st.sheet && st.sheet.actionKey; this.setState({ sheet: null }); if (k) this.exhaustBattleCard(k, false); },
+      sheetPlain: (st.sheet && st.sheet.type === 'keyword' && st.sheet.plain) || '',
+      sheetSegs: (st.sheet && st.sheet.type === 'keyword' && st.sheet.segs) || [],
+      sheetHasSegs: !!(st.sheet && st.sheet.type === 'keyword' && st.sheet.segs && st.sheet.segs.length),
+      sheetCloseLabel: st.sheet && st.sheet.returnTo ? 'Back' : 'Close',
       sheetTitle: st.sheet ? st.sheet.title : '', sheetMeta: st.sheet ? st.sheet.meta : '', sheetBody: st.sheet ? st.sheet.body : '',
       sheetTier: !!(st.sheet && st.sheet.type === 'tier'),
       tierUnitName, tierOptions,
       sheetPlay: !!(st.sheet && st.sheet.type === 'play'),
-      closeSheet: () => this.setState({ sheet: null }),
+      closeSheet: () => this.setState(s2 => ({ sheet: (s2.sheet && s2.sheet.returnTo) || null })),
       // search
       searchOpen: st.searchOpen, searchQ: st.searchQ,
       openSearch: () => this.setState({ searchOpen: true, searchQ: '' }),
