@@ -161,11 +161,23 @@
       <!-- Cards: tap a ready card to spend its resource; tap a spent card to ready it -->
       <div class="sc-play-cards-head">
         <span class="sc-play-kicker">Cards · {{ battleCardsReady }}/{{ battleCardsTotal }} ready</span>
-        <button onClick="{{ openBattleTactical }}" class="sc-play-link" aria-label="Open Tactical cards and energy">Card abilities ›</button>
+        <button onClick="{{ openBattleTactical }}" class="sc-play-link" aria-label="Open the full card list and energy payment">Full text ›</button>
       </div>
-      <div class="sc-play-chips">
+      <div class="sc-play-cards">
         <sc-for list="{{ cardChips }}" as="cc" hint-placeholder-count="3">
-          <button onClick="{{ cc.onTap }}" class="{{ cc.cls }}" aria-label="{{ cc.aria }}"><span class="sc-play-chip-name">{{ cc.name }}</span><span class="sc-play-chip-res">{{ cc.res }}</span></button>
+          <div class="{{ cc.rowCls }}">
+            <div class="sc-play-card-head">
+              <span class="sc-play-card-title"><span class="sc-play-card-kind">{{ cc.kind }}</span><span class="sc-play-card-name">{{ cc.name }}</span></span>
+              <sc-if value="{{ cc.hasButton }}" hint-placeholder-val="{{ true }}"><button onClick="{{ cc.onTap }}" class="{{ cc.cls }}" aria-label="{{ cc.aria }}"><span class="sc-play-chip-res">{{ cc.res }}</span></button></sc-if>
+            </div>
+            <sc-if value="{{ cc.hasAbilities }}" hint-placeholder-val="{{ true }}">
+              <div class="sc-play-abilities">
+                <sc-for list="{{ cc.abilities }}" as="ca" hint-placeholder-count="2">
+                  <button onClick="{{ ca.onOpen }}" class="sc-play-ability" aria-label="{{ ca.aria }}"><span class="sc-play-dot" style="background:{{ ca.phFg }}"></span>{{ ca.name }}</button>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
         </sc-for>
       </div>
       <sc-if value="{{ hasPendingPayment }}" hint-placeholder-val="{{ false }}">
@@ -326,7 +338,7 @@
                       <div class="sc-play-weapon">
                         <span class="sc-play-wname">{{ pw.name }}</span>
                         <span class="sc-phase-chip" style="background:{{ pw.phBg }};color:{{ pw.phFg }}">{{ pw.phase }}</span>
-                        <span class="sc-play-wstats">{{ pw.line }}</span>
+                        <span class="sc-play-wstats" aria-label="{{ pw.line }}"><sc-for list="{{ pw.segs }}" as="ws" hint-placeholder-count="5"><span class="{{ ws.cls }}"><small>{{ ws.l }}</small>{{ ws.v }}</span></sc-for></span>
                         <sc-if value="{{ pw.surge }}" hint-placeholder-val="{{ false }}"><span class="sc-play-wsurge">{{ pw.surge }}</span></sc-if>
                       </div>
                     </sc-for>
@@ -346,7 +358,7 @@
                       <button onClick="{{ u.onSetReserve }}" aria-pressed="{{ u.inReserve }}" class="{{ u.reserveClass }}">{{ u.reserveLabel }}</button>
                       <button onClick="{{ u.onSetDeployed }}" aria-pressed="{{ u.deployed }}" disabled="{{ u.deployDisabled }}" title="{{ u.deployTitle }}" class="{{ u.deployClass }}">Deployed</button>
                     </div>
-                    <div class="sc-model-stepper">                    <div class="sc-model-stepper">
+                    <div class="sc-model-stepper">
                       <button onClick="{{ u.onLossDown }}" disabled="{{ u.noneLeft }}" aria-label="Remove a model (casualty)" class="sc-model-step">−</button>
                       <span class="sc-model-count"><b>{{ u.remaining }}</b> / {{ u.startingModels }} <small>alive</small></span>
                       <button onClick="{{ u.onLossUp }}" disabled="{{ u.atFull }}" aria-label="Restore a model" class="sc-model-step sc-model-step--up">+</button>
@@ -603,6 +615,9 @@
         <div style="font-size:14px;color:#c8cede;line-height:1.6">{{ sheetBody }}</div>
         <sc-if value="{{ sheetHasExample }}" hint-placeholder-val="{{ false }}">
           <button onClick="{{ openSheetExample }}" class="sc-codex-example-link sc-codex-example-link--sheet">See Worked Example</button>
+        </sc-if>
+        <sc-if value="{{ sheetActionLabel }}" hint-placeholder-val="{{ false }}">
+          <button onClick="{{ sheetAction }}" class="sc-play-sheet-btn sc-play-sheet-btn--go" style="margin-top:16px">{{ sheetActionLabel }}</button>
         </sc-if>
         <button onClick="{{ closeSheet }}" style="margin-top:16px;width:100%;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Close</button>
       </div>
@@ -1350,20 +1365,25 @@ class Component extends DCLogic {
     return abilities.some(a => /\b(Active|Reaction)\b/i.test(a.type || '')
       && !/do not exhaust this card/i.test(a.description || ''));
   }
+  // Abilities that only matter while building the army are noise mid-game.
+  armyBuildingOnly(a) {
+    return /^\s*during army building\b/i.test(a.description || '');
+  }
+
   battleCardView(card, key, kind, tapped, copyLabel = '') {
     const abilities = Array.isArray(card.abilities) ? card.abilities : [];
     const resourceAmount = this.resourceYield(card);
     return {
       id: card.id, key, name: card.name, kind, copyLabel,
-      chev: this.state.expBattleCards[key] ? 180 : 0,
-      expandLabel: card.name + (this.state.expBattleCards[key] ? ': hide abilities' : ': view abilities'),
+      chev: this.state.expBattleCards[key] !== false ? 180 : 0,
+      expandLabel: card.name + (this.state.expBattleCards[key] !== false ? ': hide abilities' : ': view abilities'),
       resource: card.resource || '', hasResource: resourceAmount > 0,
       tapped, label: tapped ? 'Exhausted' : 'Ready',
       bg: tapped ? 'rgba(139,146,163,0.08)' : 'rgba(56,211,232,0.06)',
       bd: tapped ? 'var(--sc-border-input)' : 'rgba(56,211,232,0.35)',
       fg: tapped ? '#8a91a5' : '#38d3e8',
-      expanded: !!this.state.expBattleCards[key],
-      abilities: abilities.map(a => ({
+      expanded: this.state.expBattleCards[key] !== false,
+      abilities: abilities.filter(a => !this.armyBuildingOnly(a)).map(a => ({
         phase: a.phase || 'Any Phase', type: a.type || '',
         meta: [a.phase || 'Any Phase', a.type || ''].filter(Boolean).join(' · '),
         name: a.name || '', description: a.description || '',
@@ -1377,7 +1397,7 @@ class Component extends DCLogic {
       showAbility: !tapped && this.cardHasUsableAbility(abilities),
       showPassive: !tapped && resourceAmount <= 0 && !this.cardHasUsableAbility(abilities),
       onExpand: () => this.setState(st => ({
-        expBattleCards: { ...st.expBattleCards, [key]: !st.expBattleCards[key] }
+        expBattleCards: { ...st.expBattleCards, [key]: st.expBattleCards[key] === false }
       })),
       onResource: () => this.exhaustBattleCard(key, true),
       onAbility: () => this.exhaustBattleCard(key, false),
@@ -1487,7 +1507,8 @@ class Component extends DCLogic {
       const rng = c.RNG === 'E' ? 'Melee' : c.RNG + '"';
       const surge = c.SURGE && c.SURGE !== '-' ? 'Surge ' + c.SURGE + (c['S.DIE'] && c['S.DIE'] !== '-' ? ' ' + c['S.DIE'] : '') : '';
       return { name: w.name, phase: w.phase, phBg: w.phBg, phFg: w.phFg,
-        line: rng + ' · ' + c.TGT + ' · RoA ' + c.RoA + ' · Hit ' + c.HIT + ' · Dmg ' + c.DMG, surge };
+        line: rng + ' · ' + c.TGT + ' · RoA ' + c.RoA + ' · Hit ' + c.HIT + ' · Dmg ' + c.DMG, surge,
+        segs: [{ l: '', v: rng }, { l: '', v: c.TGT }, { l: 'RoA', v: c.RoA }, { l: 'Hit', v: c.HIT }, { l: 'Dmg', v: c.DMG }].map(x => ({ ...x, cls: x.l ? 'sc-ws' : 'sc-ws sc-ws--bare' })) };
     });
     const groupsMap = {};
     (unit.abilities || []).forEach(a => { (groupsMap[a.phase] = groupsMap[a.phase] || []).push(a); });
@@ -1513,9 +1534,20 @@ class Component extends DCLogic {
     const suggestion = m ? this.poolFor(round) : null;
     const chip = (c) => {
       const cls = 'sc-play-chip' + (c.tapped ? ' sc-play-chip--spent' : (c.hasResource ? '' : ' sc-play-chip--passive'));
-      return { name: c.name, res: c.tapped ? 'spent' : (c.hasResource ? c.resource : 'ability'), cls,
-        aria: c.name + (c.tapped ? ': exhausted, tap to ready' : (c.hasResource ? ': tap to spend ' + c.resource : ': open card abilities')),
-        onTap: () => c.tapped ? c.onReady() : (c.hasResource ? c.onResource() : this.setState({ battlePanel: 'tactical' })) };
+      const abilities = c.abilities.filter(a => !this.armyBuildingOnly(a)).map(a => {
+        const usable = !c.tapped && /\b(Active|Reaction)\b/i.test(a.type) && !/do not exhaust this card/i.test(a.description);
+        return { name: a.name, phFg: a.phFg,
+          aria: a.name + ', ' + a.phaseShort + ' phase. Read ability',
+          onOpen: () => this.setState({ sheet: { type: 'keyword', title: a.name,
+            meta: c.name + ' · ' + a.phaseShort + ' · ' + a.type, body: a.description, exampleId: null,
+            actionLabel: usable ? 'Exhaust ' + c.name + ' · use ability' : '', actionKey: usable ? c.key : '' } }) };
+      });
+      return { name: c.name, kind: c.kind.replace(' Card', ''), cls, abilities, hasAbilities: abilities.length > 0,
+        rowCls: 'sc-play-card' + (c.tapped ? ' sc-play-card--spent' : ''),
+        hasButton: c.tapped || c.hasResource || c.showAbility,
+        res: c.tapped ? 'Spent · ready' : (c.hasResource ? 'Spend ' + c.resource : 'Use'),
+        aria: c.name + (c.tapped ? ': exhausted, tap to ready' : (c.hasResource ? ': tap to spend ' + c.resource : ': exhaust to use its ability')),
+        onTap: () => c.tapped ? c.onReady() : (c.hasResource ? c.onResource() : c.onAbility()) };
     };
     return {
       hudRoundOf: m ? 'Round ' + round + ' of ' + m.gameLength : 'Mission',
@@ -2616,6 +2648,8 @@ class Component extends DCLogic {
       exampleSource: examples.find(e => e.id === st.sheet?.id)?.source || '',
       exampleCloseLabel: st.sheet?.returnTo ? 'Back to definition' : 'Close',
       closeExample: () => this.closeExample(),
+      sheetActionLabel: (st.sheet && st.sheet.type === 'keyword' && st.sheet.actionLabel) || '',
+      sheetAction: () => { const k = st.sheet && st.sheet.actionKey; this.setState({ sheet: null }); if (k) this.exhaustBattleCard(k, false); },
       sheetTitle: st.sheet ? st.sheet.title : '', sheetMeta: st.sheet ? st.sheet.meta : '', sheetBody: st.sheet ? st.sheet.body : '',
       sheetTier: !!(st.sheet && st.sheet.type === 'tier'),
       tierUnitName, tierOptions,

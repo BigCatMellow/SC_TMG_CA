@@ -1389,3 +1389,27 @@ input::placeholder { color: #5b6275; }
 .sc-pool-big-btn { width: 56px; height: 56px; background: #1a1f2e; border: 1px solid var(--sc-border-input); color: #c8cede; font-size: 26px; cursor: pointer; clip-path: var(--sc-corner-9); }
 .sc-pool-stats { display: flex; justify-content: center; gap: 22px; font: 700 12px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #8a91a5; }
 .sc-pool-stats b { margin-left: 4px; font: 700 15px 'Chakra Petch', sans-serif; color: #e9ecf2; letter-spacing: 0; }
+
+/* Readability pass: cards show their abilities inline; weapon values stand out from labels. */
+.sc-play-cards { display: grid; gap: 8px; margin: 4px 0 10px; }
+.sc-play-card { display: grid; gap: 8px; padding: 10px 10px 10px 12px; background: rgba(56,211,232,0.05); border: 1px solid rgba(56,211,232,0.28); border-left-width: 3px; }
+.sc-play-card--spent { background: #0d0f16; border-color: #262c3a; }
+.sc-play-card--spent .sc-play-card-name { color: #6b7388; }
+.sc-play-card-head { display: flex; align-items: center; gap: 10px; }
+.sc-play-card-title { flex: 1; min-width: 0; display: grid; }
+.sc-play-card-kind { font: 700 10px Rajdhani, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #6f97a0; }
+.sc-play-card-name { font: 700 16px Rajdhani, sans-serif; letter-spacing: .02em; color: #e9ecf2; line-height: 1.15; }
+.sc-play-card .sc-play-chip { flex: 0 0 auto; min-height: 36px; }
+.sc-play-card .sc-play-chip-res { font-size: 13px; }
+.sc-play-card .sc-play-chip--spent { text-decoration: none; }
+
+.sc-play-weapon { padding: 2px 0 2px 10px; background: none; border: 0; border-left: 2px solid #2a3040; }
+.sc-play-body { gap: 10px; }
+.sc-play-wstats { display: flex; flex-wrap: wrap; column-gap: 12px; row-gap: 2px; font: 700 15px Rajdhani, sans-serif; color: #e9ecf2; }
+.sc-ws--bare small { display: none; }
+.sc-ws small { margin-right: 3px; font: 700 10px Rajdhani, sans-serif; letter-spacing: .1em; text-transform: uppercase; color: #7c8398; }
+
+/* Battle: card-scan art stays a quiet backdrop when open; no tall banner. */
+.sc-unit-card.sc-lib-card--framed.sc-lib-card--open .sc-lib-head { min-height: 0; align-items: center; }
+.sc-unit-card.sc-lib-card--open .sc-lib-head .sc-lib-frame-art { opacity: 0.5; }
+.sc-unit-sup { background: #161a27; }
