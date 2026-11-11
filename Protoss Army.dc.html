@@ -397,7 +397,6 @@
                   <div class="sc-lib-actions">
                     <button onClick="{{ en.onAdd }}" disabled="{{ !en.recruitable }}" title="{{ en.addTitle }}" aria-label="{{ en.addTitle }}" class="sc-lib-add" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:rgba(180,130,30,0.16);border:1px solid rgba(242,200,96,0.45);color:#fae9c0;font-size:20px;cursor:pointer;clip-path:var(--sc-corner-9)">{{ en.addLabel }}</button>
                     <sc-if value="{{ en.viewSrc }}" hint-placeholder-val="{{ false }}"><button onClick="{{ en.onView }}" class="sc-lib-view" aria-label="View {{ en.name }} model fullscreen">&#10530; View</button></sc-if>
-                    <button onClick="{{ en.onToggle }}" class="sc-lib-close" aria-label="Close {{ en.name }} details"><svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 10l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>Close</button>
                   </div>
                 </div>
                 <sc-if value="{{ en.expanded }}" hint-placeholder-val="{{ false }}">
@@ -1858,8 +1857,8 @@ class Component extends DCLogic {
             name: u.name, unique: !!u.unique, inArmy, ...art,
             cutout, framed: !!art.portrait && !cutout, expanded,
             cardClass: 'sc-lib-card' + (cutout ? ' sc-lib-card--cutout' : art.portrait ? ' sc-lib-card--framed' : '') + (expanded ? ' sc-lib-card--open' : ''),
-            figureLabel: expanded ? 'View ' + u.name + ' model fullscreen' : 'Show ' + u.name + ' details',
-            onFigure: (ev) => { ev.stopPropagation(); if (expanded) this.openViewer(u.id); else this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: true } })); },
+            figureLabel: expanded ? 'Close ' + u.name + ' details' : 'Show ' + u.name + ' details',
+            onFigure: (ev) => { ev.stopPropagation(); this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: !s2.expLib[u.id] } })); },
             onView: (ev) => { ev.stopPropagation(); this.openViewer(u.id); },
             onCutoutError: () => { this._cutoutFailed[art.cutout] = true; this.setState({}); },
             addLabel: (u.unique && inArmy) ? '\u2713' : '+',
