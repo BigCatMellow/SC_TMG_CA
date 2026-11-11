@@ -48,6 +48,11 @@ for(const faction of ['terran','zerg','protoss']){
  for(const token of ['list="{{ cardChips }}"','onClick="{{ cc.onTap }}"','onClick="{{ openBattleTactical }}"',
    'onClick="{{ openMission }}"','onClick="{{ openEndRound }}"'])
    assert.ok(inline.includes(token),file+' play strip missing '+token);
+ // Card abilities are readable straight from the Battle tab: one tap opens the text.
+ for(const token of ['list="{{ cc.abilities }}"','onClick="{{ ca.onOpen }}"','class="{{ cc.rowCls }}"'])
+   assert.ok(inline.includes(token),file+' inline card abilities missing '+token);
+ assert.ok(html.includes('onClick="{{ sheetAction }}"'),file+' ability sheet can use the card');
+ assert.ok(!/<div class="sc-model-stepper">\s*<div class="sc-model-stepper">/.test(html),file+' stepper markup nested once');
  // One supply recorder: the header strip opens the pool sheet; no second stepper inline.
  assert.ok(!inline.includes('{{ battleSupplyDown }}'),file+' supply pool is adjusted in one place only');
  const poolSheet=html.slice(html.indexOf('<sc-if value="{{ sheetPool }}"'),html.indexOf('<!-- ============ MISSION SHEET ============ -->'));
@@ -218,6 +223,22 @@ for(const faction of ['terran','zerg','protoss']){
    assert.equal(view().battleFaction.tapped,false,'Chip readies a spent card');
  }
  view().finishResourcePayment();
+ // One tap on an ability name opens its text; usable abilities offer the exhaust action there.
+ const fcard=c.D().FACTION_CARDS.find(x=>x.id===c.state.factionId);
+ const expectedAbilities=fcard.abilities.filter(a=>!/^\s*during army building\b/i.test(a.description||''));
+ assert.deepEqual([...chip0().abilities.map(a=>a.name)],[...expectedAbilities.map(a=>a.name)],'army-building passives hidden in play');
+ const usableIdx=expectedAbilities.findIndex(a=>/\b(Active|Reaction)\b/i.test(a.type||'')&&!/do not exhaust this card/i.test(a.description||''));
+ if(usableIdx>=0){
+   chip0().abilities[usableIdx].onOpen();
+   assert.equal(view().sheetKeyword,true);
+   assert.equal(view().sheetBody,expectedAbilities[usableIdx].description);
+   assert.match(view().sheetActionLabel,/use ability/);
+   view().sheetAction();
+   assert.equal(view().sheetKeyword,false);
+   assert.equal(view().battleFaction.tapped,true,'Using the ability exhausts the card');
+   chip0().onTap();
+   assert.equal(view().battleFaction.tapped,false);
+ }
  // Regression: tier-2 Zerglings have twelve models, not one roster-card.
  if (faction==='zerg') {
    const zergling=c.D().UNITS.find(u=>u.id==='zergling');

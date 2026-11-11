@@ -73,13 +73,17 @@ for (const faction of units) {
   assert.equal(ui.battleTactical[1].key, primary.id + '#1');
   assert.equal(ui.battleTactical[0].abilities[0].name,primary.abilities[0].name);
   assert.equal(ui.battleTactical[0].abilities[0].description,primary.abilities[0].description);
-  assert.equal(ui.battleTactical[0].expanded,false);
+  // Cards open by default so their text is one step away.
+  assert.equal(ui.battleTactical[0].expanded,true);
 
-  // Expanding to read rules never exhausts a card or gives resources.
+  // Collapsing / expanding to read rules never exhausts a card or gives resources.
+  ui.battleTactical[0].onExpand();
+  ui=view();
+  assert.equal(ui.battleTactical[0].expanded,false);
+  assert.equal(ui.battleTactical[1].expanded,true);
   ui.battleTactical[0].onExpand();
   ui=view();
   assert.equal(ui.battleTactical[0].expanded,true);
-  assert.equal(ui.battleTactical[1].expanded,false);
   assert.equal(ui.paymentTotal,0);
   assert.equal(ui.battleTactical[0].tapped,false);
 
