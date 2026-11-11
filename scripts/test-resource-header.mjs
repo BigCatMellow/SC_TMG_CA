@@ -76,6 +76,8 @@ function originalScoreboardHash(str) {
 // Baseline hashes from original title rows on main before this change.
 const originalTitleHashes = {"terran":"eca5f626","zerg":"188c1517","protoss":"1ba3c571"};
 const titleSizingChanges = [
+  // Back goes to the real home (index.html), not the stale Command Center copy.
+  ['<a href="index.html" aria-label="Back to command center"', '<a href="Command Center.dc.html" aria-label="Back to command center"'],
   [
     "    <div class=\"{{ titleHeaderClass }}\" style=\"display:flex;align-items:center;gap:var(--sc-title-gap,10px);padding:calc(var(--sc-title-pad-top,10px) + env(safe-area-inset-top)) 14px var(--sc-title-pad-bottom,8px)\">",
     "    <div style=\"display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 8px\">"
