@@ -487,7 +487,7 @@
                           <span style="font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;color:#e9ecf2">{{ ab.name }}</span>
                           <span style="font-size:11px;color:#8a91a5">{{ ab.type }}</span>
                         </div>
-                        <div style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-kw-link">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
+                        <div class="sc-def" style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-kw-link">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
                       </div>
                     </sc-for>
                   </div>
@@ -539,7 +539,7 @@
                     <span style="font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;color:#e9ecf2">{{ ab.name }}</span>
                     <span style="font-size:11px;color:#8a91a5">{{ ab.type }}</span>
                   </div>
-                  <div style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-kw-link">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
+                  <div class="sc-def" style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-kw-link">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
                 </div>
               </sc-for>
             </div>
@@ -1080,6 +1080,40 @@ class Component extends DCLogic {
     document.body.style.overflow = '';
     this.setState({ viewer: null });
   }
+  // ---------- phone back gesture / back button closes the open panel, not the app ----------
+  // While any overlay is open there is one extra history entry; going back pops it and
+  // closes the topmost overlay. Closing an overlay from the UI removes that entry again.
+  overlayOpen(st) {
+    return !!(st.viewer || st.secMenu || st.searchOpen || st.sheet || st.battlePanel);
+  }
+  closeTopOverlay() {
+    const st = this.state;
+    if (st.viewer) this.setState({ viewer: null });
+    else if (st.secMenu) this.setState({ secMenu: false });
+    else if (st.searchOpen) this.setState({ searchOpen: false });
+    else if (st.sheet) this.setState({ sheet: (st.sheet && st.sheet.returnTo) || null });
+    else if (st.battlePanel) this.setState({ battlePanel: null });
+  }
+  syncHistory(st) {
+    if (typeof window === 'undefined' || !window.history || typeof window.history.pushState !== 'function') return;
+    if (!this._onPop) {
+      this._onPop = () => {
+        if (this._skipPop) { this._skipPop = false; return; }
+        if (this._histOpen) { this._histOpen = false; this.closeTopOverlay(); }
+      };
+      window.addEventListener('popstate', this._onPop);
+    }
+    const open = this.overlayOpen(st);
+    if (open && !this._histOpen) {
+      this._histOpen = true;
+      window.history.pushState({ scOverlay: true }, '');
+    } else if (!open && this._histOpen) {
+      this._histOpen = false;
+      this._skipPop = true;
+      window.history.back();
+    }
+  }
+
   // ---------- floating "you are here" section tab ----------
   sectionEls() {
     if (typeof document === 'undefined' || !document.querySelectorAll) return [];
@@ -2670,6 +2704,8 @@ class Component extends DCLogic {
         }));
       }
     }
+
+    this.syncHistory(st);
 
     // remember the open tab so reopening the app lands here
     if (st.ready && this._savedTab !== st.tab) { this._savedTab = st.tab; try { localStorage.setItem('sctmg_terran_tab', st.tab); } catch (e) {} }
