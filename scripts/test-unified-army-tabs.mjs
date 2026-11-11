@@ -20,7 +20,7 @@ for(const faction of ['terran','zerg','protoss']){
   const nav=html.slice(navAt,html.indexOf('<!-- ============ KEYWORD / TAG SHEET ============ -->',navAt));
   assert.ok(!html.includes('<!-- ============ ROSTER TAB ============ -->'),faction+' retired Roster view');
   assert.ok(!html.includes('tabIsRoster')&&!html.includes('tb.isRoster'),faction+' no hidden Roster tab');
-  assert.ok(setup.includes('Engagement Size')&&setup.includes('list="{{ scales }}"'),
+  assert.ok(setup.includes('Battle Size')&&setup.includes('list="{{ scales }}"'),
     faction+' engagement size selector on first faction tab');
   assert.equal((html.match(/list="\{\{ scales \}\}"/g)||[]).length,1,
     faction+' exactly one engagement size selector');

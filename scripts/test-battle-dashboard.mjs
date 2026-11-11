@@ -412,6 +412,34 @@ for(const faction of ['terran','zerg','protoss']){
      assert.equal(view().mineralsUsed,before+parseInt(paid.cost,10),'Buying an upgrade spends its tier cost'); }
    c.state.army=[];
  }
+ // ---- playtest fixes 2 ----
+ {
+   const DD2=c.D();
+   const big=DD2.UNITS.find(u=>u.tiers.some(t=>t.cost>0)&&!u.factionTag&&Number(u.stats&&u.stats.hp)>1);
+   if(big){
+     const ti=big.tiers.findIndex(t=>t.cost>0);
+     c.state.army=[{key:'kd',unitId:big.id,tierIdx:ti,upgs:[],modelsLost:0,deployed:false}];
+     let card=view().battleGroups.flatMap(g=>g.entries).find(u=>u.key==='kd');
+     assert.ok(card.tracksDamage,big.name+' tracks damage');
+     const pool=card.dmgPool;
+     for(let i=0;i<pool;i++) view().battleGroups.flatMap(g=>g.entries).find(u=>u.key==='kd').onDmgUp({stopPropagation(){}});
+     assert.equal(c.state.army[0].modelsLost,1,'filling the damage pool removes a model');
+     assert.equal(c.state.army[0].dmg,0);
+     // Undo a removal
+     card=view().battleGroups.flatMap(g=>g.entries).find(u=>u.key==='kd');
+     card.onRemove({stopPropagation(){}});
+     assert.equal(c.state.army.length,0);
+     assert.equal(view().undoOn,true);
+     view().undoRemove();
+     assert.equal(c.state.army.length,1,'Undo restores the unit');
+     assert.equal(c.state.army[0].modelsLost,1,'Undo keeps its battle state');
+     clearTimeout(c._undoTimer);
+     // Changing tier resets casualties
+     c.changeTier('kd',ti);
+     assert.equal(c.state.army[0].modelsLost,0,'tier change resets casualties');
+     c.state.army=[];
+   }
+ }
  console.log(faction+': Tactical summary + modal, inline Troops, payment, deploy and troop editing passed');
 }
 console.log('Battle tab validated across all factions');
