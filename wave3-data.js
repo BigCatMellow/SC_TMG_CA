@@ -1639,3 +1639,39 @@ for(const [name,patch] of Object.entries(extra)) {
   }
 }
 })(window);
+
+// One-line summaries for tactical cards that shipped without one, so the Tactics
+// list can be compared without expanding every card.
+(function (root) {
+  const SUMMARIES = {
+    'defiler-mound': 'Poison engaged enemies, tunnel a unit back to Reserves',
+    'reactive-creep': 'Dodge (1) on creep, creep tokens persist',
+    academy: 'Support CP abilities cost 1 less once per round',
+    armory: 'Tough (1) or Critical Hit (1) for Mechanical units',
+    barracks: 'Free 2" move for a Biological unit',
+    'barracks-proxy': 'Free 2" move, deploy Biological units from a side edge',
+    'barracks-tech-lab': 'Free 2" move, Anti-Evade (1) on first ranged weapon',
+    dropship: 'Pull a unit to Reserves, drop one in at a marker',
+    'engineering-bay': 'Tough (1) or Critical Hit (1) for Biological units',
+    factory: 'Heal (2) a Mechanical unit',
+    'orbital-command': 'Block an enemy deploy edge, reveal hidden units',
+    'supply-depot': '+1 supply for holding and scoring objectives',
+    'vanadium-plating': 'Dodge (2) on a Mechanical unit’s armour roll',
+    forge: 'Tough (1) or Critical Hit (1) for Ground units',
+    'gate-chronoboosted': '+2 Speed, Precision (2) on first melee weapon',
+    gateway: 'Precision (2) on first melee weapon',
+    nexus: 'First weapon gains Instant, recall a unit to Reserves',
+    observer: 'Reveal hidden units, +1 charge distance',
+    'overcharged-nexus': 'Shoot flanking arrivals, recall a unit to Reserves',
+    'power-field': 'Dodge (2) on a Ground unit’s armour roll',
+    'twilight-council': 'Heal (2) after a Place, +4" range on first ranged weapon',
+    'warp-gate': 'Warp a Ground unit in from a side edge, Precision (2) melee',
+    'warp-prism': 'Place (3) a unit, warp one in at a marker',
+    'templar-archives': 'Support PE abilities cost 1 less once per round'
+  };
+  ['SCTMG_ZERG', 'SCTMG_TERRAN', 'SCTMG_PROTOSS'].forEach(k => {
+    const data = root[k];
+    if (!data || !data.TACTICAL_CARDS) return;
+    data.TACTICAL_CARDS.forEach(t => { if (!t.summary && SUMMARIES[t.id]) t.summary = SUMMARIES[t.id]; });
+  });
+})(window);
