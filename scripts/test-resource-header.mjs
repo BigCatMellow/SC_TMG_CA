@@ -211,10 +211,10 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   const slots = () => controller.renderVals().roleSlots;
   const firstSlots = slots();
   const factionCard = D.FACTION_CARDS.find(x => x.id === controller.state.factionId) || D.FACTION_CARDS[0];
-  // Empty 0/0 roles are hidden; the rest keep the fixed order.
-  const shownRoles = roles.filter(r => (factionCard.slots?.[r] || 0) > 0);
+  // Hero, Elite, Core and Support always show (0/0 included) so the strip keeps its shape; Air only when used.
+  const shownRoles = roles.filter(r => r !== 'air' || (factionCard.slots?.[r] || 0) > 0);
   assert.deepEqual(firstSlots.map(x => x.name.toLowerCase()), shownRoles,
-    faction + ' role counts in fixed order, empty roles hidden');
+    faction + ' role counts in fixed order, main roles always shown');
   assert.equal(controller.renderVals().slotCols, Math.max(1, shownRoles.length), faction + ' slot strip column count');
   for (const role of shownRoles) {
     const actual = firstSlots.find(x => x.name.toLowerCase() === role);

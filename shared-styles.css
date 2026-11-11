@@ -1481,6 +1481,9 @@ input::placeholder { color: #5b6275; }
   .sc-app-col { max-width: 820px !important; }
   .sc-tabbar { max-width: 820px !important; }
   .sc-tab-btn { height: 44px !important; flex-direction: row !important; gap: 8px !important; }
+  /* Two cards side by side so a unit card fits on screen */
+  .sc-lib-list { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 14px; }
+  .sc-play-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 .sc-lock--hint { color: #8fb8c7; }
 .sc-lock--hint::before { content: "+ "; font-size: 11px; }
