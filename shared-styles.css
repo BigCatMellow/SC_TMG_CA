@@ -1500,7 +1500,7 @@ input::placeholder { color: #5b6275; }
   box-shadow: 0 8px 24px rgba(0,0,0,0.55);
   clip-path: var(--sc-corner-9);
   color: #e9ecf2; cursor: pointer; text-align: left;
-  opacity: .45; transition: opacity .25s ease;
+  opacity: .8; transition: opacity .25s ease;
 }
 .sc-secnav--active { opacity: 1; }
 .sc-secnav-label { font: 700 13px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; max-width: 150px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
