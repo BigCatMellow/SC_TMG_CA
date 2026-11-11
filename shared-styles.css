@@ -1139,3 +1139,9 @@ input::placeholder { color: #5b6275; }
 }
 .sc-title-row:not(.sc-title-row--compact) .sc-title-faction-name { line-height: 1.05 !important; }
 .sc-title-row:not(.sc-title-row--compact) .sc-title-faction { max-width: 100%; }
+
+/* Library cards: chevron shows open/closed; tapping the art toggles the card. */
+.sc-lib-chev { order: 99; flex: 0 0 auto; color: #7c8398; transition: transform .18s; }
+.sc-lib-card--open .sc-lib-chev { transform: rotate(180deg); color: var(--fc-text-tint, #c99af7); }
+.sc-lib-card--open .sc-lib-actions { z-index: 4; }
+.sc-lib-card--open.sc-lib-card--cutout .sc-lib-figure { width: 50%; right: 8px; }
