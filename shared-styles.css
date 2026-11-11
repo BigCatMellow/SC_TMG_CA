@@ -1191,3 +1191,137 @@ input::placeholder { color: #5b6275; }
 /* View button: comfortable tap target */
 .sc-lib-view { height: 34px; }
 
+
+/* ===== Battle tab, play mode: read at a glance, update once per round ===== */
+.sc-play-kicker { display: block; font: 700 10px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #8a91a5; }
+.sc-play-link { background: none; border: 0; padding: 6px 0; min-height: 32px; color: #38d3e8; font: 700 12px Rajdhani, sans-serif; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.sc-play-mission {
+  margin: 0 0 8px;
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+.sc-play-mission-name {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  padding: 9px 12px;
+  background: var(--sc-card-bg);
+  border: 1px solid rgba(53,199,107,0.4);
+  color: #e9ecf2;
+  cursor: pointer;
+  clip-path: var(--sc-corner-10);
+}
+.sc-play-mission-title { display: block; margin-top: 1px; font: 700 16px Rajdhani, sans-serif; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-play-mission-sub { display: block; font-size: 12px; color: #8a91a5; line-height: 1.35; }
+.sc-play-pool { flex: 0 0 auto; padding: 8px 10px; background: var(--sc-card-bg); border: 1px solid var(--sc-border-input); text-align: center; }
+.sc-play-pool-row { display: flex; align-items: center; gap: 6px; margin-top: 3px; }
+.sc-play-pool-value { min-width: 24px; font: 700 20px 'Chakra Petch', sans-serif; color: #e9ecf2; }
+.sc-play-pool-use { margin-top: 5px; width: 100%; min-height: 26px; background: rgba(53,199,107,0.14); border: 1px solid rgba(53,199,107,0.45); color: #7fe0a4; font: 700 11px Rajdhani, sans-serif; letter-spacing: .06em; text-transform: uppercase; cursor: pointer; }
+.sc-play-endround {
+  width: 100%;
+  min-height: 44px;
+  margin-bottom: 14px;
+  background: rgba(53,199,107,0.12);
+  border: 1px solid rgba(53,199,107,0.45);
+  color: #7fe0a4;
+  font: 700 13px Rajdhani, sans-serif;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  clip-path: var(--sc-corner-10);
+}
+.sc-play-cards-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sc-play-chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 2px 0 8px; }
+.sc-play-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 38px;
+  padding: 0 11px;
+  background: rgba(56,211,232,0.07);
+  border: 1px solid rgba(56,211,232,0.4);
+  color: #d4f5fa;
+  font: 700 13px Rajdhani, sans-serif;
+  letter-spacing: .03em;
+  cursor: pointer;
+}
+.sc-play-chip-res { font-size: 12px; color: #b6e64a; }
+.sc-play-chip--passive { border-color: var(--sc-border-input); background: #12151f; color: #a7aec2; }
+.sc-play-chip--passive .sc-play-chip-res { color: #7c8398; }
+.sc-play-chip--spent { border-color: #2a3040; background: #0d0f16; color: #5b6378; text-decoration: line-through; }
+.sc-play-chip--spent .sc-play-chip-res { color: #5b6378; text-decoration: none; }
+.sc-play-paying { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: -2px 0 10px; padding: 4px 10px; background: rgba(182,230,74,0.07); border: 1px solid rgba(182,230,74,0.3); font-size: 13px; color: #d7eaa6; }
+.sc-play-paying b { color: #b6e64a; }
+.sc-battle-troops { padding-top: 6px; }
+.sc-battle-overview { padding-bottom: 4px; }
+
+/* Unit card: play view */
+.sc-play-sup { font: 700 18px 'Chakra Petch', sans-serif; color: #e9ecf2; line-height: 1; }
+.sc-play-sup small { display: block; margin-top: 2px; font: 700 10px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #8a91a5; }
+.sc-play-body { position: relative; padding: 0 12px 10px; display: grid; gap: 6px; }
+.sc-play-stats { display: flex; gap: 12px; flex-wrap: wrap; font: 700 14px 'Chakra Petch', sans-serif; color: #e9ecf2; }
+.sc-play-stats small { margin-right: 4px; font: 700 10px Rajdhani, sans-serif; letter-spacing: .1em; color: #8a91a5; }
+.sc-play-weapon {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  column-gap: 7px;
+  row-gap: 2px;
+  padding: 6px 8px;
+  background: rgba(15,18,32,0.88);
+  border: 1px solid #232939;
+}
+.sc-play-wname { font: 700 14px Rajdhani, sans-serif; letter-spacing: .02em; color: #e9ecf2; }
+.sc-play-wstats { flex-basis: 100%; font: 600 13px Rajdhani, sans-serif; letter-spacing: .02em; color: #c8cede; }
+.sc-play-wsurge { font: 600 12px Rajdhani, sans-serif; color: #8a91a5; }
+.sc-play-abilities { display: flex; flex-wrap: wrap; gap: 5px; }
+.sc-play-ability {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 9px;
+  background: rgba(15,18,32,0.88);
+  border: 1px solid #2a3040;
+  color: #c8cede;
+  font: 700 12px Rajdhani, sans-serif;
+  letter-spacing: .02em;
+  cursor: pointer;
+}
+.sc-play-ability em { font-style: normal; color: #b6e64a; }
+.sc-play-dot { width: 6px; height: 6px; flex: 0 0 auto; transform: rotate(45deg); }
+.sc-play-fit { font: 700 12px Rajdhani, sans-serif; letter-spacing: .04em; }
+.sc-play-fit--ok { color: #7fe0a4; }
+.sc-play-fit--short { color: #f2a14e; }
+
+/* Mission + End round sheets */
+.sc-play-sheet {
+  width: 100%;
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  pointer-events: auto;
+  background: #141824;
+  border: 1px solid rgba(53,199,107,0.4);
+  border-bottom: none;
+  padding: 16px 16px calc(20px + env(safe-area-inset-bottom));
+  animation: scSheetUp 0.2s ease;
+  clip-path: var(--sc-corner-14-top);
+}
+.sc-play-grab { width: 36px; height: 3px; background: var(--sc-border-input); margin: 0 auto 14px; border-radius: 2px; }
+.sc-play-sheet-title { font: 700 20px Rajdhani, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #e9ecf2; }
+.sc-play-sheet-meta { margin-top: 2px; font-size: 12.5px; color: #8a91a5; }
+.sc-play-sheet-h { margin: 14px 0 4px; font: 700 11px Rajdhani, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #8fe6ae; }
+.sc-play-sheet-li { position: relative; padding: 4px 0 4px 14px; font-size: 14px; line-height: 1.5; color: #c8cede; }
+.sc-play-sheet-li::before { content: ""; position: absolute; left: 0; top: 12px; width: 5px; height: 5px; background: #35c76b; transform: rotate(45deg); }
+.sc-play-sheet-li--dim { color: #a7aec2; font-size: 13px; }
+.sc-play-sheet-li--dim::before { background: #5b6275; }
+.sc-play-sheet-warn { margin-top: 6px; padding: 6px 10px; background: rgba(242,193,78,0.08); border: 1px solid rgba(242,193,78,0.35); font-size: 13px; color: #f2c14e; }
+.sc-play-sheet-btn { margin-top: 10px; width: 100%; height: 44px; background: #1a1f2e; border: 1px solid var(--sc-border-input); color: #c8cede; font: 700 12px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+.sc-play-sheet-btn--go { margin-top: 16px; height: 48px; background: rgba(53,199,107,0.16); border-color: rgba(53,199,107,0.55); color: #7fe0a4; font-size: 14px; }
+.sc-play-vp { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+.sc-play-vp > div { padding: 8px 10px; background: #0f1220; border: 1px solid #232939; }
+.sc-play-vp-row { display: flex; align-items: center; justify-content: space-between; margin-top: 4px; }
+.sc-play-vp-row b { font: 700 26px 'Chakra Petch', sans-serif; color: #c8cede; }
+.sc-play-vp-row b.sc-play-vp-you { color: #c99af7; }

@@ -28,7 +28,7 @@ for (const selector of ['.sc-battle-supply-stat-label', '.sc-battle-supply-stat-
 assert.match(styles,/overflow-y:\s*auto/,'long roster and card lists can scroll inside sheet');
 assert.match(styles,/overscroll-behavior:\s*contain/,'modal scrolling stays inside sheet');
 const world={alert(){},scrollY:0,scrollTo(){},addEventListener(){},removeEventListener(){}};
-for(const file of ['terran-data.js','zerg-data.js','protoss-data.js','wave3-data.js','model-portraits.js','codex-examples.js'])
+for(const file of ['terran-data.js','zerg-data.js','protoss-data.js','wave3-data.js','model-portraits.js','codex-examples.js','missions-data.js'])
  vm.runInNewContext(read(file),{window:world},{filename:file});
 for(const faction of ['terran','zerg','protoss']){
  const file=faction[0].toUpperCase()+faction.slice(1)+' Army.dc.html';
@@ -43,8 +43,11 @@ for(const faction of ['terran','zerg','protoss']){
  const troops=battle.slice(battle.indexOf('<section class="sc-battle-troops"'));
  assert.ok(troops.length>0,file+' Troops are inline on the Battle tab');
  assert.ok(!battle.includes('sheetBattleTroops'),file+' Troops no longer hide in a sheet');
- assert.equal((inline.match(/class="sc-battle-overview-card sc-battle-overview-card--/g)||[]).length,1,
-   file+' one Tactical summary card');
+ assert.equal((inline.match(/class="sc-battle-overview-card sc-battle-overview-card--/g)||[]).length,0,
+   file+' no summary card: cards are tap-to-spend chips');
+ for(const token of ['list="{{ cardChips }}"','onClick="{{ cc.onTap }}"','onClick="{{ openBattleTactical }}"',
+   'onClick="{{ openMission }}"','onClick="{{ openEndRound }}"','onClick="{{ battleSupplyDown }}"','onClick="{{ battleSupplyUp }}"'])
+   assert.ok(inline.includes(token),file+' play strip missing '+token);
  const header=html.slice(html.indexOf('<!-- play HUD, scoreboard layout'),
    html.indexOf('<!-- ============ BATTLE TAB ============ -->'));
  const scoreboard=header.indexOf('class="{{ scoreboardClass }}"');
@@ -61,10 +64,10 @@ for(const faction of ['terran','zerg','protoss']){
    assert.ok(header.includes('{{ '+binding+' }}') || header.includes('onClick="{{ '+binding+' }}"'),
      file+' Battle-only supply row missing '+binding);
  }
- for(const token of ['list="{{ tacticalPreview }}"',
-   '{{ item.name }}','{{ item.ready }}','{{ item.total }}','tacticalPreviewHasMore']){
-   assert.ok(inline.includes(token),file+' missing dynamic summary preview: '+token);
- }
+ for(const token of ['list="{{ u.play.weapons }}"','list="{{ u.play.abilities }}"','list="{{ u.play.stats }}"','onClick="{{ pa.onOpen }}"'])
+   assert.ok(troops.includes(token),file+' unit play view missing '+token);
+ assert.ok(!troops.includes('{{ u.cost }}'),file+' mineral cost is not shown on battle cards');
+ for(const sheet of ['sheetMission','sheetEndRound']) assert.ok(html.includes('{{ '+sheet+' }}'),file+' missing '+sheet);
  assert.ok(inline.includes('list="{{ rosterIssues }}"')&&inline.includes('onClick="{{ issue.onFix }}"'),
    file+' roster alert lists each issue with a jump to its fix');
  for (const label of ['Deployment','Supply','Used','Pool','Free'])
@@ -73,7 +76,7 @@ for(const faction of ['terran','zerg','protoss']){
  assert.ok(battle.indexOf('sc-battle-overview-card--tactical')<battle.indexOf('<section class="sc-battle-troops"'),
    file+' Tactical summary must appear above Troops');
  for(const binding of ['openBattleTactical','battleCardsReady','battleCardsTotal',
-   'battleCardsExhausted','paymentTotal','paymentResource'])
+   'paymentTotal','paymentResource'])
    assert.ok(inline.includes('{{ '+binding+' }}')||inline.includes('onClick="{{ '+binding+' }}"'),
      file+' missing summary binding '+binding);
  assert.ok(!inline.includes('list="{{ battleCards }}"'),file+' tactical cards should only be in modal');
@@ -81,10 +84,10 @@ for(const faction of ['terran','zerg','protoss']){
  assert.ok(!tactical.includes('list="{{ battleGroups }}"'),file+' unit cards are not in the Tactical modal');
  assert.ok(tactical.includes('list="{{ battleCards }}"'),file+' tactical details preserved');
  for(const action of ['tc.onResource','tc.onAbility','tc.onReady','tc.onExpand',
-   'refreshTactical','finishResourcePayment','paymentTargetUp','paymentTargetDown'])
+   'refreshTactical','finishResourcePayment'])
    assert.ok(tactical.includes('onClick="{{ '+action+' }}"'),
      file+' missing tactical action '+action);
- for(const action of ['battleSupplyDown','battleSupplyUp','toggleArmyEdit','u.onChangeTier',
+ for(const action of ['toggleArmyEdit','u.onChangeTier',
    'u.onRemove','u.onSetReserve','u.onSetDeployed','u.onLossDown','u.onLossUp','u.onToggle','gotoLibrary'])
    assert.ok(troops.includes('onClick="{{ '+action+' }}"'),file+' missing troop control '+action);
  assert.equal((troops.match(/onClick="\{\{ u\.onChangeTier \}\}"/g)||[]).length,1,
@@ -191,12 +194,18 @@ for(const faction of ['terran','zerg','protoss']){
  assert.equal(tappedView.showResource||tappedView.showAbility||tappedView.showPassive,false,
    'Exhausted cards only offer Ready');
  view().refreshTactical();
- // Payment target guides one ability payment.
- view().paymentTargetUp(); view().paymentTargetUp();
- assert.equal(view().paymentTarget,2);
- assert.match(view().paymentStatus,/to go/);
+ // Card chips: tap a ready card to spend it, tap again to ready it.
+ const chip0=()=>view().cardChips[0];
+ assert.equal(chip0().name,view().battleFaction.name);
+ if (view().battleFaction.hasResource) {
+   chip0().onTap();
+   assert.equal(view().battleFaction.tapped,true,'Chip spends a ready card');
+   assert.ok(view().paymentTotal>0,'Spent resource counts toward the payment');
+   assert.match(chip0().cls,/--spent/);
+   chip0().onTap();
+   assert.equal(view().battleFaction.tapped,false,'Chip readies a spent card');
+ }
  view().finishResourcePayment();
- assert.equal(view().paymentTarget,0,'Finishing a payment clears its cost');
  // Regression: tier-2 Zerglings have twelve models, not one roster-card.
  if (faction==='zerg') {
    const zergling=c.D().UNITS.find(u=>u.id==='zergling');
@@ -303,6 +312,29 @@ for(const faction of ['terran','zerg','protoss']){
  assert.equal(view().sheetBattleTactical,false);
  assert.equal(c.state.battlePanel,null);
  assert.equal(c.state.tab,'codex');
+  // Mission drives the supply pool; End round bundles the once-a-round updates.
+ const mission=world.SCTMG_MISSIONS.MISSIONS.find(m=>m.id==='supply-drop');
+ c.state.missionId=mission.id; c.state.play={round:1,phase:2,vpYou:0,vpFoe:0}; c.state.sheet=null;
+ assert.equal(view().hudMission,mission.name,'Header shows the mission, not a phase');
+ assert.equal(view().poolSuggestion,mission.supply,'Round 1 pool comes from the mission');
+ view().usePoolSuggestion();
+ assert.equal(c.state.battleSupplyAvailable,mission.supply);
+ if (view().battleFaction.hasResource) view().battleFaction.onResource();
+ view().openEndRound();
+ assert.equal(view().sheetEndRound,true);
+ view().confirmEndRound();
+ assert.equal(c.state.play.round,2,'End round advances the round');
+ assert.equal(c.state.play.phase,0,'End round resets the phase');
+ assert.equal(c.state.factionTappedId,null,'End round readies exhausted cards');
+ assert.equal(c.state.battleSupplyAvailable,mission.supply+mission.perRound,'End round raises the pool');
+ c.state.play={...c.state.play,round:mission.gameLength};
+ const before={...c.state.play};
+ view().confirmEndRound();
+ assert.equal(c.state.play.round,before.round,'Final round does not advance past the mission length');
+ c.state.missionId=null; c.state.play={round:1,phase:0,vpYou:0,vpFoe:0};
+ // Units are grouped by where they are, not by role.
+ const groups=view().battleGroups.map(g=>g.role);
+ assert.ok(groups.every(g=>['On table','Reserves','Destroyed'].includes(g)),'Battle groups are table state: '+groups);
  console.log(faction+': Tactical summary + modal, inline Troops, payment, deploy and troop editing passed');
 }
 console.log('Battle tab validated across all factions');

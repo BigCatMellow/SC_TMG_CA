@@ -38,6 +38,13 @@ for (const [variable, value] of Object.entries({
 // markup, colors, clip-path, gradient and event wiring are byte-for-byte intact.
 const originalScoreboardHashes = { terran: 'b179839f', zerg: '2b6ccd69', protoss: 'f2989468' };
 const scoreboardSizingChanges = [
+  // The HUD shows the mission (accurate all game) instead of a phase nobody keeps updated.
+  ['text-transform:uppercase;color:#8a91a5">{{ hudRoundOf }}</div>',
+   'text-transform:uppercase;color:#8a91a5">Phase</div>'],
+  ['text-transform:uppercase;color:#c8cede;white-space:nowrap;max-width:132px;overflow:hidden;text-overflow:ellipsis">{{ hudMission }}</div>',
+   'text-transform:uppercase;color:{{ phaseColor }};white-space:nowrap">{{ phaseName }}</div>'],
+  ['background:#35c76b;box-shadow:0 0 6px #35c76b;',
+   'background:{{ phaseColor }};box-shadow:0 0 6px {{ phaseColor }};'],
   ['<div class="{{ scoreboardClass }}" onClick="{{ togglePlay }}" role="button" aria-label="Open round tracker"',
    '<div onClick="{{ togglePlay }}" role="button" aria-label="Open round tracker"'],
   ['margin:0 14px var(--sc-scoreboard-bottom-gap,8px);background:linear-gradient',

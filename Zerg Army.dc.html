@@ -26,6 +26,7 @@
   <script src="wave3-data.js"></script>
   <script src="model-portraits.js"></script>
   <script src="portraits/cutout/index.js"></script>
+  <script src="missions-data.js"></script>
   <script src="codex-examples.js"></script>
 </helmet>
 
@@ -59,7 +60,7 @@
     <!-- play HUD, scoreboard layout: round left, score center, phase right -->
     <div class="{{ scoreboardClass }}" onClick="{{ togglePlay }}" role="button" aria-label="Open round tracker" style="margin:0 14px var(--sc-scoreboard-bottom-gap,8px);background:linear-gradient(120deg,rgba(176,110,247,0.55),rgba(43,49,69,0.5) 55%);padding:1px;cursor:pointer;clip-path:var(--sc-corner-10)"><div style="display:flex;align-items:center;justify-content:space-between;gap:var(--sc-scoreboard-card-gap,10px);background:var(--sc-card-bg);padding:var(--sc-scoreboard-padding,12px 16px);clip-path:var(--sc-corner-10)">
       <div style="display:flex;align-items:center;gap:var(--sc-scoreboard-round-gap,6px);flex:0 0 auto">
-        <span style="width:6px;height:6px;background:{{ phaseColor }};box-shadow:0 0 6px {{ phaseColor }};animation:scPulse 2s infinite;flex:0 0 auto"></span>
+        <span style="width:6px;height:6px;background:#35c76b;box-shadow:0 0 6px #35c76b;animation:scPulse 2s infinite;flex:0 0 auto"></span>
         <span style="font-family:'Chakra Petch',sans-serif;font-size:var(--sc-scoreboard-round-size,17px);font-weight:700;letter-spacing:0.05em;color:#e9ecf2">R{{ round }}</span>
       </div>
       <div style="display:flex;align-items:center;gap:var(--sc-scoreboard-vp-gap,10px);flex:1;justify-content:center">
@@ -70,8 +71,8 @@
         <svg width="12" height="12" viewBox="0 0 16 16" fill="none" style="margin-left:2px"><path d="M4 6l4 4 4-4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       </div>
       <div style="text-align:right;flex:0 0 auto">
-        <div style="font-family:Rajdhani,sans-serif;font-size:var(--sc-scoreboard-phase-label-size,9px);line-height:var(--sc-scoreboard-phase-line-height,1.5);font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5">Phase</div>
-        <div style="font-family:Rajdhani,sans-serif;font-size:var(--sc-scoreboard-phase-size,13px);line-height:var(--sc-scoreboard-phase-line-height,1.5);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:{{ phaseColor }};white-space:nowrap">{{ phaseName }}</div>
+        <div style="font-family:Rajdhani,sans-serif;font-size:var(--sc-scoreboard-phase-label-size,9px);line-height:var(--sc-scoreboard-phase-line-height,1.5);font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#8a91a5">{{ hudRoundOf }}</div>
+        <div style="font-family:Rajdhani,sans-serif;font-size:var(--sc-scoreboard-phase-size,13px);line-height:var(--sc-scoreboard-phase-line-height,1.5);font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:#c8cede;white-space:nowrap;max-width:132px;overflow:hidden;text-overflow:ellipsis">{{ hudMission }}</div>
       </div>
     </div></div>
 
@@ -145,29 +146,38 @@
 
     <!-- Two concise Battle summaries; details and controls live in their sheets. -->
     <div class="sc-battle-overview" aria-label="Battle overview">
-      <button class="sc-battle-overview-card sc-battle-overview-card--tactical"
-              onClick="{{ openBattleTactical }}" aria-label="Open Tactical cards and energy">
-        <span class="sc-battle-overview-main">
-          <span class="sc-battle-overview-kicker">Battle management</span>
-          <span class="sc-battle-overview-title">Tactical</span>
-          <span class="sc-battle-overview-value">{{ battleCardsReady }}<span class="sc-battle-overview-total"> / {{ battleCardsTotal }}</span></span>
-          <span class="sc-battle-overview-label">Cards ready</span>
-          <span class="sc-battle-overview-meta">{{ battleCardsExhausted }} exhausted · {{ paymentTotal }} {{ paymentResource }} payment</span>
-          <span class="sc-battle-overview-link" style="white-space:nowrap">Manage cards &amp; energy&nbsp;<span aria-hidden="true">›</span></span>
-        </span>
-        <span class="sc-battle-overview-side" aria-hidden="true">
-          <span class="sc-battle-preview-heading">Card status <span>Ready / Total</span></span>
-          <sc-for list="{{ tacticalPreview }}" as="item" hint-placeholder-count="4">
-            <span class="{{ item.className }}">
-              <span class="sc-battle-preview-name">{{ item.name }}</span>
-              <span class="sc-battle-preview-count">{{ item.ready }}/{{ item.total }}</span>
-            </span>
-          </sc-for>
-          <sc-if value="{{ tacticalPreviewHasMore }}" hint-placeholder-val="{{ false }}">
-            <span class="sc-battle-preview-more">+{{ tacticalPreviewMore }} more cards</span>
-          </sc-if>
-        </span>
-      </button>
+      <!-- Mission: one place for the round, the supply pool and ending the round -->
+      <div class="sc-play-mission">
+        <button onClick="{{ openMission }}" class="sc-play-mission-name" aria-label="Mission scoring rules">
+          <span class="sc-play-kicker">{{ missionKicker }}</span>
+          <span class="sc-play-mission-title">{{ missionTitle }}</span>
+          <span class="sc-play-mission-sub">{{ missionSub }}</span>
+        </button>
+        <div class="sc-play-pool">
+          <span class="sc-play-kicker">Supply pool</span>
+          <div class="sc-play-pool-row">
+            <button onClick="{{ battleSupplyDown }}" class="sc-mini-step" aria-label="Lower supply pool">−</button>
+            <span class="sc-play-pool-value">{{ battleSupplyAvailable }}</span>
+            <button onClick="{{ battleSupplyUp }}" class="sc-mini-step" aria-label="Raise supply pool">+</button>
+          </div>
+          <sc-if value="{{ poolDiffers }}" hint-placeholder-val="{{ false }}"><button onClick="{{ usePoolSuggestion }}" class="sc-play-pool-use">Use mission {{ poolSuggestion }}</button></sc-if>
+        </div>
+      </div>
+      <button onClick="{{ openEndRound }}" class="sc-play-endround">{{ endRoundLabel }}</button>
+
+      <!-- Cards: tap a ready card to spend its resource; tap a spent card to ready it -->
+      <div class="sc-play-cards-head">
+        <span class="sc-play-kicker">Cards · {{ battleCardsReady }}/{{ battleCardsTotal }} ready</span>
+        <button onClick="{{ openBattleTactical }}" class="sc-play-link" aria-label="Open Tactical cards and energy">Card abilities ›</button>
+      </div>
+      <div class="sc-play-chips">
+        <sc-for list="{{ cardChips }}" as="cc" hint-placeholder-count="3">
+          <button onClick="{{ cc.onTap }}" class="{{ cc.cls }}" aria-label="{{ cc.aria }}"><span class="sc-play-chip-name">{{ cc.name }}</span><span class="sc-play-chip-res">{{ cc.res }}</span></button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ hasPendingPayment }}" hint-placeholder-val="{{ false }}">
+        <div class="sc-play-paying"><span>Paying an ability: <b>{{ paymentTotal }} {{ paymentResource }}</b></span><button onClick="{{ finishResourcePayment }}" class="sc-play-link">Done</button></div>
+      </sc-if>
     </div>
 
     <sc-if value="{{ sheetBattleTactical }}" hint-placeholder-val="{{ false }}">
@@ -202,14 +212,7 @@
                 <button onClick="{{ finishResourcePayment }}" class="sc-battle-payment-finish">Finish payment</button>
               </sc-if>
             </div>
-            <div class="sc-battle-payment-target">
-              <span class="sc-battle-payment-caption">Ability cost</span>
-              <button onClick="{{ paymentTargetDown }}" class="sc-mini-step" aria-label="Lower ability cost">−</button>
-              <span class="sc-battle-payment-target-value">{{ paymentTarget }}</span>
-              <button onClick="{{ paymentTargetUp }}" class="sc-mini-step" aria-label="Raise ability cost">+</button>
-              <span class="{{ paymentStatusClass }}">{{ paymentStatus }}</span>
-            </div>
-            <div class="sc-battle-payment-hint">1 · Set the cost &nbsp;2 · Exhaust Ready cards to pay &nbsp;3 · Resolve the ability, then Finish. Unused energy is lost, not saved.</div>
+            <div class="sc-battle-payment-hint">Exhaust Ready cards to pay one ability, then Finish. Unused energy is lost, not saved.</div>
           </div>
           <div style="display:grid;gap:8px">
             <sc-for list="{{ battleCards }}" as="tc" hint-placeholder-count="3">
@@ -285,24 +288,6 @@
       </sc-if>
 
       <sc-if value="{{ !battleEmpty }}" hint-placeholder-val="{{ false }}">
-        <!-- supply summary -->
-        <div style="margin-bottom:16px;padding:9px 10px;background:var(--sc-card-bg);border:1px solid var(--sc-border-input);clip-path:var(--sc-corner-10);display:flex;align-items:center;gap:10px">
-          <div style="display:flex;align-items:center;gap:8px;flex:1;min-width:0">
-            <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#8a91a5;white-space:nowrap">Deploy Supply</span>
-            <button onClick="{{ battleSupplyDown }}" style="width:36px;height:36px;flex:0 0 auto;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:14px;cursor:pointer">−</button>
-            <span style="font-family:'Chakra Petch',sans-serif;font-size:17px;font-weight:700;color:#e9ecf2;min-width:20px;text-align:center">{{ battleSupplyAvailable }}</span>
-            <button onClick="{{ battleSupplyUp }}" style="width:36px;height:36px;flex:0 0 auto;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:14px;cursor:pointer">+</button>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(23,27,40,0.7);border:1px solid #232939;flex:0 0 auto">
-            <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;color:#8a91a5">Used</span>
-            <span style="font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:#e9ecf2">{{ battleSupplyUsed }}</span>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;padding:5px 8px;background:rgba(23,27,40,0.7);border:1px solid #232939;flex:0 0 auto">
-            <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;color:#8a91a5">Left</span>
-            <span style="font-family:'Chakra Petch',sans-serif;font-size:14px;font-weight:700;color:#5fd98d">{{ battleSupplyRemaining }}</span>
-          </div>
-        </div>
-
         <!-- units -->
         <sc-for list="{{ battleGroups }}" as="grp" hint-placeholder-count="2">
           <div style="margin-bottom:16px">
@@ -324,10 +309,28 @@
                       <div style="font-size:12px;color:#8a91a5;margin-top:1px">{{ u.tierLabel }}</div>
                     </div>
                     <div style="position:relative;text-align:right;flex:0 0 auto">
-                      <div style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;color:#f2c14e;line-height:1.2">{{ u.cost }}</div>
-                      <div style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:#8a91a5">Sup {{ u.supply }}</div>
+                      <div class="sc-play-sup">{{ u.supply }}<small>sup</small></div>
                     </div>
                     <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="position:relative;flex:0 0 auto;transform:rotate({{ u.chev }}deg);transition:transform 0.18s"><path d="M6 4l4 4-4 4" stroke="#8a91a5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                  </div>
+                  <div class="sc-play-body">
+                    <div class="sc-play-stats"><sc-for list="{{ u.play.stats }}" as="ps" hint-placeholder-count="4"><span><small>{{ ps.k }}</small>{{ ps.v }}</span></sc-for></div>
+                    <sc-for list="{{ u.play.weapons }}" as="pw" hint-placeholder-count="2">
+                      <div class="sc-play-weapon">
+                        <span class="sc-play-wname">{{ pw.name }}</span>
+                        <span class="sc-phase-chip" style="background:{{ pw.phBg }};color:{{ pw.phFg }}">{{ pw.phase }}</span>
+                        <span class="sc-play-wstats">{{ pw.line }}</span>
+                        <sc-if value="{{ pw.surge }}" hint-placeholder-val="{{ false }}"><span class="sc-play-wsurge">{{ pw.surge }}</span></sc-if>
+                      </div>
+                    </sc-for>
+                    <sc-if value="{{ u.play.hasAbilities }}" hint-placeholder-val="{{ true }}">
+                      <div class="sc-play-abilities">
+                        <sc-for list="{{ u.play.abilities }}" as="pa" hint-placeholder-count="3">
+                          <button onClick="{{ pa.onOpen }}" class="sc-play-ability" aria-label="{{ pa.aria }}"><span class="sc-play-dot" style="background:{{ pa.phFg }}"></span>{{ pa.name }}<sc-if value="{{ pa.cost }}" hint-placeholder-val="{{ false }}"><em>{{ pa.cost }}</em></sc-if></button>
+                        </sc-for>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ u.fitText }}" hint-placeholder-val="{{ false }}"><div class="{{ u.fitClass }}">{{ u.fitText }}</div></sc-if>
                   </div>
                   <div style="position:relative;display:flex;align-items:center;gap:8px;padding:0 12px 12px">
                     <div class="sc-deploy-switch" role="group" aria-label="Deployment">
@@ -712,6 +715,49 @@
     </div>
   </sc-if>
 
+  <!-- ============ MISSION SHEET ============ -->
+  <sc-if value="{{ sheetMission }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,5,8,0.65);animation:scFade 0.15s ease"></div>
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:310;display:flex;justify-content:center;pointer-events:none">
+      <div role="dialog" aria-modal="true" aria-label="Mission" class="sc-play-sheet">
+        <div class="sc-play-grab"></div>
+        <div class="sc-play-sheet-title">{{ missionTitle }}</div>
+        <div class="sc-play-sheet-meta">{{ missionMeta }}</div>
+        <div class="sc-play-sheet-h">Scoring</div>
+        <sc-for list="{{ missionScoring }}" as="ln" hint-placeholder-count="2"><div class="sc-play-sheet-li">{{ ln }}</div></sc-for>
+        <sc-if value="{{ missionSpecial }}" hint-placeholder-val="{{ false }}"><div class="sc-play-sheet-warn">{{ missionSpecial }}</div></sc-if>
+        <div class="sc-play-sheet-h">Setup</div>
+        <sc-for list="{{ missionParams }}" as="ln" hint-placeholder-count="2"><div class="sc-play-sheet-li sc-play-sheet-li--dim">{{ ln }}</div></sc-for>
+        <button onClick="{{ closeSheet }}" class="sc-play-sheet-btn">Close</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ END ROUND SHEET ============ -->
+  <sc-if value="{{ sheetEndRound }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,5,8,0.65);animation:scFade 0.15s ease"></div>
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:310;display:flex;justify-content:center;pointer-events:none">
+      <div role="dialog" aria-modal="true" aria-label="{{ endRoundTitle }}" class="sc-play-sheet">
+        <div class="sc-play-grab"></div>
+        <div class="sc-play-sheet-title">{{ endRoundTitle }}</div>
+        <div class="sc-play-sheet-meta">Score this round, then start the next one</div>
+        <div class="sc-play-vp">
+          <div><span class="sc-play-kicker">You</span><div class="sc-play-vp-row"><button onClick="{{ vpYouDown }}" class="sc-mini-step" aria-label="Lower your VP">−</button><b class="sc-play-vp-you">{{ vpYou }}</b><button onClick="{{ vpYouUp }}" class="sc-mini-step" aria-label="Raise your VP">+</button></div></div>
+          <div><span class="sc-play-kicker">Enemy</span><div class="sc-play-vp-row"><button onClick="{{ vpFoeDown }}" class="sc-mini-step" aria-label="Lower enemy VP">−</button><b>{{ vpFoe }}</b><button onClick="{{ vpFoeUp }}" class="sc-mini-step" aria-label="Raise enemy VP">+</button></div></div>
+        </div>
+        <sc-if value="{{ missionScoring.length }}" hint-placeholder-val="{{ false }}">
+          <div class="sc-play-sheet-h">Mission scoring</div>
+          <sc-for list="{{ missionScoring }}" as="ln" hint-placeholder-count="2"><div class="sc-play-sheet-li">{{ ln }}</div></sc-for>
+          <sc-if value="{{ missionSpecial }}" hint-placeholder-val="{{ false }}"><div class="sc-play-sheet-warn">{{ missionSpecial }}</div></sc-if>
+        </sc-if>
+        <div class="sc-play-sheet-h">When you confirm</div>
+        <sc-for list="{{ endRoundEffects }}" as="ln" hint-placeholder-count="3"><div class="sc-play-sheet-li sc-play-sheet-li--dim">{{ ln }}</div></sc-for>
+        <button onClick="{{ confirmEndRound }}" class="sc-play-sheet-btn sc-play-sheet-btn--go">{{ endRoundConfirm }}</button>
+        <button onClick="{{ closeSheet }}" class="sc-play-sheet-btn">Cancel</button>
+      </div>
+    </div>
+  </sc-if>
+
   <!-- ============ ROSTER ISSUES SHEET ============ -->
   <sc-if value="{{ sheetIssues }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,5,8,0.65);animation:scFade 0.15s ease"></div>
@@ -836,6 +882,7 @@ class Component extends DCLogic {
     factionTappedId: null, // currently exhausted Faction Card
     paymentCards: [], // transient resource output for one ability payment (never banked)
     paymentTarget: 0, // transient cost of the ability being paid; never saved
+    missionId: null, // picked in War Room (sctmg_play)
     expBattleCards: {}, // expanded Faction and Tactical Card ability details
     battleSupplyAvailable: 4,
     expArmy: {},
@@ -975,6 +1022,7 @@ class Component extends DCLogic {
       }
       if (this.state.factionTappedId !== this.state.factionId) this.state.factionTappedId = null;
       if (play && ['skirmish', 'standard', 'grand'].includes(play.battleSize)) this.state.scaleId = play.battleSize;
+      if (play && play.missionId) this.state.missionId = play.missionId;
       const list = JSON.parse(localStorage.getItem('sctmg_zerg_rosters_v1') || '[]');
       this.state.savedRosters = Array.isArray(list) ? list : [];
     } catch (e) { console.error(e); }
@@ -1349,6 +1397,122 @@ class Component extends DCLogic {
   }
 
   // ---------- detail builder (passed to UnitDetail child) ----------
+  // Compact, phase-independent view for the table: stats, every weapon, ability names.
+  abilityCost(type) {
+    const m = String(type || '').match(/\((\d+)\s+([A-Za-z ]+?)\)/);
+    if (!m) return '';
+    const res = /biomass/i.test(m[2]) ? 'BM' : /command/i.test(m[2]) ? 'CP' : /psionic/i.test(m[2]) ? 'PE' : m[2].trim();
+    return m[1] + ' ' + res;
+  }
+  playView(unit, entry) {
+    const d = this.buildDetail(unit, entry);
+    const pick = ['SHD', 'SPD', 'EVD', 'ARM', 'HP'];
+    const stats = pick.map(k => d.stats.find(x => x.k === k)).filter(Boolean);
+    const short = { 'Movement Phase': 'Move', 'Assault Phase': 'Assault', 'Combat Phase': 'Combat', 'Scoring Phase': 'Scoring', 'Any Phase': 'Any' };
+    const weapons = (d.weapons || []).map(w => {
+      const c = {}; (w.chips || []).forEach(ch => { c[ch.k] = ch.v; });
+      const rng = c.RNG === 'E' ? 'Melee' : c.RNG + '"';
+      const surge = c.SURGE && c.SURGE !== '-' ? 'Surge ' + c.SURGE + (c['S.DIE'] && c['S.DIE'] !== '-' ? ' ' + c['S.DIE'] : '') : '';
+      return { name: w.name, phase: w.phase, phBg: w.phBg, phFg: w.phFg,
+        line: rng + ' · ' + c.TGT + ' · RoA ' + c.RoA + ' · Hit ' + c.HIT + ' · Dmg ' + c.DMG, surge };
+    });
+    const groupsMap = {};
+    (unit.abilities || []).forEach(a => { (groupsMap[a.phase] = groupsMap[a.phase] || []).push(a); });
+    Object.entries(unit.phaseAbilities || {}).forEach(([ph, list]) => { (groupsMap[ph] = groupsMap[ph] || []).push(...list); });
+    const chosen = entry ? this.unitUpgList(unit).filter(up => (entry.upgs || []).includes(up.name) && up.type !== 'Weapon') : [];
+    chosen.forEach(up => { (groupsMap[up.phase] = groupsMap[up.phase] || []).push({ name: up.name, type: up.type, description: up.description, phase: up.phase }); });
+    const order = ['Any Phase', 'Movement Phase', 'Assault Phase', 'Combat Phase', 'Scoring Phase'];
+    const abilities = [];
+    order.filter(ph => groupsMap[ph]).forEach(ph => groupsMap[ph].forEach(a => {
+      const cost = this.abilityCost(a.type);
+      abilities.push({ name: a.name, cost, ...this.phaseBadge(ph),
+        aria: a.name + ', ' + (short[ph] || ph) + ' phase' + (cost ? ', costs ' + cost : '') + '. Read ability',
+        onOpen: (ev) => { ev.stopPropagation(); this.setState({ sheet: { type: 'keyword', title: a.name,
+          meta: (short[ph] || ph) + ' phase · ' + (a.type || ''), body: a.description || '', exampleId: null } }); } });
+    }));
+    return { stats, weapons, abilities, hasAbilities: abilities.length > 0 };
+  }
+
+  playVals(st, battleFaction, battleTactical) {
+    const m = this.mission();
+    const round = st.play.round;
+    const last = !!(m && round >= m.gameLength);
+    const suggestion = m ? this.poolFor(round) : null;
+    const chip = (c) => {
+      const cls = 'sc-play-chip' + (c.tapped ? ' sc-play-chip--spent' : (c.hasResource ? '' : ' sc-play-chip--passive'));
+      return { name: c.name, res: c.tapped ? 'spent' : (c.hasResource ? c.resource : 'ability'), cls,
+        aria: c.name + (c.tapped ? ': exhausted, tap to ready' : (c.hasResource ? ': tap to spend ' + c.resource : ': open card abilities')),
+        onTap: () => c.tapped ? c.onReady() : (c.hasResource ? c.onResource() : this.setState({ battlePanel: 'tactical' })) };
+    };
+    return {
+      hudRoundOf: m ? 'Round ' + round + ' of ' + m.gameLength : 'Mission',
+      hudMission: m ? m.name : 'None picked',
+      missionKicker: m ? 'Mission · tap for scoring' : 'Mission',
+      missionTitle: m ? m.name : 'No mission picked',
+      missionSub: m ? ('Round ' + round + ' of ' + m.gameLength + (last ? ' · final round, no pool limit' : ' · pool ' + m.supply + ' +' + m.perRound + '/round')) : 'Pick one in War Room to auto-set supply',
+      openMission: () => m ? this.setState({ sheet: { type: 'mission' } }) : (window.location.href = 'Missions.dc.html'),
+      sheetMission: !!(st.sheet && st.sheet.type === 'mission' && m),
+      missionParams: m ? m.parameters : [], missionScoring: m ? m.scoring : [],
+      missionSpecial: m ? (m.special || '') : '', missionMeta: m ? m.gameLength + ' rounds · ' + m.type + ' · pool ' + m.supply + ' +' + m.perRound + '/round' : '',
+      poolSuggestion: suggestion, poolDiffers: m != null && suggestion !== st.battleSupplyAvailable,
+      usePoolSuggestion: () => this.setState({ battleSupplyAvailable: suggestion }, () => this.save()),
+      endRoundLabel: last ? 'Final round · save score' : 'End round ' + round + ' →',
+      openEndRound: () => this.setState({ sheet: { type: 'endround' } }),
+      sheetEndRound: !!(st.sheet && st.sheet.type === 'endround'),
+      endRoundTitle: last ? 'Final round' : 'End round ' + round,
+      endRoundConfirm: last ? 'Save final score' : 'Start round ' + (round + 1),
+      endRoundEffects: last ? ['Score is saved. Use Reset in the round tracker for a new game.'] : [
+        'Ready all exhausted cards (' + ((battleFaction && battleFaction.tapped ? 1 : 0) + battleTactical.filter(c => c.tapped).length) + ')',
+        m ? 'Supply pool ' + st.battleSupplyAvailable + ' → ' + (this.missionPool(round + 1) == null ? 'no limit' : this.poolFor(round + 1)) : 'Supply pool stays ' + st.battleSupplyAvailable + ' (no mission)',
+        'Round ' + round + ' → ' + (round + 1)
+      ],
+      confirmEndRound: () => this.endRound(),
+      cardChips: [battleFaction, ...battleTactical].filter(Boolean).map(chip)
+    };
+  }
+
+  // ---------- mission + rounds ----------
+  mission() {
+    const M = window.SCTMG_MISSIONS;
+    const id = this.state.missionId;
+    return (M && id && (M.MISSIONS || []).find(m => m.id === id)) || null;
+  }
+  missionPool(round) {
+    const m = this.mission();
+    if (!m) return null;
+    if (round >= m.gameLength) return null; // final round: no pool limit
+    return m.supply + m.perRound * (round - 1);
+  }
+  armySupplyTotal() {
+    const D = this.D();
+    return this.state.army.reduce((sum, e) => {
+      const unit = D.UNITS.find(u => u.id === e.unitId);
+      if (!unit) return sum;
+      const start = this.unitStartingModels(unit, e.tierIdx);
+      const idx = this.unitEffectiveTierIdx(unit, e.tierIdx, Math.max(0, start - (e.modelsLost || 0)));
+      return sum + (idx >= 0 ? (unit.tiers[idx].supply || 0) : 0);
+    }, 0);
+  }
+  poolFor(round) {
+    const m = this.mission();
+    if (!m) return this.state.battleSupplyAvailable;
+    const p = this.missionPool(round);
+    return p == null ? Math.max(this.armySupplyTotal(), this.state.battleSupplyAvailable) : p;
+  }
+  endRound() {
+    const m = this.mission();
+    const round = this.state.play.round;
+    const last = m && round >= m.gameLength;
+    this.setState(st => ({
+      play: last ? st.play : { ...st.play, round: round + 1, phase: 0 },
+      tacticalTapped: last ? st.tacticalTapped : [],
+      factionTappedId: last ? st.factionTappedId : null,
+      paymentCards: [], paymentTarget: 0,
+      battleSupplyAvailable: last ? st.battleSupplyAvailable : this.poolFor(round + 1),
+      sheet: null
+    }), () => { this.save(); this.savePlay(); });
+  }
+
   buildDetail(unit, entry) {
     const s = unit.stats;
     const stats = [
@@ -1737,6 +1901,7 @@ class Component extends DCLogic {
         borderColor: expanded ? 'rgba(176,110,247,0.45)' : 'var(--sc-border-neutral)',
         expanded, chev: expanded ? 90 : 0,
         detail: this.buildDetail(unit, e),
+        play: this.playView(unit, e),
         onToggle: () => this.setState(s2 => ({ expArmy: { ...s2.expArmy, [e.key]: !s2.expArmy[e.key] } })),
         startingModels, remaining, wipedOut: remaining <= 0,
         supply: effTier ? (effTier.supply || 0) : 0,
@@ -1758,8 +1923,8 @@ class Component extends DCLogic {
     }).filter(Boolean);
     const battleSupplyUsed = battleUnits.reduce((s, u) => s + (u.deployed ? u.supply : 0), 0);
     const battleSupplyRemaining = Math.max(0, st.battleSupplyAvailable - battleSupplyUsed);
-    const battleGroups = roles.map(role => {
-      const entries = battleUnits.filter(u => u.role === role).map(u => ({
+    const roleOrder = u => Math.max(0, roles.indexOf(u.role));
+    const decorate = u => ({
         ...u,
         canDeploy: u.deployed || u.wipedOut ? true : battleSupplyRemaining >= u.supply,
         deployBg: u.deployed ? 'rgba(53,199,107,0.16)' : 'transparent',
@@ -1772,10 +1937,19 @@ class Component extends DCLogic {
         deployClass: 'sc-deploy-opt' + (u.deployed ? ' sc-deploy-opt--on sc-deploy-opt--table' : ''),
         deployDisabled: !u.deployed && (u.wipedOut || battleSupplyRemaining < u.supply),
         deployTitle: u.deployed ? 'On the table' : (u.wipedOut ? 'No models left' : (battleSupplyRemaining < u.supply ? 'Needs ' + u.supply + ' supply, ' + battleSupplyRemaining + ' free' : 'Deploy for ' + u.supply + ' supply'))
-      }));
-      if (!entries.length) return null;
-      return { role, color: this.roleColor(role), entries };
-    }).filter(Boolean);
+      ,
+        fitText: u.deployed || u.wipedOut ? '' : (battleSupplyRemaining >= u.supply
+          ? 'Fits · needs ' + u.supply + ' of ' + battleSupplyRemaining + ' free supply'
+          : 'Needs ' + u.supply + ' supply · ' + (u.supply - battleSupplyRemaining) + ' short'),
+        fitClass: 'sc-play-fit' + (battleSupplyRemaining >= u.supply ? ' sc-play-fit--ok' : ' sc-play-fit--short')
+      });
+    // Grouped by where the unit is, not its role: that is what changes during a game.
+    const byRole = (a, b) => roleOrder(a) - roleOrder(b);
+    const battleGroups = [
+      { role: 'On table', color: '#5fd98d', entries: battleUnits.filter(u => u.deployed && !u.wipedOut).sort(byRole).map(decorate) },
+      { role: 'Reserves', color: '#8a91a5', entries: battleUnits.filter(u => !u.deployed && !u.wipedOut).sort(byRole).map(decorate) },
+      { role: 'Destroyed', color: '#f08a8a', entries: battleUnits.filter(u => u.wipedOut).sort(byRole).map(decorate) }
+    ].filter(g => g.entries.length);
     const tacticalCopyCounts = {};
     const battleFaction = this.battleCardView(
       faction, 'faction#' + faction.id, 'Faction Card',
@@ -2188,6 +2362,7 @@ class Component extends DCLogic {
       battleSupplyUp: () => this.bumpBattleSupply(1), battleSupplyDown: () => this.bumpBattleSupply(-1),
       hasBattleTactical: battleTactical.length > 0, battleTactical, battleFaction, battleCards, anyTapped,
       paymentTotal, paymentResource, hasPendingPayment: paymentTotal > 0 || st.paymentTarget > 0,
+      ...this.playVals(st, battleFaction, battleTactical),
       paymentTarget: st.paymentTarget,
       paymentTargetUp: () => this.setState(s2 => ({ paymentTarget: Math.min(9, s2.paymentTarget + 1) })),
       paymentTargetDown: () => this.setState(s2 => ({ paymentTarget: Math.max(0, s2.paymentTarget - 1) })),
