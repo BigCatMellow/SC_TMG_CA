@@ -27,6 +27,7 @@
   <script src="model-portraits.js"></script>
   <script src="portraits/cutout/index.js"></script>
   <script src="missions-data.js"></script>
+  <script src="mission-scoring.js"></script>
   <script src="codex-examples.js"></script>
 </helmet>
 
@@ -741,15 +742,64 @@
         <div class="sc-play-grab"></div>
         <div class="sc-play-sheet-title">{{ endRoundTitle }}</div>
         <div class="sc-play-sheet-meta">Score this round, then start the next one</div>
+        <sc-if value="{{ scoreOff }}" hint-placeholder-val="{{ false }}">
         <div class="sc-play-vp">
           <div><span class="sc-play-kicker">You</span><div class="sc-play-vp-row"><button onClick="{{ vpYouDown }}" class="sc-mini-step" aria-label="Lower your VP">−</button><b class="sc-play-vp-you">{{ vpYou }}</b><button onClick="{{ vpYouUp }}" class="sc-mini-step" aria-label="Raise your VP">+</button></div></div>
           <div><span class="sc-play-kicker">Enemy</span><div class="sc-play-vp-row"><button onClick="{{ vpFoeDown }}" class="sc-mini-step" aria-label="Lower enemy VP">−</button><b>{{ vpFoe }}</b><button onClick="{{ vpFoeUp }}" class="sc-mini-step" aria-label="Raise enemy VP">+</button></div></div>
         </div>
-        <sc-if value="{{ missionScoring.length }}" hint-placeholder-val="{{ false }}">
+        </sc-if>
+        <sc-if value="{{ scoreOn }}" hint-placeholder-val="{{ true }}">
+          <sc-if value="{{ scoreHasMarkers }}" hint-placeholder-val="{{ true }}">
+            <div class="sc-play-sheet-h">Markers · tap any that changed</div>
+            <div class="sc-score-row">
+              <sc-for list="{{ scoreMarkers }}" as="mk" hint-placeholder-count="3">
+                <button onClick="{{ mk.onTap }}" class="{{ mk.cls }}" aria-label="{{ mk.aria }}"><b>M{{ mk.num }}</b><small>{{ mk.label }}</small><sc-if value="{{ mk.badge }}" hint-placeholder-val="{{ false }}"><span class="sc-score-badge">{{ mk.badge }}</span></sc-if></button>
+              </sc-for>
+            </div>
+            <sc-if value="{{ scoreNeedsActive }}" hint-placeholder-val="{{ false }}">
+              <div class="sc-play-sheet-h sc-play-sheet-h--sub">Which markers are active</div>
+              <div class="sc-score-row">
+                <sc-for list="{{ scoreMarkers }}" as="mk" hint-placeholder-count="3"><button onClick="{{ mk.onActive }}" class="{{ mk.activeCls }}"><b>M{{ mk.num }}</b><small>{{ mk.activeLabel }}</small></button></sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ scoreNeedsColour }}" hint-placeholder-val="{{ false }}">
+              <div class="sc-play-sheet-h sc-play-sheet-h--sub">Marker colours · set once</div>
+              <div class="sc-score-row">
+                <sc-for list="{{ scoreMarkers }}" as="mk" hint-placeholder-count="3"><button onClick="{{ mk.onColour }}" class="{{ mk.colourCls }}"><b>M{{ mk.num }}</b><small>{{ mk.colourLabel }}</small></button></sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ scoreMapHint }}" hint-placeholder-val="{{ false }}"><div class="sc-play-sheet-meta">{{ scoreMapHint }}</div></sc-if>
+          </sc-if>
+          <div class="sc-score-inputs">
+            <sc-for list="{{ scoreInputs }}" as="si" hint-placeholder-count="2">
+              <div class="sc-score-input"><span>{{ si.label }}<sc-if value="{{ si.auto }}" hint-placeholder-val="{{ false }}"><em class="sc-score-auto">auto</em></sc-if></span><span class="sc-score-step"><button onClick="{{ si.onDown }}" class="sc-mini-step" aria-label="Lower {{ si.label }}">−</button><b>{{ si.value }}</b><button onClick="{{ si.onUp }}" class="sc-mini-step" aria-label="Raise {{ si.label }}">+</button></span></div>
+            </sc-for>
+          </div>
+          <sc-if value="{{ scoreNote }}" hint-placeholder-val="{{ false }}"><div class="sc-play-sheet-meta">{{ scoreNote }}</div></sc-if>
+          <div class="sc-score-sides">
+            <div class="sc-score-side">
+              <div class="sc-score-side-h"><span class="sc-score-you">You</span><b class="sc-score-you">{{ scoreYouTotal }}</b></div>
+              <sc-for list="{{ scoreYouLines }}" as="ln" hint-placeholder-count="2"><div class="sc-score-line"><span>{{ ln.label }}</span><em>{{ ln.vp }}</em></div></sc-for>
+              <sc-if value="{{ scoreYouNone }}" hint-placeholder-val="{{ false }}"><div class="sc-score-line sc-score-line--none">Nothing scored</div></sc-if>
+            </div>
+            <div class="sc-score-side">
+              <div class="sc-score-side-h"><span>Enemy</span><b>{{ scoreFoeTotal }}</b></div>
+              <sc-for list="{{ scoreFoeLines }}" as="ln" hint-placeholder-count="2"><div class="sc-score-line"><span>{{ ln.label }}</span><em>{{ ln.vp }}</em></div></sc-for>
+              <sc-if value="{{ scoreFoeNone }}" hint-placeholder-val="{{ false }}"><div class="sc-score-line sc-score-line--none">Nothing scored</div></sc-if>
+            </div>
+          </div>
+          <div class="sc-play-sheet-h">New score · adjust if needed</div>
+          <div class="sc-play-vp">
+            <div><span class="sc-play-kicker">You</span><div class="sc-play-vp-row"><button onClick="{{ scoreYouDown }}" class="sc-mini-step" aria-label="Lower your new score">−</button><b class="sc-play-vp-you">{{ scoreFinalYou }}</b><button onClick="{{ scoreYouUp }}" class="sc-mini-step" aria-label="Raise your new score">+</button></div></div>
+            <div><span class="sc-play-kicker">Enemy</span><div class="sc-play-vp-row"><button onClick="{{ scoreFoeDown }}" class="sc-mini-step" aria-label="Lower enemy new score">−</button><b>{{ scoreFinalFoe }}</b><button onClick="{{ scoreFoeUp }}" class="sc-mini-step" aria-label="Raise enemy new score">+</button></div></div>
+          </div>
+          <sc-if value="{{ scoreLead }}" hint-placeholder-val="{{ false }}"><div class="{{ scoreLeadClass }}">{{ scoreLead }}</div></sc-if>
+        </sc-if>
+        <sc-if value="{{ scoreOff }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ missionScoring.length }}" hint-placeholder-val="{{ false }}">
           <div class="sc-play-sheet-h">Mission scoring</div>
           <sc-for list="{{ missionScoring }}" as="ln" hint-placeholder-count="2"><div class="sc-play-sheet-li">{{ ln }}</div></sc-for>
           <sc-if value="{{ missionSpecial }}" hint-placeholder-val="{{ false }}"><div class="sc-play-sheet-warn">{{ missionSpecial }}</div></sc-if>
-        </sc-if>
+        </sc-if></sc-if>
         <div class="sc-play-sheet-h">When you confirm</div>
         <sc-for list="{{ endRoundEffects }}" as="ln" hint-placeholder-count="3"><div class="sc-play-sheet-li sc-play-sheet-li--dim">{{ ln }}</div></sc-for>
         <button onClick="{{ confirmEndRound }}" class="sc-play-sheet-btn sc-play-sheet-btn--go">{{ endRoundConfirm }}</button>
@@ -883,6 +933,8 @@ class Component extends DCLogic {
     paymentCards: [], // transient resource output for one ability payment (never banked)
     paymentTarget: 0, // transient cost of the ability being paid; never saved
     missionId: null, // picked in War Room (sctmg_play)
+    mapId: null,
+    scoreDraft: null, // End round inputs while the sheet is open; never saved
     expBattleCards: {}, // expanded Faction and Tactical Card ability details
     battleSupplyAvailable: 4,
     expArmy: {},
@@ -987,7 +1039,8 @@ class Component extends DCLogic {
   loadSaved() {
     try {
       const play = JSON.parse(localStorage.getItem('sctmg_play') || 'null');
-      if (play) this.state.play = { round: play.round || 1, phase: play.phase || 0, vpYou: play.vpYou || 0, vpFoe: play.vpFoe || 0 };
+      if (play) this.state.play = { round: play.round || 1, phase: play.phase || 0, vpYou: play.vpYou || 0, vpFoe: play.vpFoe || 0,
+        markers: play.markers || {}, ownLostAtStart: play.ownLostAtStart || 0 };
       localStorage.setItem('sctmg_last_faction', 'zerg');
       const saved = JSON.parse(localStorage.getItem('sctmg_zerg_v5') || 'null');
       if (saved) {
@@ -1023,6 +1076,7 @@ class Component extends DCLogic {
       if (this.state.factionTappedId !== this.state.factionId) this.state.factionTappedId = null;
       if (play && ['skirmish', 'standard', 'grand'].includes(play.battleSize)) this.state.scaleId = play.battleSize;
       if (play && play.missionId) this.state.missionId = play.missionId;
+      if (play && play.mapId) this.state.mapId = play.mapId;
       const list = JSON.parse(localStorage.getItem('sctmg_zerg_rosters_v1') || '[]');
       this.state.savedRosters = Array.isArray(list) ? list : [];
     } catch (e) { console.error(e); }
@@ -1457,18 +1511,126 @@ class Component extends DCLogic {
       poolSuggestion: suggestion, poolDiffers: m != null && suggestion !== st.battleSupplyAvailable,
       usePoolSuggestion: () => this.setState({ battleSupplyAvailable: suggestion }, () => this.save()),
       endRoundLabel: last ? 'Final round · save score' : 'End round ' + round + ' →',
-      openEndRound: () => this.setState({ sheet: { type: 'endround' } }),
+      openEndRound: () => this.openEndRound(),
       sheetEndRound: !!(st.sheet && st.sheet.type === 'endround'),
       endRoundTitle: last ? 'Final round' : 'End round ' + round,
-      endRoundConfirm: last ? 'Save final score' : 'Start round ' + (round + 1),
+      endRoundConfirm: last ? 'Save final score' : (m ? 'Apply score & start round ' + (round + 1) : 'Start round ' + (round + 1)),
       endRoundEffects: last ? ['Score is saved. Use Reset in the round tracker for a new game.'] : [
         'Ready all exhausted cards (' + ((battleFaction && battleFaction.tapped ? 1 : 0) + battleTactical.filter(c => c.tapped).length) + ')',
         m ? 'Supply pool ' + st.battleSupplyAvailable + ' → ' + (this.missionPool(round + 1) == null ? 'no limit' : this.poolFor(round + 1)) : 'Supply pool stays ' + st.battleSupplyAvailable + ' (no mission)',
         'Round ' + round + ' → ' + (round + 1)
       ],
-      confirmEndRound: () => this.endRound(),
+      confirmEndRound: () => this.applyScore(),
+      ...this.scoreVals(st),
       cardChips: [battleFaction, ...battleTactical].filter(Boolean).map(chip)
     };
+  }
+
+  // ---------- end-of-round score suggestion ----------
+  lostSupplyNow() {
+    const D = this.D();
+    return this.state.army.reduce((sum, e) => {
+      const unit = D.UNITS.find(u => u.id === e.unitId);
+      if (!unit) return sum;
+      const start = this.unitStartingModels(unit, e.tierIdx);
+      const full = unit.tiers[e.tierIdx] ? (unit.tiers[e.tierIdx].supply || 0) : 0;
+      const idx = this.unitEffectiveTierIdx(unit, e.tierIdx, Math.max(0, start - (e.modelsLost || 0)));
+      const now = idx >= 0 ? (unit.tiers[idx].supply || 0) : 0;
+      return sum + Math.max(0, full - now);
+    }, 0);
+  }
+  scoreMap() {
+    const M = window.SCTMG_MISSIONS;
+    return (M && this.state.mapId && (M.MAPS || []).find(x => x.id === this.state.mapId)) || null;
+  }
+  openEndRound() {
+    const m = this.mission();
+    const S = window.SCTMG_SCORE;
+    const saved = this.state.play.markers || {};
+    const nums = S ? S.markerNums(this.scoreMap(), m && m.type) : [];
+    const r = S && m ? S.rules(m) : null;
+    const markers = nums.map(num => {
+      const prev = saved[num] || {};
+      return { num, ctrl: prev.ctrl || 'neutral', prevCtrl: prev.ctrl || 'neutral',
+        active: prev.active != null ? prev.active : !(r && r.tracksActivation),
+        activatedRound: prev.activatedRound || null, removed: !!prev.removed, colour: prev.colour || 'neutral' };
+    });
+    const ownLost = Math.max(0, this.lostSupplyNow() - (this.state.play.ownLostAtStart || 0));
+    this.setState({ sheet: { type: 'endround' }, scoreDraft: { markers, enemyDestroyed: 0, ownLost,
+      quartersYou: 0, quartersFoe: 0, gathersYou: 0, gathersFoe: 0, adjYou: 0, adjFoe: 0 } });
+  }
+  draft(fn) {
+    this.setState(st => st.scoreDraft ? { scoreDraft: fn({ ...st.scoreDraft, markers: st.scoreDraft.markers.map(x => ({ ...x })) }) } : {});
+  }
+  scoreVals(st) {
+    const m = this.mission();
+    const S = window.SCTMG_SCORE;
+    const d = st.scoreDraft;
+    if (!m || !S || !d) return { scoreOn: false, scoreOff: true };
+    const round = st.play.round;
+    const res = S.suggest({ mission: m, round, markers: d.markers, enemyDestroyed: d.enemyDestroyed, ownLost: d.ownLost,
+      quartersYou: d.quartersYou, quartersFoe: d.quartersFoe, gathersYou: d.gathersYou, gathersFoe: d.gathersFoe });
+    const r = res.rules;
+    const cycle = { neutral: 'you', you: 'them', them: 'neutral' };
+    const word = { neutral: 'Neutral', you: 'Yours', them: 'Theirs' };
+    const live = d.markers.filter(x => !x.removed);
+    const finalYou = Math.max(0, st.play.vpYou + res.youTotal + d.adjYou);
+    const finalFoe = Math.max(0, st.play.vpFoe + res.foeTotal + d.adjFoe);
+    const lead = Math.abs(finalYou - finalFoe);
+    const stepper = (label, key, auto) => ({ label, value: d[key], auto: !!auto,
+      onDown: () => this.draft(x => ({ ...x, [key]: Math.max(0, x[key] - 1) })),
+      onUp: () => this.draft(x => ({ ...x, [key]: x[key] + 1 })) });
+    const inputs = [stepper('Enemy supply you destroyed', 'enemyDestroyed'), stepper('Your supply destroyed', 'ownLost', true)];
+    if (r.usesQuarters) inputs.push(stepper('Quarters you won', 'quartersYou'), stepper('Quarters they won', 'quartersFoe'));
+    if (r.usesGather) inputs.push(stepper('Your Gather actions', 'gathersYou'), stepper('Their Gather actions', 'gathersFoe'));
+    const line = x => ({ label: x.label, vp: '+' + x.vp, auto: x.auto });
+    return {
+      scoreOn: true, scoreOff: false,
+      scoreMarkers: live.map(x => {
+        const taken = x.ctrl !== 'neutral' && x.prevCtrl === (x.ctrl === 'you' ? 'them' : 'you');
+        return { num: x.num, label: word[x.ctrl], badge: taken ? (x.ctrl === 'you' ? 'Taken' : 'Lost') : '',
+          cls: 'sc-score-mk sc-score-mk--' + x.ctrl + (x.active ? '' : ' sc-score-mk--off'),
+          aria: 'Marker ' + x.num + ': ' + word[x.ctrl] + '. Tap to change',
+          onTap: () => this.draft(dd => ({ ...dd, markers: dd.markers.map(y => y.num === x.num ? { ...y, ctrl: cycle[y.ctrl] } : y) })),
+          activeLabel: x.active ? 'Active' + (x.activatedRound ? ' R' + x.activatedRound : '') : 'Inactive',
+          activeCls: 'sc-score-mk sc-score-mk--small' + (x.active ? ' sc-score-mk--you' : ' sc-score-mk--off'),
+          onActive: () => this.draft(dd => ({ ...dd, markers: dd.markers.map(y => y.num === x.num
+            ? { ...y, active: !y.active, activatedRound: !y.active ? round : null } : y) })),
+          colourLabel: { neutral: 'Neutral', you: 'Your colour', them: 'Their colour' }[x.colour],
+          colourCls: 'sc-score-mk sc-score-mk--small sc-score-mk--' + x.colour,
+          onColour: () => this.draft(dd => ({ ...dd, markers: dd.markers.map(y => y.num === x.num ? { ...y, colour: cycle[y.colour] } : y) }))
+        };
+      }),
+      scoreHasMarkers: live.length > 0,
+      scoreNeedsActive: r.tracksActivation, scoreNeedsColour: r.usesColour,
+      scoreMapHint: this.scoreMap() ? '' : 'No map picked: showing the usual markers. Pick a map in War Room for its exact markers.',
+      scoreNote: res.note,
+      scoreInputs: inputs,
+      scoreYouLines: res.you.map(line), scoreFoeLines: res.foe.map(line),
+      scoreYouTotal: '+' + res.youTotal, scoreFoeTotal: '+' + res.foeTotal,
+      scoreYouNone: res.you.length === 0, scoreFoeNone: res.foe.length === 0,
+      scoreFinalYou: finalYou, scoreFinalFoe: finalFoe,
+      scoreYouUp: () => this.draft(x => ({ ...x, adjYou: x.adjYou + 1 })),
+      scoreYouDown: () => this.draft(x => ({ ...x, adjYou: x.adjYou - 1 })),
+      scoreFoeUp: () => this.draft(x => ({ ...x, adjFoe: x.adjFoe + 1 })),
+      scoreFoeDown: () => this.draft(x => ({ ...x, adjFoe: x.adjFoe - 1 })),
+      scoreLead: r.earlyWinLead ? 'Lead ' + lead + (lead >= r.earlyWinLead ? ' · the game ends now (' + r.earlyWinLead + '+ lead)' : ' · game ends early at ' + r.earlyWinLead + '+') : '',
+      scoreLeadClass: 'sc-play-sheet-meta' + (r.earlyWinLead && lead >= r.earlyWinLead ? ' sc-score-lead--end' : ' sc-score-lead')
+    };
+  }
+  applyScore() {
+    const m = this.mission();
+    const S = window.SCTMG_SCORE;
+    const d = this.state.scoreDraft;
+    if (!m || !S || !d) { this.endRound(); return; }
+    const v = this.scoreVals(this.state);
+    const res = S.suggest({ mission: m, round: this.state.play.round, markers: d.markers, enemyDestroyed: d.enemyDestroyed,
+      ownLost: d.ownLost, quartersYou: d.quartersYou, quartersFoe: d.quartersFoe, gathersYou: d.gathersYou, gathersFoe: d.gathersFoe });
+    const markers = {};
+    d.markers.forEach(x => { markers[x.num] = { ctrl: x.ctrl, active: x.active, activatedRound: x.activatedRound,
+      colour: x.colour, removed: x.removed || res.removed.includes(x.num) }; });
+    this.setState(st => ({ play: { ...st.play, vpYou: v.scoreFinalYou, vpFoe: v.scoreFinalFoe, markers,
+      ownLostAtStart: this.lostSupplyNow() }, scoreDraft: null }), () => this.endRound());
   }
 
   // ---------- mission + rounds ----------
@@ -2295,7 +2457,7 @@ class Component extends DCLogic {
           return { play: { ...s2.play, phase: nx > 3 ? 0 : nx, round: nx > 3 ? s2.play.round + 1 : s2.play.round } };
         }, () => this.savePlay());
       },
-      resetPlay: (ev) => { ev.stopPropagation(); this.setState({ play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0 } }, () => this.savePlay()); },
+      resetPlay: (ev) => { ev.stopPropagation(); this.setState({ play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, ownLostAtStart: this.lostSupplyNow() } }, () => this.savePlay()); },
       phases,
       // resources
       mineralsUsed: totals.minerals, mineralsCap: isGrand ? '∞' : scale.minerals, mineralsColor: mOver ? '#f08a8a' : '#f2c14e',

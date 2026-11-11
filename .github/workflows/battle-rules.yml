@@ -39,6 +39,8 @@ jobs:
         run: npm run test:unified-army
       - name: Verify Codex example explanations and modal navigation
         run: npm run test:codex-examples
+      - name: Verify mission score suggestions
+        run: npm run test:scoring
       - name: Check committed NotebookLM study sources
         run: npm run test:study
       - name: Check faction data generator output
