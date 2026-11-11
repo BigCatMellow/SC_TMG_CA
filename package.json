@@ -20,6 +20,7 @@
     "test:home-viewport": "node scripts/test-home-viewport.mjs",
     "test:unified-army": "node ./scripts/test-unified-army-tabs.mjs",
     "test:codex-examples": "node ./scripts/test-codex-examples.mjs",
-    "test:battle-dashboard": "node ./scripts/test-battle-dashboard.mjs"
+    "test:battle-dashboard": "node ./scripts/test-battle-dashboard.mjs",
+    "test:scoring": "node scripts/test-mission-scoring.mjs"
   }
 }
