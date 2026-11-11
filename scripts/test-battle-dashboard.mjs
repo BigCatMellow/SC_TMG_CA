@@ -372,6 +372,46 @@ for(const faction of ['terran','zerg','protoss']){
  // Units are grouped by where they are, not by role.
  const groups=view().battleGroups.map(g=>g.role);
  assert.ok(groups.every(g=>['On table','Reserves','Destroyed'].includes(g)),'Battle groups are table state: '+groups);
+ // ---- playtest fixes ----
+ // Round tracker: no Round +; End round goes through the real flow.
+ assert.ok(!html.includes('onClick="{{ roundUp }}"'),faction+' tracker has no Round + shortcut');
+ assert.ok(html.includes('onClick="{{ trackerEndRound }}"'),faction+' tracker ends the round properly');
+ view().trackerEndRound();
+ assert.equal(view().sheetEndRound,true,'Tracker End round opens the End round sheet');
+ view().closeSheet();
+ // Duplicate tactical cards are one row.
+ const DD=c.D();
+ const multi=DD.TACTICAL_CARDS.find(t=>!t.unique&&t.category!=='creep'&&(!t.factionTag||t.factionTag===(DD.FACTION_CARDS.find(f=>f.id===c.state.factionId)||DD.FACTION_CARDS[0]).name));
+ if(multi){
+   const keep=c.state.tactical; c.state.tactical=[multi.id,multi.id];
+   const rows=view().cardChips.filter(r=>r.name===multi.name);
+   assert.equal(rows.length,1,'two copies of '+multi.name+' show as one row');
+   assert.match(rows[0].count,/\u00d72/);
+   c.state.tactical=keep;
+ }
+ // Locked choices say why.
+ const lib=view().libraryGroups.flatMap(g=>g.entries);
+ for(const en of lib) if(!en.recruitable && !en.inArmy) assert.ok(en.lockReason||en.addTitle,faction+' '+en.name+' locked without a reason');
+ const tagged=DD.UNITS.find(u=>u.factionTag&&u.factionTag!==(DD.FACTION_CARDS.find(f=>f.id===c.state.factionId)||DD.FACTION_CARDS[0]).name&&u.tiers.some(t=>t.cost>0));
+ if(tagged){ const en=lib.find(x=>x.name===tagged.name); assert.equal(en.lockReason,'Requires '+tagged.factionTag); }
+ // Search finds abilities.
+ const anyAbility=DD.UNITS.flatMap(u=>u.abilities||[]).find(a=>a.name&&a.name.length>4);
+ c.state.searchQ=anyAbility.name.slice(0,6);
+ assert.ok(view().searchGroups.some(g=>/Abilities/.test(g.name)),faction+' search finds abilities like '+anyAbility.name);
+ c.state.searchQ='';
+ // Upgrades can be bought from Battle › Edit Army and cost minerals.
+ const upUnit=DD.UNITS.find(u=>Object.keys(u.upgrades||{}).length&&u.tiers.some(t=>t.cost>0)&&!u.factionTag);
+ if(upUnit){
+   const tierIdx=upUnit.tiers.findIndex(t=>t.cost>0);
+   c.state.army=[{key:'kup',unitId:upUnit.id,tierIdx,upgs:[],modelsLost:0,deployed:false}];
+   const before=view().mineralsUsed;
+   const card=view().battleGroups.flatMap(g=>g.entries).find(u=>u.key==='kup');
+   assert.ok(card.hasUpgrades,'Battle card lists upgrades');
+   const paid=card.upgrades.find(x=>parseInt(x.cost,10)>0);
+   if(paid){ paid.onToggle({stopPropagation(){}});
+     assert.equal(view().mineralsUsed,before+parseInt(paid.cost,10),'Buying an upgrade spends its tier cost'); }
+   c.state.army=[];
+ }
  console.log(faction+': Tactical summary + modal, inline Troops, payment, deploy and troop editing passed');
 }
 console.log('Battle tab validated across all factions');

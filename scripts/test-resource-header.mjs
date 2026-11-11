@@ -117,7 +117,7 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
       faction + ' role slot binding missing: ' + label);
   for (const label of ['Minerals', 'Vespene', 'Supply'])
     assert.ok(html.includes('class="sc-resource-label-long">' + label + '</span>'), faction + ' ' + label + ' total');
-  for (const label of ['M', 'G', 'S'])
+  for (const label of ['M', 'G', 'SUP'])
     assert.ok(html.includes('aria-hidden="true">' + label + '</span>'), faction + ' ' + label + ' abbreviated total');
   assert.ok(html.includes('{{ mineralsUsed }}') && html.includes('{{ mineralsCap }}'), faction + ' minerals');
   assert.ok(html.includes('{{ gasUsed }}') && html.includes('{{ gasCap }}'), faction + ' gas');

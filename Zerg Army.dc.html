@@ -113,7 +113,7 @@
           <div class="sc-resource-value" style="color:{{ gasColor }}">{{ gasUsed }}<span class="sc-resource-cap"> / {{ gasCap }}</span></div>
         </div>
         <div class="sc-resource-cell" aria-label="Supply">
-          <div class="sc-resource-label"><span class="sc-resource-label-long">Supply</span><span class="sc-resource-label-short" aria-hidden="true">S</span></div>
+          <div class="sc-resource-label"><span class="sc-resource-label-long">Supply</span><span class="sc-resource-label-short" aria-hidden="true">SUP</span></div>
           <div class="sc-resource-value" style="color:#b06ef7">{{ supplyUsed }}</div>
         </div>
       </div>
@@ -162,17 +162,17 @@
       <!-- Cards: tap a ready card to spend its resource; tap a spent card to ready it -->
       <div class="sc-play-cards-head">
         <span class="sc-play-kicker">Cards · {{ battleCardsReady }}/{{ battleCardsTotal }} ready</span>
-        <button onClick="{{ openBattleTactical }}" class="sc-play-link" aria-label="Open the full card list and energy payment">Full text ›</button>
+        <span class="sc-play-cards-links"><button onClick="{{ toggleCardsCompact }}" class="sc-play-link">{{ cardsCompactLabel }}</button><button onClick="{{ openBattleTactical }}" class="sc-play-link" aria-label="Open the full card list and energy payment">Full text ›</button></span>
       </div>
-      <div class="sc-play-cards">
+      <div class="{{ cardsClass }}">
         <sc-for list="{{ cardChips }}" as="cc" hint-placeholder-count="3">
           <div class="{{ cc.rowCls }}">
             <div class="sc-play-card-head">
-              <span class="sc-play-card-title"><span class="sc-play-card-kind">{{ cc.kind }}</span><span class="sc-play-card-name">{{ cc.name }}</span></span>
+              <span class="sc-play-card-title"><span class="sc-play-card-kind">{{ cc.kind }}<sc-if value="{{ cc.count }}" hint-placeholder-val="{{ false }}"> · <b>{{ cc.count }}</b></sc-if></span><span class="sc-play-card-name">{{ cc.name }}</span></span>
               <sc-if value="{{ cc.hasButton }}" hint-placeholder-val="{{ true }}"><button onClick="{{ cc.onTap }}" class="{{ cc.cls }}" aria-label="{{ cc.aria }}"><span class="sc-play-chip-res">{{ cc.res }}</span></button></sc-if>
             </div>
             <sc-if value="{{ cc.hasAbilities }}" hint-placeholder-val="{{ true }}">
-              <div class="sc-play-abilities">
+              <div class="sc-play-abilities sc-play-card-abilities">
                 <sc-for list="{{ cc.abilities }}" as="ca" hint-placeholder-count="2">
                   <button onClick="{{ ca.onOpen }}" class="sc-play-ability" aria-label="{{ ca.aria }}"><span class="sc-play-dot" style="background:{{ ca.phFg }}"></span>{{ ca.name }}</button>
                 </sc-for>
@@ -331,6 +331,14 @@
                           <button onClick="{{ u.onChangeTier }}" style="flex:1;min-height:40px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Change Tier</button>
                           <button onClick="{{ u.onRemove }}" style="flex:1;min-height:40px;background:rgba(240,74,74,0.1);border:1px solid rgba(240,74,74,0.35);color:#f08a8a;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Remove</button>
                         </div>
+                        <sc-if value="{{ u.hasUpgrades }}" hint-placeholder-val="{{ false }}">
+                          <div class="sc-upg-edit">
+                            <div class="sc-upg-edit-label">Upgrades · {{ u.upgradeCostText }}</div>
+                            <sc-for list="{{ u.upgrades }}" as="ug" hint-placeholder-count="2">
+                              <button onClick="{{ ug.onToggle }}" class="{{ ug.cls }}" aria-pressed="{{ ug.on }}"><span class="sc-upg-box" aria-hidden="true"></span><span class="sc-upg-name">{{ ug.name }}</span><span class="sc-upg-cost">{{ ug.cost }}</span></button>
+                            </sc-for>
+                          </div>
+                        </sc-if>
                       </sc-if>
                   <sc-if value="{{ u.expanded }}" hint-placeholder-val="{{ false }}">
                   <div class="sc-play-body">
@@ -399,8 +407,9 @@
                     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
                       <span style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ en.name }}<svg class="sc-lib-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
                       <sc-if value="{{ en.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
-                      <sc-if value="{{ en.inArmy }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(53,199,107,0.14);border:1px solid rgba(53,199,107,0.4);color:#5fd98d">Mustered</span></sc-if>
+                      <sc-if value="{{ en.inArmy }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(53,199,107,0.14);border:1px solid rgba(53,199,107,0.4);color:#5fd98d">{{ en.musteredLabel }}</span></sc-if>
                     </div>
+                    <sc-if value="{{ en.lockReason }}" hint-placeholder-val="{{ false }}"><div class="sc-lock">{{ en.lockReason }}</div></sc-if>
                     <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
                       <sc-for list="{{ en.tags }}" as="tg" hint-placeholder-count="3">
                         <button onClick="{{ tg.onOpen }}" style="font-size:11px;font-weight:600;letter-spacing:0.02em;padding:4px 6px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#a7aec2;cursor:pointer;border-radius:2px">{{ tg.name }}</button>
@@ -414,6 +423,7 @@
                 </div>
                 <sc-if value="{{ en.expanded }}" hint-placeholder-val="{{ false }}">
                   <div class="sc-lib-body">
+                    <sc-if value="{{ en.upgHint }}" hint-placeholder-val="{{ false }}"><div class="sc-upg-hint">{{ en.upgHint }}</div></sc-if>
                     <dc-import name="UnitDetail" detail="{{ en.detail }}" hint-size="100%,300px"></dc-import>
                   </div>
                 </sc-if>
@@ -445,6 +455,7 @@
                       <sc-if value="{{ tc.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
                     </div>
                     <div style="font-size:12px;color:#8a91a5;margin-top:2px">{{ tc.summary }}</div>
+                    <sc-if value="{{ tc.lockReason }}" hint-placeholder-val="{{ false }}"><div class="sc-lock">{{ tc.lockReason }}</div></sc-if>
                   </div>
                   <sc-if value="{{ tc.single }}" hint-placeholder-val="{{ false }}">
                     <button onClick="{{ tc.onSelectToggle }}" aria-pressed="{{ tc.inArmy }}" disabled="{{ tc.toggleDisabled }}" class="{{ tc.toggleClass }}">{{ tc.toggleLabel }}</button>
@@ -871,9 +882,9 @@
         <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
           <div style="display:flex;align-items:center;gap:8px">
             <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5">Round</span>
-            <button onClick="{{ roundDown }}" style="width:{{ trackerRoundBtn }}px;height:{{ trackerRoundBtn }}px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
+            <button onClick="{{ roundDown }}" aria-label="Go back a round (correction only)" title="Go back a round (correction only)" style="width:{{ trackerRoundBtn }}px;height:{{ trackerRoundBtn }}px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">−</button>
             <span style="font-family:'Chakra Petch',sans-serif;font-size:{{ trackerRoundVal }};font-weight:700;color:#e9ecf2;min-width:24px;text-align:center">{{ round }}</span>
-            <button onClick="{{ roundUp }}" style="width:{{ trackerRoundBtn }}px;height:{{ trackerRoundBtn }}px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">+</button>
+            <button onClick="{{ trackerEndRound }}" class="sc-tracker-end">{{ trackerEndLabel }}</button>
           </div>
           <button onClick="{{ nextPhase }}" style="height:{{ trackerNextPhaseH }}px;padding:0 14px;background:rgba(147,51,234,0.2);border:1px solid rgba(176,110,247,0.5);color:#d9bafc;font-family:Rajdhani,sans-serif;font-size:{{ trackerNextPhaseFont }};font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;clip-path:var(--sc-corner-8)">Next Phase ▸</button>
         </div>
@@ -909,11 +920,11 @@
   <!-- ============ GLOBAL SEARCH OVERLAY ============ -->
   <sc-if value="{{ searchOpen }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:400;display:flex;justify-content:center;background:rgba(6,7,11,0.97);animation:scFade 0.12s ease">
-      <div style="width:100%;max-width:480px;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)">
+      <div style="width:100%;max-width:480px;min-width:0;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top)">
         <div style="display:flex;align-items:center;gap:10px;padding:14px">
-          <div style="flex:1;display:flex;align-items:center;gap:8px;padding:0 12px;background:#141824;border:1px solid rgba(176,110,247,0.45)">
+          <div style="flex:1;min-width:0;display:flex;align-items:center;gap:8px;padding:0 12px;background:#141824;border:1px solid rgba(176,110,247,0.45)">
             <svg width="15" height="15" viewBox="0 0 16 16" fill="none" style="flex:0 0 auto"><circle cx="7" cy="7" r="4.4" stroke="#b06ef7" stroke-width="1.6"></circle><path d="M10.4 10.4L14 14" stroke="#b06ef7" stroke-width="1.6" stroke-linecap="round"></path></svg>
-            <input ref="{{ searchRef }}" value="{{ searchQ }}" onChange="{{ onSearchInput }}" placeholder="Units, keywords, tags, tactics…" style="flex:1;background:none;border:none;color:#e9ecf2;font-size:16px;padding:13px 0;font-family:inherit">
+            <input ref="{{ searchRef }}" value="{{ searchQ }}" onChange="{{ onSearchInput }}" placeholder="Units, abilities, keywords, tactics…" style="flex:1;min-width:0;width:100%;background:none;border:none;color:#e9ecf2;font-size:16px;padding:13px 0;font-family:inherit">
           </div>
           <button onClick="{{ closeSearch }}" style="height:46px;padding:0 14px;background:none;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Esc</button>
         </div>
@@ -927,9 +938,9 @@
           <sc-for list="{{ searchGroups }}" as="grp" hint-placeholder-count="1">
             <div style="margin-bottom:14px">
               <div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#8a91a5;padding:6px 2px">{{ grp.name }}</div>
-              <div style="display:grid;gap:6px">
+              <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:6px">
                 <sc-for list="{{ grp.hits }}" as="hit" hint-placeholder-count="3">
-                  <button onClick="{{ hit.onOpen }}" style="display:flex;align-items:center;gap:10px;width:100%;min-height:48px;padding:10px 12px;background:var(--sc-card-bg);border:1px solid var(--sc-border-neutral);color:#e9ecf2;cursor:pointer;text-align:left">
+                  <button onClick="{{ hit.onOpen }}" style="display:flex;align-items:center;gap:10px;width:100%;min-width:0;min-height:48px;padding:10px 12px;background:var(--sc-card-bg);border:1px solid var(--sc-border-neutral);color:#e9ecf2;cursor:pointer;text-align:left">
                     <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 7px;background:{{ hit.badgeBg }};color:{{ hit.badgeFg }};flex:0 0 auto">{{ hit.kind }}</span>
                     <span style="flex:1;min-width:0">
                       <span style="display:block;font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.02em">{{ hit.title }}</span>
@@ -1077,6 +1088,7 @@ class Component extends DCLogic {
       if (play) this.state.play = { round: play.round || 1, phase: play.phase || 0, vpYou: play.vpYou || 0, vpFoe: play.vpFoe || 0,
         markers: play.markers || {}, ownLostAtStart: play.ownLostAtStart || 0 };
       localStorage.setItem('sctmg_last_faction', 'zerg');
+      this.state.cardsCompact = localStorage.getItem('sctmg_cards_compact') === '1';
       const lastTab = localStorage.getItem('sctmg_zerg_tab');
       if (['faction', 'library', 'tactics', 'battle', 'codex'].includes(lastTab)) this.state.tab = lastTab;
       const saved = JSON.parse(localStorage.getItem('sctmg_zerg_v5') || 'null');
@@ -1215,7 +1227,7 @@ class Component extends DCLogic {
   kwRegex() {
     if (!this._kwRe) {
       const names = Object.keys(this.D().KEYWORDS).sort((a, b) => b.length - a.length).map(k => k.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&'));
-      this._kwRe = new RegExp('\\b(' + names.join('|') + ')(\\s*\\([^)]*\\))?', 'gi');
+      this._kwRe = new RegExp('\\b(' + names.join('|') + ')(?![A-Za-z])(\\s*\\([^)]*\\))?', 'gi');
     }
     return this._kwRe;
   }
@@ -1319,6 +1331,14 @@ class Component extends DCLogic {
       return tierIdx === 0 ? parts[1] : parts[0];
     }
     return parseInt(cost, 10) || 0;
+  }
+  // "20/30" means 20m at T2, 30m at T3.
+  upgCostLabel(cost) {
+    if (typeof cost === 'string' && cost.includes('/')) {
+      const parts = cost.split('/').map(x => parseInt(x, 10) || 0);
+      return parts[0] + 'm T2 · ' + parts[1] + 'm T3';
+    }
+    return (parseInt(cost, 10) || 0) + 'm';
   }
   unitUpgList(unit) {
     const out = [];
@@ -1542,23 +1562,30 @@ class Component extends DCLogic {
     const round = st.play.round;
     const last = !!(m && round >= m.gameLength);
     const suggestion = m ? this.poolFor(round) : null;
-    const chip = (c) => {
-      const cls = 'sc-play-chip' + (c.tapped ? ' sc-play-chip--spent' : (c.hasResource ? '' : ' sc-play-chip--passive'));
+    const chip = (copies) => {
+      // Copies of the same card are one row: the button works on the next ready copy.
+      const c = copies[0];
+      const ready = copies.filter(x => !x.tapped);
+      const next = ready[0] || null;
+      const allSpent = !next;
+      const n = copies.length;
+      const cls = 'sc-play-chip' + (allSpent ? ' sc-play-chip--spent' : (c.hasResource ? '' : ' sc-play-chip--passive'));
       const abilities = c.abilities.filter(a => !this.armyBuildingOnly(a)).map(a => {
-        const usable = !c.tapped && /\b(Active|Reaction)\b/i.test(a.type) && !/do not exhaust this card/i.test(a.description);
+        const usable = !!next && /\b(Active|Reaction)\b/i.test(a.type) && !/do not exhaust this card/i.test(a.description);
         return { name: a.name, phFg: a.phFg,
           aria: a.name + ', ' + a.phaseShort + ' phase. Read ability',
           onOpen: () => this.setState({ sheet: { type: 'keyword', title: a.name, ability: true,
             meta: c.name + ' · ' + a.phaseShort + ' · ' + a.type, body: a.description, exampleId: null,
             plain: this.plainFor(a.name), segs: a.segs,
-            actionLabel: usable ? 'Exhaust ' + c.name + ' · use ability' : '', actionKey: usable ? c.key : '' } }) };
+            actionLabel: usable ? 'Exhaust ' + c.name + ' · use ability' : '', actionKey: usable ? next.key : '' } }) };
       });
       return { name: c.name, kind: c.kind.replace(' Card', ''), cls, abilities, hasAbilities: abilities.length > 0,
-        rowCls: 'sc-play-card' + (c.tapped ? ' sc-play-card--spent' : ''),
-        hasButton: c.tapped || c.hasResource || c.showAbility,
-        res: c.tapped ? 'Spent · ready' : (c.hasResource ? 'Spend ' + c.resource : 'Use'),
-        aria: c.name + (c.tapped ? ': exhausted, tap to ready' : (c.hasResource ? ': tap to spend ' + c.resource : ': exhaust to use its ability')),
-        onTap: () => c.tapped ? c.onReady() : (c.hasResource ? c.onResource() : c.onAbility()) };
+        count: n > 1 ? '\u00d7' + n + ' · ' + ready.length + ' ready' : '',
+        rowCls: 'sc-play-card' + (allSpent ? ' sc-play-card--spent' : ''),
+        hasButton: allSpent || c.hasResource || c.showAbility,
+        res: allSpent ? (n > 1 ? 'All exhausted · ready one' : 'Exhausted · tap to ready') : (c.hasResource ? 'Spend ' + c.resource : 'Use'),
+        aria: c.name + (allSpent ? ': exhausted, tap to ready' : (c.hasResource ? ': tap to spend ' + c.resource : ': exhaust to use its ability')),
+        onTap: () => allSpent ? copies[0].onReady() : (c.hasResource ? next.onResource() : next.onAbility()) };
     };
     return {
       hudRoundOf: m ? 'Round ' + round + ' of ' + m.gameLength : 'Mission',
@@ -1573,6 +1600,7 @@ class Component extends DCLogic {
       poolSuggestion: suggestion, poolDiffers: m != null && suggestion !== st.battleSupplyAvailable,
       usePoolSuggestion: () => this.setState({ battleSupplyAvailable: suggestion }, () => this.save()),
       endRoundLabel: last ? 'Final round · save score' : 'End round ' + round + ' →',
+      trackerEndLabel: last ? 'Final score' : 'End round',
       openEndRound: () => this.openEndRound(),
       openPool: () => this.setState({ sheet: { type: 'pool' } }),
       sheetPool: !!(st.sheet && st.sheet.type === 'pool'),
@@ -1587,7 +1615,19 @@ class Component extends DCLogic {
       ],
       confirmEndRound: () => this.applyScore(),
       ...this.scoreVals(st),
-      cardChips: [battleFaction, ...battleTactical].filter(Boolean).map(chip)
+      cardChips: (() => {
+        const groups = [];
+        [battleFaction, ...battleTactical].filter(Boolean).forEach(c => {
+          const id = String(c.key).split('#')[0];
+          const g = groups.find(x => x.id === id);
+          if (g) g.copies.push(c); else groups.push({ id, copies: [c] });
+        });
+        return groups.map(g => chip(g.copies));
+      })(),
+      cardsCompact: !!st.cardsCompact,
+      cardsClass: 'sc-play-cards' + (st.cardsCompact ? ' sc-play-cards--compact' : ''),
+      toggleCardsCompact: () => this.setState(s2 => { const v = !s2.cardsCompact; try { localStorage.setItem('sctmg_cards_compact', v ? '1' : ''); } catch (e) {} return { cardsCompact: v }; }),
+      cardsCompactLabel: st.cardsCompact ? 'Show abilities' : 'Hide abilities',
     };
   }
 
@@ -1787,7 +1827,7 @@ class Component extends DCLogic {
     const upgrades = upgList.map(u => {
       const on = entry ? (entry.upgs || []).includes(u.name) : false;
       return {
-        name: u.name, cost: (entry ? this.upgCostNum(u.cost, entry.tierIdx) : u.cost) + 'm', type: u.type, phase: u.phase.replace(' Phase', ''),
+        name: u.name, cost: entry ? this.upgCostNum(u.cost, entry.tierIdx) + 'm' : this.upgCostLabel(u.cost), type: u.type, phase: u.phase.replace(' Phase', ''),
         ...this.phaseBadge(u.phase),
         segs: this.segs(u.description),
         interactive: !!entry, on,
@@ -2072,7 +2112,7 @@ class Component extends DCLogic {
       const cap = baseSlots[role] || 0;
       const name = role.charAt(0).toUpperCase() + role.slice(1);
       return {
-        name, short: name.charAt(0), used, cap,
+        name, short: ({ hero: 'HRO', elite: 'ELT', core: 'CORE', support: 'SPT', air: 'AIR' })[role] || name.charAt(0), used, cap,
         fg: used > cap ? '#f08a8a' : '#c8cede',
         accessibilityLabel: name + ' slots: ' + used + ' of ' + cap + ' used'
       };
@@ -2127,6 +2167,14 @@ class Component extends DCLogic {
         tierLabel: tier.tier + ' · ' + startingModels + (startingModels === 1 ? ' model' : ' models') + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
         cost: (tier.cost || 0) + upgCost,
         ...art, cutout: battleCutout, framed: !!art.portrait && !battleCutout,
+        upgrades: this.unitUpgList(unit).map(ug => {
+          const on = (e.upgs || []).includes(ug.name);
+          return { name: ug.name, on, cost: this.upgCostNum(ug.cost, e.tierIdx) + 'm',
+            cls: 'sc-upg-row' + (on ? ' sc-upg-row--on' : ''),
+            onToggle: (ev) => { ev.stopPropagation(); this.toggleUpgrade(e.key, ug.name); } };
+        }),
+        hasUpgrades: this.unitUpgList(unit).length > 0,
+        upgradeCostText: (() => { const got = this.unitUpgList(unit).filter(ug => (e.upgs || []).includes(ug.name)); const n = got.reduce((t, ug) => t + this.upgCostNum(ug.cost, e.tierIdx), 0); return got.length ? got.length + ' bought · ' + n + 'm' : 'none bought'; })(),
         cardClass: 'sc-lib-card sc-unit-card' + (battleCutout ? ' sc-lib-card--cutout' : art.portrait ? ' sc-lib-card--framed' : '') + (expanded ? ' sc-lib-card--open' : ''),
         figureLabel: expanded ? 'Close ' + unit.name + ' details' : 'Show ' + unit.name + ' details',
         onView: (ev) => { ev.stopPropagation(); this.openViewer(unit.id); },
@@ -2251,18 +2299,24 @@ class Component extends DCLogic {
       const slotUsed = usedSlots[roleKey] || 0, slotCap = baseSlots[roleKey] || 0;
       return {
         role, color: this.roleColor(role),
-        hasSlots: usedSlots[roleKey] !== undefined && (slotCap > 0 || slotUsed > 0),
+        hasSlots: usedSlots[roleKey] !== undefined,
         slotText: slotUsed + ' / ' + slotCap + ' slots' + (slotUsed > slotCap ? ' · over by ' + (slotUsed - slotCap) : ''),
         slotTitle: role + ' slots used (by supply) of the limit from your faction and tactical cards',
         slotClass: 'sc-lib-slots' + (slotUsed > slotCap ? ' sc-lib-slots--over' : slotUsed === slotCap ? ' sc-lib-slots--full' : ''),
         entries: units.map(u => {
           const expanded = !!st.expLib[u.id];
           const inArmy = armyIds.includes(u.id);
+          const mine = st.army.filter(e => e.unitId === u.id);
           const art = this.portrait(u);
           const cutout = art.cutout && !(this._cutoutFailed || {})[art.cutout] ? art.cutout : '';
+          const noSlots = usedSlots[roleKey] !== undefined && slotCap === 0;
           const recruitable = u.role !== 'Other' && u.tiers.some(t => t.cost > 0)
             && (!u.factionTag || u.factionTag === faction.name)
-            && !(u.unique && st.army.some(e => e.unitId === u.id));
+            && !(u.unique && st.army.some(e => e.unitId === u.id))
+            && !noSlots;
+          const lockReason = u.role === 'Other' || !u.tiers.some(t => t.cost > 0) ? 'Summoned or placed by an ability'
+            : u.factionTag && u.factionTag !== faction.name ? 'Requires ' + u.factionTag
+            : noSlots && !inArmy ? 'No ' + role + ' slots with ' + faction.name : '';
           return {
             name: u.name, unique: !!u.unique, inArmy, ...art,
             cutout, framed: !!art.portrait && !cutout, expanded,
@@ -2272,9 +2326,14 @@ class Component extends DCLogic {
             onView: (ev) => { ev.stopPropagation(); this.openViewer(u.id); },
             onCutoutError: () => { this._cutoutFailed[art.cutout] = true; this.setState({}); },
             addLabel: (u.unique && inArmy) ? '\u2713' : '+',
-            addTitle: (u.unique && inArmy) ? 'Already in army' : recruitable ? 'Add unit' : 'Not recruitable under this faction or summoned only',
+            lockReason,
+            addTitle: (u.unique && inArmy) ? 'Already in army' : recruitable ? 'Add unit' : (lockReason || 'Not available'),
             tags: (u.tags || []).map(t => ({ name: t, onOpen: (ev) => { ev.stopPropagation(); this.openTag(t); } })),
-            detail: expanded ? { ...this.buildDetail(u, null), tags: [] } : null,
+            detail: expanded ? { ...this.buildDetail(u, mine.length === 1 ? mine[0] : null), tags: [] } : null,
+            upgHint: !expanded || !this.unitUpgList(u).length ? '' : mine.length > 1
+              ? 'You have ' + mine.length + ' of these. Set upgrades for each one in Battle › Edit Army.'
+              : mine.length === 1 ? 'Tap an upgrade to buy it. Cost shown is for your tier.' : 'Add this unit to buy upgrades.',
+            musteredLabel: mine.length > 1 ? '\u00d7' + mine.length + ' mustered' : mine.length ? 'Mustered · ' + ((u.tiers[mine[0].tierIdx] || {}).tier || '') : '',
             onToggle: (ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: !s2.expLib[u.id] } })); },
             recruitable,
             onAdd: (ev) => { ev.stopPropagation(); this.addUnit(u); }
@@ -2302,6 +2361,7 @@ class Component extends DCLogic {
             toggleLabel: inArmy ? '\u2713 Added' : (t.category === 'creep' ? 'Choose' : 'Add'),
             toggleClass: 'sc-tac-toggle' + (inArmy ? ' sc-tac-toggle--on' : ''),
             toggleDisabled: !inArmy && !!t.factionTag && t.factionTag !== faction.name,
+            lockReason: !inArmy && t.factionTag && t.factionTag !== faction.name ? 'Requires ' + t.factionTag : '',
             onSelectToggle: (ev) => {
               ev.stopPropagation();
               this.setState(s2 => {
@@ -2430,8 +2490,31 @@ class Component extends DCLogic {
         title: t.name, sub: t.summary,
         onOpen: () => this.setState(s2 => ({ searchOpen: false, tab: 'tactics', expTac: { ...s2.expTac, [t.id]: true } }))
       }));
+      const abilityHits = [];
+      const seenAb = new Set();
+      const pushAb = (a, where, kind) => {
+        if (!a || !a.name || !a.name.toLowerCase().includes(sq)) return;
+        const k = kind + '|' + a.name + '|' + where;
+        if (seenAb.has(k) || abilityHits.length >= 25) return;
+        seenAb.add(k);
+        abilityHits.push({ kind, badgeBg: 'rgba(176,110,247,0.14)', badgeFg: '#c99af7',
+          title: a.name, sub: where + (a.type ? ' · ' + a.type : ''),
+          onOpen: () => this.setState({ searchOpen: false, sheet: { type: 'keyword', title: a.name, ability: true,
+            meta: where + (a.type ? ' · ' + a.type : ''), body: a.description || '', exampleId: null,
+            plain: this.plainFor(a.name), segs: this.segs(a.description || '') } }) });
+      };
+      D.UNITS.forEach(u => {
+        (u.abilities || []).forEach(a => pushAb(a, u.name, 'Ability'));
+        Object.values(u.phaseAbilities || {}).forEach(list => list.forEach(a => pushAb(a, u.name, 'Ability')));
+        this.unitUpgList(u).forEach(a => pushAb({ ...a, type: 'Upgrade · ' + this.upgCostLabel(a.cost) }, u.name, 'Upgrade'));
+        (u.weapons || []).forEach(w => { if (w.name && w.name.toLowerCase().includes(sq) && abilityHits.length < 25) abilityHits.push({ kind: 'Weapon', badgeBg: 'rgba(249,130,47,0.14)', badgeFg: '#f9a35f',
+          title: w.name, sub: u.name + ' · ' + w.range + ' · RoA ' + w.roa + ' · Hit ' + w.hit + ' · Dmg ' + w.damage,
+          onOpen: () => this.setState(s2 => ({ searchOpen: false, tab: 'library', expLib: { ...s2.expLib, [u.id]: true } })) }); });
+      });
+      [...D.FACTION_CARDS, ...D.TACTICAL_CARDS].forEach(c => (c.abilities || []).forEach(a => pushAb(a, c.name, 'Card ability')));
       searchGroups = [
         unitHits.length ? { name: 'Units', hits: unitHits } : null,
+        abilityHits.length ? { name: 'Abilities, weapons & upgrades', hits: abilityHits } : null,
         kwHits.length ? { name: 'Keywords', hits: kwHits } : null,
         tagHits.length ? { name: 'Tags', hits: tagHits } : null,
         tacHits.length ? { name: 'Tactical Cards', hits: tacHits } : null
@@ -2523,6 +2606,7 @@ class Component extends DCLogic {
       trackerVpPad: trackerBig ? '12px 14px' : '8px 10px', trackerVpBtn: trackerBig ? 44 : 38,
       trackerVpVal: trackerBig ? '30px' : '22px', trackerVpLabel: trackerBig ? '11px' : '10px',
       roundUp: bump('round', 1), roundDown: bump('round', -1),
+      trackerEndRound: (ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); this.openEndRound(); },
       vpYouUp: bump('vpYou', 1), vpYouDown: bump('vpYou', -1),
       vpFoeUp: bump('vpFoe', 1), vpFoeDown: bump('vpFoe', -1),
       nextPhase: (ev) => {

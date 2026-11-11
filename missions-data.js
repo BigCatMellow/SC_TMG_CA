@@ -590,5 +590,7 @@ const MISSIONS = [
     notes: 'Pure left-edge versus right-edge deployment. Both players start in long vertical side strips with markers forming a box around the center.'
   }
 ];
+  // The battle size is already shown next to each mission; keep names short.
+  MISSIONS.forEach(m => { m.name = m.name.replace(/\s*\((Skirmish|Standard|Large|Grand)\)\s*$/i, ''); });
   return { MISSIONS, MAPS };
 })();

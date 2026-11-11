@@ -20,7 +20,8 @@
       }
     }
     localStorage.setItem(LAST, isHome ? 'index.html' : page);
-    var resuming = fresh || sessionStorage.getItem(RESUME) === '1';
+    var nav = (typeof performance !== 'undefined' && performance.getEntriesByType && performance.getEntriesByType('navigation')[0]) || {};
+    var resuming = fresh || sessionStorage.getItem(RESUME) === '1' || nav.type === 'reload';
     sessionStorage.removeItem(RESUME);
   } catch (e) { return; }
 
