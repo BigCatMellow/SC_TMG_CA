@@ -419,7 +419,7 @@
                       <sc-if value="{{ en.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
                       <sc-if value="{{ en.inArmy }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(53,199,107,0.14);border:1px solid rgba(53,199,107,0.4);color:#5fd98d">{{ en.musteredLabel }}</span></sc-if>
                     </div>
-                    <sc-if value="{{ en.lockReason }}" hint-placeholder-val="{{ false }}"><div class="sc-lock">{{ en.lockReason }}</div></sc-if>
+                    <sc-if value="{{ en.lockReason }}" hint-placeholder-val="{{ false }}"><div class="{{ en.lockCls }}">{{ en.lockReason }}</div></sc-if>
                     <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
                       <sc-for list="{{ en.tags }}" as="tg" hint-placeholder-count="3">
                         <button onClick="{{ tg.onOpen }}" style="font-size:11px;font-weight:600;letter-spacing:0.02em;padding:4px 6px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#a7aec2;cursor:pointer;border-radius:2px">{{ tg.name }}</button>
@@ -2389,14 +2389,18 @@ class Component extends DCLogic {
           const mine = st.army.filter(e => e.unitId === u.id);
           const art = this.portrait(u);
           const cutout = art.cutout && !(this._cutoutFailed || {})[art.cutout] ? art.cutout : '';
-          const noSlots = usedSlots[roleKey] !== undefined && slotCap === 0;
+          // A role with no slots is only a hard lock when no tactical card can add one.
+          const slotGivers = D.TACTICAL_CARDS.filter(t => (t.slots || {})[roleKey] > 0 && (!t.factionTag || t.factionTag === faction.name));
+          const noSlots = usedSlots[roleKey] !== undefined && slotCap === 0 && !slotGivers.length;
+          const needsSlotCard = usedSlots[roleKey] !== undefined && slotCap === 0 && slotGivers.length > 0;
           const recruitable = u.role !== 'Other' && u.tiers.some(t => t.cost > 0)
             && (!u.factionTag || u.factionTag === faction.name)
             && !(u.unique && st.army.some(e => e.unitId === u.id))
             && !noSlots;
           const lockReason = u.role === 'Other' || !u.tiers.some(t => t.cost > 0) ? 'Summoned or placed by an ability'
             : u.factionTag && u.factionTag !== faction.name ? 'Requires ' + u.factionTag
-            : noSlots && !inArmy ? 'No ' + role + ' slots with ' + faction.name : '';
+            : noSlots && !inArmy ? 'No ' + role + ' slots with ' + faction.name
+            : needsSlotCard && !inArmy ? 'Needs a ' + role + ' slot: ' + slotGivers.slice(0, 2).map(t => t.name).join(' or ') : '';
           return {
             name: u.name, unique: !!u.unique, inArmy, ...art,
             cutout, framed: !!art.portrait && !cutout, expanded,
@@ -2406,7 +2410,7 @@ class Component extends DCLogic {
             onView: (ev) => { ev.stopPropagation(); this.openViewer(u.id); },
             onCutoutError: () => { this._cutoutFailed[art.cutout] = true; this.setState({}); },
             addLabel: (u.unique && inArmy) ? '\u2713' : '+',
-            lockReason,
+            lockReason, lockCls: 'sc-lock' + (recruitable ? ' sc-lock--hint' : ''),
             addTitle: (u.unique && inArmy) ? 'Already in army' : recruitable ? 'Add unit' : (lockReason || 'Not available'),
             tags: (u.tags || []).map(t => ({ name: t, onOpen: (ev) => { ev.stopPropagation(); this.openTag(t); } })),
             detail: expanded ? { ...this.buildDetail(u, mine.length === 1 ? mine[0] : null), tags: [] } : null,

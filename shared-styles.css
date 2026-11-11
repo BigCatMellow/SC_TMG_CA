@@ -1482,3 +1482,5 @@ input::placeholder { color: #5b6275; }
   .sc-tabbar { max-width: 820px !important; }
   .sc-tab-btn { height: 44px !important; flex-direction: row !important; gap: 8px !important; }
 }
+.sc-lock--hint { color: #8fb8c7; }
+.sc-lock--hint::before { content: "+ "; font-size: 11px; }
