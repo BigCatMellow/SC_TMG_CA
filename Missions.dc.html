@@ -41,8 +41,8 @@
         <span style="font-family:'Chakra Petch',sans-serif;font-size:15px;font-weight:700;letter-spacing:0.06em;color:#e9ecf2">R{{ round }}</span>
       </div>
       <div style="flex:1;display:flex;align-items:center;gap:8px;padding:8px 12px;min-width:0">
-        <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5">Phase</span>
-        <span style="font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:{{ phaseColor }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ phaseName }}</span>
+        <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5">Mission</span>
+        <span style="font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#c8cede;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ barMission }}</span>
       </div>
       <div style="display:flex;align-items:center;gap:6px;padding:8px 12px;border-left:1px solid #232939">
         <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.14em;color:#8a91a5">VP</span>
@@ -345,6 +345,8 @@ class Component extends DCLogic {
           }
           // Battle size is shared with the army screens.
           if (play && ['skirmish', 'standard', 'grand'].includes(play.battleSize)) this.state.battleSize = play.battleSize;
+          if (play && play.missionId && !this.state.selectedMissionId) this.state.selectedMissionId = play.missionId;
+          if (play && play.mapId && !this.state.selectedMapId) this.state.selectedMapId = play.mapId;
           // an explicit ?tab= link (e.g. from the Battle tab badge) overrides whatever tab was last left open
           const tabParam = new URLSearchParams(location.search).get('tab');
           if (tabParam && ['setup', 'missions', 'maps'].includes(tabParam)) this.state.activeTab = tabParam;
@@ -653,6 +655,7 @@ class Component extends DCLogic {
     return {
       ready: true,
       round: st.play.round, phaseName: ph.name, phaseColor: ph.color,
+      barMission: ((this.D() && this.D().MISSIONS.find(x => x.id === st.selectedMissionId)) || {}).name || 'None picked',
       vpYou: st.play.vpYou, vpFoe: st.play.vpFoe,
       trackerOpen: st.trackerOpen,
       togglePlay: () => this.setState({ trackerOpen: true }),
