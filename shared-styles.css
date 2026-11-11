@@ -804,12 +804,12 @@ input::placeholder { color: #5b6275; }
 
 /* ===== Unit art: breakout Library cards, opened-card banner, model viewer =====
    Cutout minis stand on the card and rise --sc-lib-rise above it. The list gap is
-   always larger than the rise, so a model never overlaps the card above it. */
+   well over the rise (18px clear), so a model never overlaps the card above it. */
 .sc-lib-list {
   --sc-lib-rise: 28px;
   display: grid;
-  gap: 34px;
-  padding-top: 32px;
+  gap: 46px;
+  padding-top: 38px;
 }
 .sc-lib-card { position: relative; }
 .sc-lib-card-bg {
