@@ -28,7 +28,17 @@ OUT = os.path.join(ROOT, 'portraits', 'cutout')
 MAX_H = 640  # px; cards draw at <=230px CSS height, viewer at screen size
 
 # Optional pre-crop for remote group photos: "faction/id": (left, top, right, bottom) as fractions.
-CROPS = {}
+CROPS = {
+    # Publisher promo images: keep the one model, drop the card scan, logo, tokens and twin.
+    'terran/siege-tank': (0.05, 0.10, 0.53, 0.82),      # Siege Mode tank, not the Tank Mode twin or size badge
+    'terran/nova-stealth': (0.00, 0.08, 0.56, 1.00),    # Nova, not the holo-decoy beside her
+    'terran/holo-decoy': (0.58, 0.00, 1.00, 1.00),      # the decoy only
+    'terran/raven': (0.00, 0.00, 0.53, 1.00),           # main Raven, not the close-up inset
+    'zerg/ravager': (0.67, 0.00, 1.00, 0.90),           # right-hand Ravager, no title text or tokens
+    'zerg/zagara': (0.47, 0.05, 0.92, 0.95),            # model, not the unit card behind it
+    'zerg/defiler': (0.52, 0.20, 1.00, 0.95),           # model, not the card or Dark Swarm token
+    'zerg/bile-launcher': (0.48, 0.05, 1.00, 0.95),     # model, not the card or bile token
+}
 
 
 def portrait_factions():
@@ -68,6 +78,7 @@ def load(src):
 
 
 SRC_DIR = os.path.join(ROOT, 'portraits-src', 'remote')
+REDOWNLOAD = False
 
 
 def cut_one(remove, session, im):
@@ -86,14 +97,21 @@ def cut_remote(remove, session, mapping, force):
     """One cutout per unit from publisher-hosted photos, plus a review sheet."""
     os.makedirs(SRC_DIR, exist_ok=True)
     downloaded, rows = {}, []
+    first = {}
+    for faction, uid, src in remote_units():
+        first.setdefault(src, os.path.join(SRC_DIR, '%s-%s.jpg' % (faction, uid)))
     for faction, uid, src in remote_units():
         key = faction + '/' + uid
         rel = 'portraits/cutout/%s/%s.webp' % (faction, uid)
         dest = os.path.join(ROOT, rel)
         try:
             if src not in downloaded:
-                downloaded[src] = load(src)
-                downloaded[src].save(os.path.join(SRC_DIR, '%s-%s.jpg' % (faction, uid)), quality=90)
+                saved = first[src]
+                if os.path.exists(saved) and not REDOWNLOAD:
+                    downloaded[src] = Image.open(saved).convert('RGB')
+                else:
+                    downloaded[src] = load(src)
+                    downloaded[src].save(saved, quality=90)
             im = downloaded[src]
         except Exception as e:
             print('skip', key, e, file=sys.stderr)
@@ -134,7 +152,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--remote', action='store_true')
     ap.add_argument('--force', action='store_true')
+    ap.add_argument('--redownload', action='store_true', help='fetch publisher photos again instead of using portraits-src/remote')
     args = ap.parse_args()
+    global REDOWNLOAD
+    REDOWNLOAD = args.redownload
     from rembg import remove, new_session
     session = new_session('isnet-general-use')
 
@@ -151,7 +172,7 @@ def main():
         name = uid if remote else os.path.splitext(os.path.basename(src))[0]
         rel = 'portraits/cutout/%s/%s.webp' % (faction, name)
         dest = os.path.join(ROOT, rel)
-        if os.path.exists(dest) and not args.force:
+        if os.path.exists(dest) and (not args.force or args.remote):
             mapping[src] = rel
             continue
         try:
