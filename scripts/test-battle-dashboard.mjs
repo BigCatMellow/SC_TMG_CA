@@ -412,6 +412,10 @@ for(const faction of ['terran','zerg','protoss']){
      assert.equal(view().mineralsUsed,before+parseInt(paid.cost,10),'Buying an upgrade spends its tier cost'); }
    c.state.army=[];
  }
+ // Floating section tab: every long list marks its sections; the tab opens a jump menu.
+ for(const token of ['data-sec="{{ grp.role }}"','data-sec="{{ grp.secLabel }}"','data-sec="Cards"','onClick="{{ toggleSecMenu }}"','onClick="{{ si.onJump }}"'])
+   assert.ok(html.includes(token),faction+' section tab missing '+token);
+ assert.equal(view().secNavOn,false,'section tab hidden until scrolled');
  // ---- playtest fixes 2 ----
  {
    const DD2=c.D();
