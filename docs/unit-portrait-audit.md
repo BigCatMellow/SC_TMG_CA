@@ -46,6 +46,27 @@ Each image retains its original pixel data, unit ID, PDF page, and SHA-256 in [s
 
 The original [source PDF](https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf) has SHA-256 `27639c562e6db9777dd9ba984d0c9f9b581841ec30166848e021f893cd00ea54`. Re-extraction is reproducible with [scripts/extract-pdf-miniatures.py](../scripts/extract-pdf-miniatures.py). The script rejects changed source versions instead of silently substituting a similar image. The app’s [model-portraits.js](../model-portraits.js) maps photos to cards. Each card renders **one** image element anchored to the card's top edge: the model head stays framed in the collapsed header, and expanding the card reveals the rest of the same stationary miniature. Images are no longer CSS background stacks. If the primary image fails, that same element switches to the next existing image source (published fallback, then related local artwork where available).
 
+## Review — 11 November 2026
+
+**Narrow phones.** All three Army screens were rendered at 360 px and 480 px (Library, Battle, Edit Army, open cards). There is no horizontal scroll at either width. Breakout figures, framed art and card text stay inside their cards, and names wrap without covering the art.
+
+**Remote photos.** 14 units use publisher-hosted photos (starcraft-tmg.com, archon-studio.com, philibertnet.com). A live phone check showed them loading on the deployed site. `scripts/check-remote-portraits.mjs` now requests each one the way the site does (GitHub Pages Referer). It runs weekly, on demand, and whenever `model-portraits.js` changes, through the **Remote portrait links** workflow. A broken link fails the workflow; in the app the card falls back to local art.
+
+**The 20 original local PNGs.** In the table below, *Photo* means a painted-miniature photograph and *Art* means game render or illustration.
+
+| File | Type | Used as |
+|---|---|---|
+| protoss/adept, artanis, sentry, stalker | Photo | Fallback (PDF photo is primary) |
+| protoss/praetor-guard, zealot | Art (game render) | Fallback only |
+| protoss/pylon | Art (game render) | **Primary**, no miniature photo yet |
+| terran/goliath, jim-raynor, marauder, marine, medic | Photo | Fallback (PDF photo is primary) |
+| terran/raynors-raider | Art (illustration) | Fallback only |
+| terran/point-defense-drone | Art (game render) | **Primary**, no miniature photo yet |
+| zerg/hydralisk, kerrigan, roach, zergling | Photo | Fallback (PDF photo is primary) |
+| zerg/corpser, queen | Art (concept) | Fallback only |
+
+Only **Pylon** and **Point Defense Drone** still show non-miniature art as their main image. They need either a miniature photo or approval as a substitute, like the summoned **Sabotage Drone** and **Auto-Turret**.
+
 ## Remaining sources
 
 Wave 2–3 units still use official [publisher galleries](https://starcraft-tmg.com/downloads), where available. Their URL, unit ID, and source page are retained in the portrait manifest. Existing portrait binaries are not deleted.
