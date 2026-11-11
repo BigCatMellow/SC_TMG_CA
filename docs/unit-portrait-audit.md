@@ -65,7 +65,7 @@ The original [source PDF](https://starcraft-tmg.com/files/downloads/StarCraft-TM
 | zerg/hydralisk, kerrigan, roach, zergling | Photo | Fallback (PDF photo is primary) |
 | zerg/corpser, queen | Art (concept) | Fallback only |
 
-Only **Pylon** and **Point Defense Drone** still show non-miniature art as their main image. They need either a miniature photo or approval as a substitute, like the summoned **Sabotage Drone** and **Auto-Turret**.
+**Decision (11 Nov 2026): painted-miniature photos only.** Game renders, card art and concept art are no longer used anywhere in the army screens. That includes the Terran tactical-card building art and the art-only fallbacks above. Units without a miniature photo show a plain card until one is found: **Pylon**, **Point Defense Drone**, **Sabotage Drone** and **Auto-Turret**. `test-portraits.mjs` fails if any render or concept-art path comes back.
 
 ## Remaining sources
 

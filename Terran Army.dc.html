@@ -1317,31 +1317,17 @@ class Component extends DCLogic {
   }
   portrait(u) {
     const P = {
-      'jim-raynor': { src: 'uploads/Raynor-card.png', size: 'auto 520px', pos: 'right -215px top -105px' },
+      'jim-raynor': { src: 'portraits/terran/jim-raynor.png', size: 'auto 288px', pos: 'right 0px top 4px' },
       'goliath': { src: 'portraits/terran/goliath.png', size: 'auto 287px', pos: 'right 26px top 4px' },
       'marauder': { src: 'portraits/terran/marauder.png', size: 'auto 287px', pos: 'right 35px top 4px' },
       'marine': { src: 'portraits/terran/marine.png', size: 'auto 288px', pos: 'right 8px top 5px' },
-      'medic': { src: 'portraits/terran/medic.png', size: 'auto 288px', pos: 'right 24px top 5px' },
-      'point-defense-drone': { src: 'portraits/terran/point-defense-drone.png', size: 'auto 86px', pos: 'right -62px top -3px' },
-      'raynors-raider': { src: 'portraits/terran/raynors-raider.png', size: 'auto 289px', pos: 'right 59px top -63px' }
+      'medic': { src: 'portraits/terran/medic.png', size: 'auto 288px', pos: 'right 24px top 5px' }
     };
     return window.SCTMG_MAKE_PORTRAIT('terran', u.id, P);
   }
+  // Tactical cards show no art: the only images available were game renders.
   tacticalPortrait(t) {
-    const P = {
-      'academy': { src: 'portraits/terran-tactics/academy.png', size: 'auto 300px', pos: 'right 10px top -68px' },
-      'armory': { src: 'portraits/terran-tactics/armory.png', size: 'auto 300px', pos: 'right 15px top -113px' },
-      'barracks': { src: 'portraits/terran-tactics/barracks.png', size: 'auto 300px', pos: 'right 5px top -98px' },
-      'barracks-proxy': { src: 'portraits/terran-tactics/barracks.png', size: 'auto 300px', pos: 'right 5px top -98px' },
-      'barracks-tech-lab': { src: 'portraits/terran-tactics/barracks.png', size: 'auto 300px', pos: 'right 5px top -98px' },
-      'dropship': { src: 'portraits/terran-tactics/dropship.png', size: 'auto 300px', pos: 'right 5px top -98px' },
-      'engineering-bay': { src: 'portraits/terran-tactics/engineering-bay.png', size: 'auto 300px', pos: 'right 15px top -83px' },
-      'factory': { src: 'portraits/terran-tactics/factory.png', size: 'auto 300px', pos: 'right 10px top -188px' },
-      'orbital-command': { src: 'portraits/terran-tactics/orbital-command.png', size: 'auto 300px', pos: 'right 10px top -83px' },
-      'supply-depot': { src: 'portraits/terran-tactics/supply-depot.png', size: 'auto 300px', pos: 'right 10px top -158px' }
-    };
-    const p = P[t.id];
-    return p ? { portrait: p.src, portraitSize: p.size, portraitPos: p.pos } : { portrait: false };
+    return { portrait: false };
   }
   phaseBadge(phaseLabel) {
     const map = { 'Movement Phase': '#4f8df9', 'Assault Phase': '#f9822f', 'Combat Phase': '#f04a4a', 'Scoring Phase': '#35c76b', 'Any Phase': '#8a91a5' };
