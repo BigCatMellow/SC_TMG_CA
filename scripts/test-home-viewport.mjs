@@ -31,7 +31,8 @@ const delay=ms=>new Promise(r=>setTimeout(r,ms));
 let socket;
 try {
   let debuggerPort=null;
-  for(let i=0;i<120;i++){
+  // Cold CI runners can take well over 12s to start Chrome; wait up to 60s.
+  for(let i=0;i<600;i++){
     if(chrome.exitCode!==null)throw Error('Chrome exited early: '+chrome.exitCode);
     try{
       debuggerPort=Number((await readFile(join(profile,'DevToolsActivePort'),'utf8')).split('\n')[0]);
@@ -68,7 +69,8 @@ try {
   });
   await cmd('Page.navigate',{url:'http://127.0.0.1:'+sitePort+'/index.html'});
   let loaded=false;
-  for(let i=0;i<120;i++){
+  // Cold CI runners can take well over 12s to start Chrome; wait up to 60s.
+  for(let i=0;i<600;i++){
     try{
       const e=await cmd('Runtime.evaluate',{
         expression:"document.readyState === 'complete' && !!document.querySelector('.sc-home-main')",
