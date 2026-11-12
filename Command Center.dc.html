@@ -33,62 +33,6 @@
   <!-- ambient page scanline -->
   <div style="position:absolute;left:0;right:0;top:0;height:90px;background:linear-gradient(180deg,transparent,rgba(147,180,255,0.025),transparent);animation:scScan 9s linear infinite;pointer-events:none;z-index:5"></div>
 
-  <!-- ============ SPLASH ============ -->
-  <sc-if value="{{ splashVisible }}" hint-placeholder-val="{{ true }}">
-    <div onClick="{{ dismissSplash }}" style="position:fixed;inset:0;z-index:500;display:flex;justify-content:center;background:#04050a;cursor:pointer;animation:{{ splashAnim }}">
-      <div style="width:100%;max-width:480px;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;overflow:hidden;background-image:radial-gradient(95% 50% at 50% 34%, rgba(88,28,135,0.34), transparent 68%),radial-gradient(1.2px 1.2px at 30px 44px, rgba(190,200,235,0.35), transparent),radial-gradient(1px 1px at 120px 100px, rgba(190,200,235,0.2), transparent);background-size:auto,170px 170px,260px 260px">
-        <div style="position:absolute;left:0;right:0;height:110px;background:linear-gradient(180deg,transparent,rgba(176,110,247,0.05),transparent);animation:scScan 3.6s linear infinite"></div>
-        <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(0deg,rgba(255,255,255,0.013) 0 1px,transparent 1px 3px)"></div>
-
-        <!-- emblem construction -->
-        <div style="position:relative;width:170px;height:170px;display:grid;place-items:center;animation:scRise 0.8s cubic-bezier(0.22,1,0.36,1) both">
-          <svg width="170" height="170" viewBox="0 0 170 170" fill="none" style="position:absolute;inset:0;animation:scRingA 28s linear infinite">
-            <polygon points="85,6 153,45 153,125 85,164 17,125 17,45" stroke="rgba(176,110,247,0.3)" stroke-width="1" stroke-dasharray="12 7"></polygon>
-          </svg>
-          <svg width="170" height="170" viewBox="0 0 170 170" fill="none" style="position:absolute;inset:0;animation:scRingB 20s linear infinite">
-            <polygon points="85,18 143,51 143,119 85,152 27,119 27,51" stroke="rgba(176,110,247,0.45)" stroke-width="1.2" stroke-dasharray="4 10"></polygon>
-          </svg>
-          <svg width="170" height="170" viewBox="0 0 170 170" fill="none" style="position:absolute;inset:0">
-            <polygon points="85,28 134,56 134,114 85,142 36,114 36,56" stroke="rgba(176,110,247,0.6)" stroke-width="1.6"></polygon>
-            <polygon points="85,28 134,56 134,114 85,142 36,114 36,56" stroke="rgba(147,51,234,0.14)" stroke-width="7"></polygon>
-          </svg>
-          <svg width="76" height="76" viewBox="0 0 72 72" fill="none" style="animation:scCore 2.8s ease-in-out infinite">
-            <path d="M36 6l7 16 16 4-11 11 2.6 17L36 46.5 21.4 54 24 37 13 26l16-4 7-16z" fill="rgba(147,51,234,0.3)" stroke="#c99af7" stroke-width="2" stroke-linejoin="round"></path>
-            <circle cx="36" cy="33" r="4.5" fill="#e9d5ff"></circle>
-          </svg>
-        </div>
-
-        <!-- wordmark -->
-        <div style="position:relative;text-align:center;margin-top:28px;animation:scRise 0.8s 0.12s cubic-bezier(0.22,1,0.36,1) both">
-          <div style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.52em;text-transform:uppercase;color:#8a91a5;padding-left:0.52em">StarCraft Tabletop</div>
-          <div style="position:relative;margin-top:2px">
-            <div style="font-family:'Chakra Petch',sans-serif;font-size:44px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#e9ecf2;line-height:1.1;padding-left:0.16em;text-shadow:0 0 30px rgba(176,110,247,0.5)">Adjutant</div>
-          </div>
-          <div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-top:8px">
-            <span style="height:1px;width:34px;background:linear-gradient(90deg,transparent,#7c3aed)"></span>
-            <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.3em;text-transform:uppercase;color:#b06ef7;padding-left:0.3em">Field Companion</span>
-            <span style="height:1px;width:34px;background:linear-gradient(90deg,#7c3aed,transparent)"></span>
-          </div>
-        </div>
-
-        <!-- boot log -->
-        <div style="position:relative;margin-top:30px;display:grid;gap:5px;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.2em;text-transform:uppercase;text-align:center">
-          <div style="color:#5b6275;animation:scRise 0.4s 0.7s ease both">▸ Uplink established</div>
-          <div style="color:#5b6275;animation:scRise 0.4s 1.2s ease both">▸ Telemetry <span style="color:#5fd98d">online</span></div>
-          <div style="color:#8a91a5;animation:scRise 0.4s 1.7s ease both;">Awaiting command <span style="display:inline-block;width:7px;height:11px;background:#b06ef7;vertical-align:-1px;animation:scCaret 1s steps(1) infinite"></span></div>
-        </div>
-
-        <!-- segmented progress -->
-        <div style="position:absolute;left:36px;right:36px;bottom:calc(34px + env(safe-area-inset-bottom))">
-          <div style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.26em;text-transform:uppercase;color:#5b6275;text-align:center;margin-bottom:8px;animation:scPulse 1.8s infinite">Tap to deploy</div>
-          <div style="position:relative;height:5px;background:#141824;overflow:hidden">
-            <div style="height:100%;background:linear-gradient(90deg,#7c3aed,#c99af7);box-shadow:0 0 12px rgba(176,110,247,0.8);animation:scBar 2.6s 0.2s cubic-bezier(0.4,0,0.2,1) both"></div>
-            <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(90deg,transparent 0 10px,#04050a 10px 13px)"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </sc-if>
 
   <!-- ============ SYSTEM BAR ============ -->
   <div style="display:flex;align-items:center;gap:8px;padding:calc(12px + env(safe-area-inset-top)) 18px 10px;border-bottom:1px solid rgba(43,49,69,0.6)">
@@ -256,21 +200,13 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script>
 class Component extends DCLogic {
-  state = { splash: !localStorage.getItem('sctmg_intro_seen'), leaving: false, play: null };
+  state = { play: null };
 
   componentDidMount() {
     try { this.setState({ play: JSON.parse(localStorage.getItem('sctmg_play') || 'null') }); } catch (e) {}
-    if (this.state.splash) this._auto = setTimeout(() => this.dismiss(), 3000);
   }
-  componentWillUnmount() { clearTimeout(this._auto); clearTimeout(this._out); }
+  componentWillUnmount() { }
 
-  dismiss() {
-    if (!this.state.splash || this.state.leaving) return;
-    clearTimeout(this._auto);
-    try { localStorage.setItem('sctmg_intro_seen', '1'); } catch (e) {}
-    this.setState({ leaving: true });
-    this._out = setTimeout(() => this.setState({ splash: false }), 450);
-  }
 
   renderVals() {
     const play = this.state.play;
@@ -285,9 +221,6 @@ class Component extends DCLogic {
     const hasGame = !!play && (play.round > 1 || play.phase > 0 || play.vpYou > 0 || play.vpFoe > 0);
 
     return {
-      splashVisible: this.state.splash,
-      splashAnim: this.state.leaving ? 'scSplashOut 0.45s ease both' : 'scFade 0.3s ease',
-      dismissSplash: () => this.dismiss(),
       round: p.round, phaseName: ph.name, phaseColor: ph.color,
       vpYou: p.vpYou, vpFoe: p.vpFoe,
       statusLabel: hasGame ? 'In Progress' : 'Standby',
