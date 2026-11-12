@@ -28,8 +28,8 @@ for(const faction of ['terran','zerg','protoss']){
     battle.includes('aria-pressed="{{ editArmy }}"'),faction+' explicit Edit Army control');
   const gated=/<sc-if value="\{\{ editArmy \}\}"[\s\S]*?<button onClick="\{\{ u.onChangeTier \}\}"[\s\S]*?<button onClick="\{\{ u.onRemove \}\}"/;
   assert.match(battle,gated,faction+' tier/removal controls hidden outside Edit Army');
-  assert.ok(battle.includes('onClick="{{ u.onLossDown }}"')&&
-    battle.includes('onClick="{{ u.onSetDeployed }}"')&&battle.includes('onClick="{{ u.onSetReserve }}"'),faction+' Battle controls preserved');
+  assert.ok(battle.includes('onClick="{{ u.stepDown }}"')&&
+    battle.includes('onClick="{{ u.stepUp }}"')&&battle.includes('onClick="{{ u.toggleDeploy }}"'),faction+' Battle controls preserved');
   assert.ok(battle.includes('list="{{ battleCards }}"')&&
     battle.includes('onClick="{{ tc.onResource }}"'),faction+' Battle card features preserved');
   assert.ok(battle.includes('Add units from the Library'),faction+' empty state has correct navigation');

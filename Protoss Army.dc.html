@@ -305,29 +305,30 @@
               <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ grp.color }}">{{ grp.role }}</span>
               <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
             </div>
-            <div class="sc-lib-list">
+            <div class="sc-bu-list">
               <sc-for list="{{ grp.entries }}" as="u" hint-placeholder-count="2">
-                <div class="{{ u.cardClass }}">
-                  <div class="sc-lib-card-bg"></div>
-                  <div class="sc-lib-head">
-                    <sc-if value="{{ u.framed }}" hint-placeholder-val="{{ false }}"><span class="sc-lib-frame"><span class="sc-lib-frame-art"><img loading="lazy" src="{{ u.portrait }}" onError="{{ u.onPortraitError }}" alt="" aria-hidden="true" style="{{ u.portraitImgStyle }}"></span><span class="sc-lib-frame-shade"></span></span></sc-if>
-                    <sc-if value="{{ u.cutout }}" hint-placeholder-val="{{ false }}"><button onClick="{{ u.onToggle }}" class="sc-lib-figure" aria-label="{{ u.figureLabel }}"><span class="sc-lib-floor"></span><img src="{{ u.cutout }}" onError="{{ u.onCutoutError }}" alt="" loading="lazy"></button></sc-if>
-                    <div onClick="{{ u.onToggle }}" role="button" aria-expanded="{{ u.expanded }}" class="sc-lib-head-text">
-                      <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
-                        <span style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ u.name }}<svg class="sc-lib-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
-                        <sc-if value="{{ u.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
+                <div class="{{ u.rowCls }}" style="--rc:{{ u.roleColor }}">
+                  <div class="sc-bu-row">
+                    <div class="sc-bu-main">
+                      <div class="sc-bu-line">
+                        <button onClick="{{ u.onToggle }}" aria-expanded="{{ u.expanded }}" class="sc-bu-name" title="{{ u.name }}"><b>{{ u.shortName }}</b><svg class="sc-lib-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
+                        <div class="sc-vs-sup" title="Supply"><b>{{ u.supply }}</b><small>sup</small></div>
+                        <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.deployOff }}" class="{{ u.statusCls }}" title="{{ u.statusTitle }}">{{ u.status }}</button>
                       </div>
-                      <div class="sc-unit-tier">{{ u.tierLabel }}</div>
-                      <sc-if value="{{ u.expanded }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
-                        <sc-for list="{{ u.tags }}" as="tg" hint-placeholder-count="3">
-                          <button onClick="{{ tg.onOpen }}" style="font-size:11px;font-weight:600;letter-spacing:0.02em;padding:4px 6px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#a7aec2;cursor:pointer;border-radius:2px">{{ tg.name }}</button>
-                        </sc-for>
-                      </div></sc-if>
+                      <div class="sc-bu-line">
+                        <div class="sc-bu-info">
+                          <span class="sc-vs-k" style="color:{{ u.roleColor }}">{{ u.kLine }}</span>
+                          <sc-if value="{{ u.showPips }}" hint-placeholder-val="{{ true }}"><div class="sc-vs-pips">
+                            <sc-for list="{{ u.pips }}" as="p" hint-placeholder-count="6"><button onClick="{{ p.tap }}" class="{{ p.cls }}" aria-label="{{ p.label }}"></button></sc-for>
+                          </div></sc-if>
+                          <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
+                            <div class="sc-vs-hp"><span class="sc-vs-hp-track" role="img" aria-label="{{ u.hpAria }}"><sc-for list="{{ u.hpSegs }}" as="hs" hint-placeholder-count="3"><span class="sc-vs-hp-seg" style="{{ hs.style }}"><i style="{{ hs.fill }}"></i></span></sc-for></span><span class="sc-vs-hp-text">{{ u.hpText }}</span></div>
+                          </sc-if>
+                        </div>
+                        <div class="sc-vs-models"><small>{{ u.stepLabel }}</small><span class="sc-vs-steps-row"><button onClick="{{ u.stepDown }}" disabled="{{ u.stepDownOff }}" class="sc-vs-step" aria-label="{{ u.stepDownAria }}">−</button><button onClick="{{ u.stepUp }}" disabled="{{ u.stepUpOff }}" class="sc-vs-step" aria-label="{{ u.stepUpAria }}">+</button></span></div>
+                      </div>
                     </div>
-                    <div class="sc-lib-actions">
-                      <div class="sc-unit-sup" title="Supply">{{ u.supply }}<small>sup</small></div>
-                      <sc-if value="{{ u.viewSrc }}" hint-placeholder-val="{{ false }}"><button onClick="{{ u.onView }}" class="sc-lib-view" aria-label="View {{ u.name }} model fullscreen">&#10530; View</button></sc-if>
-                    </div>
+                    <button onClick="{{ u.onToggle }}" class="sc-bu-art" aria-label="{{ u.figureLabel }}"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" onError="{{ u.onImgError }}" class="{{ u.imgCls }}" alt="" aria-hidden="true" loading="lazy"></sc-if></button>
                   </div>
                       <sc-if value="{{ editArmy }}" hint-placeholder-val="{{ false }}">
                         <div style="display:flex;gap:8px;padding:0 12px 12px">
@@ -345,6 +346,10 @@
                       </sc-if>
                   <sc-if value="{{ u.expanded }}" hint-placeholder-val="{{ false }}">
                   <div class="sc-play-body">
+                    <div class="sc-bu-tags">
+                      <sc-for list="{{ u.tags }}" as="tg" hint-placeholder-count="3"><button onClick="{{ tg.onOpen }}" class="sc-bu-tag">{{ tg.name }}</button></sc-for>
+                      <sc-if value="{{ u.viewSrc }}" hint-placeholder-val="{{ false }}"><button onClick="{{ u.onView }}" class="sc-lib-view" aria-label="View {{ u.name }} model fullscreen">&#10530; View</button></sc-if>
+                    </div>
                     <div class="sc-play-stats"><sc-for list="{{ u.play.stats }}" as="ps" hint-placeholder-count="4"><span><small>{{ ps.k }}</small>{{ ps.v }}</span></sc-for></div>
                     <sc-for list="{{ u.play.weapons }}" as="pw" hint-placeholder-count="2">
                       <div class="sc-play-weapon">
@@ -363,31 +368,6 @@
                     </sc-if>
                   </div>
                   </sc-if>
-                  <div class="sc-unit-foot">
-                    <sc-if value="{{ u.fitText }}" hint-placeholder-val="{{ false }}"><div class="{{ u.fitClass }}">{{ u.fitText }}</div></sc-if>
-                    <div class="sc-unit-controls">
-                    <div class="sc-deploy-switch" role="group" aria-label="Deployment">
-                      <button onClick="{{ u.onSetReserve }}" aria-pressed="{{ u.inReserve }}" class="{{ u.reserveClass }}">{{ u.reserveLabel }}</button>
-                      <button onClick="{{ u.onSetDeployed }}" aria-pressed="{{ u.deployed }}" disabled="{{ u.deployDisabled }}" title="{{ u.deployTitle }}" class="{{ u.deployClass }}">Deployed</button>
-                    </div>
-                    <div class="sc-model-stepper">
-                      <button onClick="{{ u.onLossDown }}" disabled="{{ u.noneLeft }}" aria-label="Remove a model (casualty)" class="sc-model-step">−</button>
-                      <span class="sc-model-count"><b>{{ u.remaining }}</b> / {{ u.startingModels }} <small>alive</small></span>
-                      <button onClick="{{ u.onLossUp }}" disabled="{{ u.atFull }}" aria-label="Restore a model" class="sc-model-step sc-model-step--up">+</button>
-                    </div>
-                    </div>
-                    <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
-                      <div class="sc-dmg-row">
-                        <span class="sc-dmg-label">Damage<sc-if value="{{ u.shielded }}" hint-placeholder-val="{{ false }}"><span class="sc-dmg-shield">Shielded</span></sc-if></span>
-                        <div class="sc-model-stepper sc-dmg-stepper">
-                          <button onClick="{{ u.onDmgDown }}" disabled="{{ u.noDmg }}" aria-label="Heal 1 damage" class="sc-model-step">−</button>
-                          <span class="sc-model-count"><b>{{ u.dmg }}</b> / {{ u.dmgPool }} <small>{{ u.dmgUnit }}</small></span>
-                          <button onClick="{{ u.onDmgUp }}" aria-label="Add 1 damage" class="sc-model-step sc-model-step--up">+</button>
-                        </div>
-                      </div>
-                      <div class="sc-dmg-bar"><span class="sc-vs-hp-track" role="img" aria-label="{{ u.hpAria }}"><sc-for list="{{ u.hpSegs }}" as="hs" hint-placeholder-count="3"><span class="sc-vs-hp-seg" style="{{ hs.style }}"><i style="{{ hs.fill }}"></i></span></sc-for></span><span class="sc-dmg-hp">{{ u.hpText }}</span></div>
-                    </sc-if>
-                  </div>
                 </div>
               </sc-for>
             </div>
@@ -2383,6 +2363,36 @@ class Component extends DCLogic {
         startingModels, remaining, wipedOut: remaining <= 0,
         supply: effTier ? (effTier.supply || 0) : 0,
         deployed: !!e.deployed,
+        roleColor: this.roleColor(unit.role),
+        shortName: (() => { const m = unit.name.match(/^(.*\S)\s+\(([^)]+)\)$/); return m && D.UNITS.some(x => x.name === m[2]) ? m[1] : unit.name; })(),
+        kLine: unit.role + ' · ' + tier.tier + (unit.unique ? ' · Unique' : ''),
+        rowCls: 'sc-bu' + (remaining <= 0 ? ' sc-bu--dead' : '') + (expanded ? ' sc-bu--open' : ''),
+        img: battleCutout || art.portrait || '',
+        imgCls: battleCutout ? 'sc-bu-cut' : 'sc-bu-photo',
+        onImgError: battleCutout ? (() => { this._cutoutFailed[art.cutout] = true; this.setState({}); }) : (art.onPortraitError || (() => {})),
+        ...(() => {
+          const hp = Number(unit.stats && unit.stats.hp) || 1, shd = Number(unit.stats && unit.stats.shield) || 0;
+          const lost = e.modelsLost || 0, multiHp = (hp > 1 || shd > 0) && remaining > 0;
+          const stop = ev => { if (ev && ev.stopPropagation) ev.stopPropagation(); };
+          return {
+            showPips: !multiHp,
+            pips: Array.from({ length: startingModels }, (_, i) => ({
+              cls: 'sc-vs-pip' + (i >= remaining ? ' sc-vs-pip--lost' : ''),
+              label: unit.name + ' model ' + (i + 1) + (i >= remaining ? ', lost: tap to restore one' : ', alive: tap to remove one'),
+              tap: (ev) => { stop(ev); this.setModelsLost(e.key, i >= remaining ? -1 : 1); }
+            })),
+            // One stepper per row: multi-HP units step damage (− is 1 damage), the rest step models.
+            ...(multiHp ? {
+              stepLabel: 'HP', stepDown: (ev) => { stop(ev); this.setDamage(e.key, 1); }, stepUp: (ev) => { stop(ev); this.setDamage(e.key, -1); },
+              stepDownOff: false, stepUpOff: (e.dmg || 0) === 0 && lost === 0,
+              stepDownAria: unit.name + ': 1 damage', stepUpAria: unit.name + ': heal 1'
+            } : {
+              stepLabel: 'Models', stepDown: (ev) => { stop(ev); this.setModelsLost(e.key, 1); }, stepUp: (ev) => { stop(ev); this.setModelsLost(e.key, -1); },
+              stepDownOff: remaining <= 0, stepUpOff: lost === 0,
+              stepDownAria: 'Remove a ' + unit.name + ' model', stepUpAria: 'Restore a ' + unit.name + ' model'
+            })
+          };
+        })(),
         modelLossLabel: remaining + ' / ' + startingModels + ' models',
         ...(() => {
           const hp = Number(unit.stats && unit.stats.hp) || 1, shd = Number(unit.stats && unit.stats.shield) || 0;
@@ -2434,6 +2444,11 @@ class Component extends DCLogic {
         // Only speak up when the unit can't be deployed; the Deployed button covers the rest.
         fitText: u.deployed || u.wipedOut || battleSupplyRemaining >= u.supply ? ''
           : 'Needs ' + u.supply + ' supply · ' + (u.supply - battleSupplyRemaining) + ' short',
+        status: u.wipedOut ? 'Destroyed' : u.deployed ? 'On table' : battleSupplyRemaining < u.supply ? 'Needs ' + u.supply + ' sup' : 'Reserve',
+        statusCls: 'sc-vs-status' + (u.wipedOut ? ' sc-vs-status--dead' : u.deployed ? ' sc-vs-status--table' : battleSupplyRemaining < u.supply ? ' sc-vs-status--full' : ''),
+        statusTitle: u.wipedOut ? 'No models left' : u.deployed ? 'Tap to move to reserve' : battleSupplyRemaining < u.supply ? 'Needs ' + u.supply + ' supply, ' + battleSupplyRemaining + ' free' : 'Tap to deploy for ' + u.supply + ' supply',
+        deployOff: u.wipedOut || (!u.deployed && battleSupplyRemaining < u.supply),
+        toggleDeploy: u.onToggleDeployed,
         fitClass: 'sc-play-fit' + (battleSupplyRemaining >= u.supply ? ' sc-play-fit--ok' : ' sc-play-fit--short')
       });
     // Grouped by where the unit is, not its role: that is what changes during a game.
