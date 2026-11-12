@@ -31,6 +31,7 @@
   <script src="mission-scoring.js"></script>
   <script src="codex-examples.js"></script>
   <script src="plain-english.js"></script>
+  <script src="notch.js"></script>
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
@@ -452,7 +453,7 @@
           </div>
           <div style="display:grid;gap:8px">
             <sc-for list="{{ grp.cards }}" as="tc" hint-placeholder-count="2">
-              <div style="background:var(--sc-card-bg);border:1px solid {{ tc.borderColor }};clip-path:var(--sc-corner-12)">
+              <div class="sc-tac-card" style="background:var(--sc-card-bg);border:1px solid {{ tc.borderColor }};clip-path:var(--sc-corner-12)">
                 <div style="display:flex;align-items:center;gap:10px;padding:12px;min-height:44px">
                   <div onClick="{{ tc.onToggle }}" role="button" style="flex:1;min-width:0;cursor:pointer">
                     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
@@ -1024,7 +1025,7 @@ class Component extends DCLogic {
   };
 
   componentDidMount() {
-    this._onResourceScroll = () => { this.updateResourceStrip(); this.updateSectionNav(true); };
+    this._onResourceScroll = () => { this.updateResourceStrip(); this.updateSectionNav(true); this.notchCheck(); };
     window.addEventListener('scroll', this._onResourceScroll, { passive: true });
     this._onResourceScroll();
     this._cutoutFailed = {};
@@ -1154,7 +1155,22 @@ class Component extends DCLogic {
         this.setState({ secNav: next });
     });
   }
+  // Library / Tactics: soft snap (CSS) plus a tick as each card passes the section heading.
+  notchOn() { return this.state.tab === 'library' || this.state.tab === 'tactics'; }
+  notchCheck() {
+    if (typeof document === 'undefined' || !document.querySelectorAll) return;
+    if (document.documentElement && document.documentElement.classList) document.documentElement.classList.toggle('sc-snap', this.notchOn());
+    if (!this.notchOn()) { this._notchIdx = undefined; return; }
+    const top = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sc-sticky-top')) || 0;
+    const line = top + 64;
+    let idx = 0;
+    document.querySelectorAll('.sc-lib-card, .sc-tac-card').forEach(el => { if (el.offsetParent !== null && el.getBoundingClientRect().top <= line) idx++; });
+    // No ticks for jumps, tab switches or the first measurement.
+    if (this._notchIdx !== undefined && idx !== this._notchIdx && Date.now() > (this._notchMute || 0) && window.SCTMG_NOTCH) window.SCTMG_NOTCH.tick();
+    this._notchIdx = idx;
+  }
   jumpToSection(i) {
+    this._notchMute = Date.now() + 1200;
     const el = this.sectionEls()[i];
     const go = () => {
       if (!el) return;
@@ -2753,6 +2769,8 @@ class Component extends DCLogic {
     // Keep the section tab current after every render (tab switch, data load, cards added).
     if (typeof setTimeout === 'function' && !this._secPending) this._secPending = setTimeout(() => { this._secPending = null; this.updateSectionNav(false); }, 120);
 
+    // soft card snap on Library / Tactics only
+    if (typeof document !== 'undefined' && document.documentElement && document.documentElement.classList) document.documentElement.classList.toggle('sc-snap', st.ready && (st.tab === 'library' || st.tab === 'tactics'));
     // remember the open tab so reopening the app lands here
     if (st.ready && this._savedTab !== st.tab) { this._savedTab = st.tab; try { localStorage.setItem('sctmg_zerg_tab', st.tab); } catch (e) {} }
 
@@ -2769,7 +2787,7 @@ class Component extends DCLogic {
         bg: active ? 'rgba(147,51,234,0.1)' : 'transparent',
         fg: t.id === 'vs' ? '#f2c14e' : active ? '#c99af7' : '#7c8398',
         tick: active ? '#b06ef7' : 'transparent',
-        onSelect: () => { if (t.id === 'vs') { window.location.href = 'Vs.dc.html'; return; } this.setState({ tab: t.id, editArmy: false, battlePanel: null, secMenu: false, secNav: null }); window.scrollTo(0, 0); setTimeout(() => this.updateSectionNav(false), 60); }
+        onSelect: () => { if (t.id === 'vs') { window.location.href = 'Vs.dc.html'; return; } this._notchMute = Date.now() + 1200; this._notchIdx = undefined; this.setState({ tab: t.id, editArmy: false, battlePanel: null, secMenu: false, secNav: null }); window.scrollTo(0, 0); setTimeout(() => { this.updateSectionNav(false); this.notchCheck(); }, 60); }
       };
     });
 
