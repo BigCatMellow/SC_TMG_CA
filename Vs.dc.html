@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./resume.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#05060a">
+  <link rel="stylesheet" href="./vendor/fonts.css">
+  <link rel="stylesheet" href="./shared-styles.css">
+  <script src="terran-data.js"></script>
+  <script src="zerg-data.js"></script>
+  <script src="protoss-data.js"></script>
+  <script src="wave3-data.js"></script>
+  <script src="model-portraits.js"></script>
+  <script src="portraits/cutout/index.js"></script>
+  <script src="missions-data.js"></script>
+  <script src="mission-scoring.js"></script>
+</helmet>
+
+<sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
+<div class="sc-vs" style="--you:{{ youColor }};--opp:{{ oppColor }}" data-screen-label="VS">
+
+  <!-- ================= SCOUT: enter the opponent's army ================= -->
+  <sc-if value="{{ viewScout }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-vs-scout">
+      <header class="sc-vs-scout-head">
+        <button onClick="{{ closeScout }}" class="sc-vs-back" aria-label="Back to VS">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </button>
+        <div style="flex:1;min-width:0">
+          <div class="sc-vs-k" style="color:var(--opp)">Intel · Opponent army</div>
+          <h1 class="sc-vs-h1">Scout the enemy</h1>
+        </div>
+        <button onClick="{{ clearOpp }}" class="sc-vs-ghost">Clear</button>
+      </header>
+      <div class="sc-vs-scout-grid">
+        <section aria-label="Their faction" class="sc-vs-scout-side">
+          <div class="sc-vs-k">1 · Their faction</div>
+          <div class="sc-vs-facs">
+            <sc-for list="{{ scoutFactions }}" as="f" hint-placeholder-count="3">
+              <button onClick="{{ f.pick }}" class="{{ f.cls }}" style="--c:{{ f.color }}" aria-pressed="{{ f.on }}"><span class="sc-vs-dia" style="background:{{ f.color }}"></span>{{ f.name }}</button>
+            </sc-for>
+          </div>
+          <div class="sc-vs-k">2 · Faction card</div>
+          <div class="sc-vs-pills">
+            <sc-for list="{{ scoutCards }}" as="c" hint-placeholder-count="3">
+              <button onClick="{{ c.pick }}" class="{{ c.cls }}" aria-pressed="{{ c.on }}">{{ c.name }}<small>{{ c.slots }}</small></button>
+            </sc-for>
+          </div>
+          <div class="sc-vs-k">4 · Tactical cards <small>tap to add · ✕ to remove</small></div>
+          <div class="sc-vs-pills sc-vs-pills--wrap">
+            <sc-for list="{{ scoutTacs }}" as="t" hint-placeholder-count="6">
+              <span class="{{ t.cls }}"><button onClick="{{ t.add }}" class="sc-vs-tac-add">{{ t.label }}</button><sc-if value="{{ t.count }}" hint-placeholder-val="{{ false }}"><button onClick="{{ t.remove }}" class="sc-vs-tac-x" aria-label="Remove one {{ t.name }}">✕</button></sc-if></span>
+            </sc-for>
+          </div>
+        </section>
+
+        <section aria-label="Their units" class="sc-vs-scout-units">
+          <div class="sc-vs-k">3 · Units they brought <small>tap a tier to add one</small></div>
+          <div class="sc-vs-tiles">
+            <sc-for list="{{ scoutUnits }}" as="u" hint-placeholder-count="8">
+              <div class="{{ u.cls }}" style="--rc:{{ u.roleColor }}">
+                <sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" alt="" aria-hidden="true" loading="lazy" class="sc-vs-tile-img"></sc-if>
+                <sc-if value="{{ u.count }}" hint-placeholder-val="{{ false }}"><span class="sc-vs-tile-count">×{{ u.count }}</span></sc-if>
+                <div class="sc-vs-tile-body">
+                  <div class="sc-vs-k" style="font-size:9px;color:{{ u.roleColor }}">{{ u.role }}</div>
+                  <div class="sc-vs-tile-name">{{ u.name }}</div>
+                  <div class="sc-vs-tiers">
+                    <sc-for list="{{ u.tiers }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.add }}" disabled="{{ t.off }}" class="sc-vs-tier" aria-label="Add {{ u.name }} {{ t.label }}">{{ t.label }}</button></sc-for>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <section aria-label="Their roster" class="sc-vs-scout-roster">
+          <div class="sc-vs-k" style="color:var(--opp)">Their roster</div>
+          <div class="sc-vs-stats">
+            <div><span class="sc-vs-k">Minerals</span><b style="color:#f2c14e">{{ oppMinerals }}</b></div>
+            <div><span class="sc-vs-k">Supply</span><b>{{ oppSupplyTotal }}</b></div>
+            <div><span class="sc-vs-k">Models</span><b>{{ oppModelsTotal }}</b></div>
+          </div>
+          <sc-if value="{{ oppRosterEmpty }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">No units yet. Pick a tier on any unit to add it.</p></sc-if>
+          <div class="sc-vs-roster-list">
+            <sc-for list="{{ oppRoster }}" as="r" hint-placeholder-count="4">
+              <div class="sc-vs-roster-row" style="--rc:{{ r.roleColor }}">
+                <div style="flex:1;min-width:0"><b>{{ r.name }}</b><small>{{ r.meta }}</small></div>
+                <button onClick="{{ r.remove }}" class="sc-vs-step" aria-label="Remove {{ r.name }}">−</button>
+              </div>
+            </sc-for>
+          </div>
+          <button onClick="{{ closeScout }}" class="sc-vs-go">Deploy to VS →</button>
+        </section>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= VS BOARD ================= -->
+  <sc-if value="{{ viewBoard }}" hint-placeholder-val="{{ true }}">
+    <div class="sc-vs-board">
+      <div class="sc-vs-topbar">
+        <button onClick="{{ goBack }}" class="sc-vs-back" aria-label="Back to your Battle tab">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+        </button>
+        <span class="sc-vs-k" style="flex:1">VS · Battle command</span>
+        <button onClick="{{ openScout }}" class="sc-vs-ghost">Edit their army</button>
+      </div>
+
+      <!-- HUD -->
+      <div class="sc-vs-hud">
+        <section class="sc-vs-cmd sc-vs-cmd--you" aria-label="Your commander">
+          <img src="{{ you.logo }}" alt="" aria-hidden="true" class="sc-vs-cmd-logo">
+          <sc-if value="{{ you.heroImg }}" hint-placeholder-val="{{ false }}"><img src="{{ you.heroImg }}" alt="" aria-hidden="true" class="sc-vs-cmd-hero"></sc-if>
+          <div class="sc-vs-cmd-text">
+            <div class="sc-vs-k" style="color:var(--you)">You · {{ you.factionName }}</div>
+            <div class="sc-vs-cmd-name">{{ you.cardName }}</div>
+            <div class="sc-vs-chips">
+              <span><small>{{ you.resLabel }}</small><b style="color:#b6e64a">{{ you.res }}</b></span>
+              <span><small>On table</small><b>{{ you.supplyOnTable }}<i> / {{ you.pool }}</i></b></span>
+              <span><small>Models</small><b>{{ you.models }}</b></span>
+            </div>
+          </div>
+        </section>
+
+        <section class="sc-vs-score" aria-label="Score">
+          <div class="sc-vs-roundline"><span class="sc-vs-k">Round</span><b>{{ round }}</b><i>{{ roundOf }}</i><span class="sc-vs-dot">·</span><span class="sc-vs-mission">{{ missionName }}</span></div>
+          <div class="sc-vs-scoreline">
+            <div class="sc-vs-steps"><button onClick="{{ vpYouUp }}" class="sc-vs-step sc-vs-step--you" aria-label="Your VP up">+</button><button onClick="{{ vpYouDown }}" class="sc-vs-step" aria-label="Your VP down">−</button></div>
+            <div class="sc-vs-vp sc-vs-vp--you"><b>{{ vpYou }}</b><span class="sc-vs-k">You</span></div>
+            <div class="sc-vs-versus">VS</div>
+            <div class="sc-vs-vp sc-vs-vp--opp"><b>{{ vpFoe }}</b><span class="sc-vs-k">Opponent</span></div>
+            <div class="sc-vs-steps"><button onClick="{{ vpFoeUp }}" class="sc-vs-step sc-vs-step--opp" aria-label="Opponent VP up">+</button><button onClick="{{ vpFoeDown }}" class="sc-vs-step" aria-label="Opponent VP down">−</button></div>
+          </div>
+          <div class="sc-vs-lead" role="img" aria-label="{{ leadText }}"><span class="sc-vs-lead-mid"></span><span class="sc-vs-lead-bar" style="{{ leadBar }}"></span></div>
+          <div class="sc-vs-lead-text"><span>{{ winLeftText }}</span><b>{{ leadText }}</b><span>{{ winRightText }}</span></div>
+        </section>
+
+        <section class="sc-vs-cmd sc-vs-cmd--opp" aria-label="Opponent commander">
+          <img src="{{ opp.logo }}" alt="" aria-hidden="true" class="sc-vs-cmd-logo">
+          <sc-if value="{{ opp.heroImg }}" hint-placeholder-val="{{ false }}"><img src="{{ opp.heroImg }}" alt="" aria-hidden="true" class="sc-vs-cmd-hero"></sc-if>
+          <div class="sc-vs-cmd-text">
+            <div class="sc-vs-k" style="color:var(--opp)">Opponent · {{ opp.factionName }}</div>
+            <div class="sc-vs-cmd-name">{{ opp.cardName }}</div>
+            <div class="sc-vs-chips">
+              <span><small>Models</small><b>{{ opp.models }}</b></span>
+              <span><small>On table</small><b>{{ opp.supplyOnTable }}</b></span>
+              <span><small>Lost</small><b>{{ opp.lostSupply }}<i> sup</i></b></span>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- narrow screens: one column at a time -->
+      <div class="sc-vs-panes" role="tablist" aria-label="Show">
+        <sc-for list="{{ paneTabs }}" as="pt" hint-placeholder-count="3">
+          <button onClick="{{ pt.pick }}" class="{{ pt.cls }}" role="tab" aria-selected="{{ pt.on }}">{{ pt.label }}</button>
+        </sc-for>
+      </div>
+
+      <div class="{{ fieldCls }}">
+        <!-- YOUR FORCES -->
+        <section class="sc-vs-col sc-vs-col--you" aria-label="Your forces">
+          <div class="sc-vs-colhead"><span class="sc-vs-dia" style="background:var(--you)"></span><span class="sc-vs-k" style="color:var(--you)">Your forces</span><span class="sc-vs-rule"></span><span class="sc-vs-muted">{{ you.onTableCount }} on table · {{ you.reserveCount }} reserve</span></div>
+          <sc-if value="{{ you.empty }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">No army yet: build one in the Library.</p></sc-if>
+          <sc-for list="{{ you.units }}" as="u" hint-placeholder-count="5">
+            <div class="{{ u.cls }}" style="--rc:{{ u.roleColor }}">
+              <div class="sc-vs-unit-art"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" alt="" aria-hidden="true" loading="lazy"></sc-if></div>
+              <div class="sc-vs-unit-main">
+                <div class="sc-vs-unit-name"><b>{{ u.name }}</b><span class="sc-vs-k" style="color:{{ u.roleColor }}">{{ u.role }} · {{ u.tier }}</span></div>
+                <div class="sc-vs-pips">
+                  <sc-for list="{{ u.pips }}" as="p" hint-placeholder-count="6"><button onClick="{{ p.tap }}" class="{{ p.cls }}" aria-label="{{ p.label }}"></button></sc-for>
+                </div>
+                <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
+                  <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span><span class="sc-vs-hp-btns"><button onClick="{{ u.dmgDown }}" class="sc-vs-mini" aria-label="Heal 1">−</button><button onClick="{{ u.dmgUp }}" class="sc-vs-mini" aria-label="1 damage">+</button></span></div>
+                </sc-if>
+              </div>
+              <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.dead }}" class="{{ u.statusCls }}" title="Tap to switch between reserve and table">{{ u.status }}</button>
+              <div class="sc-vs-sup"><b>{{ u.supply }}</b><small>sup</small></div>
+              <div class="sc-vs-steps-row"><button onClick="{{ u.lose }}" disabled="{{ u.dead }}" class="sc-vs-step" aria-label="Remove a {{ u.name }} model">−</button><button onClick="{{ u.heal }}" disabled="{{ u.full }}" class="sc-vs-step" aria-label="Restore a {{ u.name }} model">+</button></div>
+            </div>
+          </sc-for>
+          <div class="sc-vs-cards">
+            <sc-for list="{{ you.cards }}" as="c" hint-placeholder-count="3">
+              <button onClick="{{ c.tap }}" class="{{ c.cls }}" aria-pressed="{{ c.spent }}"><small>{{ c.kind }}</small><b>{{ c.name }}</b><i>{{ c.state }}</i></button>
+            </sc-for>
+          </div>
+        </section>
+
+        <!-- CENTRE -->
+        <section class="sc-vs-col sc-vs-col--mid" aria-label="Battlefield">
+          <div class="sc-vs-phases">
+            <sc-for list="{{ phases }}" as="ph" hint-placeholder-count="4">
+              <button onClick="{{ ph.pick }}" class="{{ ph.cls }}" style="--pc:{{ ph.color }}" aria-pressed="{{ ph.on }}">{{ ph.name }}</button>
+            </sc-for>
+          </div>
+          <button onClick="{{ openEndRound }}" class="sc-vs-endround">{{ endRoundLabel }}</button>
+          <div class="sc-vs-panel">
+            <div class="sc-vs-panel-head"><span class="sc-vs-k">Mission markers</span><span class="sc-vs-muted">tap: nobody → you → them</span></div>
+            <sc-if value="{{ noMarkers }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">Pick a mission in the War Room to track markers.</p></sc-if>
+            <div class="sc-vs-markers">
+              <sc-for list="{{ markers }}" as="m" hint-placeholder-count="5">
+                <div class="sc-vs-marker">
+                  <button onClick="{{ m.cycle }}" class="{{ m.cls }}" aria-label="{{ m.aria }}">M{{ m.num }}</button>
+                  <span class="sc-vs-k" style="font-size:9px;color:{{ m.color }}">{{ m.holder }}</span>
+                  <sc-if value="{{ m.canActivate }}" hint-placeholder-val="{{ false }}"><button onClick="{{ m.activate }}" class="sc-vs-link">{{ m.activateLabel }}</button></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div class="sc-vs-panel">
+            <div class="sc-vs-panel-head"><span class="sc-vs-k">Scoreline</span><span class="sc-vs-muted">points scored each round</span></div>
+            <div class="sc-vs-table" style="grid-template-columns:72px repeat({{ roundCols }},minmax(0,1fr))">
+              <span></span>
+              <sc-for list="{{ rounds }}" as="r" hint-placeholder-count="5"><span class="{{ r.headCls }}">R{{ r.n }}</span></sc-for>
+              <span class="sc-vs-k" style="color:var(--you);text-align:left">You</span>
+              <sc-for list="{{ rounds }}" as="r" hint-placeholder-count="5"><b class="{{ r.cellCls }}">{{ r.you }}</b></sc-for>
+              <span class="sc-vs-k" style="color:var(--opp);text-align:left">Them</span>
+              <sc-for list="{{ rounds }}" as="r" hint-placeholder-count="5"><b class="{{ r.cellCls }}">{{ r.foe }}</b></sc-for>
+            </div>
+          </div>
+        </section>
+
+        <!-- OPPONENT FORCES -->
+        <section class="sc-vs-col sc-vs-col--opp" aria-label="Opponent forces">
+          <div class="sc-vs-colhead"><span class="sc-vs-muted">{{ opp.onTableCount }} on table · {{ opp.reserveCount }} reserve</span><span class="sc-vs-rule"></span><span class="sc-vs-k" style="color:var(--opp)">Opponent forces</span><span class="sc-vs-dia" style="background:var(--opp)"></span></div>
+          <sc-if value="{{ opp.empty }}" hint-placeholder-val="{{ false }}">
+            <div class="sc-vs-empty"><p>Add what your opponent brought to track both sides.</p><button onClick="{{ openScout }}" class="sc-vs-go">Scout the enemy →</button></div>
+          </sc-if>
+          <sc-for list="{{ opp.units }}" as="u" hint-placeholder-count="5">
+            <div class="{{ u.cls }}" style="--rc:{{ u.roleColor }}">
+              <div class="sc-vs-unit-art"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" alt="" aria-hidden="true" loading="lazy"></sc-if></div>
+              <div class="sc-vs-unit-main">
+                <div class="sc-vs-unit-name"><b>{{ u.name }}</b><span class="sc-vs-k" style="color:{{ u.roleColor }}">{{ u.role }} · {{ u.tier }}</span></div>
+                <div class="sc-vs-pips">
+                  <sc-for list="{{ u.pips }}" as="p" hint-placeholder-count="6"><button onClick="{{ p.tap }}" class="{{ p.cls }}" aria-label="{{ p.label }}"></button></sc-for>
+                </div>
+                <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
+                  <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span><span class="sc-vs-hp-btns"><button onClick="{{ u.dmgDown }}" class="sc-vs-mini" aria-label="Heal 1">−</button><button onClick="{{ u.dmgUp }}" class="sc-vs-mini" aria-label="1 damage">+</button></span></div>
+                </sc-if>
+              </div>
+              <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.dead }}" class="{{ u.statusCls }}" title="Tap to switch between reserve and table">{{ u.status }}</button>
+              <div class="sc-vs-sup"><b>{{ u.supply }}</b><small>sup</small></div>
+              <div class="sc-vs-steps-row"><button onClick="{{ u.lose }}" disabled="{{ u.dead }}" class="sc-vs-step" aria-label="Remove a {{ u.name }} model">−</button><button onClick="{{ u.heal }}" disabled="{{ u.full }}" class="sc-vs-step" aria-label="Restore a {{ u.name }} model">+</button></div>
+            </div>
+          </sc-for>
+          <div class="sc-vs-cards">
+            <sc-for list="{{ opp.cards }}" as="c" hint-placeholder-count="3">
+              <button onClick="{{ c.tap }}" class="{{ c.cls }}" aria-pressed="{{ c.spent }}"><small>{{ c.kind }}</small><b>{{ c.name }}</b><i>{{ c.state }}</i></button>
+            </sc-for>
+          </div>
+        </section>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= END ROUND ================= -->
+  <sc-if value="{{ sheetEnd }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-vs-scrim" onClick="{{ closeSheet }}"></div>
+    <div class="sc-vs-sheet" role="dialog" aria-modal="true" aria-label="End round">
+      <div class="sc-vs-k" style="color:#f2c14e">{{ endTitle }}</div>
+      <h2 class="sc-vs-h2">Round {{ round }} score</h2>
+      <sc-if value="{{ endHasMission }}" hint-placeholder-val="{{ false }}">
+        <p class="sc-vs-muted">{{ endNote }}</p>
+        <div class="sc-vs-end-cols">
+          <div>
+            <div class="sc-vs-k" style="color:var(--you)">You</div>
+            <sc-for list="{{ endYou }}" as="l" hint-placeholder-count="2"><div class="sc-vs-end-line"><span>{{ l.label }}</span><b>+{{ l.vp }}</b></div></sc-for>
+            <div class="sc-vs-end-adj"><span>Adjust</span><button onClick="{{ adjYouDown }}" class="sc-vs-step" aria-label="Lower your points">−</button><b>{{ endYouTotal }}</b><button onClick="{{ adjYouUp }}" class="sc-vs-step" aria-label="Raise your points">+</button></div>
+          </div>
+          <div>
+            <div class="sc-vs-k" style="color:var(--opp)">Opponent</div>
+            <sc-for list="{{ endFoe }}" as="l" hint-placeholder-count="2"><div class="sc-vs-end-line"><span>{{ l.label }}</span><b>+{{ l.vp }}</b></div></sc-for>
+            <div class="sc-vs-end-adj"><span>Adjust</span><button onClick="{{ adjFoeDown }}" class="sc-vs-step" aria-label="Lower their points">−</button><b>{{ endFoeTotal }}</b><button onClick="{{ adjFoeUp }}" class="sc-vs-step" aria-label="Raise their points">+</button></div>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ endNoMission }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">No mission picked, so score with the VP buttons. Ending the round readies every card on both sides.</p></sc-if>
+      <ul class="sc-vs-effects">
+        <sc-for list="{{ endEffects }}" as="e" hint-placeholder-count="2"><li>{{ e }}</li></sc-for>
+      </ul>
+      <button onClick="{{ applyEnd }}" class="sc-vs-go">{{ endConfirm }}</button>
+      <button onClick="{{ closeSheet }}" class="sc-vs-ghost" style="width:100%;margin-top:8px">Cancel</button>
+    </div>
+  </sc-if>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{}">
+const VS_FACTIONS = {
+  zerg: { key: 'SCTMG_ZERG', name: 'Zerg', page: 'Zerg Army.dc.html', color: '#b06ef7', logo: 'uploads/zerglogo.png', res: 'Biomass' },
+  terran: { key: 'SCTMG_TERRAN', name: 'Terran', page: 'Terran Army.dc.html', color: '#4f8df9', logo: 'uploads/terranlogo.png', res: 'Command pts' },
+  protoss: { key: 'SCTMG_PROTOSS', name: 'Protoss', page: 'Protoss Army.dc.html', color: '#f2c860', logo: 'uploads/protosslogo.png', res: 'Psionic energy' }
+};
+const ROLE_COLOR = { Hero: '#f2a33c', Elite: '#b06ef7', Core: '#4f8df9', Support: '#35c76b', Other: '#8a91a5' };
+const ROLE_ORDER = ['Hero', 'Elite', 'Core', 'Support', 'Other'];
+const OPP_KEY = 'sctmg_opp_v1';
+
+class Component extends DCLogic {
+  state = {
+    ready: false, view: 'board', sheet: null, pane: 'you',
+    yourFaction: 'zerg', yours: null, opp: null, play: {}, adjYou: 0, adjFoe: 0
+  };
+
+  componentDidMount() {
+    this._poll = setInterval(() => {
+      if (!(window.SCTMG_ZERG && window.SCTMG_TERRAN && window.SCTMG_PROTOSS && window.SCTMG_MISSIONS && window.SCTMG_MAKE_PORTRAIT)) return;
+      clearInterval(this._poll);
+      const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || 'null') || d; } catch (e) { return d; } };
+      const yourFaction = VS_FACTIONS[localStorage.getItem('sctmg_last_faction')] ? localStorage.getItem('sctmg_last_faction') : 'zerg';
+      const yours = read('sctmg_' + yourFaction + '_v5', { army: [], tactical: [], tacticalTapped: [], factionTappedId: null, battleSupplyAvailable: 4 });
+      const opp = read(OPP_KEY, null) || { faction: yourFaction === 'terran' ? 'zerg' : 'terran', factionId: null, army: [], tactical: [], tapped: [] };
+      const play = read('sctmg_play', {});
+      const view = (opp.army || []).length ? 'board' : 'scout';
+      this.setState({ ready: true, yourFaction, yours, opp, play, view });
+    }, 40);
+  }
+
+  // ---------- data ----------
+  D(f) { return window[VS_FACTIONS[f].key]; }
+  card(f, id) { const D = this.D(f); return D.FACTION_CARDS.find(c => c.id === id) || D.FACTION_CARDS[0]; }
+  models(unit, tierIdx) {
+    const t = unit.tiers[tierIdx] || unit.tiers.find(x => x.cost) || unit.tiers[0];
+    const m = String(t.models || '').match(/(\d+)(?:-(\d+))?/);
+    return m ? parseInt(m[2] || m[1], 10) : 0;
+  }
+  minModels(unit, i) { const m = String(unit.tiers[i].models || '').match(/(\d+)/); return m ? parseInt(m[1], 10) : 0; }
+  effTier(unit, tierIdx, remaining) {
+    if (remaining <= 0) return -1;
+    for (let i = tierIdx; i < unit.tiers.length; i++) if (remaining >= this.minModels(unit, i)) return i;
+    return unit.tiers.length - 1;
+  }
+  supplyNow(unit, e) {
+    const idx = this.effTier(unit, e.tierIdx, this.models(unit, e.tierIdx) - (e.modelsLost || 0));
+    return idx >= 0 ? (unit.tiers[idx].supply || 0) : 0;
+  }
+  lostSupply(f, army) {
+    const D = this.D(f);
+    return (army || []).reduce((t, e) => {
+      const u = D.UNITS.find(x => x.id === e.unitId); if (!u) return t;
+      const full = (u.tiers[e.tierIdx] || {}).supply || 0;
+      return t + Math.max(0, full - this.supplyNow(u, e));
+    }, 0);
+  }
+  mission() {
+    const M = window.SCTMG_MISSIONS, id = this.state.play.missionId;
+    return (M && id && M.MISSIONS.find(m => m.id === id)) || null;
+  }
+  map() {
+    const M = window.SCTMG_MISSIONS, id = this.state.play.mapId;
+    return (M && id && M.MAPS.find(m => m.id === id)) || null;
+  }
+  poolFor(round) {
+    const m = this.mission(), y = this.state.yours || {};
+    if (!m) return y.battleSupplyAvailable || 0;
+    if (round >= m.gameLength) {
+      const D = this.D(this.state.yourFaction);
+      const total = (y.army || []).reduce((t, e) => { const u = D.UNITS.find(x => x.id === e.unitId); return t + (u ? this.supplyNow(u, e) : 0); }, 0);
+      return Math.max(y.battleSupplyAvailable || 0, total);
+    }
+    return m.supply + m.perRound * (round - 1);
+  }
+
+  // ---------- saving ----------
+  saveYours(next) {
+    this.setState({ yours: next });
+    try {
+      const k = 'sctmg_' + this.state.yourFaction + '_v5';
+      const prev = JSON.parse(localStorage.getItem(k) || 'null') || {};
+      localStorage.setItem(k, JSON.stringify({ ...prev, ...next }));
+    } catch (e) {}
+  }
+  saveOpp(next) {
+    this.setState({ opp: next });
+    try { localStorage.setItem(OPP_KEY, JSON.stringify(next)); } catch (e) {}
+  }
+  savePlay(patch) {
+    const play = { ...this.state.play, ...patch };
+    this.setState({ play });
+    try {
+      const prev = JSON.parse(localStorage.getItem('sctmg_play') || 'null') || {};
+      localStorage.setItem('sctmg_play', JSON.stringify({ ...prev, ...patch }));
+    } catch (e) {}
+  }
+  editArmy(side, key, fn) {
+    const src = side === 'you' ? this.state.yours : this.state.opp;
+    const next = { ...src, army: src.army.map(e => e.key === key ? fn(e) : e) };
+    side === 'you' ? this.saveYours(next) : this.saveOpp(next);
+  }
+
+  // ---------- back gesture closes Scout / End round first ----------
+  syncHistory(open) {
+    if (typeof window === 'undefined' || !window.history || !window.history.pushState) return;
+    if (!this._onPop) {
+      this._onPop = () => {
+        if (this._skipPop) { this._skipPop = false; return; }
+        if (this._histOpen) { this._histOpen = false; this.setState(s => s.sheet ? { sheet: null } : { view: 'board' }); }
+      };
+      window.addEventListener('popstate', this._onPop);
+    }
+    if (open && !this._histOpen) { this._histOpen = true; window.history.scrollRestoration = 'manual'; window.history.pushState({ scOverlay: true }, ''); }
+    else if (!open && this._histOpen) { this._histOpen = false; this._skipPop = true; window.history.back(); }
+  }
+
+  // ---------- one unit row (either side) ----------
+  unitRow(side, f, e) {
+    const D = this.D(f);
+    const u = D.UNITS.find(x => x.id === e.unitId);
+    if (!u) return null;
+    const start = this.models(u, e.tierIdx);
+    const lost = Math.min(start, e.modelsLost || 0);
+    const alive = start - lost;
+    const dead = alive <= 0;
+    const hp = Number(u.stats && u.stats.hp) || 1, shd = Number(u.stats && u.stats.shield) || 0;
+    const pool = hp + (lost === 0 ? shd : 0);
+    const dmg = e.dmg || 0;
+    const art = window.SCTMG_MAKE_PORTRAIT(f, u.id, {}) || {};
+    const setLost = n => this.editArmy(side, e.key, x => ({ ...x, modelsLost: Math.max(0, Math.min(start, n)), dmg: 0 }));
+    const setDmg = d => this.editArmy(side, e.key, x => {
+      let l = x.modelsLost || 0, v = Math.max(0, (x.dmg || 0) + d);
+      const p = () => hp + (l === 0 ? shd : 0);
+      while (v >= p() && l < start) { v -= p(); l++; }
+      return { ...x, dmg: l >= start ? 0 : v, modelsLost: l };
+    });
+    const status = dead ? 'Destroyed' : (e.deployed ? 'On table' : 'Reserve');
+    return {
+      key: e.key, name: u.name, role: u.role, roleColor: ROLE_COLOR[u.role] || '#8a91a5', roleRank: ROLE_ORDER.indexOf(u.role),
+      tier: (u.tiers[e.tierIdx] || {}).tier || '', img: art.cutout || art.portrait || '',
+      cls: 'sc-vs-unit sc-vs-unit--' + side + (dead ? ' sc-vs-unit--dead' : ''),
+      status, dead, full: lost === 0, deployed: !!e.deployed && !dead,
+      statusCls: 'sc-vs-status' + (dead ? ' sc-vs-status--dead' : e.deployed ? ' sc-vs-status--table' : ''),
+      supply: this.supplyNow(u, e), alive,
+      pips: Array.from({ length: start }, (_, i) => ({
+        cls: 'sc-vs-pip' + (i >= alive ? ' sc-vs-pip--lost' : ''),
+        // Tapping any live model removes one; tapping a lost one brings one back.
+        label: u.name + ' model ' + (i + 1) + (i >= alive ? ', lost: tap to restore one' : ', alive: tap to remove one'),
+        tap: () => setLost(i >= alive ? lost - 1 : lost + 1)
+      })),
+      tracksDamage: !dead && (hp > 1 || shd > 0) && start === 1,
+      hpBar: 'width:' + Math.round(100 * Math.max(0, pool - dmg) / pool) + '%',
+      hpText: (pool - dmg) + ' / ' + pool + (lost === 0 && shd ? ' HP+SHD' : ' HP'),
+      dmgUp: () => setDmg(1), dmgDown: () => setDmg(-1),
+      lose: () => setLost(lost + 1), heal: () => setLost(lost - 1),
+      toggleDeploy: () => this.editArmy(side, e.key, x => ({ ...x, deployed: !x.deployed }))
+    };
+  }
+  side(side) {
+    const st = this.state;
+    const f = side === 'you' ? st.yourFaction : st.opp.faction;
+    const src = side === 'you' ? st.yours : st.opp;
+    const meta = VS_FACTIONS[f];
+    const fc = this.card(f, side === 'you' ? src.factionId : src.factionId);
+    const units = (src.army || []).map(e => this.unitRow(side, f, e)).filter(Boolean)
+      .sort((a, b) => (a.dead - b.dead) || (b.deployed - a.deployed) || (a.roleRank - b.roleRank));
+    const D = this.D(f);
+    const hero = (src.army || []).map(e => D.UNITS.find(u => u.id === e.unitId)).find(u => u && u.role === 'Hero');
+    const heroArt = hero ? (window.SCTMG_MAKE_PORTRAIT(f, hero.id, {}) || {}) : {};
+    // cards: faction card + tactical copies; tapped keys use "id#copy"
+    const counts = {};
+    const tapped = side === 'you' ? (src.tacticalTapped || []) : (src.tapped || []);
+    const factionTapped = side === 'you' ? src.factionTappedId === fc.id : tapped.includes('faction');
+    const toggle = (key) => {
+      if (side === 'you') {
+        if (key === 'faction') this.saveYours({ ...src, factionTappedId: factionTapped ? null : fc.id });
+        else this.saveYours({ ...src, tacticalTapped: tapped.includes(key) ? tapped.filter(k => k !== key) : [...tapped, key] });
+      } else this.saveOpp({ ...src, tapped: tapped.includes(key) ? tapped.filter(k => k !== key) : [...tapped, key] });
+    };
+    const cardView = (key, kind, name, spent) => ({ key, kind, name, spent,
+      cls: 'sc-vs-card sc-vs-card--' + side + (spent ? ' sc-vs-card--spent' : ''),
+      state: spent ? 'Exhausted · tap to ready' : 'Ready', tap: () => toggle(key) });
+    const cards = [cardView('faction', 'Faction', fc.name, factionTapped)].concat((src.tactical || []).map(id => {
+      const n = counts[id] || 0; counts[id] = n + 1;
+      const t = D.TACTICAL_CARDS.find(x => x.id === id);
+      const key = id + '#' + n;
+      return t ? cardView(key, 'Tactical', t.name + (n ? ' ' + (n + 1) : ''), tapped.includes(key)) : null;
+    }).filter(Boolean));
+    const live = units.filter(u => !u.dead);
+    const ready = 1 + (src.tactical || []).length - tapped.length - (side === 'you' && factionTapped ? 1 : 0);
+    return {
+      factionName: meta.name, cardName: fc.name, logo: meta.logo, heroImg: heroArt.cutout || heroArt.portrait || '',
+      units, cards, empty: units.length === 0,
+      models: live.reduce((t, u) => t + u.alive, 0),
+      supplyOnTable: live.filter(u => u.deployed).reduce((t, u) => t + u.supply, 0),
+      onTableCount: live.filter(u => u.deployed).length, reserveCount: live.filter(u => !u.deployed).length,
+      lostSupply: this.lostSupply(f, src.army), resLabel: meta.res, res: fc.resource || '', pool: this.poolFor(st.play.round || 1),
+      readyCards: Math.max(0, ready)
+    };
+  }
+
+  // ---------- markers ----------
+  markerList() {
+    const m = this.mission(), S = window.SCTMG_SCORE;
+    if (!m || !S) return [];
+    const r = S.rules(m), saved = this.state.play.markers || {};
+    return S.markerNums(this.map(), m.type).map(num => {
+      const p = saved[num] || {};
+      return { num, ctrl: p.ctrl || 'neutral', prevCtrl: p.prevCtrl || p.ctrl || 'neutral', active: p.active != null ? p.active : !r.tracksActivation,
+        activatedRound: p.activatedRound || null, removed: !!p.removed, colour: p.colour || 'neutral' };
+    });
+  }
+  setMarker(num, patch) {
+    const saved = { ...(this.state.play.markers || {}) };
+    saved[num] = { ...(saved[num] || {}), ...patch };
+    this.savePlay({ markers: saved });
+  }
+
+  // ---------- end round ----------
+  endSuggestion() {
+    const st = this.state, m = this.mission(), S = window.SCTMG_SCORE;
+    const round = st.play.round || 1;
+    const enemyDestroyed = Math.max(0, this.lostSupply(st.opp.faction, st.opp.army) - (st.play.foeLostAtStart || 0));
+    const ownLost = Math.max(0, this.lostSupply(st.yourFaction, st.yours.army) - (st.play.ownLostAtStart || 0));
+    if (!m || !S) return { you: [], foe: [], youTotal: 0, foeTotal: 0, removed: [], enemyDestroyed, ownLost };
+    const res = S.suggest({ mission: m, round, markers: this.markerList(), enemyDestroyed, ownLost, quartersYou: 0, quartersFoe: 0, gathersYou: 0, gathersFoe: 0 });
+    return { ...res, enemyDestroyed, ownLost };
+  }
+  applyEnd() {
+    const st = this.state, m = this.mission();
+    const round = st.play.round || 1;
+    const last = !!(m && round >= m.gameLength);
+    const sug = this.endSuggestion();
+    const addYou = m ? Math.max(0, sug.youTotal + st.adjYou) : 0;
+    const addFoe = m ? Math.max(0, sug.foeTotal + st.adjFoe) : 0;
+    const markers = {};
+    this.markerList().forEach(x => { markers[x.num] = { ctrl: x.ctrl, prevCtrl: x.ctrl, active: x.active, activatedRound: x.activatedRound, colour: x.colour,
+      removed: x.removed || (sug.removed || []).includes(x.num) }; });
+    const rounds = { ...(st.play.rounds || {}) };
+    if (m) rounds[round] = { you: addYou, foe: addFoe };
+    this.savePlay({
+      vpYou: (st.play.vpYou || 0) + addYou, vpFoe: (st.play.vpFoe || 0) + addFoe, markers, rounds,
+      round: last ? round : round + 1, phase: 0,
+      ownLostAtStart: this.lostSupply(st.yourFaction, st.yours.army), foeLostAtStart: this.lostSupply(st.opp.faction, st.opp.army)
+    });
+    if (!last) {
+      this.saveYours({ ...this.state.yours, tacticalTapped: [], factionTappedId: null, battleSupplyAvailable: this.poolFor(round + 1) });
+      this.saveOpp({ ...this.state.opp, tapped: [] });
+    }
+    this.setState({ sheet: null, adjYou: 0, adjFoe: 0 });
+  }
+
+  // ---------- scout ----------
+  scoutVals() {
+    const st = this.state, opp = st.opp, f = opp.faction, D = this.D(f);
+    const fc = this.card(f, opp.factionId);
+    const roster = (opp.army || []).map(e => {
+      const u = D.UNITS.find(x => x.id === e.unitId); if (!u) return null;
+      const t = u.tiers[e.tierIdx] || {};
+      return { name: u.name, roleColor: ROLE_COLOR[u.role], cost: t.cost || 0, supply: t.supply || 0, models: this.models(u, e.tierIdx),
+        meta: t.tier + ' · ' + this.models(u, e.tierIdx) + ' models · ' + (t.supply || 0) + ' sup · ' + (t.cost || 0) + 'm',
+        remove: () => this.saveOpp({ ...opp, army: opp.army.filter(x => x.key !== e.key) }) };
+    }).filter(Boolean);
+    const addUnit = (u, i) => this.saveOpp({ ...opp, army: [...(opp.army || []), { key: 'o' + Date.now() + Math.floor(Math.random() * 1000), unitId: u.id, tierIdx: i, modelsLost: 0, deployed: false, dmg: 0 }] });
+    const units = D.UNITS.filter(u => u.tiers.some(t => t.cost > 0) && (!u.factionTag || u.factionTag === fc.name))
+      .sort((a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role))
+      .map(u => {
+        const count = (opp.army || []).filter(e => e.unitId === u.id).length;
+        const art = window.SCTMG_MAKE_PORTRAIT(f, u.id, {}) || {};
+        return { name: u.name, role: u.role, roleColor: ROLE_COLOR[u.role], count, img: art.cutout || '',
+          cls: 'sc-vs-tile' + (count ? ' sc-vs-tile--in' : ''),
+          tiers: ['T1', 'T2', 'T3'].map(label => { const i = u.tiers.findIndex(t => t.tier === label && t.cost > 0);
+            return { label, off: i < 0, add: () => { if (i >= 0) addUnit(u, i); } }; }) };
+      });
+    const tacCounts = {}; (opp.tactical || []).forEach(id => { tacCounts[id] = (tacCounts[id] || 0) + 1; });
+    return {
+      scoutFactions: Object.entries(VS_FACTIONS).map(([id, x]) => ({ name: x.name, color: x.color, on: id === f,
+        cls: 'sc-vs-fac' + (id === f ? ' sc-vs-fac--on' : ''),
+        pick: () => { if (id !== f) this.saveOpp({ faction: id, factionId: null, army: [], tactical: [], tapped: [] }); } })),
+      scoutCards: D.FACTION_CARDS.map(c => ({ name: c.name, on: c.id === fc.id,
+        slots: Object.entries(c.slots || {}).map(([k, v]) => v + ' ' + k).join(' · '),
+        cls: 'sc-vs-pill' + (c.id === fc.id ? ' sc-vs-pill--on' : ''), pick: () => this.saveOpp({ ...opp, factionId: c.id }) })),
+      scoutTacs: D.TACTICAL_CARDS.filter(t => !t.factionTag || t.factionTag === fc.name).map(t => ({ name: t.name, count: tacCounts[t.id] || 0,
+        label: t.name + (tacCounts[t.id] ? ' ×' + tacCounts[t.id] : ''),
+        cls: 'sc-vs-tac' + (tacCounts[t.id] ? ' sc-vs-tac--on' : ''),
+        add: () => this.saveOpp({ ...opp, tactical: [...(opp.tactical || []), t.id] }),
+        remove: () => { const i = opp.tactical.lastIndexOf(t.id); if (i >= 0) this.saveOpp({ ...opp, tactical: opp.tactical.filter((_, j) => j !== i), tapped: [] }); } })),
+      scoutUnits: units, oppRoster: roster, oppRosterEmpty: roster.length === 0,
+      oppMinerals: roster.reduce((t, r) => t + r.cost, 0), oppSupplyTotal: roster.reduce((t, r) => t + r.supply, 0),
+      oppModelsTotal: roster.reduce((t, r) => t + r.models, 0)
+    };
+  }
+
+  renderVals() {
+    const st = this.state;
+    if (!st.ready) return { ready: false };
+    this.syncHistory(st.view === 'scout' || !!st.sheet);
+    const m = this.mission();
+    const round = st.play.round || 1;
+    const you = this.side('you'), opp = this.side('opp');
+    const vpYou = st.play.vpYou || 0, vpFoe = st.play.vpFoe || 0;
+    const lead = vpYou - vpFoe;
+    const win = m ? (window.SCTMG_SCORE.rules(m).earlyWinLead || 0) : 0;
+    const span = win || 12;
+    const pct = Math.min(50, Math.abs(lead) / span * 50);
+    const markers = this.markerList().map(x => {
+      const c = x.removed ? { holder: 'Removed', color: '#5b6275' } : x.ctrl === 'you' ? { holder: 'You', color: 'var(--you)' } : x.ctrl === 'them' ? { holder: 'Them', color: 'var(--opp)' } : { holder: x.active ? 'Nobody' : 'Inactive', color: '#8a91a5' };
+      const r = window.SCTMG_SCORE.rules(m);
+      return { num: x.num, ...c,
+        cls: 'sc-vs-mk sc-vs-mk--' + (x.removed ? 'gone' : x.ctrl) + (x.active ? '' : ' sc-vs-mk--off'),
+        aria: 'Marker ' + x.num + ': ' + c.holder + '. Tap to change who holds it',
+        cycle: () => { if (x.removed) return; this.setMarker(x.num, { ctrl: x.ctrl === 'neutral' ? 'you' : x.ctrl === 'you' ? 'them' : 'neutral' }); },
+        canActivate: !!r.tracksActivation && !x.removed,
+        activateLabel: x.active ? 'Active R' + (x.activatedRound || round) : 'Activate',
+        activate: () => this.setMarker(x.num, x.active ? { active: false, activatedRound: null } : { active: true, activatedRound: round })
+      };
+    });
+    const gameLength = m ? m.gameLength : Math.max(5, round);
+    const rounds = Array.from({ length: gameLength }, (_, i) => {
+      const n = i + 1, rec = (st.play.rounds || {})[n];
+      return { n, you: rec ? rec.you : '–', foe: rec ? rec.foe : '–',
+        headCls: 'sc-vs-k sc-vs-th' + (n === round ? ' sc-vs-th--now' : ''), cellCls: 'sc-vs-td' + (n === round ? ' sc-vs-td--now' : '') };
+    });
+    const sug = st.sheet === 'end' ? this.endSuggestion() : null;
+    const last = !!(m && round >= m.gameLength);
+    const paneDefs = [['you', 'Your forces'], ['mid', 'Battlefield'], ['opp', 'Opponent']];
+    const bump = (k, d) => () => this.savePlay({ [k]: Math.max(0, (st.play[k] || 0) + d) });
+    return {
+      ready: true, youColor: VS_FACTIONS[st.yourFaction].color, oppColor: VS_FACTIONS[st.opp.faction].color,
+      viewScout: st.view === 'scout', viewBoard: st.view !== 'scout',
+      ...(st.view === 'scout' ? this.scoutVals() : {}),
+      you, opp, round, roundOf: m ? '/ ' + m.gameLength : '', missionName: m ? m.name : 'No mission',
+      vpYou, vpFoe,
+      vpYouUp: bump('vpYou', 1), vpYouDown: bump('vpYou', -1), vpFoeUp: bump('vpFoe', 1), vpFoeDown: bump('vpFoe', -1),
+      leadText: lead === 0 ? 'Level' : lead > 0 ? 'You lead by ' + lead : 'They lead by ' + (-lead),
+      leadBar: lead >= 0 ? 'right:50%;width:' + pct + '%;background:linear-gradient(270deg,var(--you),transparent)' : 'left:50%;width:' + pct + '%;background:linear-gradient(90deg,var(--opp),transparent)',
+      winLeftText: win ? 'You win at +' + win : '', winRightText: win ? 'They win at +' + win : '',
+      markers, noMarkers: markers.length === 0, rounds, roundCols: rounds.length,
+      phases: [['Movement', '#4f8df9'], ['Assault', '#f9822f'], ['Combat', '#f04a4a'], ['Scoring', '#35c76b']].map(([name, color], i) => ({
+        name, color, on: (st.play.phase || 0) === i, cls: 'sc-vs-phase' + ((st.play.phase || 0) === i ? ' sc-vs-phase--on' : ''),
+        pick: () => this.savePlay({ phase: i }) })),
+      endRoundLabel: last ? 'Final round · score it' : 'End round ' + round + ' →',
+      openEndRound: () => this.setState({ sheet: 'end', adjYou: 0, adjFoe: 0 }),
+      sheetEnd: st.sheet === 'end', closeSheet: () => this.setState({ sheet: null }),
+      endTitle: last ? 'Final round' : 'End round',
+      endHasMission: !!m, endNoMission: !m,
+      endNote: sug ? 'Auto-filled from the markers and the supply each side lost this round (you lost ' + sug.ownLost + ', they lost ' + sug.enemyDestroyed + '). Adjust if the table says otherwise.' : '',
+      endYou: sug ? sug.you : [], endFoe: sug ? sug.foe : [],
+      endYouTotal: sug ? '+' + Math.max(0, sug.youTotal + st.adjYou) : '', endFoeTotal: sug ? '+' + Math.max(0, sug.foeTotal + st.adjFoe) : '',
+      adjYouUp: () => this.setState(s => ({ adjYou: s.adjYou + 1 })), adjYouDown: () => this.setState(s => ({ adjYou: s.adjYou - 1 })),
+      adjFoeUp: () => this.setState(s => ({ adjFoe: s.adjFoe + 1 })), adjFoeDown: () => this.setState(s => ({ adjFoe: s.adjFoe - 1 })),
+      endEffects: last ? ['The score is saved. Start a new game from the round tracker.'] : ['Ready every exhausted card on both sides', 'Your supply pool becomes ' + this.poolFor(round + 1), 'Round ' + (round + 1) + ' begins'],
+      endConfirm: last ? 'Save final score' : (m ? 'Apply score · start round ' + (round + 1) : 'Start round ' + (round + 1)),
+      applyEnd: () => this.applyEnd(),
+      paneTabs: paneDefs.map(([id, label]) => ({ label, on: st.pane === id, cls: 'sc-vs-pane' + (st.pane === id ? ' sc-vs-pane--on' : ''), pick: () => this.setState({ pane: id }) })),
+      fieldCls: 'sc-vs-field sc-vs-field--' + st.pane,
+      openScout: () => this.setState({ view: 'scout' }), closeScout: () => this.setState({ view: 'board' }),
+      clearOpp: () => this.saveOpp({ ...st.opp, army: [], tactical: [], tapped: [] }),
+      goBack: () => {
+        const page = VS_FACTIONS[st.yourFaction].page;
+        if (document.referrer && document.referrer.indexOf('Army.dc.html') >= 0 && window.history.length > 1) window.history.back();
+        else window.location.href = page;
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>

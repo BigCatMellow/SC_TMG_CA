@@ -3,6 +3,9 @@
  * If the last screen used was another page, jump straight back to it, then restore
  * that page's scroll position. Navigating Home inside the app never redirects. */
 (function () {
+  // Coming back with the browser's back button can show a cached copy of the page from
+  // before VS mode changed the shared game state; reload it so every screen agrees.
+  window.addEventListener('pageshow', function (e) { if (e.persisted) location.reload(); });
   var LAST = 'sctmg_last_page', SESSION = 'sctmg_session', RESUME = 'sctmg_resuming';
   var page;
   try { page = decodeURIComponent(location.pathname.split('/').pop() || 'index.html'); } catch (e) { return; }
