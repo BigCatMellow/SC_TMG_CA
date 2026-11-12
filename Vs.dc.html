@@ -326,6 +326,8 @@ const VS_FACTIONS = {
 const ROLE_COLOR = { Hero: '#f2a33c', Elite: '#b06ef7', Core: '#4f8df9', Support: '#35c76b', Other: '#8a91a5' };
 const ROLE_ORDER = ['Hero', 'Elite', 'Core', 'Support', 'Other'];
 const OPP_KEY = 'sctmg_opp_v1';
+// Where each army page saves its army (the save versions differ by faction).
+const ARMY_KEY = { zerg: 'sctmg_zerg_v5', terran: 'sctmg_terran_v1', protoss: 'sctmg_protoss_v1' };
 
 class Component extends DCLogic {
   state = {
@@ -338,8 +340,11 @@ class Component extends DCLogic {
       if (!(window.SCTMG_ZERG && window.SCTMG_TERRAN && window.SCTMG_PROTOSS && window.SCTMG_MISSIONS && window.SCTMG_MAKE_PORTRAIT)) return;
       clearInterval(this._poll);
       const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || 'null') || d; } catch (e) { return d; } };
-      const yourFaction = VS_FACTIONS[localStorage.getItem('sctmg_last_faction')] ? localStorage.getItem('sctmg_last_faction') : 'zerg';
-      const yours = read('sctmg_' + yourFaction + '_v5', { army: [], tactical: [], tacticalTapped: [], factionTappedId: null, battleSupplyAvailable: 4 });
+      // The army you came from (?f=terran from an army page's VS tab), else the last army opened.
+      const fromUrl = (/[?&]f=([a-z]+)/.exec(location.search) || [])[1];
+      const lastF = localStorage.getItem('sctmg_last_faction');
+      const yourFaction = VS_FACTIONS[fromUrl] ? fromUrl : VS_FACTIONS[lastF] ? lastF : 'zerg';
+      const yours = read(ARMY_KEY[yourFaction], { army: [], tactical: [], tacticalTapped: [], factionTappedId: null, battleSupplyAvailable: 4 });
       const opp = read(OPP_KEY, null) || { faction: yourFaction === 'terran' ? 'zerg' : 'terran', factionId: null, army: [], tactical: [], tapped: [] };
       const play = read('sctmg_play', {});
       const view = (opp.army || []).length ? 'board' : 'scout';
@@ -412,7 +417,7 @@ class Component extends DCLogic {
   saveYours(next) {
     this.setState({ yours: next });
     try {
-      const k = 'sctmg_' + this.state.yourFaction + '_v5';
+      const k = ARMY_KEY[this.state.yourFaction];
       const prev = JSON.parse(localStorage.getItem(k) || 'null') || {};
       localStorage.setItem(k, JSON.stringify({ ...prev, ...next }));
     } catch (e) {}
