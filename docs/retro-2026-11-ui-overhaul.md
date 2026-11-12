@@ -1,8 +1,8 @@
-# Retro: the November 2026 UI overhaul (PRs #27–#65)
+# Retro: the November 2026 UI overhaul (PRs #27–#73)
 
 These notes cover how this work was done, not just what came out of it. They record what worked, what went wrong, and what we would do differently next time. Mistakes are fine. Making the same mistake twice is the thing to avoid.
 
-Work done by bt 7274 with Claude, 9–12 November 2026. Sections 1–5 cover PRs #27–#53; section 6 covers the design pass that followed (#55–#65).
+Work done by bt 7274 with Claude, 9–12 November 2026. Sections 1–4 cover PRs #27–#53. Section 5 covers the design pass that followed (#55–#65), and section 6 the polish pass after it (#66–#73). Open threads are at the end.
 
 ---
 
@@ -158,7 +158,7 @@ Run one after any big batch of changes.
 
 ---
 
-## 6. Part 2: the design pass (12 November, PRs #55–#65)
+## 5. Part 2: the design pass (12 November, PRs #55–#65)
 
 ### What happened, in order
 
@@ -240,11 +240,63 @@ Each round fixed the problem the previous round revealed. Small rounds with a pi
 
 ---
 
-## 5. Open threads
+## 6. Part 3: the polish pass (12 November, PRs #66–#73)
+
+### What happened, in order
+
+| Stage | PRs | What drove it |
+|---|---|---|
+| Tab highlight moved under the label | #67 | The section strip's progress line ran into the active-tab line. |
+| VS commanders on phones | #68–#69 | "Put the models on top so they have room to be big." Then: make the chips line up across both panels. |
+| Painted faction emblems | #70 | The early traced logos "stand out in the wrong ways". bt 7274 supplied the rules PDF and the emblems were taken from it. Then: "fill the space, don't worry about the edges". |
+| Team-coloured health bars | #71 | The green stood out too much. First a gradient in the team colour, then just the darker end of it. |
+| Faction and tactical card abilities | #72–#73 | "Add a little colour like the Library", then "something light on the header". |
+
+### How it moved
+
+The loop stayed the same: a screenshot and one sentence, one change, a screenshot back.
+
+Two things were different this time:
+
+- **Iterations got smaller.** Several requests were "now just the darker side" or "now the header too". Each was a one-line CSS change sent back with a picture within minutes. Small asks deserve small, fast answers.
+- **bt 7274 brought the source material.** The rules PDF arrived just as we needed it. With the real file in hand, the emblems came out of it with their own transparency, so they look cleaner than screenshots of them would.
+
+### Design principles that came out of it
+
+- **Official art beats traced art.**
+  - Flat traced logos looked like clip-art next to painted models.
+  - The book's painted emblems match the miniatures.
+  - Low resolution is fine for a background mark; it just shouldn't be the focal point.
+- **Background marks should fill, not decorate.** A small emblem in a corner looks like a sticker. Filling the panel and cropping freely turns it into texture.
+- **Colour means team, not status.** Health bars in the team colour read as "whose unit"; bright green said nothing and drew the eye. Flat and muted beats a gradient.
+- **Every block gets a little colour.** "Any phase" abilities were grey, so a list of them still looked the same. Using the faction tint for them gives every ability a coloured edge and header.
+- **Line things up across columns.** Chips at the bottom of each panel stay level even when one name wraps. Same idea as the same-height VS rows.
+
+### Mistakes and lessons
+
+**I didn't check the PDF until it arrived.** When asked about better logos, I listed three options and asked which to take. Fair at the time, but the answer turned out to be sitting in the book.
+- Lesson: when the user owns the source material, ask for it early ("can you send the rules PDF?"). It is quicker than describing workarounds.
+
+**The first emblem placement was too timid.** A 170px mark in the corner at 16% opacity cut off the Protoss emblem and left the Zerg one small.
+- Lesson: for background art, start bold (fill the space) and dial down. Starting small means an extra round.
+
+**The gradient was one step too many.** The team-coloured gradient still had a bright end that stood out.
+- Lesson: when the complaint is "it stands out", go flat and muted first.
+
+### What worked
+
+- **Matching patterns across screens.** The unit-detail ability style (#65) was reused for faction and tactical cards (#72), so the whole app now reads the same way.
+- **Provenance kept with the assets.** `portraits/factions/README.md` records the PDF pages the emblems came from, like the portrait audit does for photos.
+- **Merging as we go.** Each round merged before the next started, so there were no stacked PRs or conflicts this time.
+
+---
+
+## Open threads
 
 - ~~Miniature photos missing~~: done. Every unit has a painted-model photo (#57–#58, issue #7 closed).
 - Firefox: the app didn't start there and the cause wasn't found (the splash is skipped for now). Needs a console error from a real Firefox.
 - GitHub Pages source should be set to GitHub Actions so only one deploy runs.
+- The `uploads/*logo.png` traced logos are no longer used anywhere and can be deleted.
 - The card-by-card audit against official PDFs, and the Glial Reconstitution CP vs BM question (issue #2).
 - Army share codes: parked until a short, human-friendly format exists. A QR code carrying a link (the code never typed) is the likely route.
 - The VS battle log: left out of v1 on purpose. Revisit once VS mode has been used in real games.
