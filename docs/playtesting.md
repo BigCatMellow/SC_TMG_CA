@@ -85,6 +85,9 @@ Run it as a background agent. A full run takes about 25 minutes and around 100 t
    - reload mid-game and cold-start; state comes back;
    - Reset clears what it should, and Undo restores it.
 
+9. **Every faction.** Build and play with Terran and Protoss too, not just Zerg: the Terran / Protoss save-key bug (#85) hid for days because tests used Zerg.
+10. **Real device, briefly.** Anything that depends on the phone (vibration, sound, install, offline) needs a check on bt 7274's Android phone; headless Chrome can't tell.
+
 Not covered yet: printing, roster import/export, Grand battle size, Firefox and Safari. Add them when we can.
 
 ## Known by design (tell the tester)
@@ -118,3 +121,5 @@ Not covered yet: printing, roster import/export, Grand battle size, Firefox and 
 - **Check cross-screen agreement.** Battle and VS disagreed on the supply pool; testing each screen alone didn't show it.
 - **Destructive actions need a confirm or an undo.** Reset was the second one to slip through (the first was pip taps wiping a squad). Add this to the checklist for every new button that clears data.
 - **Verify the test data before trusting a "bug".** Illegal tiers make units look destroyed.
+- **Test every faction.** A storage-key mismatch broke VS and the home card for Terran and Protoss while everything worked for Zerg.
+- **Ask what device people use** before building device features (vibration, sound).
