@@ -1,0 +1,23 @@
+name: Rules or points correction
+description: A unit, card, cost or rule that doesn't match the official material
+labels: [rules]
+body:
+  - type: input
+    id: item
+    attributes:
+      label: Unit, card or rule
+    validations:
+      required: true
+  - type: textarea
+    id: correction
+    attributes:
+      label: What the app says vs what the official source says
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: Rulebook page, FAQ version, balance update or card. Please don't paste whole pages of rules text.
+    validations:
+      required: true

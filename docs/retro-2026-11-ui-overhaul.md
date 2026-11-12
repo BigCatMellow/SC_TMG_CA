@@ -1,8 +1,8 @@
-# Retro: the November 2026 UI overhaul (PRs #27–#73)
+# Retro: the November 2026 UI overhaul (PRs #27–#88)
 
 These notes cover how this work was done, not just what came out of it. They record what worked, what went wrong, and what we would do differently next time. Mistakes are fine. Making the same mistake twice is the thing to avoid.
 
-Work done by bt 7274 with Claude, 9–12 November 2026. Sections 1–4 cover PRs #27–#53. Section 5 covers the design pass that followed (#55–#65), and section 6 the polish pass after it (#66–#73). Open threads are at the end.
+Work done by bt 7274 with Claude, 9–12 November 2026. Sections 1–4 cover PRs #27–#53. Section 5 covers the design pass that followed (#55–#65), section 6 the polish pass (#66–#73), and section 7 the afternoon of 12 November (#74–#88), ending with getting ready to share. Open threads are at the end.
 
 ---
 
@@ -291,12 +291,65 @@ Two things were different this time:
 
 ---
 
+## 7. Part 4: build tab, VS and getting ready to share (12 November, PRs #74–#88)
+
+### What happened, in order
+
+| Stage | PRs | What drove it |
+|---|---|---|
+| Colour on weapons and the VS screen | #75–#76 | "Same treatment for the Library weapons, then for VS." VS also got the army tab bar. |
+| Sticky section headings | #77–#78 | Idea from bt 7274: drop the scoreboard while building, let headings stick. The last section ("Other") needed room to reach the top. |
+| Scroll "notch" (snap, vibration, click) | #79, #81–#82 | Tried, then removed: the snap hid the breakout models and needed a fix, and the vibration and click did nothing on bt 7274's Android phone. |
+| Same-size Library cards | #80 | First pass ran text right over the art. Second pass: shorter closed-card names and lock notes, Unique under the name. |
+| Tactics overhaul | #83, #86–#87 | "A wall of text compared to the Library." Colour first, then real groups with a line each (from the first version of the app), then readable phase words. |
+| Scout tiles | #84 | Models ran off the right edge. |
+| Remove units in the Library; Terran missing from VS | #85 | Two reports in one message. The second was a real bug: Terran and Protoss save their army under `_v1`, everything else read `_v5`. |
+| New game in VS | #88 | "How do I start a new game in VS?" There was no way. |
+| Sharing | #89 | "How do I protect the repo and let others use it safely?" |
+
+### Design principles that came out of it
+
+- **Edit where you build.** Removing a unit lived behind Battle › Edit Army while the warning pointed to the Library. Controls belong where the user is when they need them.
+- **Overlap a little, never a lot.** Text may nudge into the model art; a whole line of text running over a model is noise. Shorten the text before shrinking the art.
+- **Groups need names and a purpose.** Colour alone didn't fix the Tactics wall. What fixed it was every card being in a named group with a one-line "what this is for", as in the first version.
+- **Spell it out.** Single-letter phase badges (M, A, C) were unreadable without a key. Short words are worth the width; drop labels ("Used in") before you let a row wrap.
+- **Every game screen needs a way out.** A finished game should say so (game-over banner), and a reset should exist mid-game, with a confirm and an undo.
+
+### Mistakes and lessons
+
+**Two storage keys for the same thing.** The Zerg page moved to `sctmg_zerg_v5`, Terran and Protoss stayed on `_v1`, and every new feature (VS, home summary, War Room pool) was written against `_v5`. Only Zerg ever worked, and nobody noticed because testing mostly used Zerg.
+- Lesson: one map of storage keys, and a test that each page's save key matches what readers use (now in `test-vs`).
+- Lesson: playtest every faction, not just the first one.
+
+**Building haptics without a device to test on.** The notch shipped untested on a real phone and didn't work there. I guessed iPhone limits before asking what phone bt 7274 had.
+- Lesson: ask about the device first. For anything that depends on hardware or browser permissions, get a real-device check before building more on it, and say up front that it can't be verified here.
+
+**A trial that touches scrolling needs to be easy to remove.** Keeping the notch in its own file (`notch.js`) and a few hooks made removing it one clean PR.
+
+**First fixes overshoot.** Text over the art went from "too little room" to "too much overlap" before it settled. Several requests followed the same arc (the gradient health bars, the emblem placement).
+- Lesson: aim for the middle on the first try, and send the screenshot of the trickiest card, not the easiest one.
+
+**Element screenshots lie.** Screenshots of single elements, or long page captures, showed repeated tab bars and missing text that weren't really there.
+- Lesson: take viewport screenshots, or hide fixed bars before capturing.
+
+### What worked
+
+- **Measuring instead of eyeballing.** Card heights, pill overflow and header offsets were checked in code for all three factions at 393 and 360px, so "all cards are 100px" was a fact, not a hope.
+- **Looking at the old version.** The first app (`uploads/*.html`) already had good Tactics groups and descriptions; reusing that idea beat inventing a new one.
+- **Quick reverts.** When something didn't land (the notch), it came out the same afternoon instead of lingering.
+
+---
+
 ## Open threads
 
 - ~~Miniature photos missing~~: done. Every unit has a painted-model photo (#57–#58, issue #7 closed).
 - Firefox: the app didn't start there and the cause wasn't found (the splash is skipped for now). Needs a console error from a real Firefox.
 - GitHub Pages source should be set to GitHub Actions so only one deploy runs.
 - The `uploads/*logo.png` traced logos are no longer used anywhere and can be deleted.
+- Repo protection (bt 7274, in GitHub settings): a ruleset on `main` requiring pull requests and passing checks; read-only workflow permissions; approval for outside contributors' workflows.
+- Consider asking Archon Studio for their blessing before sharing widely.
+- Tier and upgrade editing still live under Battle › Edit Army; move them to the Library too.
+- Terran and Protoss still save under `_v1` while Zerg uses `_v5`; unify the keys (with a migration) when the faction pages are refactored into one.
 - The card-by-card audit against official PDFs, and the Glial Reconstitution CP vs BM question (issue #2).
 - Army share codes: parked until a short, human-friendly format exists. A QR code carrying a link (the code never typed) is the likely route.
 - The VS battle log: left out of v1 on purpose. Revisit once VS mode has been used in real games.
