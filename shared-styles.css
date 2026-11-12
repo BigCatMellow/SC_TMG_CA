@@ -1775,7 +1775,8 @@ input::placeholder { color: #5b6275; }
   .sc-vs-cmd-name { font-size: 16px; }
   .sc-vs-cmd-text { padding: 6px 8px 10px; gap: 8px; align-items: center; justify-content: flex-start; }
   .sc-vs-cmd-text > .sc-vs-k { white-space: nowrap; font-size: 9px; }
-  .sc-vs-chips, .sc-vs-cmd--opp .sc-vs-chips { justify-content: center; flex-wrap: nowrap; gap: 6px; }
+  .sc-vs-chips, .sc-vs-cmd--opp .sc-vs-chips { justify-content: center; flex-wrap: nowrap; gap: 6px; margin-top: auto; }
+  .sc-vs-cmd-text { flex: 1; }
   .sc-vs-chips > span { padding: 4px 8px; justify-items: center; }
   .sc-vs-chips b { font-size: 15px; white-space: nowrap; }
   .sc-vs-chips > span:last-child { display: none; }
