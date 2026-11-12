@@ -1544,19 +1544,22 @@ input::placeholder { color: #5b6275; }
 .sc-role-head .sc-lib-slots { font-size: 13px; }
 
 /* Library cards take their role colour (Hero orange, Elite purple, Core blue, Support green) */
+/* --card-role falls back to the faction tint, so a card never loses its colour
+   (a stale page without --role on the group showed plain white outlines). */
+.sc-role-group .sc-lib-card { --card-role: var(--role, var(--fc-text-tint, #8a91a5)); }
 .sc-role-group .sc-lib-card-bg {
-  border-color: color-mix(in srgb, var(--role) 42%, #272d3c);
-  background: radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--role) 12%, transparent), transparent 55%), var(--sc-card-bg);
+  border-color: color-mix(in srgb, var(--card-role) 42%, #272d3c);
+  background: radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--card-role) 12%, transparent), transparent 55%), var(--sc-card-bg);
 }
 .sc-role-group .sc-lib-card--cutout .sc-lib-card-bg {
   background:
-    radial-gradient(70px 34px at calc(100% - 120px) 100%, color-mix(in srgb, var(--role) 45%, transparent), transparent),
-    radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--role) 12%, transparent), transparent 55%),
+    radial-gradient(70px 34px at calc(100% - 120px) 100%, color-mix(in srgb, var(--card-role) 45%, transparent), transparent),
+    radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--card-role) 12%, transparent), transparent 55%),
     var(--sc-card-bg);
 }
-.sc-role-group .sc-lib-card-bg::before { border-color: var(--role); }
-.sc-role-group .sc-lib-card-bg::after { border-color: var(--role); }
-.sc-role-group .sc-lib-card--open .sc-lib-card-bg { border-color: color-mix(in srgb, var(--role) 70%, #272d3c); }
+.sc-role-group .sc-lib-card-bg::before { border-color: var(--card-role); }
+.sc-role-group .sc-lib-card-bg::after { border-color: var(--card-role); }
+.sc-role-group .sc-lib-card--open .sc-lib-card-bg { border-color: color-mix(in srgb, var(--card-role) 70%, #272d3c); }
 
 /* ===================== VS mode (Vs.dc.html): both armies on one scoreboard ===================== */
 .sc-vs { --you: #b06ef7; --opp: #4f8df9; min-height: 100dvh; box-sizing: border-box; padding: calc(10px + env(safe-area-inset-top)) 14px calc(24px + env(safe-area-inset-bottom));
