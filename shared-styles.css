@@ -1595,8 +1595,9 @@ input::placeholder { color: #5b6275; }
 .sc-vs-cmd { position: relative; display: flex; flex-direction: row-reverse; text-align: right; align-items: stretch; min-height: 170px; overflow: hidden; clip-path: var(--sc-corner-12);
   background: linear-gradient(100deg, color-mix(in srgb, var(--you) 30%, transparent), #10131c 60%); border: 1px solid color-mix(in srgb, var(--you) 55%, #232939); }
 .sc-vs-cmd--opp { flex-direction: row; text-align: left; background: linear-gradient(260deg, color-mix(in srgb, var(--opp) 30%, transparent), #10131c 60%); border-color: color-mix(in srgb, var(--opp) 55%, #232939); }
-.sc-vs-cmd-logo { position: absolute; top: -10px; left: -10px; width: 170px; opacity: .16; pointer-events: none; }
-.sc-vs-cmd--opp .sc-vs-cmd-logo { left: auto; right: -10px; }
+/* The faction emblem fills the whole panel; cropping at the edges is fine. */
+.sc-vs-cmd-logo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center; transform: scale(1.12); opacity: .17; pointer-events: none; }
+
 .sc-vs-cmd-hero { position: relative; flex: 0 0 auto; align-self: flex-end; height: 176px; max-width: 42%; object-fit: contain; object-position: bottom; margin: 0 4px -4px -6px; transform: scaleX(-1); filter: drop-shadow(0 0 16px color-mix(in srgb, var(--you) 60%, transparent)); }
 .sc-vs-cmd--opp .sc-vs-cmd-hero { margin: 0 -6px -4px 4px; transform: none; filter: drop-shadow(0 0 16px color-mix(in srgb, var(--opp) 60%, transparent)); }
 .sc-vs-cmd-text { position: relative; flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: space-between; gap: 10px; padding: 14px 16px; }
