@@ -28,7 +28,7 @@ world.window = world;
 for (const f of ['terran-data.js', 'zerg-data.js', 'protoss-data.js', 'wave3-data.js', 'model-portraits.js', 'missions-data.js', 'mission-scoring.js'])
   vm.runInNewContext(read(f), world);
 class Stub { constructor() { this.props = {}; } setState(n, cb) { this.state = { ...this.state, ...(typeof n === 'function' ? n(this.state) : n) }; cb && cb(); } }
-const Component = vm.runInNewContext(script + '\nComponent', { DCLogic: Stub, window: world, localStorage: world.localStorage, Math, JSON, Object, Array, Number, String, Date, setInterval, clearInterval });
+const Component = vm.runInNewContext(script + '\nComponent', { DCLogic: Stub, window: world, localStorage: world.localStorage, Math, JSON, Object, Array, Number, String, Date, setInterval, clearInterval, setTimeout, clearTimeout });
 const c = new Component();
 store.set('sctmg_last_faction', 'zerg');
 store.set('sctmg_zerg_v5', JSON.stringify({ army: [{ key: 'z1', unitId: 'zergling', tierIdx: 0, modelsLost: 0, deployed: true }], tactical: ['evolution-chamber'], tacticalTapped: ['evolution-chamber#0'], factionTappedId: null, battleSupplyAvailable: 6, factionId: 'kerrigans-swarm' }));
@@ -95,4 +95,18 @@ assert.deepEqual([c.state.yours.army[0].modelsLost, c.state.yours.army[0].dmg], 
 const tabs = c.renderVals().navTabs;
 assert.equal(tabs.map(t => t.label).join(','), 'Brood,Library,Tactics,Battle,VS,Codex');
 assert.equal(tabs.find(t => t.label === 'VS').current, 'page');
+// New game: shows game over at the early-win lead; two taps reset both sides (armies kept); Undo restores.
+c.state = { ...c.state, view: 'board', newArmed: false, play: { round: 4, vpYou: 4, vpFoe: 12, missionId: 'supply-drop', rounds: {} },
+  yours: { ...c.state.yours, army: [{ key: 'n1', unitId: 'zergling', tierIdx: 1, modelsLost: 3, deployed: true }], tacticalTapped: ['x#0'] },
+  opp: { faction: 'terran', army: [{ key: 'n2', unitId: 'marine', tierIdx: 0, modelsLost: 2, deployed: true }], tactical: [], tapped: ['faction'] } };
+const winAt = world.SCTMG_SCORE.rules(world.SCTMG_MISSIONS.MISSIONS.find(m => m.id === 'supply-drop')).earlyWinLead;
+if (winAt && winAt <= 8) assert.equal(c.renderVals().gameOver, true, 'game over at the early-win lead');
+c.renderVals().newGame();
+assert.equal(c.state.newArmed, true, 'first tap only arms');
+c.renderVals().newGame();
+assert.equal(c.state.play.vpFoe, 0); assert.equal(c.state.play.round, 1);
+assert.equal(c.state.yours.army[0].modelsLost, 0); assert.equal(c.state.opp.army[0].modelsLost, 0);
+assert.equal(c.state.yours.army.length, 1, 'your army list is kept'); assert.deepEqual(c.state.opp.tapped.length, 0);
+c.renderVals().undo();
+assert.equal(c.state.play.vpFoe, 12, 'undo restores the game'); assert.equal(c.state.opp.army[0].modelsLost, 2);
 console.log('VS mode checks passed.');
