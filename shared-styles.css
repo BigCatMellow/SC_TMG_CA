@@ -1881,3 +1881,23 @@ input::placeholder { color: #5b6275; }
 /* Weapons match abilities: plain block, phase-coloured edge and a light header wash */
 .sc-ud-wpn { padding-top: 0; background: #12151f; }
 .sc-ud-wpn-top { margin: 0 -12px 2px; padding: 7px 12px; background: linear-gradient(90deg, color-mix(in srgb, var(--ph) 16%, transparent), color-mix(in srgb, var(--ph) 4%, transparent) 75%); border-bottom: 1px solid color-mix(in srgb, var(--ph) 22%, transparent); }
+
+/* ---- VS: bottom tab bar (same sections as the army pages) ---- */
+.sc-vs { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+.sc-vs-tabbar { position: fixed; left: 50%; bottom: 0; z-index: 220; transform: translateX(-50%); width: min(100%, 640px); display: flex;
+  padding-bottom: env(safe-area-inset-bottom); background: rgba(6,8,13,0.96); backdrop-filter: blur(14px); border-top: 1px solid #232939; }
+.sc-vs-tab { position: relative; flex: 1; height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+  background: none; border: 0; color: #7c8398; cursor: pointer; }
+.sc-vs-tab-icon { display: grid; place-items: center; width: 20px; height: 20px; }
+.sc-vs-tab-label { font: 700 10px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; }
+.sc-vs-tab--on { color: #f2c14e; background: rgba(242,193,78,0.08); }
+.sc-vs-tab--on::after { content: ""; position: absolute; left: 26%; right: 26%; bottom: 5px; height: 2px; background: #f2c14e; }
+
+/* ---- VS: the same light colour treatment as cards elsewhere ---- */
+.sc-vs-unit { background: linear-gradient(90deg, color-mix(in srgb, var(--rc) 11%, transparent), transparent 40%), #10131c; }
+.sc-vs-unit--opp { background: linear-gradient(270deg, color-mix(in srgb, var(--rc) 11%, transparent), transparent 40%), #10131c; }
+.sc-vs-panel { padding-top: 0; }
+.sc-vs-panel-head { margin: 0 -14px; padding: 9px 14px; background: linear-gradient(90deg, rgba(242,193,78,0.12), rgba(242,193,78,0.02) 75%); border-bottom: 1px solid rgba(242,193,78,0.2); }
+.sc-vs-card { background: linear-gradient(180deg, color-mix(in srgb, var(--you) 14%, transparent), transparent 70%), #10131c; }
+.sc-vs-card--opp { background: linear-gradient(180deg, color-mix(in srgb, var(--opp) 14%, transparent), transparent 70%), #10131c; }
+.sc-vs-card--spent { background: #0b0d14; }
