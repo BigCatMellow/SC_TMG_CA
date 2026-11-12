@@ -2052,3 +2052,25 @@ input::placeholder { color: #5b6275; }
 /* Battle cards: abilities take the card's colour; the phase shows only in its small badge. */
 .sc-bc-ab { border-left-color: var(--role); }
 .sc-bc-use { background: color-mix(in srgb, var(--role) 18%, #12151f); border-color: color-mix(in srgb, var(--role) 60%, transparent); }
+
+/* ---------- VS: unit and card reference sheets ---------- */
+.sc-vs-unit-name { padding: 0; background: none; border: 0; color: #e9ecf2; cursor: pointer; font: inherit; }
+.sc-vs-unit-name b { display: flex !important; align-items: center; gap: 6px; justify-content: flex-end; }
+.sc-vs-unit--opp .sc-vs-unit-name b { justify-content: flex-start; }
+.sc-vs-i { flex: 0 0 auto; width: 16px; height: 16px; display: inline-grid; place-items: center; border: 1px solid #5b6275; border-radius: 50%; font: 700 11px/1 'Chakra Petch', sans-serif; font-style: italic; color: #a7aec2; }
+.sc-vs-unit-art { cursor: pointer; }
+.sc-vs-info { position: fixed; z-index: 310; left: 50%; bottom: 0; transform: translateX(-50%); width: min(640px, 100%); max-height: 88dvh; overflow-y: auto; box-sizing: border-box; padding: 14px 14px calc(20px + env(safe-area-inset-bottom)); background: #141824; border-top: 2px solid var(--side); box-shadow: 0 -12px 40px rgba(0,0,0,0.6); }
+.sc-vs-info-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.sc-vs-info-art { width: 84px; height: 84px; flex: 0 0 auto; display: grid; place-items: end center; overflow: hidden; }
+.sc-vs-info-art img { max-width: 92px; max-height: 84px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+.sc-vs-info-title { flex: 1; min-width: 0; display: grid; gap: 3px; }
+.sc-vs-info-title .sc-vs-h2 { margin: 0; }
+.sc-vs-info-x { flex: 0 0 auto; align-self: flex-start; width: 40px; height: 40px; background: #1a1f2e; border: 1px solid var(--sc-border-input); color: #c8cede; font-size: 16px; cursor: pointer; }
+.sc-vs-info-btn { flex: 0 0 auto; min-height: 40px; padding: 0 14px; background: #1a1f2e; border: 1px solid #5b6275; color: #e9ecf2; font: 700 12px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+.sc-vs-info-btn--go { background: rgba(182,230,74,0.12); border-color: rgba(182,230,74,0.55); color: #c9ec7a; }
+.sc-vs-info-abs { display: grid; gap: 8px; }
+.sc-vs-info-ab { padding: 10px 12px; background: #10131c; border-left: 2px solid var(--side); }
+.sc-vs-info-ab-top { display: flex; align-items: center; gap: 7px; }
+.sc-vs-info-ab-top b { font: 700 15px Rajdhani, sans-serif; color: #e9ecf2; }
+.sc-vs-info-ab-top .sc-ud-type { margin-left: auto; }
+.sc-vs-info-ab p { margin: 6px 0 0; font-size: 13px; line-height: 1.55; color: #c8cede; }

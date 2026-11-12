@@ -179,10 +179,10 @@
           <sc-if value="{{ you.empty }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">No army yet: build one in the Library.</p></sc-if>
           <sc-for list="{{ you.units }}" as="u" hint-placeholder-count="5">
             <div class="{{ u.cls }}" style="--rc:{{ u.roleColor }}">
-              <div class="sc-vs-unit-art"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" alt="" aria-hidden="true" loading="lazy"></sc-if></div>
+              <div class="sc-vs-unit-art" onClick="{{ u.info }}"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" alt="" aria-hidden="true" loading="lazy"></sc-if></div>
               <div class="sc-vs-unit-main">
                 <div class="sc-vs-unit-line">
-                  <div class="sc-vs-unit-name" title="{{ u.name }}"><b>{{ u.shortName }}</b></div>
+                  <button onClick="{{ u.info }}" class="sc-vs-unit-name" title="{{ u.name }}" aria-label="{{ u.infoAria }}"><b><span class="sc-vs-i" aria-hidden="true">i</span>{{ u.shortName }}</b></button>
                   <div class="sc-vs-sup" title="Supply on the table"><b>{{ u.supply }}</b><small>sup</small></div>
                   <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.deployOff }}" class="{{ u.statusCls }}" title="{{ u.statusTitle }}">{{ u.status }}</button>
                 </div>
@@ -203,7 +203,7 @@
           </sc-for>
           <div class="sc-vs-cards">
             <sc-for list="{{ you.cards }}" as="c" hint-placeholder-count="3">
-              <button onClick="{{ c.tap }}" class="{{ c.cls }}" aria-pressed="{{ c.spent }}"><small>{{ c.kind }}</small><b>{{ c.name }}</b><i>{{ c.state }}</i></button>
+              <button onClick="{{ c.open }}" class="{{ c.cls }}" aria-label="{{ c.name }}: {{ c.state }}. Open abilities"><small>{{ c.kind }}</small><b>{{ c.name }}</b><i>{{ c.state }}</i></button>
             </sc-for>
           </div>
         </section>
@@ -250,10 +250,10 @@
           </sc-if>
           <sc-for list="{{ opp.units }}" as="u" hint-placeholder-count="5">
             <div class="{{ u.cls }}" style="--rc:{{ u.roleColor }}">
-              <div class="sc-vs-unit-art"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" alt="" aria-hidden="true" loading="lazy"></sc-if></div>
+              <div class="sc-vs-unit-art" onClick="{{ u.info }}"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" alt="" aria-hidden="true" loading="lazy"></sc-if></div>
               <div class="sc-vs-unit-main">
                 <div class="sc-vs-unit-line">
-                  <div class="sc-vs-unit-name" title="{{ u.name }}"><b>{{ u.shortName }}</b></div>
+                  <button onClick="{{ u.info }}" class="sc-vs-unit-name" title="{{ u.name }}" aria-label="{{ u.infoAria }}"><b><span class="sc-vs-i" aria-hidden="true">i</span>{{ u.shortName }}</b></button>
                   <div class="sc-vs-sup" title="Supply on the table"><b>{{ u.supply }}</b><small>sup</small></div>
                   <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.deployOff }}" class="{{ u.statusCls }}" title="{{ u.statusTitle }}">{{ u.status }}</button>
                 </div>
@@ -274,10 +274,52 @@
           </sc-for>
           <div class="sc-vs-cards">
             <sc-for list="{{ opp.cards }}" as="c" hint-placeholder-count="3">
-              <button onClick="{{ c.tap }}" class="{{ c.cls }}" aria-pressed="{{ c.spent }}"><small>{{ c.kind }}</small><b>{{ c.name }}</b><i>{{ c.state }}</i></button>
+              <button onClick="{{ c.open }}" class="{{ c.cls }}" aria-label="{{ c.name }}: {{ c.state }}. Open abilities"><small>{{ c.kind }}</small><b>{{ c.name }}</b><i>{{ c.state }}</i></button>
             </sc-for>
           </div>
         </section>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ================= UNIT INFO ================= -->
+  <sc-if value="{{ sheetUnit }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-vs-scrim" onClick="{{ closeSheet }}"></div>
+    <div class="sc-vs-info" style="{{ info.style }}" role="dialog" aria-modal="true" aria-label="{{ info.name }}">
+      <div class="sc-vs-info-head">
+        <div class="sc-vs-info-art"><sc-if value="{{ info.img }}" hint-placeholder-val="{{ false }}"><img src="{{ info.img }}" alt="" aria-hidden="true"></sc-if></div>
+        <div class="sc-vs-info-title">
+          <span class="sc-vs-k" style="color:var(--side)">{{ info.sideLabel }}</span>
+          <h2 class="sc-vs-h2">{{ info.name }}</h2>
+          <span class="sc-vs-k" style="color:{{ info.roleColor }}">{{ info.sub }}</span>
+          <span class="sc-vs-muted">{{ info.state }}</span>
+        </div>
+        <button onClick="{{ closeSheet }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
+      </div>
+      <dc-import name="UnitDetail" detail="{{ info.detail }}" hint-size="100%,300px"></dc-import>
+    </div>
+  </sc-if>
+
+  <!-- ================= CARD ================= -->
+  <sc-if value="{{ sheetCard }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-vs-scrim" onClick="{{ closeSheet }}"></div>
+    <div class="sc-vs-info" style="{{ cardInfo.style }}" role="dialog" aria-modal="true" aria-label="{{ cardInfo.name }}">
+      <div class="sc-vs-info-head">
+        <div class="sc-vs-info-title">
+          <span class="sc-vs-k" style="color:var(--side)">{{ cardInfo.sideLabel }} · {{ cardInfo.kind }}</span>
+          <h2 class="sc-vs-h2">{{ cardInfo.name }}</h2>
+          <span class="sc-vs-muted">{{ cardInfo.state }}</span>
+        </div>
+        <button onClick="{{ cardInfo.toggle }}" class="{{ cardInfo.btnCls }}">{{ cardInfo.btn }}</button>
+        <button onClick="{{ closeSheet }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
+      </div>
+      <div class="sc-vs-info-abs">
+        <sc-for list="{{ cardInfo.abilities }}" as="a" hint-placeholder-count="2">
+          <div class="sc-vs-info-ab" style="--ph:{{ a.color }}">
+            <div class="sc-vs-info-ab-top"><span class="sc-bc-ph">{{ a.phase }}</span><b>{{ a.name }}</b><span class="{{ a.typeCls }}">{{ a.type }}</span></div>
+            <p>{{ a.text }}</p>
+          </div>
+        </sc-for>
       </div>
     </div>
   </sc-if>
@@ -504,7 +546,10 @@ class Component extends DCLogic {
     const supplyNow = this.supplyNow(u, e);
     const blocked = !dead && !e.deployed && supplyNow > free;
     const status = dead ? 'Destroyed' : e.deployed ? 'On table' : blocked ? 'Needs ' + supplyNow + ' sup' : 'Reserve';
+    const sx = u.stats || {};
     return {
+      statLine: [['SPD', sx.speed], ['EVD', sx.evade], ['ARM', sx.armour], ['SHD', sx.shield]].filter(([, v]) => v && v !== '-').map(([k, v]) => k + ' ' + v).join(' · '),
+      info: () => this.setState({ sheet: { type: 'unit', side, key: e.key } }), infoAria: u.name + ': stats, weapons and abilities',
       key: e.key, name: u.name, shortName, role: u.role, roleColor: ROLE_COLOR[u.role] || '#8a91a5', roleRank: ROLE_ORDER.indexOf(u.role),
       tier: (u.tiers[e.tierIdx] || {}).tier || '', img: art.cutout || art.portrait || '',
       cls: 'sc-vs-unit sc-vs-unit--' + side + (dead ? ' sc-vs-unit--dead' : ''),
@@ -561,7 +606,8 @@ class Component extends DCLogic {
     };
     const cardView = (key, kind, name, spent) => ({ key, kind, name, spent,
       cls: 'sc-vs-card sc-vs-card--' + side + (spent ? ' sc-vs-card--spent' : ''),
-      state: spent ? 'Exhausted · tap to ready' : 'Ready', tap: () => toggle(key) });
+      state: spent ? 'Exhausted' : 'Ready', tap: () => toggle(key),
+      open: () => this.setState({ sheet: { type: 'card', side, key } }) });
     const cards = [cardView('faction', 'Faction', fc.name, factionTapped)].concat((src.tactical || []).map(id => {
       const n = counts[id] || 0; counts[id] = n + 1;
       const t = D.TACTICAL_CARDS.find(x => x.id === id);
@@ -580,6 +626,57 @@ class Component extends DCLogic {
       tableCls: used > pool ? 'sc-vs-chip--over' : '',
       readyCards: Math.max(0, ready)
     };
+  }
+
+  // ---------- reference sheets ----------
+  phaseColor(ph) {
+    return { Movement: '#4f8df9', Assault: '#f9822f', Combat: '#f04a4a', Scoring: '#35c76b', Any: '#c99af7' }[String(ph || '').replace(' Phase', '')] || '#8a91a5';
+  }
+  plainSegs(text) { return [{ t: String(text || ''), plain: true, kw: false }]; }
+  unitDetail(u, e) {
+    const s = u.stats || {};
+    const stats = [{ k: 'SPD', v: s.speed }, { k: 'EVD', v: s.evade }, { k: 'ARM', v: s.armour }, { k: 'HP', v: String(s.hp) }, { k: 'SIZE', v: String(s.size) }];
+    if (s.shield) stats.unshift({ k: 'SHD', v: String(s.shield) });
+    const upgs = Object.entries(u.upgrades || {}).flatMap(([ph, l]) => (l || []).map(x => ({ ...x, phase: ph })))
+      .filter(x => (e.upgs || []).includes(x.name));
+    const weapons = (u.weapons || []).filter(w => !w.replaces || (e.upgs || []).includes(w.name)).map(w => ({
+      name: w.name, phase: w.phase, phFg: this.phaseColor(w.phase),
+      chips: [{ k: 'RNG', v: String(w.range) }, { k: 'TGT', v: w.target }, { k: 'RoA', v: String(w.roa) }, { k: 'HIT', v: w.hit },
+        { k: 'SURGE', v: w.surge }, { k: 'S.DIE', v: w.sDie }, { k: 'DMG', v: String(w.damage) }],
+      kwSegs: (w.keywords || []).length ? this.plainSegs(w.keywords.join(', ')) : null }));
+    const order = ['Any Phase', 'Movement Phase', 'Assault Phase', 'Combat Phase', 'Scoring Phase'];
+    const g = {};
+    (u.abilities || []).forEach(a => (g[a.phase] = g[a.phase] || []).push(a));
+    Object.entries(u.phaseAbilities || {}).forEach(([ph, l]) => (g[ph] = g[ph] || []).push(...l));
+    upgs.filter(x => x.type !== 'Weapon').forEach(x => (g[x.phase] = g[x.phase] || []).push({ ...x, type: x.type + ' · upgrade' }));
+    const abilityGroups = order.filter(ph => g[ph]).map(ph => ({ phase: ph.replace(' Phase', ''), phFg: this.phaseColor(ph),
+      items: g[ph].map(a => ({ name: a.name, type: a.type, segs: this.plainSegs(a.description) })) }));
+    return { stats, weapons, abilityGroups, upgrades: [], tags: (u.tags || []).map(t => ({ name: t, onOpen: () => {} })) };
+  }
+  infoVals(you, opp) {
+    const sh = this.state.sheet;
+    const sideOf = s => s === 'you' ? { v: you, src: this.state.yours, f: this.state.yourFaction, label: 'Your unit', color: 'var(--you)' }
+      : { v: opp, src: this.state.opp, f: this.state.opp.faction, label: 'Opponent', color: 'var(--opp)' };
+    const out = { sheetUnit: false, sheetCard: false, info: {}, cardInfo: {} };
+    if (sh && sh.type === 'unit') {
+      const S = sideOf(sh.side), row = S.v.units.find(x => x.key === sh.key);
+      const e = (S.src.army || []).find(x => x.key === sh.key), u = e && this.D(S.f).UNITS.find(x => x.id === e.unitId);
+      if (row && u) Object.assign(out, { sheetUnit: true, info: { style: '--side:' + S.color, sideLabel: S.label, name: u.name, img: row.img,
+        roleColor: row.roleColor, sub: row.role + ' · ' + row.tier + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
+        state: row.status + ' · ' + (row.tracksDamage ? row.hpText : row.alive + ' model' + (row.alive === 1 ? '' : 's') + ' left'),
+        detail: this.unitDetail(u, e) } });
+    }
+    if (sh && sh.type === 'card') {
+      const S = sideOf(sh.side), c = S.v.cards.find(x => x.key === sh.key);
+      const id = sh.key === 'faction' ? null : sh.key.split('#')[0];
+      const card = id ? this.D(S.f).TACTICAL_CARDS.find(x => x.id === id) : this.card(S.f, S.src.factionId);
+      if (c && card) Object.assign(out, { sheetCard: true, cardInfo: { style: '--side:' + S.color, sideLabel: sh.side === 'you' ? 'Your card' : 'Opponent', kind: c.kind,
+        name: c.name, state: (c.spent ? 'Exhausted' : 'Ready') + (card.resource ? ' · exhaust for ' + card.resource : ''),
+        btn: c.spent ? 'Ready' : card.resource ? 'Spend ' + card.resource : 'Exhaust', btnCls: 'sc-vs-info-btn' + (c.spent ? '' : ' sc-vs-info-btn--go'), toggle: c.tap,
+        abilities: (card.abilities || []).map(a => ({ name: a.name, type: a.type, phase: String(a.phase || '').replace(' Phase', ''), color: this.phaseColor(a.phase), text: a.description,
+          typeCls: 'sc-ud-type' + (/^active/i.test(a.type || '') ? ' sc-ud-type--active' : /reaction/i.test(a.type || '') ? ' sc-ud-type--reaction' : '') })) } });
+    }
+    return out;
   }
 
   // ---------- markers ----------
@@ -774,6 +871,7 @@ class Component extends DCLogic {
       newGameCls: 'sc-vs-ghost' + (st.newArmed ? ' sc-vs-ghost--warn' : ''),
       undoOn: !!st.undoSnap, undoText: 'New game started: score, casualties and used cards reset', undo: () => this.undoNewGame(),
       openEndRound: () => this.setState({ sheet: 'end', adjYou: 0, adjFoe: 0 }),
+      ...this.infoVals(you, opp),
       sheetEnd: st.sheet === 'end', closeSheet: () => this.setState({ sheet: null }),
       endTitle: last ? 'Final round' : 'End round',
       endHasMission: !!m, endNoMission: !m,
