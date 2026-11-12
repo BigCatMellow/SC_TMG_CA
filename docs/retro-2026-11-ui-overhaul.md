@@ -1,8 +1,8 @@
-# Retro: the November 2026 UI overhaul (PRs #27–#53)
+# Retro: the November 2026 UI overhaul (PRs #27–#65)
 
 These notes cover how this work was done, not just what came out of it. They record what worked, what went wrong, and what we would do differently next time. Mistakes are fine. Making the same mistake twice is the thing to avoid.
 
-Work done by bt 7274 with Claude, 9–11 November 2026.
+Work done by bt 7274 with Claude, 9–12 November 2026. Sections 1–5 cover PRs #27–#53; section 6 covers the design pass that followed (#55–#65).
 
 ---
 
@@ -158,9 +158,93 @@ Run one after any big batch of changes.
 
 ---
 
+## 6. Part 2: the design pass (12 November, PRs #55–#65)
+
+### What happened, in order
+
+| Stage | PRs | What drove it |
+|---|---|---|
+| White card outlines on the phone | #55 | Screenshot from a real phone. Cause: new styles on an old cached page. Fixed the fallback colour and made scripts and styles network-first. |
+| Splash screen stuck in Firefox | #56 | Couldn't reproduce here (no Firefox). bt 7274 chose to skip the splash for now. |
+| Every unit gets a model photo | #57–#58 | bt 7274 sent publisher promo images for the drones, Roachling, Auto-Turret and Pylon. Shared sculpts borrow the base model's cutout. |
+| Second helper-agent playtest | #59 | 4 major bugs, 7 minor, 7 UX notes. All fixed in one PR, together with VS layout feedback. |
+| Playtesting guide | #60 | "Note the process so we can give instructions to others." See [playtesting.md](playtesting.md). |
+| VS rows line up | #61–#62 | Screenshots: cards of different heights, then empty space, then a cramped health bar. Three small rounds, each from one screenshot. |
+| Squad HP | #63 | Question: how do Roaches with 4 HP × 3 models work? We checked the rules first (8.7.4: one Damage Marker per Unit), then designed the bar. |
+| Background texture | #64 | "Break up the plain blackness without drawing attention." |
+| Unit detail hierarchy | #65 | "It all looks the same." |
+
+### How the design moved (the loop)
+
+Almost every change followed the same loop:
+
+1. bt 7274 sends a screenshot from real use, with one sentence about what feels wrong.
+2. We change one thing and render it at phone and desktop size.
+3. We send the screenshot back.
+4. bt 7274 merges, or names the next thing.
+
+The VS screen went through four rounds in under an hour:
+- models on the inside edge;
+- rows the same height;
+- bigger models to fill the space;
+- supply moved up to give the health bar room.
+
+Each round fixed the problem the previous round revealed. Small rounds with a picture each time beat one big redesign.
+
+### Design principles that came out of it
+
+- **Mirror toward the centre.** On a two-sided screen, each side's art faces the middle and controls sit on the outer edge. It reads as "versus".
+- **Same size, same shape.** Rows that hold different content still get the same height and the same one stepper. Uneven rows ("size creep") break alignment across columns.
+- **Fill empty space with the thing people look at.** Bigger model art beat padding or extra text.
+- **Give the important number room.** Supply moved up so the health bar could use the full width.
+- **Check the rule before designing the control.** Squad damage is one pool per Unit, so the bar is one track split per model, not separate bars per model.
+- **Hierarchy through contrast, not more boxes:**
+  - one stats strip instead of five boxes;
+  - big numbers for the values you roll;
+  - colour by phase on the edge of each weapon and ability;
+  - section headings in the faction colour;
+  - cost-paying abilities in gold.
+- **Texture behind, never on top.** The hex grid sits behind the content at about 8% opacity and fades lower down; cards stay solid.
+
+### Mistakes and lessons
+
+**Two deploys fighting.** Every push ran our deploy and GitHub's built-in branch deploy, which overwrote ours with raw files. That left the service-worker version stuck, so phones mixed cached and new files.
+- Lesson: check *what* is live, not just that a deploy went green. Settings → Pages → Source should be GitHub Actions.
+- Status: bt 7274 has to make the change; I can't reach that setting.
+
+**We couldn't test Firefox.** The sandbox only has Chrome. We fell back on asking for a console error, then removed the splash at bt 7274's call.
+- Lesson: keep a quick real-device check on the list, and say early when a browser can't be tested here.
+
+**Bad test data looked like bugs.** VS screenshots showed "Destroyed" units because the test armies used tiers that don't exist.
+- Lesson: build test data from legal tiers. This is now in the playtesting guide.
+
+**The playtester reported a design choice as a bug** (shared drone photos).
+- Lesson: give the tester a "known by design" list.
+
+**The section tab covered buttons.** A floating element that "never moves" will eventually sit on something you need to tap. Docking it as a strip above the tab bar fixed it for good.
+
+**Reset was destructive and only half-reset the game.** This is the second time a data-clearing tap shipped without a confirm (pip taps were the first).
+- Lesson: every clearing action gets a confirm or an undo, and the playtest checklist now says so.
+
+**Long screenshots repeat fixed bars.** Full-page screenshots draw the tab bar part-way down.
+- Lesson: crop to the element instead, or say so when sending.
+
+### What worked
+
+- **Rules lookups before building game logic.** It took a few minutes and avoided building the wrong damage model.
+- **One PR per screenshot round.** Easy to review and easy to merge.
+- **Tests that pin each decision:**
+  - VS: the supply cap, unique scouting, the scoreline, the HP/Models stepper and squad damage;
+  - portraits: the "promo photo needs provenance" rule.
+- **Write the process down while it's fresh.** The playtesting guide and this section were written the same day.
+
+---
+
 ## 5. Open threads
 
-- Miniature photos still missing for Pylon, Point Defense Drone, Sabotage Drone and Auto-Turret (issue #7).
+- ~~Miniature photos missing~~: done. Every unit has a painted-model photo (#57–#58, issue #7 closed).
+- Firefox: the app didn't start there and the cause wasn't found (the splash is skipped for now). Needs a console error from a real Firefox.
+- GitHub Pages source should be set to GitHub Actions so only one deploy runs.
 - The card-by-card audit against official PDFs, and the Glial Reconstitution CP vs BM question (issue #2).
 - Army share codes: parked until a short, human-friendly format exists. A QR code carrying a link (the code never typed) is the likely route.
 - The VS battle log: left out of v1 on purpose. Revisit once VS mode has been used in real games.
