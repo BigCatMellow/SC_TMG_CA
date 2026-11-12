@@ -149,7 +149,10 @@
           <span class="sc-play-mission-sub">{{ missionSub }}</span>
         </button>
       </div>
-      <button onClick="{{ openEndRound }}" class="sc-play-endround">{{ endRoundLabel }}</button>
+      <div class="sc-play-endrow">
+        <button onClick="{{ openEndRound }}" class="sc-play-endround">{{ endRoundLabel }}</button>
+        <a href="Vs.dc.html" class="sc-play-vs" aria-label="VS mode: track both armies on one scoreboard">VS</a>
+      </div>
 
       <!-- Cards: tap a ready card to spend its resource; tap a spent card to ready it -->
       <div class="sc-play-cards-head" data-sec="Cards" data-sec-note="{{ battleCardsReady }}/{{ battleCardsTotal }} ready">
@@ -1873,7 +1876,11 @@ class Component extends DCLogic {
     const markers = {};
     d.markers.forEach(x => { markers[x.num] = { ctrl: x.ctrl, active: x.active, activatedRound: x.activatedRound,
       colour: x.colour, removed: x.removed || res.removed.includes(x.num) }; });
-    this.setState(st => ({ play: { ...st.play, vpYou: v.scoreFinalYou, vpFoe: v.scoreFinalFoe, markers,
+    // Points per round feed the VS scoreline.
+    let rounds = {};
+    try { rounds = (JSON.parse(localStorage.getItem('sctmg_play') || 'null') || {}).rounds || {}; } catch (e) {}
+    rounds = { ...rounds, [this.state.play.round]: { you: Math.max(0, v.scoreFinalYou - (this.state.play.vpYou || 0)), foe: Math.max(0, v.scoreFinalFoe - (this.state.play.vpFoe || 0)) } };
+    this.setState(st => ({ play: { ...st.play, vpYou: v.scoreFinalYou, vpFoe: v.scoreFinalFoe, markers, rounds,
       ownLostAtStart: this.lostSupplyNow() }, scoreDraft: null }), () => this.endRound());
   }
 
@@ -2788,7 +2795,7 @@ class Component extends DCLogic {
           return { play: { ...s2.play, phase: nx > 3 ? 0 : nx, round: nx > 3 ? s2.play.round + 1 : s2.play.round } };
         }, () => this.savePlay());
       },
-      resetPlay: (ev) => { ev.stopPropagation(); this.setState({ play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, ownLostAtStart: this.lostSupplyNow() } }, () => this.savePlay()); },
+      resetPlay: (ev) => { ev.stopPropagation(); this.setState({ play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, rounds: {}, foeLostAtStart: 0, ownLostAtStart: this.lostSupplyNow() } }, () => this.savePlay()); },
       phases,
       // resources
       mineralsUsed: totals.minerals, mineralsCap: isGrand ? '∞' : scale.minerals, mineralsColor: mOver ? '#f08a8a' : '#f2c14e',
