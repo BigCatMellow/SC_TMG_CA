@@ -22,6 +22,8 @@ window.SCTMG_PORTRAIT_CUTOUTS = {
   "portraits/pdf/zerg/swarmling.jpg": "portraits/cutout/zerg/swarmling.webp",
   "portraits/pdf/zerg/vile.jpg": "portraits/cutout/zerg/vile.webp",
   "portraits/pdf/zerg/zergling.jpg": "portraits/cutout/zerg/zergling.webp",
+  "portraits/promo/protoss/pylon.jpg": "portraits/cutout/protoss/pylon.webp",
+  "portraits/promo/terran/auto-turret.jpg": "portraits/cutout/terran/auto-turret.webp",
   "portraits/promo/terran/point-defense-drone.jpg": "portraits/cutout/terran/point-defense-drone.webp",
   "portraits/promo/zerg/roachling.jpg": "portraits/cutout/zerg/roachling.webp",
   "protoss/high-templar": "portraits/cutout/protoss/high-templar.webp",

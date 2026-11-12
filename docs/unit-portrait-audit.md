@@ -58,16 +58,16 @@ The original [source PDF](https://starcraft-tmg.com/files/downloads/StarCraft-TM
 |---|---|---|
 | protoss/adept, artanis, sentry, stalker | Photo | Fallback (PDF photo is primary) |
 | protoss/praetor-guard, zealot | Art (game render) | Fallback only |
-| protoss/pylon | Art (game render) | **Primary**, no miniature photo yet |
+| protoss/pylon | Art (game render) | Not used; promo photo in portraits/promo/ is primary |
 | terran/goliath, jim-raynor, marauder, marine, medic | Photo | Fallback (PDF photo is primary) |
 | terran/raynors-raider | Art (illustration) | Fallback only |
 | terran/point-defense-drone | Art (game render) | Not used; promo photo in portraits/promo/ is primary |
 | zerg/hydralisk, kerrigan, roach, zergling | Photo | Fallback (PDF photo is primary) |
 | zerg/corpser, queen | Art (concept) | Fallback only |
 
-**Decision (11 Nov 2026): painted-miniature photos only.** Game renders, card art and concept art are no longer used anywhere in the army screens. That includes the Terran tactical-card building art and the art-only fallbacks above. Units without a miniature photo show a plain card until one is found: **Pylon** and **Auto-Turret**.
+**Decision (11 Nov 2026): painted-miniature photos only.** Game renders, card art and concept art are no longer used anywhere in the army screens. That includes the Terran tactical-card building art and the art-only fallbacks above. Every unit now has a miniature photo.
 
-**Promo photos (12 Nov 2026).** bt 7274 supplied publisher promo images for the **Point Defense Drone** and **Roachling**. Each is cropped to the one model in `portraits/promo/` (originals in `portraits-src/remote/`) and cut out like the PDF photos. Roachling no longer borrows the Roach photo. The **Sabotage Drone** is the same drone kit built with different options, so it shares the Point Defense Drone photo. `test-portraits.mjs` fails if any render or concept-art path comes back.
+**Promo photos (12 Nov 2026).** bt 7274 supplied publisher promo images for the **Point Defense Drone** and **Roachling**. Each is cropped to the one model in `portraits/promo/` (originals in `portraits-src/remote/`) and cut out like the PDF photos. Roachling no longer borrows the Roach photo. The **Sabotage Drone** is the same drone kit built with different options, so it shares the Point Defense Drone photo. The **Auto-Turret** comes from the Raven promo image (small model, bottom left), and the **Pylon** from the Artanis promo image. `test-portraits.mjs` fails if any render or concept-art path comes back.
 
 ## Remaining sources
 
