@@ -1872,3 +1872,8 @@ input::placeholder { color: #5b6275; }
 .sc-ab-card-top b { font: 700 15px Rajdhani, sans-serif; letter-spacing: .02em; color: #e9ecf2; }
 .sc-ab-card-top .sc-ud-type { margin-left: auto; }
 .sc-ab-card .sc-def { border-left-color: transparent; padding-left: 10px; }
+
+/* Ability header strip: a light wash of the phase colour behind the name row */
+.sc-ab-card, .sc-ud-abil { padding-top: 0; }
+.sc-ab-card-top, .sc-ud-abil-top { margin: 0 -12px 7px; padding: 7px 12px; background: linear-gradient(90deg, color-mix(in srgb, var(--ph) 16%, transparent), color-mix(in srgb, var(--ph) 4%, transparent) 75%); border-bottom: 1px solid color-mix(in srgb, var(--ph) 22%, transparent); }
+.sc-ud-abil-top { align-items: center; }
