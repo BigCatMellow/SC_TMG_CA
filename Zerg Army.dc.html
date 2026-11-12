@@ -1424,7 +1424,7 @@ class Component extends DCLogic {
     return 'sc-ud-type' + (/^active/i.test(type || '') ? ' sc-ud-type--active' : /reaction/i.test(type || '') ? ' sc-ud-type--reaction' : '');
   }
   phaseBadge(phaseLabel) {
-    const map = { 'Movement Phase': '#4f8df9', 'Assault Phase': '#f9822f', 'Combat Phase': '#f04a4a', 'Scoring Phase': '#35c76b', 'Any Phase': '#8a91a5' };
+    const map = { 'Movement Phase': '#4f8df9', 'Assault Phase': '#f9822f', 'Combat Phase': '#f04a4a', 'Scoring Phase': '#35c76b', 'Any Phase': '#c99af7' }; // Any phase uses the faction tint
     const c = map[phaseLabel] || '#8a91a5';
     return { phBg: 'rgba(' + this.hexRgb(c) + ',0.16)', phFg: c };
   }
