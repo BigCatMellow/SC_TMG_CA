@@ -58,6 +58,14 @@ window.SCTMG_MODEL_PORTRAITS = {
         "fallbackSize": "auto 310px",
         "fallbackPos": "right center"
       },
+      "point-defense-drone": {
+        "kind": "exact-miniature",
+        "src": "portraits/promo/terran/point-defense-drone.jpg",
+        "promo": "Publisher promo image (left model, beside a Spec Ops trooper), supplied by bt 7274; original in portraits-src/remote/terran-point-defense-drone.jpg. All rights remain with the publisher.",
+        "size": "auto 288px",
+        "pos": "right top",
+        "note": "Point Defense Drone miniature cropped from a publisher promo image."
+      },
       "spec-ops-marauder": {
         "fallbackId": "marauder",
         "kind": "shared-sculpt",
@@ -220,7 +228,11 @@ window.SCTMG_MODEL_PORTRAITS = {
       "roachling": {
         "fallbackId": "roach",
         "kind": "exact-miniature",
-        "note": "Cutout from the publisher's Roach-family promo image (portraits-src/remote/zerg-roachling.jpg, the small model top centre). Roach photo is the framed fallback. All rights remain with the publisher."
+        "src": "portraits/promo/zerg/roachling.jpg",
+        "promo": "Publisher promo image of the Roach family (small model, top centre), supplied by bt 7274; original in portraits-src/remote/zerg-roachling.jpg. All rights remain with the publisher.",
+        "size": "auto 230px",
+        "pos": "right center",
+        "note": "Roachling miniature cropped from a publisher promo image."
       },
       "zergling": {
         "src": "portraits/pdf/zerg/zergling.jpg",

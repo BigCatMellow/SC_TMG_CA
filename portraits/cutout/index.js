@@ -22,6 +22,8 @@ window.SCTMG_PORTRAIT_CUTOUTS = {
   "portraits/pdf/zerg/swarmling.jpg": "portraits/cutout/zerg/swarmling.webp",
   "portraits/pdf/zerg/vile.jpg": "portraits/cutout/zerg/vile.webp",
   "portraits/pdf/zerg/zergling.jpg": "portraits/cutout/zerg/zergling.webp",
+  "portraits/promo/terran/point-defense-drone.jpg": "portraits/cutout/terran/point-defense-drone.webp",
+  "portraits/promo/zerg/roachling.jpg": "portraits/cutout/zerg/roachling.webp",
   "protoss/high-templar": "portraits/cutout/protoss/high-templar.webp",
   "protoss/immortal": "portraits/cutout/protoss/immortal.webp",
   "protoss/tassadar": "portraits/cutout/protoss/tassadar.webp",
@@ -35,6 +37,5 @@ window.SCTMG_PORTRAIT_CUTOUTS = {
   "zerg/defiler": "portraits/cutout/zerg/defiler.webp",
   "zerg/omega-worm": "portraits/cutout/zerg/omega-worm.webp",
   "zerg/ravager": "portraits/cutout/zerg/ravager.webp",
-  "zerg/roachling": "portraits/cutout/zerg/roachling.webp",
   "zerg/zagara": "portraits/cutout/zerg/zagara.webp"
 };

@@ -17,7 +17,7 @@ let localPhotoCount = 0;
 assert.ok(config && config.version === 1);
 assert.deepEqual(Object.keys(config.factions).sort(), ['protoss','terran','zerg']);
 // Units with no painted-miniature photo show no art (renders/concept art are not used).
-const expectedUnmapped = ['protoss/pylon','terran/auto-turret','terran/point-defense-drone','terran/sabotage-drone'];
+const expectedUnmapped = ['protoss/pylon','terran/auto-turret','terran/sabotage-drone'];
 const unmapped = [];
 const stats = {};
 const controllers = {};
@@ -55,6 +55,12 @@ for (const faction of ['terran','zerg','protoss']) {
       assert.ok(entry.src || entry.fallbackId,unit.id+' must define a photo or fallback');
       if(entry.src) {
         if(entry.src.startsWith('https://')) stats[faction].remote++;
+        else if(entry.src.startsWith('portraits/promo/')) {
+          // Publisher promo photo supplied by hand: must exist and say where it came from.
+          assert.ok(fs.existsSync(new URL('../' + entry.src, import.meta.url)),unit.id+' promo photo missing');
+          assert.ok(entry.promo,unit.id+' promo photo needs a provenance note');
+          stats[faction].local++;
+        }
         else {
           assert.ok(entry.src.startsWith('portraits/pdf/'),unit.id+' unrecognized local image');
           stats[faction].local++;
@@ -68,7 +74,7 @@ for (const faction of ['terran','zerg','protoss']) {
           const digest = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
           assert.equal(digest,photo.sha256,unit.id+' PDF JPEG checksum mismatch');
         }
-        assert.ok(entry.source?.startsWith('https://'),unit.id+' missing publisher source link');
+        if(!entry.promo) assert.ok(entry.source?.startsWith('https://'),unit.id+' missing publisher source link');
         assert.ok(picture.portraitBg.includes(entry.src),unit.id+' image is not displayed');
       }
       if(entry.fallbackId) {
@@ -122,7 +128,7 @@ for (const faction of ['terran','zerg','protoss']) {
   for (const path of conceptArt) assert.ok(!html.includes(path), faction + ' still uses concept/render art: ' + path);
 }
 assert.equal(Object.values(stats).reduce((n,x)=>n+x.total,0),43,'check audit when adding units');
-assert.equal(Object.values(stats).reduce((n,x)=>n+x.covered,0),39);
+assert.equal(Object.values(stats).reduce((n,x)=>n+x.covered,0),40);
 assert.equal(localPhotoCount,22,'all 22 original PDF miniatures must be displayed');
 assert.equal(pdfSource.pdf_sha256,'27639c562e6db9777dd9ba984d0c9f9b581841ec30166848e021f893cd00ea54');
 const terranHtml=read('Terran Army.dc.html');
