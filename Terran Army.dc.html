@@ -2619,7 +2619,7 @@ class Component extends DCLogic {
             slotPills: Object.entries(t.slots || {}).map(([k, v]) => '+' + v + ' ' + k),
             slotChips: Object.entries(t.slots || {}).map(([k, v]) => ({ label: '+' + v + ' ' + k, color: this.roleColor(k.charAt(0).toUpperCase() + k.slice(1)) })),
             // Which phases the card's abilities work in, as small coloured letters.
-            phaseDots: [...new Set((t.abilities || []).map(a => a.phase))].map(ph => ({ name: ph.replace(' Phase', ''), short: ph === 'Any Phase' ? '◆' : ph.replace(' Phase', '').charAt(0), color: this.phaseBadge(ph).phFg })),
+            phaseDots: [...new Set((t.abilities || []).map(a => a.phase))].map(ph => ({ name: ph.replace(' Phase', ''), short: ({ 'Any Phase': 'Any phase', 'Movement Phase': 'Move', 'Assault Phase': 'Assault', 'Combat Phase': 'Combat', 'Scoring Phase': 'Score' })[ph] || ph.replace(' Phase', ''), color: this.phaseBadge(ph).phFg })),
             btnGlyph: inArmy ? '✓' : '+',
             btnBg: inArmy ? 'rgba(53,199,107,0.16)' : 'rgba(37,99,235,0.16)',
             btnBd: inArmy ? 'rgba(53,199,107,0.45)' : 'rgba(98,169,247,0.45)',
