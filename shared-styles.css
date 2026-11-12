@@ -1913,3 +1913,8 @@ input::placeholder { color: #5b6275; }
 
 /* The last section is short (e.g. Other): give it room to scroll up so its heading can stick like the rest. */
 .sc-role-group:last-child, .sc-tac-group:last-child { min-height: calc(100vh - var(--sc-sticky-top, 140px) - 120px); min-height: calc(100dvh - var(--sc-sticky-top, 140px) - 120px); }
+
+/* Library / Tactics: soft "notch" snap. Proximity only settles when you stop near a card. */
+html.sc-snap { scroll-snap-type: y proximity; }
+html.sc-snap .sc-lib-card:not(.sc-lib-card--open) { scroll-snap-align: start; scroll-margin-top: calc(var(--sc-sticky-top, 140px) + 64px); }
+html.sc-snap .sc-tac-card { scroll-snap-align: start; scroll-margin-top: calc(var(--sc-sticky-top, 140px) + 52px); }
