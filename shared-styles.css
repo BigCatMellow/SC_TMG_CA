@@ -1810,3 +1810,50 @@ input::placeholder { color: #5b6275; }
 }
 [data-screen-label="War Room"] { --sc-pattern: #35c76b; }
 [data-screen-label="Rules Reference"] { --sc-pattern: #38d3e8; }
+
+/* ---- Unit detail (Library / Battle cards): clear sections, big numbers, phase colour ---- */
+.sc-ud { display: grid; gap: 16px; font-family: -apple-system, BlinkMacSystemFont, Segoe UI, system-ui, sans-serif; }
+.sc-ud-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.sc-ud-tag { font-size: 10px; font-weight: 600; letter-spacing: .04em; padding: 3px 8px; background: #1a1f2e; border: 1px solid var(--sc-border-input); color: #a7aec2; cursor: pointer; border-radius: 2px; }
+.sc-ud-stats { display: grid; background: linear-gradient(180deg, #161a27, #10131c); border: 1px solid #2a3040; clip-path: var(--sc-corner-8); }
+.sc-ud-stat { display: grid; justify-items: center; padding: 7px 2px 8px; border-left: 1px solid #232939; }
+.sc-ud-stat:first-child { border-left: 0; }
+.sc-ud-stat small { font: 700 10px Rajdhani, sans-serif; letter-spacing: .12em; color: #7c8398; }
+.sc-ud-stat b { font: 700 19px/1.15 'Chakra Petch', sans-serif; color: #e9ecf2; }
+.sc-ud-stat--hp { background: rgba(53,199,107,0.08); }
+.sc-ud-stat--hp b { color: #7fe3a3; }
+.sc-ud-stat--shd { background: rgba(111,211,240,0.08); }
+.sc-ud-stat--shd b { color: #8fdcf3; }
+.sc-ud-sec { display: grid; gap: 10px; }
+.sc-ud-head { display: flex; align-items: center; gap: 10px; }
+.sc-ud-head span { font: 700 13px Rajdhani, sans-serif; letter-spacing: .2em; text-transform: uppercase; color: var(--fc-text-tint, #c99af7); }
+.sc-ud-head i { flex: 1; height: 1px; background: linear-gradient(90deg, var(--fc-primary-45, rgba(176,110,247,0.45)), transparent); }
+.sc-ud-head--gold span { color: #f2c14e; }
+.sc-ud-head--gold i { background: linear-gradient(90deg, rgba(242,193,78,0.45), transparent); }
+.sc-ud-pill { justify-self: start; font: 700 10px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; padding: 2px 8px; color: var(--ph); background: color-mix(in srgb, var(--ph) 16%, transparent); }
+.sc-ud-wpn { display: grid; gap: 8px; padding: 10px 12px 11px; border: 1px solid #232939; border-left: 3px solid var(--ph);
+  background: linear-gradient(90deg, color-mix(in srgb, var(--ph) 9%, transparent), transparent 60%), #12151f; }
+.sc-ud-wpn-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.sc-ud-wpn-top b { font: 700 16px Rajdhani, sans-serif; letter-spacing: .03em; color: #e9ecf2; }
+.sc-ud-wpn-main { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.sc-ud-wpn-main > div { display: grid; padding-left: 9px; border-left: 1px solid #2a3040; }
+.sc-ud-wpn-main > div:first-child { padding-left: 0; border-left: 0; }
+.sc-ud-wpn-main small { font: 700 9.5px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #7c8398; }
+.sc-ud-wpn-main b { font: 700 18px/1.2 'Chakra Petch', sans-serif; color: #e9ecf2; }
+.sc-ud-wpn-sub { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12.5px; color: #a7aec2; }
+.sc-ud-surge { color: #f2c14e; }
+.sc-ud-wpn-kw { font-size: 12.5px; color: #b9bfd0; }
+.sc-ud-kw { color: var(--fc-text-tint, #c99af7); border-bottom: 1px dotted var(--fc-primary-60, rgba(176,110,247,0.6)); font-weight: 600; cursor: pointer; }
+.sc-ud-legend-btn { justify-self: start; background: none; border: 0; padding: 0; min-height: 32px; color: #8a91a5; font: 700 11px Rajdhani, sans-serif; letter-spacing: .08em; text-transform: uppercase; cursor: pointer; }
+.sc-ud-legend { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; padding: 10px; background: #12151f; border: 1px solid #232939; font-size: 12px; line-height: 1.4; }
+.sc-ud-legend b { font-family: Rajdhani, sans-serif; color: #c8cede; letter-spacing: .06em; }
+.sc-ud-legend span { color: #9aa1b4; }
+.sc-ud-group { display: grid; gap: 8px; }
+.sc-ud-abil { padding: 9px 12px 10px; background: #12151f; border-left: 2px solid var(--ph); }
+.sc-ud-abil-top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-bottom: 4px; }
+.sc-ud-abil-top b { font: 700 15px Rajdhani, sans-serif; letter-spacing: .02em; color: #e9ecf2; }
+.sc-ud-type { flex: 0 0 auto; font: 700 10px Rajdhani, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #7c8398; }
+.sc-ud-type--active { color: #f2c14e; }
+.sc-ud-type--reaction { color: #6fd3f0; }
+.sc-ud-text { font-size: 13px; color: #b9bfd0; line-height: 1.55; }
+.sc-ud-abil .sc-def { border-left-color: transparent; padding-left: 10px; }
