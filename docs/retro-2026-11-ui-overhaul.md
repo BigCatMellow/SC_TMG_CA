@@ -145,7 +145,7 @@ Run one after any big batch of changes.
 1. **Mockup first** for anything that is a judgement call. Build after the "yes".
 2. **"Needed, not just useful."** Every new element must earn its pixels mid-game.
 3. **Declutter pass** after every three or four features.
-4. **Playtest with fresh eyes** (an agent or another player) after big batches.
+4. **Playtest with fresh eyes** (an agent or another player) after big batches. How: [playtesting.md](playtesting.md).
 5. **Screenshot at 360/390px** for every UI change, before asking to merge.
 6. **Shared code goes in shared files.** Stop growing the three faction copies.
 7. **Global mechanisms need regression checks** (history, scroll, storage, back gesture).
