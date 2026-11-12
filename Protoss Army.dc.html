@@ -34,7 +34,7 @@
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
-<div class="sc-app-col" style="max-width:480px;margin:0 auto;min-height:100dvh;background-color:#05060a;background-image:radial-gradient(120% 55% at 50% -10%, rgba(120,90,20,0.30), transparent 62%),conic-gradient(from 200deg at 85% 0%, rgba(242,200,96,0.10), transparent 30%, transparent 72%, rgba(242,200,96,0.05)),radial-gradient(1.2px 1.2px at 24px 38px, rgba(190,200,235,0.25), transparent),radial-gradient(1px 1px at 110px 92px, rgba(190,200,235,0.15), transparent);background-size:auto,auto,190px 190px,240px 240px;color:#e9ecf2;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;font-size:15px;line-height:1.5;padding-bottom:calc(84px + env(safe-area-inset-bottom))" data-screen-label="Protoss Army">
+<div class="sc-app-col" style="max-width:480px;margin:0 auto;min-height:100dvh;background-color:#05060a;background-image:radial-gradient(120% 55% at 50% -10%, rgba(120,90,20,0.30), transparent 62%),conic-gradient(from 200deg at 85% 0%, rgba(242,200,96,0.10), transparent 30%, transparent 72%, rgba(242,200,96,0.05)),radial-gradient(1.2px 1.2px at 24px 38px, rgba(190,200,235,0.25), transparent),radial-gradient(1px 1px at 110px 92px, rgba(190,200,235,0.15), transparent);background-size:auto,auto,190px 190px,240px 240px;color:#e9ecf2;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,system-ui,sans-serif;font-size:15px;line-height:1.5;padding-bottom:calc(120px + env(safe-area-inset-bottom))" data-screen-label="Protoss Army">
 
   <!-- ============ COMMAND HEADER (sticky) ============ -->
   <div class="sc-cmd-header" style="position:sticky;top:0;z-index:200;background:rgba(5,6,10,0.93);backdrop-filter:blur(14px);border-bottom:1px solid #232939;box-shadow:0 12px 28px rgba(0,0,0,0.5)">
@@ -151,7 +151,6 @@
       </div>
       <div class="sc-play-endrow">
         <button onClick="{{ openEndRound }}" class="sc-play-endround">{{ endRoundLabel }}</button>
-        <a href="Vs.dc.html" class="sc-play-vs" aria-label="VS mode: track both armies on one scoreboard">VS</a>
       </div>
 
       <!-- Cards: tap a ready card to spend its resource; tap a spent card to ready it -->
@@ -422,7 +421,7 @@
                     </div>
                   </div>
                   <div class="sc-lib-actions">
-                    <button onClick="{{ en.onAdd }}" disabled="{{ !en.recruitable }}" title="{{ en.addTitle }}" aria-label="{{ en.addTitle }}" class="sc-lib-add" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:rgba(180,130,30,0.16);border:1px solid rgba(242,200,96,0.45);color:#fae9c0;font-size:20px;cursor:pointer;clip-path:var(--sc-corner-9)">{{ en.addLabel }}</button>
+                    <button onClick="{{ en.onAdd }}" disabled="{{ !en.recruitable }}" title="{{ en.addTitle }}" aria-label="{{ en.addTitle }}" class="{{ en.addCls }}" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:rgba(180,130,30,0.16);border:1px solid rgba(242,200,96,0.45);color:#fae9c0;font-size:20px;cursor:pointer;clip-path:var(--sc-corner-9)">{{ en.addLabel }}</button>
                     <sc-if value="{{ en.viewSrc }}" hint-placeholder-val="{{ false }}"><button onClick="{{ en.onView }}" class="sc-lib-view" aria-label="View {{ en.name }} model fullscreen">&#10530; View</button></sc-if>
                   </div>
                 </div>
@@ -594,7 +593,7 @@
       <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="5">
         <button onClick="{{ tb.onSelect }}" class="sc-tab-btn" style="flex:1;height:60px;border:none;background:{{ tb.bg }};color:{{ tb.fg }};display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;cursor:pointer;position:relative">
           <span style="position:absolute;top:0;left:20%;right:20%;height:2px;background:{{ tb.tick }}"></span>
-          <span style="display:grid;place-items:center;width:20px;height:20px"><sc-if value="{{ tb.isBattle }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 14V2M4 2h8l-2 3 2 3H4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isLibrary }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="2" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect></svg></sc-if><sc-if value="{{ tb.isTactics }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"></circle><circle cx="8" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4"></circle><path d="M8 2v2.5M8 11.5V14M2 8h2.5M11.5 8H14" stroke="currentColor" stroke-width="1.4"></path></svg></sc-if><sc-if value="{{ tb.isFaction }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4 4 1-3 3 .8 4L8 11l-3.8 2 .8-4-3-3 4-1 2-4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isCodex }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h7.5A2.5 2.5 0 0113 5v8.5H5.5A2.5 2.5 0 013 11V2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M6 5.5h4M6 8h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if></span>
+          <span style="display:grid;place-items:center;width:20px;height:20px"><sc-if value="{{ tb.isBattle }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 14V2M4 2h8l-2 3 2 3H4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isLibrary }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="2" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect></svg></sc-if><sc-if value="{{ tb.isTactics }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"></circle><circle cx="8" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4"></circle><path d="M8 2v2.5M8 11.5V14M2 8h2.5M11.5 8H14" stroke="currentColor" stroke-width="1.4"></path></svg></sc-if><sc-if value="{{ tb.isFaction }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4 4 1-3 3 .8 4L8 11l-3.8 2 .8-4-3-3 4-1 2-4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isVs }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M2.5 2.5l7 7M9.5 9.5l-1.6 1.6M9.5 9.5l1.6-1.6M10 12l2 2M13.5 2.5l-7 7M6.5 9.5l1.6 1.6M6.5 9.5L4.9 7.9M6 12l-2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if><sc-if value="{{ tb.isCodex }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h7.5A2.5 2.5 0 0113 5v8.5H5.5A2.5 2.5 0 013 11V2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M6 5.5h4M6 8h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if></span>
           <span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase">{{ tb.label }}</span>
         </button>
       </sc-for>
@@ -938,7 +937,7 @@
             <button onClick="{{ vpFoeUp }}" aria-label="Enemy VP up" style="width:{{ trackerVpBtn }}px;height:{{ trackerVpBtn }}px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-size:16px;cursor:pointer">+</button>
           </div>
         </div>
-        <button onClick="{{ resetPlay }}" style="margin-top:10px;width:100%;height:34px;background:none;border:1px dashed var(--sc-border-input);color:#8a91a5;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Reset Tracker</button>
+        <button onClick="{{ resetPlay }}" style="margin-top:10px;width:100%;height:40px;background:{{ resetBg }};border:1px dashed {{ resetBorder }};color:{{ resetFg }};font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">{{ resetLabel }}</button>
         <button onClick="{{ closeSheet }}" style="margin-top:8px;width:100%;height:44px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Done</button>
       </div>
     </div>
@@ -1198,7 +1197,7 @@ class Component extends DCLogic {
       if (play) this.state.play = { round: play.round || 1, phase: play.phase || 0, vpYou: play.vpYou || 0, vpFoe: play.vpFoe || 0,
         markers: play.markers || {}, ownLostAtStart: play.ownLostAtStart || 0 };
       localStorage.setItem('sctmg_last_faction', 'protoss');
-      this.state.cardsCompact = localStorage.getItem('sctmg_cards_compact') === '1';
+      this.state.cardsCompact = localStorage.getItem('sctmg_cards_compact') !== '';
       const lastTab = localStorage.getItem('sctmg_protoss_tab');
       if (['faction', 'library', 'tactics', 'battle', 'codex'].includes(lastTab)) this.state.tab = lastTab;
       const saved = JSON.parse(localStorage.getItem('sctmg_protoss_v1') || 'null');
@@ -1512,8 +1511,30 @@ class Component extends DCLogic {
     this.setState(s2 => ({ army: s2.army.filter(x => x.key !== key), undo: { name, entry, idx } }), () => this.save());
     this._undoTimer = setTimeout(() => this.setState({ undo: null }), 6000);
   }
+  resetGame() {
+    clearTimeout(this._resetTimer); clearTimeout(this._undoTimer);
+    const st = this.state;
+    const snap = { play: st.play, army: st.army, tacticalTapped: st.tacticalTapped, factionTappedId: st.factionTappedId, battleSupplyAvailable: st.battleSupplyAvailable };
+    let rounds = {};
+    try { rounds = (JSON.parse(localStorage.getItem('sctmg_play') || 'null') || {}).rounds || {}; } catch (e) {}
+    snap.play = { ...snap.play, rounds };
+    const army = st.army.map(e => ({ ...e, modelsLost: 0, dmg: 0, deployed: false }));
+    const m = this.mission();
+    this.setState({
+      resetArmed: false, sheet: null, army, tacticalTapped: [], factionTappedId: null, paymentCards: [], paymentTarget: 0, scoreDraft: null,
+      battleSupplyAvailable: m ? m.supply : st.battleSupplyAvailable,
+      play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, rounds: {}, foeLostAtStart: 0, ownLostAtStart: 0 },
+      undo: { type: 'reset', text: 'New game started', snap }
+    }, () => { this.save(); this.savePlay(); });
+    this._undoTimer = setTimeout(() => this.setState({ undo: null }), 8000);
+  }
   undoRemove() {
     const u = this.state.undo;
+    if (u && u.type === 'reset') {
+      clearTimeout(this._undoTimer);
+      this.setState({ ...u.snap, undo: null }, () => { this.save(); this.savePlay(); });
+      return;
+    }
     if (!u) return;
     clearTimeout(this._undoTimer);
     this.setState(s2 => { const army = s2.army.slice(); army.splice(Math.min(u.idx, army.length), 0, u.entry); return { army, undo: null }; }, () => this.save());
@@ -1735,7 +1756,7 @@ class Component extends DCLogic {
       hudMission: m ? m.name : 'None picked',
       missionKicker: m ? 'Mission · tap for scoring' : 'Mission',
       missionTitle: m ? m.name : 'No mission picked',
-      missionSub: m ? ('Round ' + round + ' of ' + m.gameLength + (last ? ' · final round, no pool limit' : ' · pool ' + m.supply + ' +' + m.perRound + '/round')) : 'Pick one in War Room to auto-set supply',
+      missionSub: m ? ('Round ' + round + ' of ' + m.gameLength + (last ? ' · final round, no pool limit' : ' · pool ' + this.missionPool(round) + (m.perRound ? ' (+' + m.perRound + ' next round)' : ''))) : 'Pick one in War Room to auto-set supply',
       openMission: () => m ? this.setState({ sheet: { type: 'mission' } }) : (window.location.href = 'Missions.dc.html'),
       sheetMission: !!(st.sheet && st.sheet.type === 'mission' && m),
       missionParams: m ? m.parameters : [], missionScoring: m ? m.scoring : [],
@@ -1793,6 +1814,7 @@ class Component extends DCLogic {
   }
   openEndRound() {
     const m = this.mission();
+    if (this.state.scoreDraft && this.state.scoreDraft.round === this.state.play.round) { this.setState({ sheet: { type: 'endround' } }); return; }
     const S = window.SCTMG_SCORE;
     const saved = this.state.play.markers || {};
     const nums = S ? S.markerNums(this.scoreMap(), m && m.type) : [];
@@ -1804,7 +1826,7 @@ class Component extends DCLogic {
         activatedRound: prev.activatedRound || null, removed: !!prev.removed, colour: prev.colour || 'neutral' };
     });
     const ownLost = Math.max(0, this.lostSupplyNow() - (this.state.play.ownLostAtStart || 0));
-    this.setState({ sheet: { type: 'endround' }, scoreDraft: { markers, enemyDestroyed: 0, ownLost,
+    this.setState({ sheet: { type: 'endround' }, scoreDraft: { round: this.state.play.round, markers, enemyDestroyed: 0, ownLost,
       quartersYou: 0, quartersFoe: 0, gathersYou: 0, gathersFoe: 0, adjYou: 0, adjFoe: 0 } });
   }
   draft(fn) {
@@ -1880,7 +1902,9 @@ class Component extends DCLogic {
     // Points per round feed the VS scoreline.
     let rounds = {};
     try { rounds = (JSON.parse(localStorage.getItem('sctmg_play') || 'null') || {}).rounds || {}; } catch (e) {}
-    rounds = { ...rounds, [this.state.play.round]: { you: Math.max(0, v.scoreFinalYou - (this.state.play.vpYou || 0)), foe: Math.max(0, v.scoreFinalFoe - (this.state.play.vpFoe || 0)) } };
+    const rn = this.state.play.round, prior = { you: 0, foe: 0 }, kept = {};
+    Object.keys(rounds).forEach(k => { if (+k < rn) { kept[k] = rounds[k]; prior.you += rounds[k].you || 0; prior.foe += rounds[k].foe || 0; } });
+    rounds = { ...kept, [rn]: { you: Math.max(0, v.scoreFinalYou - prior.you), foe: Math.max(0, v.scoreFinalFoe - prior.foe) } };
     this.setState(st => ({ play: { ...st.play, vpYou: v.scoreFinalYou, vpFoe: v.scoreFinalFoe, markers, rounds,
       ownLostAtStart: this.lostSupplyNow() }, scoreDraft: null }), () => this.endRound());
   }
@@ -2469,6 +2493,7 @@ class Component extends DCLogic {
             && (!u.factionTag || u.factionTag === faction.name)
             && !(u.unique && st.army.some(e => e.unitId === u.id))
             && !noSlots;
+          const slotFull = recruitable && slotCap > 0 && slotUsed >= slotCap;
           const lockReason = u.role === 'Other' || !u.tiers.some(t => t.cost > 0) ? 'Summoned or placed by an ability'
             : u.factionTag && u.factionTag !== faction.name ? 'Requires ' + u.factionTag
             : noSlots && !inArmy ? 'No ' + role + ' slots with ' + faction.name
@@ -2482,8 +2507,9 @@ class Component extends DCLogic {
             onView: (ev) => { ev.stopPropagation(); this.openViewer(u.id); },
             onCutoutError: () => { this._cutoutFailed[art.cutout] = true; this.setState({}); },
             addLabel: (u.unique && inArmy) ? '\u2713' : '+',
-            lockReason, lockCls: 'sc-lock' + (recruitable ? ' sc-lock--hint' : ''),
-            addTitle: (u.unique && inArmy) ? 'Already in army' : recruitable ? 'Add unit' : (lockReason || 'Not available'),
+            lockReason: lockReason || (slotFull ? role + ' slots full: adding goes over the limit' : ''), lockCls: 'sc-lock' + (recruitable && !slotFull ? ' sc-lock--hint' : slotFull ? ' sc-lock--over' : ''),
+            addCls: 'sc-lib-add' + (slotFull ? ' sc-lib-add--over' : ''),
+            addTitle: (u.unique && inArmy) ? 'Already in army' : slotFull ? 'Add anyway (over the ' + role + ' slot limit)' : recruitable ? 'Add unit' : (lockReason || 'Not available'),
             tags: (u.tags || []).map(t => ({ name: t, onOpen: (ev) => { ev.stopPropagation(); this.openTag(t); } })),
             detail: expanded ? { ...this.buildDetail(u, mine.length === 1 ? mine[0] : null), tags: [] } : null,
             upgHint: !expanded || !this.unitUpgList(u).length ? '' : mine.length > 1
@@ -2710,17 +2736,17 @@ class Component extends DCLogic {
     // tabs
     const tabDefs = [
       { id: 'faction', label: 'Nexus' }, { id: 'library', label: 'Library' }, { id: 'tactics', label: 'Tactics' },
-      { id: 'battle', label: 'Battle' }, { id: 'codex', label: 'Codex' }
+      { id: 'battle', label: 'Battle' }, { id: 'vs', label: 'VS' }, { id: 'codex', label: 'Codex' }
     ];
     const tabs = tabDefs.map(t => {
       const active = st.tab === t.id;
       return {
         label: t.label,
-        isBattle: t.id === 'battle', isLibrary: t.id === 'library', isTactics: t.id === 'tactics', isFaction: t.id === 'faction', isCodex: t.id === 'codex',
+        isBattle: t.id === 'battle', isLibrary: t.id === 'library', isTactics: t.id === 'tactics', isFaction: t.id === 'faction', isCodex: t.id === 'codex', isVs: t.id === 'vs',
         bg: active ? 'rgba(180,130,30,0.1)' : 'transparent',
-        fg: active ? '#f6d98c' : '#7c8398',
+        fg: t.id === 'vs' ? '#f2c14e' : active ? '#f6d98c' : '#7c8398',
         tick: active ? '#f2c860' : 'transparent',
-        onSelect: () => { this.setState({ tab: t.id, editArmy: false, battlePanel: null, secMenu: false, secNav: null }); window.scrollTo(0, 0); setTimeout(() => this.updateSectionNav(false), 60); }
+        onSelect: () => { if (t.id === 'vs') { window.location.href = 'Vs.dc.html'; return; } this.setState({ tab: t.id, editArmy: false, battlePanel: null, secMenu: false, secNav: null }); window.scrollTo(0, 0); setTimeout(() => this.updateSectionNav(false), 60); }
       };
     });
 
@@ -2786,7 +2812,10 @@ class Component extends DCLogic {
           return { play: { ...s2.play, phase: nx > 3 ? 0 : nx, round: nx > 3 ? s2.play.round + 1 : s2.play.round } };
         }, () => this.savePlay());
       },
-      resetPlay: (ev) => { ev.stopPropagation(); this.setState({ play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, rounds: {}, foeLostAtStart: 0, ownLostAtStart: this.lostSupplyNow() } }, () => this.savePlay()); },
+      // Two taps: the first arms it, the second starts a new game (with Undo for a few seconds).
+      resetPlay: (ev) => { ev.stopPropagation(); if (!st.resetArmed) { this.setState({ resetArmed: true }); clearTimeout(this._resetTimer); this._resetTimer = setTimeout(() => this.setState({ resetArmed: false }), 4000); return; } this.resetGame(); },
+      resetLabel: st.resetArmed ? 'Tap again: new game (clears score, damage, casualties, used cards)' : 'Reset tracker · new game',
+      resetBg: st.resetArmed ? 'rgba(240,74,74,0.12)' : 'none', resetBorder: st.resetArmed ? 'rgba(240,74,74,0.6)' : 'var(--sc-border-input)', resetFg: st.resetArmed ? '#f08a8a' : '#8a91a5',
       phases,
       // resources
       mineralsUsed: totals.minerals, mineralsCap: isGrand ? '∞' : scale.minerals, mineralsColor: mOver ? '#f08a8a' : '#f2c14e',
@@ -2803,7 +2832,7 @@ class Component extends DCLogic {
       // roster
       scales, roleSlots, slotCols: Math.max(1, roleSlots.length),
       rosterEmpty: st.army.length === 0,
-      hasRosterWarnings: rosterWarnings.length > 0, rosterWarnings,
+      hasRosterWarnings: rosterWarnings.length > 0 && (st.army.length > 0 || st.tactical.length > 0), rosterWarnings,
       rosterIssueCount: rosterWarnings.length,
       rosterIssueTitle: rosterWarnings.length + (rosterWarnings.length === 1 ? ' roster issue' : ' roster issues'),
       rosterIssues: rosterWarnings.map(text => {
@@ -2935,7 +2964,7 @@ class Component extends DCLogic {
           secMenuOn: on && !!st.secMenu, secItems: items,
           toggleSecMenu: () => this.setState(s2 => ({ secMenu: !s2.secMenu })), closeSecMenu: () => this.setState({ secMenu: false }) };
       })(),
-      undoOn: !!st.undo, undoText: st.undo ? st.undo.name + ' removed' : '', undoRemove: () => this.undoRemove(),
+      undoOn: !!st.undo, undoText: st.undo ? (st.undo.text || st.undo.name + ' removed') : '', undoRemove: () => this.undoRemove(),
       sheetPlay: !!(st.sheet && st.sheet.type === 'play'),
       closeSheet: () => this.setState(s2 => ({ sheet: (s2.sheet && s2.sheet.returnTo) || null })),
       // search

@@ -25,7 +25,7 @@
   <!-- ============ STICKY HEADER ============ -->
   <div style="position:sticky;top:0;z-index:200;background:rgba(5,6,10,0.93);backdrop-filter:blur(14px);border-bottom:1px solid #232939;box-shadow:0 12px 28px rgba(0,0,0,0.5)">
     <div style="display:flex;align-items:center;gap:10px;padding:calc(10px + env(safe-area-inset-top)) 14px 8px">
-      <a href="index.html" aria-label="Back to command center" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#8a91a5;text-decoration:none;background:#141824;border:1px solid var(--sc-border-neutral);clip-path:var(--sc-corner-8)">
+      <a href="index.html" aria-label="Back to command center" onClick="{{ goBack }}" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#8a91a5;text-decoration:none;background:#141824;border:1px solid var(--sc-border-neutral);clip-path:var(--sc-corner-8)">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
       </a>
       <div style="flex:1;min-width:0">
@@ -79,6 +79,7 @@
           </button>
         </sc-for>
       </div>
+      <sc-if value="{{ sizeNote }}" hint-placeholder-val="{{ false }}"><div role="status" style="margin:0 0 10px;padding:8px 12px;background:rgba(242,193,78,0.08);border:1px solid rgba(242,193,78,0.4);color:#f2c14e;font-size:13px">{{ sizeNote }}</div></sc-if>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;background:var(--sc-card-bg);border:1px solid #232939;margin-bottom:18px">
         <div style="padding:8px;text-align:center;border-right:1px solid #1c2130">
           <div style="font-family:Rajdhani,sans-serif;font-size:9px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#8a91a5">Minerals</div>
@@ -400,6 +401,15 @@ class Component extends DCLogic {
     try {
       const play = JSON.parse(localStorage.getItem('sctmg_play') || 'null') || { round: 1, phase: 0, vpYou: 0, vpFoe: 0 };
       localStorage.setItem('sctmg_play', JSON.stringify({ ...play, missionId: this.state.selectedMissionId, mapId: this.state.selectedMapId, battleSize: this.state.battleSize }));
+      const m = this.D().MISSIONS.find(x => x.id === this.state.selectedMissionId);
+      const round = play.round || 1;
+      if (m && m.id !== play.missionId && round < m.gameLength) {
+        const pool = m.supply + m.perRound * (round - 1);
+        ['zerg', 'terran', 'protoss'].forEach(f => {
+          const k = 'sctmg_' + f + '_v5', a = JSON.parse(localStorage.getItem(k) || 'null');
+          if (a) localStorage.setItem(k, JSON.stringify({ ...a, battleSupplyAvailable: pool }));
+        });
+      }
     } catch (e) {}
   }
 
@@ -416,8 +426,10 @@ class Component extends DCLogic {
       const next = { battleSize: size };
       const m = this.D().MISSIONS.find(x => x.id === st.selectedMissionId);
       const mp = this.D().MAPS.find(x => x.id === st.selectedMapId);
-      if (m && m.type.toLowerCase() !== size) next.selectedMissionId = null;
-      if (mp && mp.type.toLowerCase() !== size) next.selectedMapId = null;
+      const cleared = [];
+      if (m && m.type.toLowerCase() !== size) { next.selectedMissionId = null; cleared.push(m.name); }
+      if (mp && mp.type.toLowerCase() !== size) { next.selectedMapId = null; cleared.push(mp.name); }
+      next.sizeNote = cleared.length ? cleared.join(' and ') + (cleared.length > 1 ? ' are ' : ' is ') + (m && cleared[0] === m.name ? m.type : mp.type) + ' only, so ' + (cleared.length > 1 ? 'they were' : 'it was') + ' cleared. Pick again below.' : '';
       return next;
     }, () => this.save());
   }
@@ -676,6 +688,10 @@ class Component extends DCLogic {
 
     return {
       ready: true,
+      // Opened from an army's Battle tab: go back there instead of Home.
+      goBack: (ev) => {
+        if (document.referrer && /Army\.dc\.html/.test(document.referrer) && window.history.length > 1) { ev.preventDefault(); window.history.back(); }
+      },
       round: st.play.round, phaseName: ph.name, phaseColor: ph.color,
       barMission: ((this.D() && this.D().MISSIONS.find(x => x.id === st.selectedMissionId)) || {}).name || 'None picked',
       vpYou: st.play.vpYou, vpFoe: st.play.vpFoe,
@@ -723,7 +739,7 @@ class Component extends DCLogic {
       })),
       sumMinerals: this.sizeInfo().mineralsRaw, sumGas: st.battleSize === 'grand' ? '∞' : this.sizeInfo().gas, sumBoard: this.sizeInfo().boardShort,
       sizeName: this.sizeInfo().name,
-      noSizeContent: missions.length === 0,
+      noSizeContent: missions.length === 0, sizeNote: st.sizeNote || '',
       slots,
       hasAnyPick: !!(selM || selMap),
       randomBoth: () => { this.randomMission(); this.randomMap(); },

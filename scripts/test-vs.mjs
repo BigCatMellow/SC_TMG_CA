@@ -11,7 +11,7 @@ assert.ok(html.indexOf('<script src="./resume.js"></script>') < html.indexOf('<s
 assert.ok(!/\{\{[^}]*(&&|\|\||\?)[^}]*\}\}/.test(html), 'no expressions in template holes');
 for (const F of ['Zerg', 'Terran', 'Protoss']) {
   const a = read(F + ' Army.dc.html');
-  assert.ok(a.includes('<a href="Vs.dc.html" class="sc-play-vs"'), F + ' Battle tab has the VS button');
+  assert.ok(a.includes("{ id: 'vs', label: 'VS' }") && a.includes("window.location.href = 'Vs.dc.html'"), F + ' has a VS tab in the bottom bar');
   assert.ok(a.includes('rounds: {}, foeLostAtStart: 0'), F + ' reset clears the VS scoreline');
 }
 
@@ -53,4 +53,20 @@ assert.equal(JSON.parse(store.get('sctmg_zerg_v5')).battleSupplyAvailable, 8, 'y
 // Your casualties made in VS land in your army save.
 c.renderVals().you.units[0].lose();
 assert.equal(JSON.parse(store.get('sctmg_zerg_v5')).army[0].modelsLost, 1, 'your casualties write back to your army');
+// Supply pool: a reserve unit that does not fit cannot be deployed.
+c.state = { ...c.state, yours: { ...c.state.yours, battleSupplyAvailable: 0, army: [{ key: 'z9', unitId: 'zergling', tierIdx: 1, modelsLost: 0, deployed: false }] } };
+let row = c.renderVals().you.units[0];
+assert.ok(row.deployOff && /Needs/.test(row.status), 'reserve unit over the pool is blocked');
+row.toggleDeploy();
+assert.equal(c.state.yours.army[0].deployed, false, 'blocked unit stays in reserve');
+// Scout: a unique unit can be added once.
+c.state = { ...c.state, view: 'scout', opp: { faction: 'terran', factionId: null, army: [], tactical: [], tapped: [] } };
+let raynor = () => c.renderVals().scoutUnits.find(u => u.name === 'Jim Raynor');
+raynor().tiers.find(t => !t.off).add();
+assert.ok(raynor().tiers.every(t => t.off), 'unique unit locked after one copy');
+assert.equal(c.state.opp.army.length, 1);
+// Scoreline: manual VP during a round counts toward that round, and the line adds up to the total.
+c.state = { ...c.state, view: 'board', play: { round: 2, vpYou: 7, vpFoe: 2, rounds: { 1: { you: 4, foe: 2 }, 3: { you: 9, foe: 9 } } } };
+const line = c.renderVals().rounds;
+assert.equal(line[0].you, 4); assert.equal(line[1].you, 3, 'current round shows points so far'); assert.equal(line[2].you, '–', 'later rounds are not shown');
 console.log('VS mode checks passed.');

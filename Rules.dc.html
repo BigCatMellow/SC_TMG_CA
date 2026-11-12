@@ -76,6 +76,7 @@
       </sc-for>
     </div>
     <!-- quick-nav chips -->
+    <sc-if value="{{ notSearching }}" hint-placeholder-val="{{ true }}">
     <div style="display:flex;gap:6px;overflow-x:auto;padding:0 14px 10px;scrollbar-width:none">
       <sc-for list="{{ chips }}" as="ch" hint-placeholder-count="6">
         <button onClick="{{ ch.onJump }}" style="flex:0 0 auto;height:32px;padding:0 12px;display:flex;align-items:center;gap:6px;background:{{ ch.bg }};border:1px solid {{ ch.bd }};color:{{ ch.fg }};font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap">
@@ -83,11 +84,13 @@
         </button>
       </sc-for>
     </div>
+    </sc-if>
   </div>
 
   <!-- ============ SECTIONS ============ -->
   <div style="padding:14px">
-    <div style="margin-bottom:12px;padding:9px 11px;background:rgba(56,211,232,0.06);border-left:2px solid #38d3e8;color:#9ab4bd;font-size:11px;line-height:1.5">{{ sourceBanner }}</div>
+    <sc-if value="{{ notSearching }}" hint-placeholder-val="{{ true }}"><div style="margin-bottom:12px;padding:9px 11px;background:rgba(56,211,232,0.06);border-left:2px solid #38d3e8;color:#9ab4bd;font-size:11px;line-height:1.5">{{ sourceBanner }}</div></sc-if>
+    <sc-if value="{{ hitText }}" hint-placeholder-val="{{ false }}"><div role="status" style="margin:0 2px 10px;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#f2c14e">{{ hitText }}</div></sc-if>
     <sc-if value="{{ noHits }}" hint-placeholder-val="{{ false }}">
       <div style="padding:40px 20px;text-align:center;color:#5b6275;font-size:13px">No rules match “{{ q }}”.</div>
     </sc-if>
@@ -109,12 +112,12 @@
           <sc-if value="{{ sec.expanded }}" hint-placeholder-val="{{ false }}">
             <div style="border-top:1px solid #1f2430;padding:12px;display:grid;gap:12px">
               <sc-if value="{{ sec.introSegs }}" hint-placeholder-val="{{ false }}">
-                <div style="font-size:13.5px;color:#c8cede;line-height:1.6"><sc-for list="{{ sec.introSegs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:#5fd9ea;border-bottom:1px dotted rgba(56,211,232,0.6);font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.b }}" hint-placeholder-val="{{ false }}"><strong style="color:#e9ecf2">{{ sg.t }}</strong></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
+                <div style="font-size:13.5px;color:#c8cede;line-height:1.6"><sc-for list="{{ sec.introSegs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:#5fd9ea;border-bottom:1px dotted rgba(56,211,232,0.6);font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.b }}" hint-placeholder-val="{{ false }}"><strong style="color:#e9ecf2">{{ sg.t }}</strong></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if><sc-if value="{{ sg.hl }}" hint-placeholder-val="{{ false }}"><mark style="background:rgba(242,193,78,0.28);color:#fff;padding:0 1px">{{ sg.t }}</mark></sc-if></sc-for></div>
               </sc-if>
               <sc-if value="{{ sec.practicalSegs }}" hint-placeholder-val="{{ false }}">
                 <div style="display:flex;gap:9px;padding:10px 12px;background:rgba(56,211,232,0.06);border:1px solid rgba(56,211,232,0.22)">
                   <svg width="14" height="14" viewBox="0 0 16 16" fill="none" style="flex:0 0 auto;margin-top:3px"><circle cx="8" cy="8" r="6.4" stroke="#38d3e8" stroke-width="1.4"></circle><path d="M8 7.2v4" stroke="#38d3e8" stroke-width="1.5" stroke-linecap="round"></path><circle cx="8" cy="4.9" r="0.9" fill="#38d3e8"></circle></svg>
-                  <span style="font-size:13px;color:#a9cfd6;line-height:1.55"><sc-for list="{{ sec.practicalSegs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:#5fd9ea;border-bottom:1px dotted rgba(56,211,232,0.6);font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.b }}" hint-placeholder-val="{{ false }}"><strong style="color:#dff5f9">{{ sg.t }}</strong></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></span>
+                  <span style="font-size:13px;color:#a9cfd6;line-height:1.55"><sc-for list="{{ sec.practicalSegs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:#5fd9ea;border-bottom:1px dotted rgba(56,211,232,0.6);font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.b }}" hint-placeholder-val="{{ false }}"><strong style="color:#dff5f9">{{ sg.t }}</strong></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if><sc-if value="{{ sg.hl }}" hint-placeholder-val="{{ false }}"><mark style="background:rgba(242,193,78,0.28);color:#fff;padding:0 1px">{{ sg.t }}</mark></sc-if></sc-for></span>
                 </div>
               </sc-if>
               <sc-for list="{{ sec.groups }}" as="grp" hint-placeholder-count="3">
@@ -136,7 +139,7 @@
                           <span style="width:6px;height:6px;background:{{ grp.color }};opacity:0.7;flex:0 0 auto;margin-top:7px;clip-path:var(--sc-diamond)"></span>
                         </sc-if>
                         <span style="flex:1;min-width:0;font-size:13.5px;color:#c3c9d8;line-height:1.55">
-                          <sc-if value="{{ it.ph }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:1px 6px;margin-right:6px;background:{{ it.phBg }};color:{{ it.phFg }};white-space:nowrap">{{ it.ph }}</span></sc-if><sc-for list="{{ it.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:#5fd9ea;border-bottom:1px dotted rgba(56,211,232,0.6);font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.b }}" hint-placeholder-val="{{ false }}"><strong style="color:#e9ecf2">{{ sg.t }}</strong></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for>
+                          <sc-if value="{{ it.ph }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:1px 6px;margin-right:6px;background:{{ it.phBg }};color:{{ it.phFg }};white-space:nowrap">{{ it.ph }}</span></sc-if><sc-for list="{{ it.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" style="color:#5fd9ea;border-bottom:1px dotted rgba(56,211,232,0.6);font-weight:600;cursor:pointer">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.b }}" hint-placeholder-val="{{ false }}"><strong style="color:#e9ecf2">{{ sg.t }}</strong></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if><sc-if value="{{ sg.hl }}" hint-placeholder-val="{{ false }}"><mark style="background:rgba(242,193,78,0.28);color:#fff;padding:0 1px">{{ sg.t }}</mark></sc-if></sc-for>
                         </span>
                       </div>
                     </sc-for>
@@ -277,7 +280,12 @@ class Component extends DCLogic {
       last = m.index + m[0].length;
     }
     pushRun(text.slice(last), false);
-    return out;
+    // Highlight the search term inside plain text.
+    const q = (this.state.q || '').trim();
+    if (q.length < 2) return out;
+    const hlRe = new RegExp('(' + q.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
+    return out.flatMap(sg => !sg.plain ? [sg] : sg.t.split(hlRe).filter(Boolean).map(t =>
+      t.toLowerCase() === q.toLowerCase() ? { t, hl: true, plain: false, kw: false, b: false } : { t, plain: true, kw: false, b: false }));
   }
 
   openKeyword(name) {
@@ -440,7 +448,9 @@ class Component extends DCLogic {
       sourceBanner: window.SCTMG_BATTLE_RULES
         ? '2026 Core Rules + publisher FAQ v1.1 for rulings; October 2026 balance for points. Includes selected Wave 2 units. Follow official card text for disputed interactions; the full newer-wave catalogue is not loaded.'
         : 'Legacy HTML summary loaded. The 2026 battle reference is unavailable — do not rely on this as fully updated.',
-      noHits: searching && sections.length === 0,
+      noHits: searching && sections.length === 0, notSearching: !searching,
+      hitText: searching && sections.length ? (() => { const n = sections.reduce((t, x) => t + x.groups.reduce((a, g) => a + g.items.length, 0), 0);
+        return n + (n === 1 ? ' rule' : ' rules') + ' in ' + sections.length + (sections.length === 1 ? ' section' : ' sections') + ' match “' + st.q.trim() + '”'; })() : '',
       sheetOpen: !!(st.sheet && st.sheet.type !== 'play'),
       sheetPlay: !!(st.sheet && st.sheet.type === 'play'),
       sheetTitle: st.sheet ? st.sheet.title : '', sheetMeta: st.sheet ? st.sheet.meta : '', sheetBody: st.sheet ? st.sheet.body : '',
