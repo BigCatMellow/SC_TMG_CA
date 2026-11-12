@@ -65,9 +65,9 @@ The original [source PDF](https://starcraft-tmg.com/files/downloads/StarCraft-TM
 | zerg/hydralisk, kerrigan, roach, zergling | Photo | Fallback (PDF photo is primary) |
 | zerg/corpser, queen | Art (concept) | Fallback only |
 
-**Decision (11 Nov 2026): painted-miniature photos only.** Game renders, card art and concept art are no longer used anywhere in the army screens. That includes the Terran tactical-card building art and the art-only fallbacks above. Units without a miniature photo show a plain card until one is found: **Pylon**, **Sabotage Drone** and **Auto-Turret**.
+**Decision (11 Nov 2026): painted-miniature photos only.** Game renders, card art and concept art are no longer used anywhere in the army screens. That includes the Terran tactical-card building art and the art-only fallbacks above. Units without a miniature photo show a plain card until one is found: **Pylon** and **Auto-Turret**.
 
-**Promo photos (12 Nov 2026).** bt 7274 supplied publisher promo images for the **Point Defense Drone** and **Roachling**. Each is cropped to the one model in `portraits/promo/` (originals in `portraits-src/remote/`) and cut out like the PDF photos. Roachling no longer borrows the Roach photo. `test-portraits.mjs` fails if any render or concept-art path comes back.
+**Promo photos (12 Nov 2026).** bt 7274 supplied publisher promo images for the **Point Defense Drone** and **Roachling**. Each is cropped to the one model in `portraits/promo/` (originals in `portraits-src/remote/`) and cut out like the PDF photos. Roachling no longer borrows the Roach photo. The **Sabotage Drone** is the same drone kit built with different options, so it shares the Point Defense Drone photo. `test-portraits.mjs` fails if any render or concept-art path comes back.
 
 ## Remaining sources
 

@@ -66,6 +66,11 @@ window.SCTMG_MODEL_PORTRAITS = {
         "pos": "right top",
         "note": "Point Defense Drone miniature cropped from a publisher promo image."
       },
+      "sabotage-drone": {
+        "fallbackId": "point-defense-drone",
+        "kind": "shared-sculpt",
+        "note": "Same drone miniature as the Point Defense Drone, built with different options"
+      },
       "spec-ops-marauder": {
         "fallbackId": "marauder",
         "kind": "shared-sculpt",
