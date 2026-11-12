@@ -141,16 +141,14 @@
 
     <!-- Two concise Battle summaries; details and controls live in their sheets. -->
     <div class="sc-battle-overview" aria-label="Battle overview">
-      <!-- Mission: one place for the round, the supply pool and ending the round -->
-      <div class="sc-play-mission">
-        <button onClick="{{ openMission }}" class="sc-play-mission-name" aria-label="Mission scoring rules">
-          <span class="sc-play-kicker">{{ missionKicker }}</span>
+      <!-- Mission and End round in one compact block (the round itself is in the header) -->
+      <div class="sc-play-top">
+        <button onClick="{{ openMission }}" class="sc-play-top-mission" aria-label="Mission scoring rules">
+          <span class="sc-play-kicker">{{ missionKickerShort }}</span>
           <span class="sc-play-mission-title">{{ missionTitle }}</span>
-          <span class="sc-play-mission-sub">{{ missionSub }}</span>
+          <span class="sc-play-mission-sub">{{ missionSubShort }}</span>
         </button>
-      </div>
-      <div class="sc-play-endrow">
-        <button onClick="{{ openEndRound }}" class="sc-play-endround">{{ endRoundLabel }}</button>
+        <button onClick="{{ openEndRound }}" class="sc-play-top-end" aria-label="{{ endRoundLabel }}"><small>{{ endRoundKicker }}</small><b>{{ endRoundBig }}</b></button>
       </div>
 
       <!-- Cards: tap a ready card to spend its resource; tap a spent card to ready it -->
@@ -1779,6 +1777,10 @@ class Component extends DCLogic {
       poolSuggestion: suggestion, poolDiffers: m != null && suggestion !== st.battleSupplyAvailable,
       usePoolSuggestion: () => this.setState({ battleSupplyAvailable: suggestion }, () => this.save()),
       endRoundLabel: last ? 'Final round · save score' : 'End round ' + round + ' →',
+      endRoundKicker: last ? 'Final round' : 'End round',
+      endRoundBig: last ? 'Score' : round + ' →',
+      missionKickerShort: m ? 'Mission · scoring ›' : 'Mission',
+      missionSubShort: m ? (last ? 'No pool limit' : 'Pool ' + this.missionPool(round) + (m.perRound ? ' · +' + m.perRound + ' next round' : '')) : 'Pick one in War Room',
       trackerEndLabel: last ? 'Final score' : 'End round',
       openEndRound: () => this.openEndRound(),
       openPool: () => this.setState({ sheet: { type: 'pool' } }),
