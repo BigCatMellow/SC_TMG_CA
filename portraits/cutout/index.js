@@ -35,5 +35,6 @@ window.SCTMG_PORTRAIT_CUTOUTS = {
   "zerg/defiler": "portraits/cutout/zerg/defiler.webp",
   "zerg/omega-worm": "portraits/cutout/zerg/omega-worm.webp",
   "zerg/ravager": "portraits/cutout/zerg/ravager.webp",
+  "zerg/roachling": "portraits/cutout/zerg/roachling.webp",
   "zerg/zagara": "portraits/cutout/zerg/zagara.webp"
 };

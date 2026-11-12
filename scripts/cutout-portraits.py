@@ -38,6 +38,7 @@ CROPS = {
     'zerg/zagara': (0.47, 0.05, 0.92, 0.95),            # model, not the unit card behind it
     'zerg/defiler': (0.52, 0.20, 1.00, 0.95),           # model, not the card or Dark Swarm token
     'zerg/bile-launcher': (0.48, 0.05, 1.00, 0.95),     # model, not the card or bile token
+    # zerg/roachling: cut by hand from portraits-src/remote/zerg-roachling.jpg at (0.40, 0.09, 0.69, 0.31)
 }
 
 

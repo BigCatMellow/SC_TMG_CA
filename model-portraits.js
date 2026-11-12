@@ -219,8 +219,8 @@ window.SCTMG_MODEL_PORTRAITS = {
       },
       "roachling": {
         "fallbackId": "roach",
-        "kind": "shared-sculpt",
-        "note": "Roach base miniature fallback for summoned Roachling"
+        "kind": "exact-miniature",
+        "note": "Cutout from the publisher's Roach-family promo image (portraits-src/remote/zerg-roachling.jpg, the small model top centre). Roach photo is the framed fallback. All rights remain with the publisher."
       },
       "zergling": {
         "src": "portraits/pdf/zerg/zergling.jpg",
