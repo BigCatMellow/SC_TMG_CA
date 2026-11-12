@@ -338,7 +338,7 @@ class Component extends DCLogic {
   // Saved army summary per faction, or the catalogue size when nothing is saved yet.
   factionSummary(key, D, last) {
     let saved = null;
-    try { saved = JSON.parse(localStorage.getItem('sctmg_' + key + '_v5') || 'null'); } catch (e) {}
+    try { saved = JSON.parse(localStorage.getItem({ zerg: 'sctmg_zerg_v5', terran: 'sctmg_terran_v1', protoss: 'sctmg_protoss_v1' }[key]) || 'null'); } catch (e) {}
     const army = (saved && Array.isArray(saved.army)) ? saved.army : [];
     const cards = (saved && Array.isArray(saved.tactical)) ? saved.tactical.length : 0;
     if (army.length) {

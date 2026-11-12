@@ -1949,3 +1949,8 @@ input::placeholder { color: #5b6275; }
 .sc-tc-phases { display: inline-flex; gap: 3px; margin-left: auto; }
 .sc-tc-phase { display: grid; place-items: center; width: 18px; height: 18px; font: 700 10px Rajdhani, sans-serif; color: var(--ph); background: color-mix(in srgb, var(--ph) 16%, transparent); border: 1px solid color-mix(in srgb, var(--ph) 40%, transparent); }
 .sc-tc-body { border-top: 1px solid color-mix(in srgb, var(--role) 25%, #1f2430); padding: 12px; display: grid; gap: 10px; }
+
+/* Library: units in the army get a − under the + (or ✓) so the roster is edited right here. */
+.sc-lib-actions--pair { flex-direction: column; gap: 4px; }
+.sc-lib-actions--pair > button { width: 40px !important; height: 36px !important; }
+.sc-lib-remove { display: grid; place-items: center; padding: 0; background: rgba(240,74,74,0.1); border: 1px solid rgba(240,74,74,0.4); color: #f08a8a; font-size: 20px; cursor: pointer; clip-path: var(--sc-corner-9); }

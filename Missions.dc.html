@@ -406,7 +406,7 @@ class Component extends DCLogic {
       if (m && m.id !== play.missionId && round < m.gameLength) {
         const pool = m.supply + m.perRound * (round - 1);
         ['zerg', 'terran', 'protoss'].forEach(f => {
-          const k = 'sctmg_' + f + '_v5', a = JSON.parse(localStorage.getItem(k) || 'null');
+          const k = { zerg: 'sctmg_zerg_v5', terran: 'sctmg_terran_v1', protoss: 'sctmg_protoss_v1' }[f], a = JSON.parse(localStorage.getItem(k) || 'null');
           if (a) localStorage.setItem(k, JSON.stringify({ ...a, battleSupplyAvailable: pool }));
         });
       }

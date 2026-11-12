@@ -422,8 +422,9 @@
                       </sc-for>
                     </div>
                   </div>
-                  <div class="sc-lib-actions">
+                  <div class="{{ en.actionsCls }}">
                     <button onClick="{{ en.onAdd }}" disabled="{{ !en.recruitable }}" title="{{ en.addTitle }}" aria-label="{{ en.addTitle }}" class="{{ en.addCls }}" style="width:44px;height:44px;flex:0 0 auto;display:grid;place-items:center;background:rgba(37,99,235,0.16);border:1px solid rgba(98,169,247,0.45);color:#bcd9fd;font-size:20px;cursor:pointer;clip-path:var(--sc-corner-9)">{{ en.addLabel }}</button>
+                    <sc-if value="{{ en.inArmy }}" hint-placeholder-val="{{ false }}"><button onClick="{{ en.onRemoveOne }}" class="sc-lib-remove" aria-label="{{ en.removeTitle }}" title="{{ en.removeTitle }}">−</button></sc-if>
                     <sc-if value="{{ en.viewSrc }}" hint-placeholder-val="{{ false }}"><button onClick="{{ en.onView }}" class="sc-lib-view" aria-label="View {{ en.name }} model fullscreen">&#10530; View</button></sc-if>
                   </div>
                 </div>
@@ -2554,6 +2555,10 @@ class Component extends DCLogic {
               && !(u.unique && st.army.some(e => e.unitId === u.id))
               && !(u.exclusiveGroup && st.army.some(e => D.UNITS.find(other => other.id === e.unitId)?.exclusiveGroup === u.exclusiveGroup))
               && recruitable,
+            // Units in the army can be removed right here (the last copy added goes first, with Undo).
+            actionsCls: 'sc-lib-actions' + (inArmy ? ' sc-lib-actions--pair' : ''),
+            removeTitle: mine.length > 1 ? 'Remove one ' + u.name + ' (' + mine.length + ' in army)' : 'Remove ' + u.name + ' from the army',
+            onRemoveOne: (ev) => { ev.stopPropagation(); const last = mine[mine.length - 1]; if (last) this.removeWithUndo(last.key, u.name); },
             onAdd: (ev) => { ev.stopPropagation(); this.addUnit(u); }
           };
         })
@@ -2789,7 +2794,7 @@ class Component extends DCLogic {
         bg: active ? 'rgba(37,99,235,0.1)' : 'transparent',
         fg: t.id === 'vs' ? '#f2c14e' : active ? '#8ec3fa' : '#7c8398',
         tick: active ? '#62a9f7' : 'transparent',
-        onSelect: () => { if (t.id === 'vs') { window.location.href = 'Vs.dc.html'; return; } this.setState({ tab: t.id, editArmy: false, battlePanel: null, secMenu: false, secNav: null }); window.scrollTo(0, 0); setTimeout(() => this.updateSectionNav(false), 60); }
+        onSelect: () => { if (t.id === 'vs') { window.location.href = 'Vs.dc.html?f=terran'; return; } this.setState({ tab: t.id, editArmy: false, battlePanel: null, secMenu: false, secNav: null }); window.scrollTo(0, 0); setTimeout(() => this.updateSectionNav(false), 60); }
       };
     });
 

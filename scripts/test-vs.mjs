@@ -9,9 +9,14 @@ for (const f of ['terran-data.js', 'zerg-data.js', 'protoss-data.js', 'wave3-dat
   assert.ok(html.includes('<script src="' + f + '"></script>'), 'VS loads ' + f);
 assert.ok(html.indexOf('<script src="./resume.js"></script>') < html.indexOf('<script src="./support.js"></script>'), 'VS resumes like other pages');
 assert.ok(!/\{\{[^}]*(&&|\|\||\?)[^}]*\}\}/.test(html), 'no expressions in template holes');
+// VS must read each army from the key its page saves to (Terran and Protoss are still on v1).
+for (const [f, key] of [['Zerg', 'sctmg_zerg_v5'], ['Terran', 'sctmg_terran_v1'], ['Protoss', 'sctmg_protoss_v1']]) {
+  assert.ok(read(f + ' Army.dc.html').includes("localStorage.setItem('" + key + "'"), f + ' saves to ' + key);
+  assert.ok(html.includes(f.toLowerCase() + ": '" + key + "'"), 'VS reads ' + f + ' from ' + key);
+}
 for (const F of ['Zerg', 'Terran', 'Protoss']) {
   const a = read(F + ' Army.dc.html');
-  assert.ok(a.includes("{ id: 'vs', label: 'VS' }") && a.includes("window.location.href = 'Vs.dc.html'"), F + ' has a VS tab in the bottom bar');
+  assert.ok(a.includes("{ id: 'vs', label: 'VS' }") && a.includes("window.location.href = 'Vs.dc.html?f="), F + ' has a VS tab in the bottom bar');
   assert.ok(a.includes('rounds: {}, foeLostAtStart: 0'), F + ' reset clears the VS scoreline');
 }
 
