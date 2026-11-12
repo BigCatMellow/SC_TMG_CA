@@ -2058,7 +2058,6 @@ input::placeholder { color: #5b6275; }
 .sc-vs-unit-name b { display: flex !important; align-items: center; gap: 6px; justify-content: flex-end; }
 .sc-vs-unit--opp .sc-vs-unit-name b { justify-content: flex-start; }
 .sc-vs-i { flex: 0 0 auto; width: 16px; height: 16px; display: inline-grid; place-items: center; border: 1px solid #5b6275; border-radius: 50%; font: 700 11px/1 'Chakra Petch', sans-serif; font-style: italic; color: #a7aec2; }
-.sc-vs-statline { display: block; margin-top: 3px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font: 600 11px 'Chakra Petch', sans-serif; letter-spacing: .02em; color: #8a91a5; }
 .sc-vs-unit-art { cursor: pointer; }
 .sc-vs-info { position: fixed; z-index: 310; left: 50%; bottom: 0; transform: translateX(-50%); width: min(640px, 100%); max-height: 88dvh; overflow-y: auto; box-sizing: border-box; padding: 14px 14px calc(20px + env(safe-area-inset-bottom)); background: #141824; border-top: 2px solid var(--side); box-shadow: 0 -12px 40px rgba(0,0,0,0.6); }
 .sc-vs-info-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
