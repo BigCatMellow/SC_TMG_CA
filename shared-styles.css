@@ -1667,7 +1667,10 @@ input::placeholder { color: #5b6275; }
 .sc-vs-unit--opp .sc-vs-hp { flex-direction: row; }
 .sc-vs-hp-track { flex: 1; min-width: 30px; height: 8px; display: flex; gap: 2px; }
 .sc-vs-hp-seg { flex: 1 1 0; min-width: 4px; height: 8px; background: #232939; display: flex; }
-.sc-vs-hp-seg i { display: block; height: 100%; background: linear-gradient(90deg, #35c76b, #b6e64a); }
+/* Health bars take the team colour (VS: you / opponent; Battle tab: your faction). */
+.sc-vs-hp-seg i { display: block; height: 100%; background: color-mix(in srgb, var(--hp, var(--fc-primary-solid, #8a91a5)) 55%, #10131c); }
+.sc-vs-unit--you { --hp: var(--you); }
+.sc-vs-unit--opp { --hp: var(--opp); }
 .sc-vs-hp-text { font: 700 12px 'Chakra Petch', sans-serif; color: #a7aec2; white-space: nowrap; }
 .sc-vs-status { flex: 0 0 auto; min-height: 32px; padding: 0 8px; background: none; border: 1px solid #5b6275; color: #8a91a5; font: 700 10px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
 .sc-vs-status:disabled { cursor: default; }
