@@ -154,8 +154,14 @@
       </div>
 
       <!-- Cards: tap a ready card to spend its resource; tap a spent card to ready it -->
-      <div class="sc-play-cards-head" data-sec="Cards" data-sec-note="{{ battleCardsReady }}/{{ battleCardsTotal }} ready">
-        <span class="sc-play-kicker">Cards · {{ battleCardsReady }}/{{ battleCardsTotal }} ready</span>
+      <div class="sc-role-group sc-bat-group" style="--role:#38d3e8" data-sec="Cards" data-sec-note="{{ battleCardsReady }}/{{ battleCardsTotal }} ready">
+      <div class="sc-role-head" onClick="{{ toggleSecMenu }}" role="button" aria-label="Cards section. Tap to jump to another section">
+        <span class="sc-role-mark" aria-hidden="true"></span>
+        <h2 class="sc-role-name">Cards</h2>
+        <span class="sc-role-rule" aria-hidden="true"></span>
+        <span class="sc-role-note">{{ battleCardsReady }}/{{ battleCardsTotal }} ready</span>
+      </div>
+      <div class="sc-play-cards-head">
         <span class="sc-play-cards-links"><button onClick="{{ openBattleTactical }}" class="sc-play-link" aria-label="Pay one ability with several cards">Pay several ›</button></span>
       </div>
       <div class="sc-bc-list">
@@ -183,6 +189,7 @@
             </sc-if>
           </div>
         </sc-for>
+      </div>
       </div>
       <sc-if value="{{ hasPendingPayment }}" hint-placeholder-val="{{ false }}">
         <div class="sc-play-paying"><span>Paying an ability: <b>{{ paymentTotal }} {{ paymentResource }}</b></span><button onClick="{{ finishResourcePayment }}" class="sc-play-link">Done</button></div>
@@ -299,11 +306,12 @@
       <sc-if value="{{ !battleEmpty }}" hint-placeholder-val="{{ false }}">
         <!-- units -->
         <sc-for list="{{ battleGroups }}" as="grp" hint-placeholder-count="2">
-          <div style="margin-bottom:16px" data-sec="{{ grp.role }}" data-sec-note="{{ grp.secNote }}">
-            <div style="display:flex;align-items:center;gap:8px;padding:0 2px 8px">
-              <span style="width:8px;height:8px;background:{{ grp.color }};clip-path:var(--sc-diamond)"></span>
-              <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:{{ grp.color }}">{{ grp.role }}</span>
-              <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
+          <div class="sc-role-group sc-bat-group" style="--role:{{ grp.color }}" data-sec="{{ grp.role }}" data-sec-note="{{ grp.secNote }}">
+            <div class="sc-role-head" onClick="{{ toggleSecMenu }}" role="button" aria-label="{{ grp.role }} section. Tap to jump to another section">
+              <span class="sc-role-mark" aria-hidden="true"></span>
+              <h2 class="sc-role-name">{{ grp.role }}</h2>
+              <span class="sc-role-rule" aria-hidden="true"></span>
+              <span class="sc-role-note">{{ grp.secNote }}</span>
             </div>
             <div class="sc-bu-list">
               <sc-for list="{{ grp.entries }}" as="u" hint-placeholder-count="2">
@@ -3030,8 +3038,8 @@ class Component extends DCLogic {
       ...(() => {
         const nav = st.secNav || {};
         const free = !!nav.show && !st.sheet && !st.searchOpen && !st.viewer && !st.undo;
-        // Library and Tactics use sticky section headings (tap one for the jump menu); Battle and Codex keep the strip.
-        const on = free && ['battle', 'codex'].includes(st.tab);
+        // Library, Tactics and Battle use sticky section headings (tap one for the jump menu); Codex keeps the strip.
+        const on = free && st.tab === 'codex';
         const menuOn = free && ['library', 'tactics', 'battle', 'codex'].includes(st.tab) && !!st.secMenu;
         const items = st.secMenu ? this.sectionEls().map((el, i) => ({ label: el.getAttribute('data-sec'), note: el.getAttribute('data-sec-note') || '',
           cls: 'sc-secnav-item' + (i === nav.idx ? ' sc-secnav-item--on' : ''), onJump: () => this.jumpToSection(i) })) : [];
