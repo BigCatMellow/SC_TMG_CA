@@ -1910,3 +1910,6 @@ input::placeholder { color: #5b6275; }
 .sc-tac-head { position: sticky; top: var(--sc-sticky-top, 0px); z-index: 150; cursor: pointer; display: flex; align-items: center; gap: 8px;
   margin: 0 -14px 8px; padding: 10px 16px; background: linear-gradient(90deg, rgba(56,211,232,0.12), #0a0c13 70%), #0a0c13; border-bottom: 1px solid rgba(56,211,232,0.35); }
 .sc-tac-head::after { content: "\25BE"; font-size: 12px; color: #38d3e8; opacity: .7; }
+
+/* The last section is short (e.g. Other): give it room to scroll up so its heading can stick like the rest. */
+.sc-role-group:last-child, .sc-tac-group:last-child { min-height: calc(100vh - var(--sc-sticky-top, 140px) - 120px); min-height: calc(100dvh - var(--sc-sticky-top, 140px) - 120px); }

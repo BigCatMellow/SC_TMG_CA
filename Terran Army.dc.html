@@ -444,7 +444,7 @@
   <sc-if value="{{ tabIsTactics }}" hint-placeholder-val="{{ false }}">
     <div style="padding:14px">
       <sc-for list="{{ tacticalGroups }}" as="grp" hint-placeholder-count="3">
-        <div style="margin-bottom:16px" data-sec="{{ grp.secLabel }}" data-sec-note="{{ grp.secNote }}">
+        <div class="sc-tac-group" style="margin-bottom:16px" data-sec="{{ grp.secLabel }}" data-sec-note="{{ grp.secNote }}">
           <div class="sc-tac-head" onClick="{{ grp.onHead }}" role="button" aria-label="{{ grp.headAria }}">
             <span style="width:8px;height:8px;background:#38d3e8;clip-path:var(--sc-diamond)"></span>
             <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#38d3e8">{{ grp.name }}</span>
