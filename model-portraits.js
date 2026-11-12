@@ -375,8 +375,13 @@ window.SCTMG_MODEL_PORTRAITS = {
 // so expanding a unit reveals its lower body without recentering the artwork.
 // Error fallbacks replace the image element; they are never stacked behind it.
 window.SCTMG_MAKE_PORTRAIT = function(faction, unitId, localPortraits) {
-  const official = window.SCTMG_MODEL_PORTRAITS?.factions?.[faction]?.[unitId];
-  const local = localPortraits[official?.fallbackId] || localPortraits[unitId];
+  const factionPortraits = window.SCTMG_MODEL_PORTRAITS?.factions?.[faction] || {};
+  const official = factionPortraits[unitId];
+  const baseId = official?.fallbackId;
+  // Shared sculpts with no photo of their own (Vileling, Roachling, Spec Ops Marauder)
+  // borrow the base model's photo and cutout, so they look like every other card.
+  const base = baseId && !official?.src ? factionPortraits[baseId] : null;
+  const local = localPortraits[baseId] || localPortraits[unitId];
   const sources = [];
   function add(src, size, pos) {
     if (src && !sources.some(item => item.src === src)) {
@@ -386,6 +391,7 @@ window.SCTMG_MAKE_PORTRAIT = function(faction, unitId, localPortraits) {
   add(official?.src, official?.size, official?.pos);
   add(official?.fallbackSrc, official?.fallbackSize || official?.size,
       official?.fallbackPos || official?.pos);
+  add(base?.src, base?.size, base?.pos);
   add(local?.src, local?.size, local?.pos);
   if (!sources.length) return { portrait: false };
 
@@ -405,7 +411,7 @@ window.SCTMG_MAKE_PORTRAIT = function(faction, unitId, localPortraits) {
   // Transparent cutout (scripts/cutout-portraits.py) for the first source that has one.
   const cutouts = window.SCTMG_PORTRAIT_CUTOUTS || {};
   // Per-unit cutouts first: one publisher photo can hold several models, each cropped separately.
-  const cutout = cutouts[faction + '/' + unitId] || sources.map(item => cutouts[item.src]).find(Boolean) || '';
+  const cutout = cutouts[faction + '/' + unitId] || (base && cutouts[faction + '/' + baseId]) || sources.map(item => cutouts[item.src]).find(Boolean) || '';
   return {
     cutout,
     viewSrc: cutout || first.src,
