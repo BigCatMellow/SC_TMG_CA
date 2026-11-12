@@ -76,4 +76,14 @@ assert.equal(rows.find(r => r.name === 'Kerrigan').stepLabel, 'HP'); assert.equa
 assert.equal(rows.find(r => r.name === 'Zergling').stepLabel, 'Models');
 rows.find(r => r.name === 'Kerrigan').stepDown();
 assert.equal(c.state.yours.army[0].dmg, 1, 'HP − deals 1 damage');
+// Squads with multi-HP models share one damage pool (rules 8.7.4): one model goes each time it reaches its HP.
+c.state = { ...c.state, yours: { ...c.state.yours, army: [{ key: 'r1', unitId: 'roach', tierIdx: 1, modelsLost: 0, deployed: true }] } };
+let roach = () => c.renderVals().you.units[0];
+assert.equal(roach().stepLabel, 'HP', 'multi-HP squads step HP');
+assert.equal(roach().hpSegs.length, 3, 'one segment per model');
+for (let i = 0; i < 5; i++) roach().stepDown();
+assert.deepEqual([c.state.yours.army[0].modelsLost, c.state.yours.army[0].dmg], [1, 1], '5 damage on 4 HP Roaches: one removed, 1 left on the marker');
+assert.equal(roach().hpText, '7 / 12 HP');
+roach().stepUp(); roach().stepUp();
+assert.deepEqual([c.state.yours.army[0].modelsLost, c.state.yours.army[0].dmg], [0, 3], 'stepping back restores the model as a correction');
 console.log('VS mode checks passed.');

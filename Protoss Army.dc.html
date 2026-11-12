@@ -376,6 +376,7 @@
                           <button onClick="{{ u.onDmgUp }}" aria-label="Add 1 damage" class="sc-model-step sc-model-step--up">+</button>
                         </div>
                       </div>
+                      <div class="sc-dmg-bar"><span class="sc-vs-hp-track" role="img" aria-label="{{ u.hpAria }}"><sc-for list="{{ u.hpSegs }}" as="hs" hint-placeholder-count="3"><span class="sc-vs-hp-seg" style="{{ hs.style }}"><i style="{{ hs.fill }}"></i></span></sc-for></span><span class="sc-dmg-hp">{{ u.hpText }}</span></div>
                     </sc-if>
                   </div>
                 </div>
@@ -2361,7 +2362,15 @@ class Component extends DCLogic {
           const hp = Number(unit.stats && unit.stats.hp) || 1, shd = Number(unit.stats && unit.stats.shield) || 0;
           const lostNow = e.modelsLost || 0, dmg = e.dmg || 0;
           const pool = hp + (lostNow === 0 ? shd : 0);
-          return { tracksDamage: (hp > 1 || shd > 0) && remaining > 0 && (startingModels === 1 || dmg > 0), dmg, dmgPool: pool,
+          // One Damage Marker per Unit (rules 8.7.4); the bar shows it as one segment per model.
+          const segs = Array.from({ length: startingModels }, (_, k) => {
+            const size = hp + (k === 0 ? shd : 0);
+            return { size, left: k < lostNow ? 0 : k === lostNow ? Math.max(0, size - dmg) : size };
+          });
+          const hpLeft = segs.reduce((t, x) => t + x.left, 0), hpFull = segs.reduce((t, x) => t + x.size, 0);
+          return { tracksDamage: (hp > 1 || shd > 0) && remaining > 0, dmg, dmgPool: pool,
+            hpSegs: segs.slice().reverse().map(x => ({ style: 'flex-grow:' + x.size, fill: 'width:' + Math.round(100 * x.left / x.size) + '%' })),
+            hpText: hpLeft + ' / ' + hpFull + ' HP', hpAria: unit.name + ': ' + hpLeft + ' of ' + hpFull + ' HP',
             dmgUnit: lostNow === 0 && shd ? 'HP+SHD' : 'HP', noDmg: dmg <= 0,
             shielded: shd > 0 && lostNow === 0 && dmg <= shd,
             onDmgUp: (ev) => { ev.stopPropagation(); this.setDamage(e.key, 1); },
