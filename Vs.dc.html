@@ -181,15 +181,15 @@
                 <div class="sc-vs-unit-line">
                   <div class="sc-vs-unit-info">
                     <span class="sc-vs-k" style="color:{{ u.roleColor }}">{{ u.role }} · {{ u.tier }}</span>
-                    <div class="sc-vs-pips">
+                    <sc-if value="{{ u.showPips }}" hint-placeholder-val="{{ true }}"><div class="sc-vs-pips">
                       <sc-for list="{{ u.pips }}" as="p" hint-placeholder-count="6"><button onClick="{{ p.tap }}" class="{{ p.cls }}" aria-label="{{ p.label }}"></button></sc-for>
-                    </div>
+                    </div></sc-if>
                     <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
-                      <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span><span class="sc-vs-hp-btns"><button onClick="{{ u.dmgDown }}" class="sc-vs-mini" aria-label="Heal 1">−</button><button onClick="{{ u.dmgUp }}" class="sc-vs-mini" aria-label="1 damage">+</button></span></div>
+                      <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span></div>
                     </sc-if>
                   </div>
                   <div class="sc-vs-sup"><b>{{ u.supply }}</b><small>sup</small></div>
-                  <div class="sc-vs-models"><small>Models</small><span class="sc-vs-steps-row"><button onClick="{{ u.lose }}" disabled="{{ u.dead }}" class="sc-vs-step" aria-label="Remove a {{ u.name }} model">−</button><button onClick="{{ u.heal }}" disabled="{{ u.full }}" class="sc-vs-step" aria-label="Restore a {{ u.name }} model">+</button></span></div>
+                  <div class="sc-vs-models"><small>{{ u.stepLabel }}</small><span class="sc-vs-steps-row"><button onClick="{{ u.stepDown }}" disabled="{{ u.stepDownOff }}" class="sc-vs-step" aria-label="{{ u.stepDownAria }}">−</button><button onClick="{{ u.stepUp }}" disabled="{{ u.stepUpOff }}" class="sc-vs-step" aria-label="{{ u.stepUpAria }}">+</button></span></div>
                 </div>
               </div>
             </div>
@@ -252,15 +252,15 @@
                 <div class="sc-vs-unit-line">
                   <div class="sc-vs-unit-info">
                     <span class="sc-vs-k" style="color:{{ u.roleColor }}">{{ u.role }} · {{ u.tier }}</span>
-                    <div class="sc-vs-pips">
+                    <sc-if value="{{ u.showPips }}" hint-placeholder-val="{{ true }}"><div class="sc-vs-pips">
                       <sc-for list="{{ u.pips }}" as="p" hint-placeholder-count="6"><button onClick="{{ p.tap }}" class="{{ p.cls }}" aria-label="{{ p.label }}"></button></sc-for>
-                    </div>
+                    </div></sc-if>
                     <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
-                      <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span><span class="sc-vs-hp-btns"><button onClick="{{ u.dmgDown }}" class="sc-vs-mini" aria-label="Heal 1">−</button><button onClick="{{ u.dmgUp }}" class="sc-vs-mini" aria-label="1 damage">+</button></span></div>
+                      <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span></div>
                     </sc-if>
                   </div>
                   <div class="sc-vs-sup"><b>{{ u.supply }}</b><small>sup</small></div>
-                  <div class="sc-vs-models"><small>Models</small><span class="sc-vs-steps-row"><button onClick="{{ u.lose }}" disabled="{{ u.dead }}" class="sc-vs-step" aria-label="Remove a {{ u.name }} model">−</button><button onClick="{{ u.heal }}" disabled="{{ u.full }}" class="sc-vs-step" aria-label="Restore a {{ u.name }} model">+</button></span></div>
+                  <div class="sc-vs-models"><small>{{ u.stepLabel }}</small><span class="sc-vs-steps-row"><button onClick="{{ u.stepDown }}" disabled="{{ u.stepDownOff }}" class="sc-vs-step" aria-label="{{ u.stepDownAria }}">−</button><button onClick="{{ u.stepUp }}" disabled="{{ u.stepUpOff }}" class="sc-vs-step" aria-label="{{ u.stepUpAria }}">+</button></span></div>
                 </div>
               </div>
             </div>
@@ -480,10 +480,20 @@ class Component extends DCLogic {
         tap: () => setLost(i >= alive ? lost - 1 : lost + 1)
       })),
       tracksDamage: !dead && (hp > 1 || shd > 0) && start === 1,
+      showPips: !(!dead && (hp > 1 || shd > 0) && start === 1),
       hpBar: 'width:' + Math.round(100 * Math.max(0, pool - dmg) / pool) + '%',
       hpText: (pool - dmg) + ' / ' + pool + (lost === 0 && shd ? ' HP+SHD' : ' HP'),
       dmgUp: () => setDmg(1), dmgDown: () => setDmg(-1),
       lose: () => setLost(lost + 1), heal: () => setLost(lost - 1),
+      // One pair of buttons per row, so every row is the same height: single-model units with
+      // health step HP (− is 1 damage), everyone else steps models.
+      ...(!dead && (hp > 1 || shd > 0) && start === 1 ? {
+        stepLabel: 'HP', stepDown: () => setDmg(1), stepUp: () => setDmg(-1), stepDownOff: false, stepUpOff: dmg === 0,
+        stepDownAria: u.name + ': 1 damage', stepUpAria: u.name + ': heal 1'
+      } : {
+        stepLabel: 'Models', stepDown: () => setLost(lost + 1), stepUp: () => setLost(lost - 1), stepDownOff: dead, stepUpOff: lost === 0,
+        stepDownAria: 'Remove a ' + u.name + ' model', stepUpAria: 'Restore a ' + u.name + ' model'
+      }),
       toggleDeploy: () => { if (!blocked) this.editArmy(side, e.key, x => ({ ...x, deployed: !x.deployed })); }
     };
   }
