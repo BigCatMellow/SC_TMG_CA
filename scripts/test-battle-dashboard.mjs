@@ -49,7 +49,7 @@ for(const faction of ['terran','zerg','protoss']){
    'onClick="{{ openMission }}"','onClick="{{ openEndRound }}"'])
    assert.ok(inline.includes(token),file+' play strip missing '+token);
  // Card abilities are readable straight from the Battle tab: one tap opens the text.
- for(const token of ['list="{{ cc.abilities }}"','onClick="{{ ca.onOpen }}"','class="{{ cc.rowCls }}"'])
+ for(const token of ['list="{{ cc.abilities }}"','onClick="{{ ca.onToggle }}"','onClick="{{ ca.onUse }}"','class="{{ cc.rowCls }}"'])
    assert.ok(inline.includes(token),file+' inline card abilities missing '+token);
  assert.ok(html.includes('onClick="{{ sheetAction }}"'),file+' ability sheet can use the card');
  assert.ok(!/<div class="sc-model-stepper">\s*<div class="sc-model-stepper">/.test(html),file+' stepper markup nested once');
@@ -220,30 +220,28 @@ for(const faction of ['terran','zerg','protoss']){
    chip0().onTap();
    assert.equal(view().battleFaction.tapped,true,'Chip spends a ready card');
    assert.ok(view().paymentTotal>0,'Spent resource counts toward the payment');
-   assert.match(chip0().cls,/--spent/);
+   assert.match(chip0().rowCls,/--spent/);
    chip0().onTap();
    assert.equal(view().battleFaction.tapped,false,'Chip readies a spent card');
  }
  view().finishResourcePayment();
- // One tap on an ability name opens its text; usable abilities offer the exhaust action there.
+ // Abilities are visible with a summary; one tap opens the full text in place, one tap on Use exhausts the card.
  const fcard=c.D().FACTION_CARDS.find(x=>x.id===c.state.factionId);
  const expectedAbilities=fcard.abilities.filter(a=>!/^\s*during army building\b/i.test(a.description||''));
  assert.deepEqual([...chip0().abilities.map(a=>a.name)],[...expectedAbilities.map(a=>a.name)],'army-building passives hidden in play');
+ for(const a of chip0().abilities) assert.ok(a.summary,'every ability has a one-line summary');
  const usableIdx=expectedAbilities.findIndex(a=>/\b(Active|Reaction)\b/i.test(a.type||'')&&!/do not exhaust this card/i.test(a.description||''));
+ chip0().abilities[0].onToggle();
+ assert.equal(chip0().abilities[0].open,true,'tap shows the full text in place');
+ assert.equal(view().sheetKeyword,false,'no pop-up needed to read an ability');
+ chip0().abilities[0].onToggle();
  if(usableIdx>=0){
-   chip0().abilities[usableIdx].onOpen();
-   assert.equal(view().sheetKeyword,true);
-   assert.equal(view().sheetBody,expectedAbilities[usableIdx].description);
-   assert.match(view().sheetActionLabel,/use ability/);
-   assert.ok(view().sheetHasSegs,'ability text has tappable keywords');
-   const kw=view().sheetSegs.find(sg=>sg.kw);
-   if(kw){ kw.onOpen({stopPropagation(){}}); assert.equal(view().sheetCloseLabel,'Back'); view().closeSheet();
-     assert.equal(view().sheetBody,expectedAbilities[usableIdx].description,'Back returns to the ability'); }
-   view().sheetAction();
-   assert.equal(view().sheetKeyword,false);
-   assert.equal(view().battleFaction.tapped,true,'Using the ability exhausts the card');
+   assert.equal(chip0().abilities[usableIdx].usable,true);
+   chip0().abilities[usableIdx].onUse();
+   assert.equal(view().battleFaction.tapped,true,'Use exhausts the card in one tap');
+   assert.equal(chip0().abilities[usableIdx].usable,false,'no Use on an exhausted card');
    chip0().onTap();
-   assert.equal(view().battleFaction.tapped,false);
+   assert.equal(view().battleFaction.tapped,false,'Ready brings it back');
  }
  // Regression: tier-2 Zerglings have twelve models, not one roster-card.
  if (faction==='zerg') {

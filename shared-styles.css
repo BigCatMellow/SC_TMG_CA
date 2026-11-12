@@ -1975,3 +1975,31 @@ input::placeholder { color: #5b6275; }
 .sc-vs-undo { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(72px + env(safe-area-inset-bottom)); z-index: 240; display: flex; align-items: center; gap: 12px; padding: 10px 14px; background: #1a1f2e; border: 1px solid #3a4154; box-shadow: 0 8px 24px rgba(0,0,0,0.6); font-size: 13px; color: #e9ecf2; max-width: calc(100% - 24px); }
 .sc-vs-undo button { min-height: 36px; padding: 0 12px; background: none; border: 1px solid #f2c14e; color: #f2c14e; font: 700 12px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
 @media (max-width: 760px) { .sc-vs-topbar .sc-vs-ghost { padding: 0 10px; font-size: 11px; letter-spacing: .08em; } .sc-vs-over { flex-wrap: wrap; } }
+
+/* ---- Battle: cards with abilities in view; one tap to use ---- */
+.sc-bc-list { display: grid; gap: 10px; }
+.sc-bc { background: radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--role) 12%, transparent), transparent 55%), var(--sc-card-bg);
+  border: 1px solid color-mix(in srgb, var(--role) 38%, #272d3c); border-left: 3px solid var(--role); clip-path: var(--sc-corner-12); }
+.sc-bc--spent { opacity: .62; }
+.sc-bc-head { display: flex; align-items: center; gap: 10px; padding: 10px 12px; background: linear-gradient(90deg, color-mix(in srgb, var(--role) 13%, transparent), transparent 75%); }
+.sc-bc-title { flex: 1; min-width: 0; display: grid; }
+.sc-bc-kind { font: 700 10px Rajdhani, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: color-mix(in srgb, var(--role) 70%, #8a91a5); }
+.sc-bc-kind b { color: #e9ecf2; }
+.sc-bc-name { font: 700 17px/1.15 Rajdhani, sans-serif; letter-spacing: .03em; color: #e9ecf2; }
+.sc-bc-btn { flex: 0 0 auto; min-height: 40px; padding: 0 14px; font: 700 13px Rajdhani, sans-serif; letter-spacing: .06em; cursor: pointer; clip-path: var(--sc-corner-8); }
+.sc-bc-btn--res { background: rgba(182,230,74,0.12); border: 1px solid rgba(182,230,74,0.55); color: #c9ec7a; }
+.sc-bc-btn--ready { background: #1a1f2e; border: 1px solid #5b6275; color: #e9ecf2; text-transform: uppercase; letter-spacing: .14em; }
+.sc-bc-abs { display: grid; gap: 1px; background: #1a1f2a; border-top: 1px solid color-mix(in srgb, var(--role) 25%, #1f2430); }
+.sc-bc-ab { background: #11141d; border-left: 2px solid var(--ph); }
+.sc-bc-ab-row { display: flex; align-items: center; gap: 8px; padding-right: 10px; }
+.sc-bc-ab-main { flex: 1; min-width: 0; display: grid; gap: 3px; padding: 9px 10px 9px 12px; background: none; border: 0; color: inherit; text-align: left; cursor: pointer; }
+.sc-bc-ab-top { display: flex; align-items: center; gap: 7px; min-width: 0; }
+.sc-bc-ab-top b { font: 700 14.5px Rajdhani, sans-serif; letter-spacing: .02em; color: #e9ecf2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-bc-ab-top .sc-ud-type { margin-left: auto; white-space: nowrap; }
+.sc-bc-ph { flex: 0 0 auto; font: 700 9.5px Rajdhani, sans-serif; letter-spacing: .1em; text-transform: uppercase; padding: 1px 6px; color: var(--ph); background: color-mix(in srgb, var(--ph) 16%, transparent); }
+.sc-bc-chev { flex: 0 0 auto; color: #6b7388; transition: transform .15s; }
+.sc-bc-ab--open .sc-bc-chev { transform: rotate(180deg); }
+.sc-bc-ab-sum { font-size: 12.5px; line-height: 1.4; color: #a7aec2; }
+.sc-bc-ab-text { margin: 0 12px 10px 14px; font-size: 13px; line-height: 1.55; color: #c8cede; }
+.sc-bc-use { flex: 0 0 auto; min-width: 58px; min-height: 40px; background: color-mix(in srgb, var(--ph) 18%, #12151f); border: 1px solid color-mix(in srgb, var(--ph) 60%, transparent); color: #e9ecf2; font: 700 12px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; clip-path: var(--sc-corner-8); }
+.sc-bc-ab--spent .sc-bc-ab-sum { color: #6b7388; }

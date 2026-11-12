@@ -156,19 +156,28 @@
       <!-- Cards: tap a ready card to spend its resource; tap a spent card to ready it -->
       <div class="sc-play-cards-head" data-sec="Cards" data-sec-note="{{ battleCardsReady }}/{{ battleCardsTotal }} ready">
         <span class="sc-play-kicker">Cards · {{ battleCardsReady }}/{{ battleCardsTotal }} ready</span>
-        <span class="sc-play-cards-links"><button onClick="{{ toggleCardsCompact }}" class="sc-play-link">{{ cardsCompactLabel }}</button><button onClick="{{ openBattleTactical }}" class="sc-play-link" aria-label="Open the full card list and energy payment">Full text ›</button></span>
+        <span class="sc-play-cards-links"><button onClick="{{ openBattleTactical }}" class="sc-play-link" aria-label="Pay one ability with several cards">Pay several ›</button></span>
       </div>
-      <div class="{{ cardsClass }}">
+      <div class="sc-bc-list">
         <sc-for list="{{ cardChips }}" as="cc" hint-placeholder-count="3">
-          <div class="{{ cc.rowCls }}">
-            <div class="sc-play-card-head">
-              <span class="sc-play-card-title"><span class="sc-play-card-kind">{{ cc.kind }}<sc-if value="{{ cc.count }}" hint-placeholder-val="{{ false }}"> · <b>{{ cc.count }}</b></sc-if></span><span class="sc-play-card-name">{{ cc.name }}</span></span>
-              <sc-if value="{{ cc.hasButton }}" hint-placeholder-val="{{ true }}"><button onClick="{{ cc.onTap }}" class="{{ cc.cls }}" aria-label="{{ cc.aria }}"><span class="sc-play-chip-res">{{ cc.res }}</span></button></sc-if>
+          <div class="{{ cc.rowCls }}" style="--role:{{ cc.color }}">
+            <div class="sc-bc-head">
+              <span class="sc-bc-title"><span class="sc-bc-kind">{{ cc.kind }}<sc-if value="{{ cc.count }}" hint-placeholder-val="{{ false }}"> · <b>{{ cc.count }}</b></sc-if></span><span class="sc-bc-name">{{ cc.name }}</span></span>
+              <sc-if value="{{ cc.hasButton }}" hint-placeholder-val="{{ true }}"><button onClick="{{ cc.onTap }}" class="{{ cc.cls }}" aria-label="{{ cc.aria }}">{{ cc.res }}</button></sc-if>
             </div>
             <sc-if value="{{ cc.hasAbilities }}" hint-placeholder-val="{{ true }}">
-              <div class="sc-play-abilities sc-play-card-abilities">
+              <div class="sc-bc-abs">
                 <sc-for list="{{ cc.abilities }}" as="ca" hint-placeholder-count="2">
-                  <button onClick="{{ ca.onOpen }}" class="sc-play-ability" aria-label="{{ ca.aria }}"><span class="sc-play-dot" style="background:{{ ca.phFg }}"></span>{{ ca.name }}</button>
+                  <div class="{{ ca.cls }}" style="--ph:{{ ca.phFg }}">
+                    <div class="sc-bc-ab-row">
+                      <button onClick="{{ ca.onToggle }}" class="sc-bc-ab-main" aria-expanded="{{ ca.open }}" aria-label="{{ ca.aria }}">
+                        <span class="sc-bc-ab-top"><span class="sc-bc-ph">{{ ca.phase }}</span><b>{{ ca.name }}</b><span class="{{ ca.typeCls }}">{{ ca.type }}</span><svg class="sc-bc-chev" width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+                        <sc-if value="{{ ca.closed }}" hint-placeholder-val="{{ true }}"><span class="sc-bc-ab-sum">{{ ca.summary }}</span></sc-if>
+                      </button>
+                      <sc-if value="{{ ca.usable }}" hint-placeholder-val="{{ false }}"><button onClick="{{ ca.onUse }}" class="sc-bc-use" aria-label="{{ ca.useAria }}">Use</button></sc-if>
+                    </div>
+                    <sc-if value="{{ ca.open }}" hint-placeholder-val="{{ false }}"><div class="sc-def sc-bc-ab-text"><sc-for list="{{ ca.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-kw-link">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div></sc-if>
+                  </div>
                 </sc-for>
               </div>
             </sc-if>
@@ -1742,22 +1751,31 @@ class Component extends DCLogic {
       const allSpent = !next;
       const n = copies.length;
       const cls = 'sc-play-chip' + (allSpent ? ' sc-play-chip--spent' : (c.hasResource ? '' : ' sc-play-chip--passive'));
+      // Every ability is visible with a one-line summary; tap to read the full text in place,
+      // and usable abilities have their own Use button (one tap: exhausts the next ready copy).
       const abilities = c.abilities.filter(a => !this.armyBuildingOnly(a)).map(a => {
         const usable = !!next && /\b(Active|Reaction)\b/i.test(a.type) && !/do not exhaust this card/i.test(a.description);
-        return { name: a.name, phFg: a.phFg,
-          aria: a.name + ', ' + a.phaseShort + ' phase. Read ability',
-          onOpen: () => this.setState({ sheet: { type: 'keyword', title: a.name, ability: true,
-            meta: c.name + ' · ' + a.phaseShort + ' · ' + a.type, body: a.description, exampleId: null,
-            plain: this.plainFor(a.name), segs: a.segs,
-            actionLabel: usable ? 'Exhaust ' + c.name + ' · use ability' : '', actionKey: usable ? next.key : '' } }) };
+        const k = c.id + '|' + a.name, open = !!(st.abOpen || {})[k];
+        const first = (a.description || '').split(/(?<=\.)\s/)[0];
+        const summary = this.plainFor(a.name) || (first.length > 120 ? first.slice(0, 117).replace(/\s+\S*$/, '') + '…' : first);
+        return { name: a.name, phFg: a.phFg, phase: a.phaseShort, type: a.type, typeCls: this.abilityTypeCls(a.type),
+          summary, segs: a.segs, open, closed: !open, usable,
+          cls: 'sc-bc-ab' + (open ? ' sc-bc-ab--open' : '') + (allSpent ? ' sc-bc-ab--spent' : ''),
+          aria: a.name + ', ' + a.phaseShort + ' phase. ' + (open ? 'Hide' : 'Show') + ' full text',
+          useAria: 'Use ' + a.name + ': exhaust ' + c.name,
+          onToggle: () => this.setState(s2 => ({ abOpen: { ...(s2.abOpen || {}), [k]: !open } })),
+          onUse: () => next.onAbility() };
       });
-      return { name: c.name, kind: c.kind.replace(' Card', ''), cls, abilities, hasAbilities: abilities.length > 0,
+      const tac = this.D().TACTICAL_CARDS.find(t => t.id === c.id);
+      const color = !tac ? 'var(--fc-primary-solid)' : ({ creep: '#d46ad9', combat: '#f04a4a', positioning: '#4f8df9', defense: '#38d3e8', support: '#f2c14e' })[tac.category] || 'var(--fc-text-tint)';
+      return { name: c.name, kind: c.kind.replace(' Card', ''), color, abilities, hasAbilities: abilities.length > 0,
         count: n > 1 ? '\u00d7' + n + ' · ' + ready.length + ' ready' : '',
-        rowCls: 'sc-play-card' + (allSpent ? ' sc-play-card--spent' : ''),
-        hasButton: allSpent || c.hasResource || c.showAbility,
-        res: allSpent ? (n > 1 ? 'All exhausted · ready one' : 'Exhausted · tap to ready') : (c.hasResource ? 'Spend ' + c.resource : 'Use'),
-        aria: c.name + (allSpent ? ': exhausted, tap to ready' : (c.hasResource ? ': tap to spend ' + c.resource : ': exhaust to use its ability')),
-        onTap: () => allSpent ? copies[0].onReady() : (c.hasResource ? next.onResource() : next.onAbility()) };
+        rowCls: 'sc-bc' + (allSpent ? ' sc-bc--spent' : ''),
+        cls: 'sc-bc-btn' + (allSpent ? ' sc-bc-btn--ready' : ' sc-bc-btn--res'),
+        hasButton: allSpent || c.hasResource,
+        res: allSpent ? (n > 1 ? 'Ready one' : 'Ready') : 'Spend ' + c.resource,
+        aria: c.name + (allSpent ? ': exhausted, tap to ready' : ': exhaust for ' + c.resource),
+        onTap: () => allSpent ? copies[0].onReady() : next.onResource() };
     };
     return {
       hudRoundOf: m ? 'Round ' + round + ' of ' + m.gameLength : 'Mission',
