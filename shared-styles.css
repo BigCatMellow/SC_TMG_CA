@@ -1769,13 +1769,16 @@ input::placeholder { color: #5b6275; }
 }
 @media (max-width: 760px) {
   .sc-vs { padding-left: 10px; padding-right: 10px; }
-  .sc-vs-cmd { min-height: 0; }
-  .sc-vs-cmd-hero { height: 104px; }
-  .sc-vs-cmd-name { font-size: 17px; }
-  .sc-vs-chips > span { padding: 4px 7px; }
-  .sc-vs-chips b { font-size: 15px; }
+  /* Commanders stack on phones: the model on top with room to be big, then name, then the two chips side by side. */
+  .sc-vs-cmd, .sc-vs-cmd--opp { min-height: 0; flex-direction: column; text-align: center; }
+  .sc-vs-cmd-hero, .sc-vs-cmd--opp .sc-vs-cmd-hero { align-self: center; height: 150px; max-width: 92%; margin: 10px auto 0; }
+  .sc-vs-cmd-name { font-size: 16px; }
+  .sc-vs-cmd-text { padding: 6px 8px 10px; gap: 8px; align-items: center; justify-content: flex-start; }
+  .sc-vs-cmd-text > .sc-vs-k { white-space: nowrap; font-size: 9px; }
+  .sc-vs-chips, .sc-vs-cmd--opp .sc-vs-chips { justify-content: center; flex-wrap: nowrap; gap: 6px; }
+  .sc-vs-chips > span { padding: 4px 8px; justify-items: center; }
+  .sc-vs-chips b { font-size: 15px; white-space: nowrap; }
   .sc-vs-chips > span:last-child { display: none; }
-  .sc-vs-cmd-text { padding: 10px; gap: 6px; }
   .sc-vs-vp b { font-size: 64px; }
   .sc-vs-panes { display: flex; gap: 4px; position: sticky; top: 0; z-index: 20; padding: 6px 0; background: #05060a; }
   .sc-vs-pane { flex: 1; min-height: 44px; background: #12151f; border: 1px solid var(--sc-border-input); color: #8a91a5; font: 700 12px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
