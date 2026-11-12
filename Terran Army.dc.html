@@ -395,7 +395,7 @@
     <div style="padding:14px">
       <sc-for list="{{ libraryGroups }}" as="grp" hint-placeholder-count="3">
         <div class="sc-role-group" style="--role:{{ grp.color }}" data-sec="{{ grp.role }}" data-sec-note="{{ grp.secNote }}">
-          <div class="sc-role-head">
+          <div class="sc-role-head" onClick="{{ grp.onHead }}" role="button" aria-label="{{ grp.headAria }}">
             <span class="sc-role-mark" aria-hidden="true"></span>
             <h2 class="sc-role-name">{{ grp.role }}</h2>
             <span class="sc-role-rule" aria-hidden="true"></span>
@@ -445,7 +445,7 @@
     <div style="padding:14px">
       <sc-for list="{{ tacticalGroups }}" as="grp" hint-placeholder-count="3">
         <div style="margin-bottom:16px" data-sec="{{ grp.secLabel }}" data-sec-note="{{ grp.secNote }}">
-          <div style="display:flex;align-items:center;gap:8px;padding:0 2px 8px">
+          <div class="sc-tac-head" onClick="{{ grp.onHead }}" role="button" aria-label="{{ grp.headAria }}">
             <span style="width:8px;height:8px;background:#38d3e8;clip-path:var(--sc-diamond)"></span>
             <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#38d3e8">{{ grp.name }}</span>
             <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
@@ -683,15 +683,15 @@
     <div class="sc-undo" role="status"><span>{{ undoText }}</span><button onClick="{{ undoRemove }}" class="sc-undo-btn">Undo</button></div>
   </sc-if>
 
+  <sc-if value="{{ secMenuOn }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-secnav-scrim" onClick="{{ closeSecMenu }}"></div>
+    <div class="sc-secnav-menu" role="menu" aria-label="Jump to section">
+      <sc-for list="{{ secItems }}" as="si" hint-placeholder-count="4">
+        <button onClick="{{ si.onJump }}" class="{{ si.cls }}" role="menuitem"><span>{{ si.label }}</span><small>{{ si.note }}</small></button>
+      </sc-for>
+    </div>
+  </sc-if>
   <sc-if value="{{ secNavOn }}" hint-placeholder-val="{{ false }}">
-    <sc-if value="{{ secMenuOn }}" hint-placeholder-val="{{ false }}">
-      <div class="sc-secnav-scrim" onClick="{{ closeSecMenu }}"></div>
-      <div class="sc-secnav-menu" role="menu" aria-label="Jump to section">
-        <sc-for list="{{ secItems }}" as="si" hint-placeholder-count="4">
-          <button onClick="{{ si.onJump }}" class="{{ si.cls }}" role="menuitem"><span>{{ si.label }}</span><small>{{ si.note }}</small></button>
-        </sc-for>
-      </div>
-    </sc-if>
     <button onClick="{{ toggleSecMenu }}" class="{{ secNavCls }}" aria-label="Section: {{ secNavLabel }}. Jump to another section" aria-expanded="{{ secMenuOn }}">
       <span class="sc-secnav-label">{{ secNavLabel }}</span><span class="sc-secnav-pos">{{ secNavPos }}</span>
       <span class="sc-secnav-track" aria-hidden="true"><span class="sc-secnav-fill" style="{{ secNavBar }}"></span></span>
@@ -1136,6 +1136,7 @@ class Component extends DCLogic {
       const els = this.sectionEls();
       // A section is 'current' once its heading passes the upper third of the visible area.
       const hb = this.headerBottom();
+      if (document.documentElement && document.documentElement.style) document.documentElement.style.setProperty('--sc-sticky-top', Math.round(hb) + 'px');
       const top = hb + (window.innerHeight - hb) * 0.3;
       // Before the first heading reaches that line, the first section is current.
       let idx = els.length ? 0 : -1;
@@ -1160,7 +1161,7 @@ class Component extends DCLogic {
       if (!el) return;
       const sticky = document.querySelector('.sc-cmd-header');
       const offset = sticky && getComputedStyle(sticky).position === 'sticky' ? sticky.getBoundingClientRect().height : 0;
-      window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top - offset - 8, behavior: 'smooth' });
+      window.scrollTo({ top: window.scrollY + el.getBoundingClientRect().top - offset + 1, behavior: 'smooth' });
     };
     // Closing the menu pops its history entry; scroll once that has happened so it isn't undone.
     if (this._histOpen) this._afterPop = go;
@@ -2858,7 +2859,7 @@ class Component extends DCLogic {
       tabIsBattle: st.tab === 'battle', tabIsLibrary: st.tab === 'library', tabIsTactics: st.tab === 'tactics',
       resourceStripClass: st.resourcesCompact ? 'sc-resource-strip sc-resource-strip--compact' : 'sc-resource-strip',
       slotStripClass: st.resourcesCompact ? 'sc-slot-strip sc-slot-strip--compact' : 'sc-slot-strip',
-      scoreboardClass: 'sc-scoreboard sc-scoreboard--compact',
+      scoreboardClass: 'sc-scoreboard sc-scoreboard--compact' + (st.tab === 'library' || st.tab === 'tactics' ? ' sc-scoreboard--hidden' : ''),
       titleHeaderClass: st.resourcesCompact ? 'sc-title-row sc-title-row--compact' : 'sc-title-row',
       tabIsFaction: st.tab === 'faction', tabIsCodex: st.tab === 'codex',
       // roster
@@ -2956,8 +2957,10 @@ class Component extends DCLogic {
       triggerImport: () => { if (this._rosterFileEl) this._rosterFileEl.click(); },
       importRosterFile: (ev) => this.importRosterFile(ev),
       // library / tactics / faction / codex
-      libraryGroups: libraryGroups.map(g => { const n = g.entries.filter(en => en.inArmy).length; return { ...g, secNote: n ? n + ' mustered' : (g.hasSlots ? g.slotText : '') }; }),
-      tacticalGroups: tacticalGroups.map(g => { const n = g.cards.filter(c => c.inArmy).length; return { ...g, secLabel: g.name.replace(/ · .*$/, ''), secNote: n ? n + ' picked' : g.cards.length + ' cards' }; }),
+      libraryGroups: libraryGroups.map(g => { const n = g.entries.filter(en => en.inArmy).length; return { ...g, secNote: n ? n + ' mustered' : (g.hasSlots ? g.slotText : ''),
+        headAria: g.role + ' section. Tap to jump to another section', onHead: () => this.setState(s2 => ({ secMenu: !s2.secMenu })) }; }),
+      tacticalGroups: tacticalGroups.map(g => { const n = g.cards.filter(c => c.inArmy).length; return { ...g, secLabel: g.name.replace(/ · .*$/, ''), secNote: n ? n + ' picked' : g.cards.length + ' cards',
+        headAria: g.name + ' section. Tap to jump to another section', onHead: () => this.setState(s2 => ({ secMenu: !s2.secMenu })) }; }),
       factionCards,
       codexQ: st.codexQ, onCodexInput: (ev) => this.setState({ codexQ: ev.target.value }), codexGroups: codexGroups.map(g => ({ ...g, secNote: (g.entries || []).length + ' entries' })),
       // sheets
@@ -2988,12 +2991,15 @@ class Component extends DCLogic {
       tierUnitName, tierOptions,
       ...(() => {
         const nav = st.secNav || {};
-        const on = !!nav.show && !st.sheet && !st.searchOpen && !st.viewer && !st.undo && ['library', 'tactics', 'battle', 'codex'].includes(st.tab);
+        const free = !!nav.show && !st.sheet && !st.searchOpen && !st.viewer && !st.undo;
+        // Library and Tactics use sticky section headings (tap one for the jump menu); Battle and Codex keep the strip.
+        const on = free && ['battle', 'codex'].includes(st.tab);
+        const menuOn = free && ['library', 'tactics', 'battle', 'codex'].includes(st.tab) && !!st.secMenu;
         const items = st.secMenu ? this.sectionEls().map((el, i) => ({ label: el.getAttribute('data-sec'), note: el.getAttribute('data-sec-note') || '',
           cls: 'sc-secnav-item' + (i === nav.idx ? ' sc-secnav-item--on' : ''), onJump: () => this.jumpToSection(i) })) : [];
         return { secNavOn: on, secNavLabel: nav.label || '', secNavPos: (nav.idx + 1) + '/' + (nav.total || 0),
           secNavCls: 'sc-secnav' + (nav.active || st.secMenu ? ' sc-secnav--active' : ''), secNavBar: 'width:' + (nav.progress || 0) + '%',
-          secMenuOn: on && !!st.secMenu, secItems: items,
+          secMenuOn: menuOn, secItems: items,
           toggleSecMenu: () => this.setState(s2 => ({ secMenu: !s2.secMenu })), closeSecMenu: () => this.setState({ secMenu: false }) };
       })(),
       undoOn: !!st.undo, undoText: st.undo ? (st.undo.text || st.undo.name + ' removed') : '', undoRemove: () => this.undoRemove(),
