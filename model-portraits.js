@@ -71,6 +71,14 @@ window.SCTMG_MODEL_PORTRAITS = {
         "kind": "shared-sculpt",
         "note": "Same drone miniature as the Point Defense Drone, built with different options"
       },
+      "auto-turret": {
+        "kind": "exact-miniature",
+        "src": "portraits/promo/terran/auto-turret.jpg",
+        "promo": "Publisher promo image (bottom-left model, beside the Raven), supplied by bt 7274; original in portraits-src/remote/terran-auto-turret.jpg. All rights remain with the publisher.",
+        "size": "auto 230px",
+        "pos": "right center",
+        "note": "Auto-Turret miniature cropped from a publisher promo image."
+      },
       "spec-ops-marauder": {
         "fallbackId": "marauder",
         "kind": "shared-sculpt",

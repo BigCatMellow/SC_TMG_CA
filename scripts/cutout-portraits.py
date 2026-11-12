@@ -16,7 +16,8 @@ CROPS below (fractions of the source image) if the wrong model is picked out.
 
 Promo photos sent by hand live in portraits/promo/ (already cropped to one model; originals
 and crop boxes: portraits-src/remote/zerg-roachling.jpg (0.40, 0.09, 0.69, 0.31),
-terran-point-defense-drone.jpg (0.04, 0.04, 0.50, 0.68)). They are cut like the PDF photos.
+terran-point-defense-drone.jpg (0.04, 0.04, 0.50, 0.68), terran-auto-turret.jpg pixels
+(165, 665, 410, 905), upscaled 3x before rembg because the model is small). They are cut like the PDF photos.
 
 Remote photos are cut per unit (one publisher image can show several models) and stored
 under the unit key "faction/id". The downloaded originals go to portraits-src/remote/
