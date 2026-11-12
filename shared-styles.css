@@ -2042,3 +2042,10 @@ input::placeholder { color: #5b6275; }
 .sc-role-group.sc-bat-group + .sc-role-group.sc-bat-group { margin-top: 28px; }
 .sc-role-note { font: 700 13px 'Chakra Petch', sans-serif; color: #a7aec2; white-space: nowrap; }
 .sc-bat-group .sc-play-cards-head { justify-content: flex-end; margin: -4px 0 6px; }
+
+/* ---------- Battle tab: mission + End round in one compact block ---------- */
+.sc-play-top { display: flex; align-items: stretch; margin-bottom: 18px; background: var(--sc-card-bg); border: 1px solid rgba(53,199,107,0.4); clip-path: var(--sc-corner-10); }
+.sc-play-top-mission { flex: 1; min-width: 0; padding: 9px 12px; background: none; border: 0; color: #e9ecf2; text-align: left; cursor: pointer; }
+.sc-play-top-end { flex: 0 0 auto; min-width: 104px; display: grid; place-content: center; gap: 1px; padding: 6px 14px; background: rgba(53,199,107,0.14); border: 0; border-left: 1px solid rgba(53,199,107,0.45); color: #8fe6ae; cursor: pointer; text-align: center; }
+.sc-play-top-end small { font: 700 10px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #7fe0a4; }
+.sc-play-top-end b { font: 700 22px/1 'Chakra Petch', sans-serif; }
