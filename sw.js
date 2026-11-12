@@ -1,5 +1,5 @@
-// Offline support for the companion. Pages are network-first (fresh when online,
-// cached when not); scripts, styles, fonts and images are served from cache and
+// Offline support for the companion. Pages, scripts and styles are network-first
+// (fresh when online, cached when not); fonts and images are served from cache and
 // refreshed in the background. scripts/prepare-pages.mjs fills PRECACHE and
 // VERSION at deploy time, so every deploy installs a fresh cache.
 const VERSION = 'dev';
@@ -29,8 +29,11 @@ self.addEventListener('fetch', event => {
   const url = new URL(request.url);
   const sameOrigin = url.origin === self.location.origin;
 
-  if (sameOrigin && isPage(request)) {
-    event.respondWith(fetch(request).then(response => {
+  // Pages, scripts and styles are network-first so they always match each other.
+  // Serving one from cache and another fresh mixed two versions of the app
+  // (new styles on an old page left the Library cards with white outlines).
+  if (sameOrigin && (isPage(request) || /\.(?:js|css|html)$/.test(url.pathname))) {
+    event.respondWith(fetch(request, { cache: 'no-cache' }).then(response => {
       if (response.ok) caches.open(CACHE).then(cache => cache.put(request, response.clone()));
       return response;
     }).catch(() => caches.match(request, { ignoreSearch: true })
