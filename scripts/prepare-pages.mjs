@@ -96,7 +96,7 @@ const precache = ['./', ...everything.filter(rel =>
   (!rel.includes('/') && /\.(html|js|css|webmanifest)$/.test(rel) && rel !== 'sw.js') ||
   rel.startsWith('vendor/') ||
   /^uploads\/[a-z]+logo\.png$/.test(rel) ||
-  rel.startsWith('portraits/cutout/') ||
+  rel.startsWith('portraits/cutout/') || rel.startsWith('portraits/factions/') ||
   rel.startsWith('icons/')
 ).filter(rel => !/^uploads\/.*\.html$/.test(rel)).sort()];
 const hash = createHash('sha256');
