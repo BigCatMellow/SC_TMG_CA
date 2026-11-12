@@ -453,6 +453,7 @@
             <span class="sc-role-rule" aria-hidden="true"></span>
             <span class="sc-lib-slots">{{ grp.headNote }}</span>
           </div>
+          <sc-if value="{{ grp.desc }}" hint-placeholder-val="{{ false }}"><p class="sc-tac-desc">{{ grp.desc }}</p></sc-if>
           <div class="sc-tac-list">
             <sc-for list="{{ grp.cards }}" as="tc" hint-placeholder-count="2">
               <div class="{{ tc.cardCls }}">
@@ -2551,16 +2552,22 @@ class Component extends DCLogic {
     }).filter(Boolean);
 
     // tactics groups
-    const catNames = { creep: 'Creep', combat: 'Combat', positioning: 'Positioning', general: 'Cards' };
+    const catNames = { creep: 'Creep', combat: 'Combat', defense: 'Defense', positioning: 'Positioning', support: 'Support', general: 'Cards' };
+    // What each group is for, shown under its heading (as in the first version of the app).
+    const catDesc = { creep: 'Spread creep and buff units standing on it', combat: 'Better attacks: Precision, Critical Hit, Instant',
+      defense: 'Survive hits: Dodge, Tough and shields', positioning: 'Deploy, move, recall and reveal',
+      support: 'Cheaper abilities and repairs', general: '' };
+    const catOrder = ['creep', 'combat', 'defense', 'positioning', 'support', 'general'];
     const cats = [];
     D.TACTICAL_CARDS.forEach(t => { const c = t.category || 'general'; if (!cats.includes(c)) cats.push(c); });
+    cats.sort((a, b) => (catOrder.indexOf(a) + 1 || 99) - (catOrder.indexOf(b) + 1 || 99));
     const tacticalGroups = cats.map(cat => {
       const cards = D.TACTICAL_CARDS.filter(t => (t.category || 'general') === cat);
       if (!cards.length) return null;
       // Category colours for headings and card edges (like Library roles).
-      const catColor = { creep: '#d46ad9', combat: '#f04a4a', positioning: '#4f8df9', defense: '#38d3e8', general: '#c99af7' }[cat] || '#8a91a5';
+      const catColor = { creep: '#d46ad9', combat: '#f04a4a', positioning: '#4f8df9', defense: '#38d3e8', support: '#f2c14e', general: '#c99af7' }[cat] || '#8a91a5';
       return {
-        color: catColor,
+        color: catColor, desc: catDesc[cat] || '',
         name: (catNames[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1))) + (cat === 'creep' ? ' · choose one' : ''),
         cards: cards.map(t => {
           const count = st.tactical.filter(id => id === t.id).length;
@@ -2966,7 +2973,7 @@ class Component extends DCLogic {
       libraryGroups: libraryGroups.map(g => { const n = g.entries.filter(en => en.inArmy).length; return { ...g, secNote: n ? n + ' mustered' : (g.hasSlots ? g.slotText : ''),
         headAria: g.role + ' section. Tap to jump to another section', onHead: () => this.setState(s2 => ({ secMenu: !s2.secMenu })) }; }),
       tacticalGroups: tacticalGroups.map(g => { const n = g.cards.filter(c => c.inArmy).length; return { ...g, secLabel: g.name.replace(/ · .*$/, ''), secNote: n ? n + ' picked' : g.cards.length + ' cards',
-        headNote: (n ? n + ' picked · ' : '') + (/choose one/.test(g.name) ? 'choose one' : g.cards.length + ' cards'),
+        headNote: (n ? n + ' picked · ' : '') + (/choose one/.test(g.name) ? 'choose one' : g.cards.length + (g.cards.length === 1 ? ' card' : ' cards')),
         headAria: g.name + ' section. Tap to jump to another section', onHead: () => this.setState(s2 => ({ secMenu: !s2.secMenu })) }; }),
       factionCards,
       codexQ: st.codexQ, onCodexInput: (ev) => this.setState({ codexQ: ev.target.value }), codexGroups: codexGroups.map(g => ({ ...g, secNote: (g.entries || []).length + ' entries' })),
