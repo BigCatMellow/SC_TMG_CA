@@ -798,52 +798,52 @@ const KEYWORDS = {
     // DATA: Tactical Cards
     // ============================================================================
     const ZERG_TACTICAL_CARDS = [
-  { id: 'academy', name: 'Academy', unique: true, cost: 40, resource: '+1 CP', slots: { support: 2 },
+  { id: 'academy', category: 'support', name: 'Academy', unique: true, cost: 40, resource: '+1 CP', slots: { support: 2 },
     abilities: [{ phase: 'Any Phase', name: 'Advanced Training', type: 'Reaction', description: 'Once per Round, when a Friendly Support Unit activates a Special Ability that costs CP, resolve that ability with its CP cost reduced by 1 (to a minimum of 0). Do not Exhaust this card.' }]
   },
-  { id: 'armory', name: 'Armory', unique: false, cost: 30, resource: '+1 CP', slots: { elite: 1 },
+  { id: 'armory', category: 'combat', name: 'Armory', unique: false, cost: 30, resource: '+1 CP', slots: { elite: 1 },
     abilities: [
       { phase: 'Any Phase', name: 'Vehicle Plating', type: 'Reaction', description: 'Use before a Friendly Mechanical Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.' },
       { phase: 'Assault Phase', name: 'Vehicle Weapons', type: 'Active', description: "The active Mechanical Unit's first Ranged Weapon used gains CRITICAL HIT (1)." }
     ]
   },
-  { id: 'barracks', name: 'Barracks', unique: false, cost: 30, resource: '+1 CP', slots: { core: 1 },
+  { id: 'barracks', category: 'positioning', name: 'Barracks', unique: false, cost: 30, resource: '+1 CP', slots: { core: 1 },
     abilities: [{ phase: 'Movement Phase', name: 'Go! Go! Go!', type: 'Active', description: 'The active Biological Unit performs a 2" Move action. This does not count towards its action limit.' }]
   },
-  { id: 'barracks-proxy', name: 'Barracks (Proxy)', unique: true, cost: 40, resource: '+2 CP', slots: { core: 2 },
+  { id: 'barracks-proxy', category: 'positioning', name: 'Barracks (Proxy)', unique: true, cost: 40, resource: '+2 CP', slots: { core: 2 },
     abilities: [
       { phase: 'Movement Phase', name: 'Go! Go! Go!', type: 'Active', description: 'The active Biological Unit performs a 2" Move action. This does not count towards its action limit.' },
       { phase: 'Movement Phase', name: 'Armed and Ready', type: 'Active', description: "The active Biological Unit Deploys from any table edge that is not a player's Entry Edge. No model may be placed Within 10\" of any Enemy model. This ability cannot be used if another Friendly Biological Unit has already been Deployed this Round." }
     ]
   },
-  { id: 'barracks-tech-lab', name: 'Barracks (Tech Lab)', unique: true, cost: 40, resource: '+2 CP', slots: { elite: 1, core: 1 },
+  { id: 'barracks-tech-lab', category: 'combat', name: 'Barracks (Tech Lab)', unique: true, cost: 40, resource: '+2 CP', slots: { elite: 1, core: 1 },
     abilities: [
       { phase: 'Movement Phase', name: 'Go! Go! Go!', type: 'Active', description: 'The active Biological Unit performs a 2" Move action. This does not count towards its action limit.' },
       { phase: 'Assault Phase', name: "Let's Have a Blast!", type: 'Active', description: "The active Biological Unit's first Ranged Weapon used gains ANTI-EVADE (1)." }
     ]
   },
-  { id: 'dropship', name: 'Dropship', unique: true, cost: 35, resource: '+1 CP', slots: { core: 1, support: 1 },
+  { id: 'dropship', category: 'positioning', name: 'Dropship', unique: true, cost: 35, resource: '+1 CP', slots: { core: 1, support: 1 },
     abilities: [
       { phase: 'Movement Phase', name: 'Strap in!', type: 'Active', description: 'The active, Unengaged Ground Unit is placed in Reserves instead of performing an action.' },
       { phase: 'Movement Phase', name: 'Ready For Dust-off', type: 'Active', description: 'Place a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.' }
     ]
   },
-  { id: 'engineering-bay', name: 'Engineering Bay', unique: false, cost: 25, resource: '+1 CP', slots: { core: 1 },
+  { id: 'engineering-bay', category: 'combat', name: 'Engineering Bay', unique: false, cost: 25, resource: '+1 CP', slots: { core: 1 },
     abilities: [
       { phase: 'Any Phase', name: 'Infantry Armor', type: 'Reaction', description: 'Use before a Friendly Biological Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.' },
       { phase: 'Assault Phase', name: 'Infantry Weapons', type: 'Active', description: "The active Biological Unit's first Ranged Weapon used gains CRITICAL HIT (1)." }
     ]
   },
-  { id: 'factory', name: 'Factory', unique: false, cost: 35, resource: '+1 CP', slots: { elite: 2 },
+  { id: 'factory', category: 'support', name: 'Factory', unique: false, cost: 35, resource: '+1 CP', slots: { elite: 2 },
     abilities: [{ phase: 'Movement Phase', name: 'Field Repair', type: 'Active', description: 'The active Mechanical Unit resolves the HEAL (2) effect.' }]
   },
-  { id: 'orbital-command', name: 'Orbital Command', unique: true, cost: 25, resource: '+1 CP', slots: { core: 1 },
+  { id: 'orbital-command', category: 'positioning', name: 'Orbital Command', unique: true, cost: 25, resource: '+1 CP', slots: { core: 1 },
     abilities: [
       { phase: 'Movement Phase', name: 'ComSat Station', type: 'Active', description: "Select one table edge that is not a player's Entry Edge. Until the End of the Round, Enemy Units cannot Deploy from that edge." },
       { phase: 'Movement Phase', name: 'Scanner Sweep', type: 'Active', description: 'Place a Faction Indicator anywhere on the battlefield. While Enemy Units are Within 6" of this Faction Indicator, they lose HIDDEN.' }
     ]
   },
-  { id: 'supply-depot', name: 'Supply Depot', unique: true, cost: 40, resource: '+1 CP', slots: { hero: 1, elite: 1, core: 1 },
+  { id: 'supply-depot', category: 'positioning', name: 'Supply Depot', unique: true, cost: 40, resource: '+1 CP', slots: { hero: 1, elite: 1, core: 1 },
     abilities: [{ phase: 'Movement Phase', name: 'Additional Supply Depots', type: 'Active', description: "The active Unit's Supply Value is improved by 1 for Controlling and Contesting Mission Markers and completing objectives." }]
   },
 {

@@ -549,7 +549,7 @@ const KEYWORDS = {
   "slots": {
     "elite": 2
   },
-  "category": "combat",
+  "category": "defense",
   "summary": "Shielded mechanical Armour Rolls get protection",
   "wave": 2,
   "abilities": [

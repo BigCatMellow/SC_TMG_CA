@@ -690,6 +690,7 @@ const extra = {
     "tactical": [
       {
         "id": "vanadium-plating",
+        "category": "defense",
         "name": "Vanadium Plating",
         "unique": false,
         "cost": 25,
@@ -1051,6 +1052,7 @@ const extra = {
     "tactical": [
       {
         "id": "templar-archives",
+        "category": "support",
         "name": "Templar Archives",
         "unique": true,
         "cost": 40,
