@@ -2032,6 +2032,6 @@ input::placeholder { color: #5b6275; }
   .sc-bu-art { width: 76px; }
   .sc-bu-art .sc-bu-cut { max-width: 84px; }
 }
-.sc-bu-list { display: grid; gap: 6px; }
+.sc-bu-list { display: grid; gap: 12px; }
 .sc-bu-tags .sc-lib-view { display: inline-flex; }
 @media (min-width: 900px) { .sc-bu-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
