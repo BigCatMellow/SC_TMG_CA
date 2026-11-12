@@ -1930,3 +1930,4 @@ html.sc-snap .sc-tac-card { scroll-snap-align: start; scroll-margin-top: calc(va
 .sc-role-group .sc-lib-card--cutout:not(.sc-lib-card--open) .sc-lib-head-text > div:last-child { flex-wrap: nowrap !important; gap: 4px !important; margin-right: -40px; }
 .sc-role-group .sc-lib-card--cutout:not(.sc-lib-card--open) .sc-lib-head-text > div:last-child button { font-size: 10.5px !important; padding: 3px 5px !important; }
 .sc-role-group .sc-lib-card--cutout:not(.sc-lib-card--open) .sc-lib-head-text > div:first-child { margin-right: -40px; }
+.sc-lib-unique { display: inline-flex; align-items: center; min-height: 26px; box-sizing: border-box; font: 700 10px Rajdhani, sans-serif; letter-spacing: .08em; text-transform: uppercase; padding: 0 6px; background: rgba(242,193,78,0.14); border: 1px solid rgba(242,193,78,0.4); color: #f2c14e; }

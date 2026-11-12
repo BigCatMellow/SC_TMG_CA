@@ -412,11 +412,12 @@
                   <div onClick="{{ en.onToggle }}" role="button" aria-expanded="{{ en.expanded }}" class="sc-lib-head-text">
                     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
                       <span style="font-family:Rajdhani,sans-serif;font-size:16px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2" title="{{ en.name }}">{{ en.headName }}<svg class="sc-lib-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
-                      <sc-if value="{{ en.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
+                      
                       <sc-if value="{{ en.inArmy }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(53,199,107,0.14);border:1px solid rgba(53,199,107,0.4);color:#5fd98d">{{ en.musteredLabel }}</span></sc-if>
                     </div>
                     <sc-if value="{{ en.lockReason }}" hint-placeholder-val="{{ false }}"><div class="{{ en.lockCls }}" title="{{ en.lockTitle }}">{{ en.lockReason }}</div></sc-if>
                     <div style="display:flex;gap:5px;flex-wrap:wrap;margin-top:4px">
+                      <sc-if value="{{ en.unique }}" hint-placeholder-val="{{ false }}"><span class="sc-lib-unique">Unique</span></sc-if>
                       <sc-for list="{{ en.tags }}" as="tg" hint-placeholder-count="3">
                         <button onClick="{{ tg.onOpen }}" style="font-size:11px;font-weight:600;letter-spacing:0.02em;padding:4px 6px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#a7aec2;cursor:pointer;border-radius:2px">{{ tg.name }}</button>
                       </sc-for>
