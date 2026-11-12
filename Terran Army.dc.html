@@ -445,23 +445,23 @@
   <sc-if value="{{ tabIsTactics }}" hint-placeholder-val="{{ false }}">
     <div style="padding:14px">
       <sc-for list="{{ tacticalGroups }}" as="grp" hint-placeholder-count="3">
-        <div class="sc-tac-group" style="margin-bottom:16px" data-sec="{{ grp.secLabel }}" data-sec-note="{{ grp.secNote }}">
-          <div class="sc-tac-head" onClick="{{ grp.onHead }}" role="button" aria-label="{{ grp.headAria }}">
-            <span style="width:8px;height:8px;background:#38d3e8;clip-path:var(--sc-diamond)"></span>
-            <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#38d3e8">{{ grp.name }}</span>
-            <span style="flex:1;height:1px;background:linear-gradient(90deg,var(--sc-border-neutral),transparent)"></span>
+        <div class="sc-role-group sc-tac-group" style="--role:{{ grp.color }}" data-sec="{{ grp.secLabel }}" data-sec-note="{{ grp.secNote }}">
+          <div class="sc-role-head" onClick="{{ grp.onHead }}" role="button" aria-label="{{ grp.headAria }}">
+            <span class="sc-role-mark" aria-hidden="true"></span>
+            <h2 class="sc-role-name">{{ grp.secLabel }}</h2>
+            <span class="sc-role-rule" aria-hidden="true"></span>
+            <span class="sc-lib-slots">{{ grp.headNote }}</span>
           </div>
-          <div style="display:grid;gap:8px">
+          <div class="sc-tac-list">
             <sc-for list="{{ grp.cards }}" as="tc" hint-placeholder-count="2">
-              <div style="position:relative;background:var(--sc-card-bg);border:1px solid {{ tc.borderColor }};clip-path:var(--sc-corner-12)">
-                <sc-if value="{{ tc.portrait }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;inset:0;pointer-events:none;opacity:0.5;background-image:url('{{ tc.portrait }}');background-repeat:no-repeat;background-size:{{ tc.portraitSize }};background-position:{{ tc.portraitPos }}"></span><span style="position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(11,14,23,0.88) 20%,rgba(11,14,23,0.4) 46%,rgba(11,14,23,0.08) 72%,rgba(11,14,23,0.3) 100%)"></span></sc-if>
-                <div style="position:relative;display:flex;align-items:center;gap:10px;padding:12px;min-height:44px">
+              <div class="{{ tc.cardCls }}">
+                <div class="sc-tc-head">
                   <div onClick="{{ tc.onToggle }}" role="button" style="flex:1;min-width:0;cursor:pointer">
                     <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">
-                      <span style="font-family:Rajdhani,sans-serif;font-size:15px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2">{{ tc.name }}</span>
+                      <span class="sc-tc-name">{{ tc.name }}<svg class="sc-lib-chev" width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
                       <sc-if value="{{ tc.unique }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;padding:2px 6px;background:rgba(242,193,78,0.14);border:1px solid rgba(242,193,78,0.4);color:#f2c14e">Unique</span></sc-if>
                     </div>
-                    <div style="font-size:12px;color:#8a91a5;margin-top:2px">{{ tc.summary }}</div>
+                    <div class="sc-tc-summary">{{ tc.summary }}</div>
                     <sc-if value="{{ tc.lockReason }}" hint-placeholder-val="{{ false }}"><div class="sc-lock">{{ tc.lockReason }}</div></sc-if>
                   </div>
                   <sc-if value="{{ tc.single }}" hint-placeholder-val="{{ false }}">
@@ -475,15 +475,14 @@
                    </div>
                   </sc-if>
                 </div>
-                <div style="display:flex;gap:5px;flex-wrap:wrap;padding:0 12px 12px;margin-top:-4px">
-                  <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;padding:2px 7px;background:rgba(56,211,232,0.06);border:1px solid rgba(56,211,232,0.22);color:#7fc9d4">{{ tc.cost }} gas</span>
-                  <sc-if value="{{ tc.resource }}" hint-placeholder-val="{{ false }}"><span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;padding:2px 7px;background:rgba(182,230,74,0.05);border:1px solid rgba(182,230,74,0.2);color:#a8c479">{{ tc.resource }}</span></sc-if>
-                  <sc-for list="{{ tc.slotPills }}" as="sp" hint-placeholder-count="1">
-                    <span style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;padding:2px 7px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#8a91a5">{{ sp }}</span>
-                  </sc-for>
+                <div class="sc-tc-pills">
+                  <span class="sc-tc-pill sc-tc-pill--gas">{{ tc.cost }} gas</span>
+                  <sc-if value="{{ tc.resource }}" hint-placeholder-val="{{ false }}"><span class="sc-tc-pill sc-tc-pill--res">{{ tc.resource }}</span></sc-if>
+                  <sc-for list="{{ tc.slotChips }}" as="sp" hint-placeholder-count="1"><span class="sc-tc-pill sc-tc-pill--slot" style="--rc:{{ sp.color }}">{{ sp.label }}</span></sc-for>
+                  <span class="sc-tc-phases"><sc-for list="{{ tc.phaseDots }}" as="pd" hint-placeholder-count="2"><span class="sc-tc-phase" style="--ph:{{ pd.color }}" title="{{ pd.name }} phase">{{ pd.short }}</span></sc-for></span>
                 </div>
                 <sc-if value="{{ tc.expanded }}" hint-placeholder-val="{{ false }}">
-                  <div style="position:relative;border-top:1px solid #1f2430;padding:12px;display:grid;gap:10px">
+                  <div class="sc-tc-body">
                     <sc-for list="{{ tc.abilities }}" as="ab" hint-placeholder-count="2">
                       <div class="sc-ab-card" style="--ph:{{ ab.phFg }}">
                         <div class="sc-ab-card-top">
@@ -2568,7 +2567,10 @@ class Component extends DCLogic {
     const tacticalGroups = cats.map(cat => {
       const cards = D.TACTICAL_CARDS.filter(t => (t.category || 'general') === cat);
       if (!cards.length) return null;
+      // Category colours for headings and card edges (like Library roles).
+      const catColor = { creep: '#d46ad9', combat: '#f04a4a', positioning: '#4f8df9', defense: '#38d3e8', general: '#8ec3fa' }[cat] || '#8a91a5';
       return {
+        color: catColor,
         name: (catNames[cat] || (cat.charAt(0).toUpperCase() + cat.slice(1))) + (cat === 'creep' ? ' · choose one' : ''),
         cards: cards.map(t => {
           const count = st.tactical.filter(id => id === t.id).length;
@@ -2601,7 +2603,11 @@ class Component extends DCLogic {
             }, canAdd: !t.unique || count === 0,
             resource: t.resource || false, expanded, ...this.tacticalPortrait(t),
             borderColor: inArmy ? 'rgba(56,211,232,0.45)' : (expanded ? 'rgba(98,169,247,0.45)' : 'var(--sc-border-neutral)'),
+            cardCls: 'sc-tc' + (inArmy ? ' sc-tc--in' : '') + (expanded ? ' sc-tc--open' : ''),
             slotPills: Object.entries(t.slots || {}).map(([k, v]) => '+' + v + ' ' + k),
+            slotChips: Object.entries(t.slots || {}).map(([k, v]) => ({ label: '+' + v + ' ' + k, color: this.roleColor(k.charAt(0).toUpperCase() + k.slice(1)) })),
+            // Which phases the card's abilities work in, as small coloured letters.
+            phaseDots: [...new Set((t.abilities || []).map(a => a.phase))].map(ph => ({ name: ph.replace(' Phase', ''), short: ph === 'Any Phase' ? '◆' : ph.replace(' Phase', '').charAt(0), color: this.phaseBadge(ph).phFg })),
             btnGlyph: inArmy ? '✓' : '+',
             btnBg: inArmy ? 'rgba(53,199,107,0.16)' : 'rgba(37,99,235,0.16)',
             btnBd: inArmy ? 'rgba(53,199,107,0.45)' : 'rgba(98,169,247,0.45)',
@@ -2964,6 +2970,7 @@ class Component extends DCLogic {
       libraryGroups: libraryGroups.map(g => { const n = g.entries.filter(en => en.inArmy).length; return { ...g, secNote: n ? n + ' mustered' : (g.hasSlots ? g.slotText : ''),
         headAria: g.role + ' section. Tap to jump to another section', onHead: () => this.setState(s2 => ({ secMenu: !s2.secMenu })) }; }),
       tacticalGroups: tacticalGroups.map(g => { const n = g.cards.filter(c => c.inArmy).length; return { ...g, secLabel: g.name.replace(/ · .*$/, ''), secNote: n ? n + ' picked' : g.cards.length + ' cards',
+        headNote: (n ? n + ' picked · ' : '') + (/choose one/.test(g.name) ? 'choose one' : g.cards.length + ' cards'),
         headAria: g.name + ' section. Tap to jump to another section', onHead: () => this.setState(s2 => ({ secMenu: !s2.secMenu })) }; }),
       factionCards,
       codexQ: st.codexQ, onCodexInput: (ev) => this.setState({ codexQ: ev.target.value }), codexGroups: codexGroups.map(g => ({ ...g, secNote: (g.entries || []).length + ' entries' })),
