@@ -1865,3 +1865,10 @@ input::placeholder { color: #5b6275; }
 .sc-ud-type--reaction { color: #6fd3f0; }
 .sc-ud-text { font-size: 13px; color: #b9bfd0; line-height: 1.55; }
 .sc-ud-abil .sc-def { border-left-color: transparent; padding-left: 10px; }
+
+/* Faction and tactical card abilities: own block, phase-coloured edge (matches unit details) */
+.sc-ab-card { padding: 9px 12px 10px; background: #12151f; border-left: 2px solid var(--ph); }
+.sc-ab-card-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 5px; }
+.sc-ab-card-top b { font: 700 15px Rajdhani, sans-serif; letter-spacing: .02em; color: #e9ecf2; }
+.sc-ab-card-top .sc-ud-type { margin-left: auto; }
+.sc-ab-card .sc-def { border-left-color: transparent; padding-left: 10px; }

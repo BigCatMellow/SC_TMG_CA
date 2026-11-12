@@ -484,11 +484,11 @@
                 <sc-if value="{{ tc.expanded }}" hint-placeholder-val="{{ false }}">
                   <div style="position:relative;border-top:1px solid #1f2430;padding:12px;display:grid;gap:10px">
                     <sc-for list="{{ tc.abilities }}" as="ab" hint-placeholder-count="2">
-                      <div>
-                        <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px">
+                      <div class="sc-ab-card" style="--ph:{{ ab.phFg }}">
+                        <div class="sc-ab-card-top">
                           <span class="sc-phase-chip" style="background:{{ ab.phBg }};color:{{ ab.phFg }}">{{ ab.phase }}</span>
-                          <span style="font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;color:#e9ecf2">{{ ab.name }}</span>
-                          <span style="font-size:11px;color:#8a91a5">{{ ab.type }}</span>
+                          <b>{{ ab.name }}</b>
+                          <span class="{{ ab.typeCls }}">{{ ab.type }}</span>
                         </div>
                         <div class="sc-def" style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-kw-link">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
                       </div>
@@ -536,11 +536,11 @@
             <sc-if value="{{ fc.showAbilities }}" hint-placeholder-val="{{ true }}">
             <div style="border-top:1px solid #1f2430;padding:12px;display:grid;gap:10px">
               <sc-for list="{{ fc.abilities }}" as="ab" hint-placeholder-count="3">
-                <div>
-                  <div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:3px">
+                <div class="sc-ab-card" style="--ph:{{ ab.phFg }}">
+                  <div class="sc-ab-card-top">
                     <span class="sc-phase-chip" style="background:{{ ab.phBg }};color:{{ ab.phFg }}">{{ ab.phase }}</span>
-                    <span style="font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;color:#e9ecf2">{{ ab.name }}</span>
-                    <span style="font-size:11px;color:#8a91a5">{{ ab.type }}</span>
+                    <b>{{ ab.name }}</b>
+                    <span class="{{ ab.typeCls }}">{{ ab.type }}</span>
                   </div>
                   <div class="sc-def" style="font-size:13px;color:#b9bfd0;line-height:1.55"><sc-for list="{{ ab.segs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-kw-link">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
                 </div>
@@ -1424,6 +1424,10 @@ class Component extends DCLogic {
   // Tactical cards show no art: the only images available were game renders.
   tacticalPortrait(t) {
     return { portrait: false };
+  }
+  // Ability type colour: Active (pays a cost) gold, Reaction cyan, Passive grey.
+  abilityTypeCls(type) {
+    return 'sc-ud-type' + (/^active/i.test(type || '') ? ' sc-ud-type--active' : /reaction/i.test(type || '') ? ' sc-ud-type--reaction' : '');
   }
   phaseBadge(phaseLabel) {
     const map = { 'Movement Phase': '#4f8df9', 'Assault Phase': '#f9822f', 'Combat Phase': '#f04a4a', 'Scoring Phase': '#35c76b', 'Any Phase': '#8a91a5' };
@@ -2597,7 +2601,7 @@ class Component extends DCLogic {
             btnBg: inArmy ? 'rgba(53,199,107,0.16)' : 'rgba(37,99,235,0.16)',
             btnBd: inArmy ? 'rgba(53,199,107,0.45)' : 'rgba(98,169,247,0.45)',
             btnFg: inArmy ? '#5fd98d' : '#bcd9fd',
-            abilities: expanded ? t.abilities.map(a => ({ name: a.name, type: a.type, phase: a.phase.replace(' Phase', ''), ...this.phaseBadge(a.phase), segs: this.segs(a.description) })) : [],
+            abilities: expanded ? t.abilities.map(a => ({ name: a.name, type: a.type, typeCls: this.abilityTypeCls(a.type), phase: a.phase.replace(' Phase', ''), ...this.phaseBadge(a.phase), segs: this.segs(a.description) })) : [],
             onToggle: () => this.setState(s2 => ({ expTac: { ...s2.expTac, [t.id]: !s2.expTac[t.id] } })),
             onAdd: (ev) => {
               ev.stopPropagation();
@@ -2633,7 +2637,7 @@ class Component extends DCLogic {
         bd: sel ? 'rgba(98,169,247,0.55)' : 'var(--sc-border-neutral)',
         dot: sel ? '#62a9f7' : 'transparent', dotBd: sel ? '#62a9f7' : '#3a4154',
         slotPills: Object.entries(fc.slots || {}).map(([k, v]) => v + ' ' + k),
-        abilities: fc.abilities.map(a => ({ name: a.name, type: a.type, phase: a.phase.replace(' Phase', ''), ...this.phaseBadge(a.phase), segs: this.segs(a.description) })),
+        abilities: fc.abilities.map(a => ({ name: a.name, type: a.type, typeCls: this.abilityTypeCls(a.type), phase: a.phase.replace(' Phase', ''), ...this.phaseBadge(a.phase), segs: this.segs(a.description) })),
         showAbilities: sel || !!(st.expFc || {})[fc.id],
         peekLabel: (st.expFc || {})[fc.id] ? 'Hide abilities' : 'Read abilities · ' + fc.abilities.map(a => a.name).join(', '),
         canPeek: !sel,
