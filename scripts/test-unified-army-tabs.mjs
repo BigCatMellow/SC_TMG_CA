@@ -61,7 +61,7 @@ for(const faction of ['terran','zerg','protoss']){
   assert.equal(controller.state.scaleId,'standard',faction+' existing default size');
   assert.deepEqual(view().tabs.map(t=>t.label),
     [faction==='terran'?'Command':faction==='protoss'?'Nexus':'Brood',
-      'Library','Tactics','Battle','Codex'],faction+' five navigation tabs');
+      'Library','Tactics','Battle','VS','Codex'],faction+' six navigation tabs (VS opens the scoreboard)');
   const D=controller.D();
   const engagementScales=D.ENGAGEMENT_SCALES;
   assert.equal(view().scales.length,3,faction+' all engagement sizes available');

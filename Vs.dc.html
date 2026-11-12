@@ -53,7 +53,7 @@
               <button onClick="{{ c.pick }}" class="{{ c.cls }}" aria-pressed="{{ c.on }}">{{ c.name }}<small>{{ c.slots }}</small></button>
             </sc-for>
           </div>
-          <div class="sc-vs-k">4 · Tactical cards <small>tap to add · ✕ to remove</small></div>
+          <div class="sc-vs-k">3 · Tactical cards <small>tap to add · ✕ to remove</small></div>
           <div class="sc-vs-pills sc-vs-pills--wrap">
             <sc-for list="{{ scoutTacs }}" as="t" hint-placeholder-count="6">
               <span class="{{ t.cls }}"><button onClick="{{ t.add }}" class="sc-vs-tac-add">{{ t.label }}</button><sc-if value="{{ t.count }}" hint-placeholder-val="{{ false }}"><button onClick="{{ t.remove }}" class="sc-vs-tac-x" aria-label="Remove one {{ t.name }}">✕</button></sc-if></span>
@@ -62,7 +62,7 @@
         </section>
 
         <section aria-label="Their units" class="sc-vs-scout-units">
-          <div class="sc-vs-k">3 · Units they brought <small>tap a tier to add one</small></div>
+          <div class="sc-vs-k">4 · Units they brought <small>tap a tier to add one</small></div>
           <div class="sc-vs-tiles">
             <sc-for list="{{ scoutUnits }}" as="u" hint-placeholder-count="8">
               <div class="{{ u.cls }}" style="--rc:{{ u.roleColor }}">
@@ -71,6 +71,7 @@
                 <div class="sc-vs-tile-body">
                   <div class="sc-vs-k" style="font-size:9px;color:{{ u.roleColor }}">{{ u.role }}</div>
                   <div class="sc-vs-tile-name">{{ u.name }}</div>
+                  <sc-if value="{{ u.uniqueNote }}" hint-placeholder-val="{{ false }}"><div class="sc-vs-k" style="font-size:9px;color:#f2c14e">{{ u.uniqueNote }}</div></sc-if>
                   <div class="sc-vs-tiers">
                     <sc-for list="{{ u.tiers }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.add }}" disabled="{{ t.off }}" class="sc-vs-tier" aria-label="Add {{ u.name }} {{ t.label }}">{{ t.label }}</button></sc-for>
                   </div>
@@ -116,14 +117,14 @@
       <!-- HUD -->
       <div class="sc-vs-hud">
         <section class="sc-vs-cmd sc-vs-cmd--you" aria-label="Your commander">
-          <img src="{{ you.logo }}" alt="" aria-hidden="true" class="sc-vs-cmd-logo">
-          <sc-if value="{{ you.heroImg }}" hint-placeholder-val="{{ false }}"><img src="{{ you.heroImg }}" alt="" aria-hidden="true" class="sc-vs-cmd-hero"></sc-if>
+          <img src="{{ you.logo }}" alt="" aria-hidden="true" loading="lazy" class="sc-vs-cmd-logo">
+          <sc-if value="{{ you.heroImg }}" hint-placeholder-val="{{ false }}"><img src="{{ you.heroImg }}" alt="" aria-hidden="true" loading="lazy" class="sc-vs-cmd-hero"></sc-if>
           <div class="sc-vs-cmd-text">
             <div class="sc-vs-k" style="color:var(--you)">You · {{ you.factionName }}</div>
             <div class="sc-vs-cmd-name">{{ you.cardName }}</div>
             <div class="sc-vs-chips">
               <span><small>{{ you.resLabel }}</small><b style="color:#b6e64a">{{ you.res }}</b></span>
-              <span><small>On table</small><b>{{ you.supplyOnTable }}<i> / {{ you.pool }}</i></b></span>
+              <span class="{{ you.tableCls }}"><small>On table</small><b>{{ you.supplyOnTable }}<i> / {{ you.pool }}</i></b></span>
               <span><small>Models</small><b>{{ you.models }}</b></span>
             </div>
           </div>
@@ -143,14 +144,14 @@
         </section>
 
         <section class="sc-vs-cmd sc-vs-cmd--opp" aria-label="Opponent commander">
-          <img src="{{ opp.logo }}" alt="" aria-hidden="true" class="sc-vs-cmd-logo">
-          <sc-if value="{{ opp.heroImg }}" hint-placeholder-val="{{ false }}"><img src="{{ opp.heroImg }}" alt="" aria-hidden="true" class="sc-vs-cmd-hero"></sc-if>
+          <img src="{{ opp.logo }}" alt="" aria-hidden="true" loading="lazy" class="sc-vs-cmd-logo">
+          <sc-if value="{{ opp.heroImg }}" hint-placeholder-val="{{ false }}"><img src="{{ opp.heroImg }}" alt="" aria-hidden="true" loading="lazy" class="sc-vs-cmd-hero"></sc-if>
           <div class="sc-vs-cmd-text">
             <div class="sc-vs-k" style="color:var(--opp)">Opponent · {{ opp.factionName }}</div>
             <div class="sc-vs-cmd-name">{{ opp.cardName }}</div>
             <div class="sc-vs-chips">
               <span><small>Models</small><b>{{ opp.models }}</b></span>
-              <span><small>On table</small><b>{{ opp.supplyOnTable }}</b></span>
+              <span class="{{ opp.tableCls }}"><small>On table</small><b>{{ opp.supplyOnTable }}<i> / {{ opp.pool }}</i></b></span>
               <span><small>Lost</small><b>{{ opp.lostSupply }}<i> sup</i></b></span>
             </div>
           </div>
@@ -173,17 +174,24 @@
             <div class="{{ u.cls }}" style="--rc:{{ u.roleColor }}">
               <div class="sc-vs-unit-art"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" alt="" aria-hidden="true" loading="lazy"></sc-if></div>
               <div class="sc-vs-unit-main">
-                <div class="sc-vs-unit-name"><b>{{ u.name }}</b><span class="sc-vs-k" style="color:{{ u.roleColor }}">{{ u.role }} · {{ u.tier }}</span></div>
-                <div class="sc-vs-pips">
-                  <sc-for list="{{ u.pips }}" as="p" hint-placeholder-count="6"><button onClick="{{ p.tap }}" class="{{ p.cls }}" aria-label="{{ p.label }}"></button></sc-for>
+                <div class="sc-vs-unit-line">
+                  <div class="sc-vs-unit-name" title="{{ u.name }}"><b>{{ u.shortName }}</b></div>
+                  <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.deployOff }}" class="{{ u.statusCls }}" title="{{ u.statusTitle }}">{{ u.status }}</button>
                 </div>
-                <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
-                  <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span><span class="sc-vs-hp-btns"><button onClick="{{ u.dmgDown }}" class="sc-vs-mini" aria-label="Heal 1">−</button><button onClick="{{ u.dmgUp }}" class="sc-vs-mini" aria-label="1 damage">+</button></span></div>
-                </sc-if>
+                <div class="sc-vs-unit-line">
+                  <div class="sc-vs-unit-info">
+                    <span class="sc-vs-k" style="color:{{ u.roleColor }}">{{ u.role }} · {{ u.tier }}</span>
+                    <div class="sc-vs-pips">
+                      <sc-for list="{{ u.pips }}" as="p" hint-placeholder-count="6"><button onClick="{{ p.tap }}" class="{{ p.cls }}" aria-label="{{ p.label }}"></button></sc-for>
+                    </div>
+                    <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
+                      <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span><span class="sc-vs-hp-btns"><button onClick="{{ u.dmgDown }}" class="sc-vs-mini" aria-label="Heal 1">−</button><button onClick="{{ u.dmgUp }}" class="sc-vs-mini" aria-label="1 damage">+</button></span></div>
+                    </sc-if>
+                  </div>
+                  <div class="sc-vs-sup"><b>{{ u.supply }}</b><small>sup</small></div>
+                  <div class="sc-vs-models"><small>Models</small><span class="sc-vs-steps-row"><button onClick="{{ u.lose }}" disabled="{{ u.dead }}" class="sc-vs-step" aria-label="Remove a {{ u.name }} model">−</button><button onClick="{{ u.heal }}" disabled="{{ u.full }}" class="sc-vs-step" aria-label="Restore a {{ u.name }} model">+</button></span></div>
+                </div>
               </div>
-              <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.dead }}" class="{{ u.statusCls }}" title="Tap to switch between reserve and table">{{ u.status }}</button>
-              <div class="sc-vs-sup"><b>{{ u.supply }}</b><small>sup</small></div>
-              <div class="sc-vs-steps-row"><button onClick="{{ u.lose }}" disabled="{{ u.dead }}" class="sc-vs-step" aria-label="Remove a {{ u.name }} model">−</button><button onClick="{{ u.heal }}" disabled="{{ u.full }}" class="sc-vs-step" aria-label="Restore a {{ u.name }} model">+</button></div>
             </div>
           </sc-for>
           <div class="sc-vs-cards">
@@ -237,17 +245,24 @@
             <div class="{{ u.cls }}" style="--rc:{{ u.roleColor }}">
               <div class="sc-vs-unit-art"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" alt="" aria-hidden="true" loading="lazy"></sc-if></div>
               <div class="sc-vs-unit-main">
-                <div class="sc-vs-unit-name"><b>{{ u.name }}</b><span class="sc-vs-k" style="color:{{ u.roleColor }}">{{ u.role }} · {{ u.tier }}</span></div>
-                <div class="sc-vs-pips">
-                  <sc-for list="{{ u.pips }}" as="p" hint-placeholder-count="6"><button onClick="{{ p.tap }}" class="{{ p.cls }}" aria-label="{{ p.label }}"></button></sc-for>
+                <div class="sc-vs-unit-line">
+                  <div class="sc-vs-unit-name" title="{{ u.name }}"><b>{{ u.shortName }}</b></div>
+                  <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.deployOff }}" class="{{ u.statusCls }}" title="{{ u.statusTitle }}">{{ u.status }}</button>
                 </div>
-                <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
-                  <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span><span class="sc-vs-hp-btns"><button onClick="{{ u.dmgDown }}" class="sc-vs-mini" aria-label="Heal 1">−</button><button onClick="{{ u.dmgUp }}" class="sc-vs-mini" aria-label="1 damage">+</button></span></div>
-                </sc-if>
+                <div class="sc-vs-unit-line">
+                  <div class="sc-vs-unit-info">
+                    <span class="sc-vs-k" style="color:{{ u.roleColor }}">{{ u.role }} · {{ u.tier }}</span>
+                    <div class="sc-vs-pips">
+                      <sc-for list="{{ u.pips }}" as="p" hint-placeholder-count="6"><button onClick="{{ p.tap }}" class="{{ p.cls }}" aria-label="{{ p.label }}"></button></sc-for>
+                    </div>
+                    <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
+                      <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span><span class="sc-vs-hp-btns"><button onClick="{{ u.dmgDown }}" class="sc-vs-mini" aria-label="Heal 1">−</button><button onClick="{{ u.dmgUp }}" class="sc-vs-mini" aria-label="1 damage">+</button></span></div>
+                    </sc-if>
+                  </div>
+                  <div class="sc-vs-sup"><b>{{ u.supply }}</b><small>sup</small></div>
+                  <div class="sc-vs-models"><small>Models</small><span class="sc-vs-steps-row"><button onClick="{{ u.lose }}" disabled="{{ u.dead }}" class="sc-vs-step" aria-label="Remove a {{ u.name }} model">−</button><button onClick="{{ u.heal }}" disabled="{{ u.full }}" class="sc-vs-step" aria-label="Restore a {{ u.name }} model">+</button></span></div>
+                </div>
               </div>
-              <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.dead }}" class="{{ u.statusCls }}" title="Tap to switch between reserve and table">{{ u.status }}</button>
-              <div class="sc-vs-sup"><b>{{ u.supply }}</b><small>sup</small></div>
-              <div class="sc-vs-steps-row"><button onClick="{{ u.lose }}" disabled="{{ u.dead }}" class="sc-vs-step" aria-label="Remove a {{ u.name }} model">−</button><button onClick="{{ u.heal }}" disabled="{{ u.full }}" class="sc-vs-step" aria-label="Restore a {{ u.name }} model">+</button></div>
             </div>
           </sc-for>
           <div class="sc-vs-cards">
@@ -356,6 +371,22 @@ class Component extends DCLogic {
     const M = window.SCTMG_MISSIONS, id = this.state.play.mapId;
     return (M && id && M.MAPS.find(m => m.id === id)) || null;
   }
+  // Supply each side may have on the table this round. Yours is the Battle tab's pool, so both
+  // screens agree; the opponent follows the mission (no cap without one, or in the last round).
+  poolOf(side) {
+    const st = this.state, round = st.play.round || 1, m = this.mission();
+    if (side === 'you') { const y = st.yours || {}; return typeof y.battleSupplyAvailable === 'number' ? y.battleSupplyAvailable : this.poolFor(round); }
+    if (!m || round >= m.gameLength) return Infinity;
+    return m.supply + m.perRound * (round - 1);
+  }
+  onTable(f, army) {
+    const D = this.D(f);
+    return (army || []).reduce((t, e) => {
+      const u = D.UNITS.find(x => x.id === e.unitId);
+      if (!u || !e.deployed || this.models(u, e.tierIdx) - (e.modelsLost || 0) <= 0) return t;
+      return t + this.supplyNow(u, e);
+    }, 0);
+  }
   poolFor(round) {
     const m = this.mission(), y = this.state.yours || {};
     if (!m) return y.battleSupplyAvailable || 0;
@@ -409,10 +440,13 @@ class Component extends DCLogic {
   }
 
   // ---------- one unit row (either side) ----------
-  unitRow(side, f, e) {
+  unitRow(side, f, e, free) {
     const D = this.D(f);
     const u = D.UNITS.find(x => x.id === e.unitId);
     if (!u) return null;
+    // "Kerrigan's Raptor (Zergling)" reads as "Kerrigan's Raptor" on the board; the full name stays in the tooltip.
+    const paren = u.name.match(/^(.*\S)\s+\(([^)]+)\)$/);
+    const shortName = paren && D.UNITS.some(x => x.name === paren[2]) ? paren[1] : u.name;
     const start = this.models(u, e.tierIdx);
     const lost = Math.min(start, e.modelsLost || 0);
     const alive = start - lost;
@@ -428,14 +462,17 @@ class Component extends DCLogic {
       while (v >= p() && l < start) { v -= p(); l++; }
       return { ...x, dmg: l >= start ? 0 : v, modelsLost: l };
     });
-    const status = dead ? 'Destroyed' : (e.deployed ? 'On table' : 'Reserve');
+    const supplyNow = this.supplyNow(u, e);
+    const blocked = !dead && !e.deployed && supplyNow > free;
+    const status = dead ? 'Destroyed' : e.deployed ? 'On table' : blocked ? 'Needs ' + supplyNow + ' sup' : 'Reserve';
     return {
-      key: e.key, name: u.name, role: u.role, roleColor: ROLE_COLOR[u.role] || '#8a91a5', roleRank: ROLE_ORDER.indexOf(u.role),
+      key: e.key, name: u.name, shortName, role: u.role, roleColor: ROLE_COLOR[u.role] || '#8a91a5', roleRank: ROLE_ORDER.indexOf(u.role),
       tier: (u.tiers[e.tierIdx] || {}).tier || '', img: art.cutout || art.portrait || '',
       cls: 'sc-vs-unit sc-vs-unit--' + side + (dead ? ' sc-vs-unit--dead' : ''),
-      status, dead, full: lost === 0, deployed: !!e.deployed && !dead,
-      statusCls: 'sc-vs-status' + (dead ? ' sc-vs-status--dead' : e.deployed ? ' sc-vs-status--table' : ''),
-      supply: this.supplyNow(u, e), alive,
+      status, dead, full: lost === 0, deployed: !!e.deployed && !dead, deployOff: dead || blocked,
+      statusTitle: blocked ? 'Not enough supply: ' + Math.max(0, free) + ' free this round' : 'Tap to switch between reserve and table',
+      statusCls: 'sc-vs-status' + (dead ? ' sc-vs-status--dead' : e.deployed ? ' sc-vs-status--table' : blocked ? ' sc-vs-status--full' : ''),
+      supply: supplyNow, alive,
       pips: Array.from({ length: start }, (_, i) => ({
         cls: 'sc-vs-pip' + (i >= alive ? ' sc-vs-pip--lost' : ''),
         // Tapping any live model removes one; tapping a lost one brings one back.
@@ -447,7 +484,7 @@ class Component extends DCLogic {
       hpText: (pool - dmg) + ' / ' + pool + (lost === 0 && shd ? ' HP+SHD' : ' HP'),
       dmgUp: () => setDmg(1), dmgDown: () => setDmg(-1),
       lose: () => setLost(lost + 1), heal: () => setLost(lost - 1),
-      toggleDeploy: () => this.editArmy(side, e.key, x => ({ ...x, deployed: !x.deployed }))
+      toggleDeploy: () => { if (!blocked) this.editArmy(side, e.key, x => ({ ...x, deployed: !x.deployed })); }
     };
   }
   side(side) {
@@ -456,7 +493,8 @@ class Component extends DCLogic {
     const src = side === 'you' ? st.yours : st.opp;
     const meta = VS_FACTIONS[f];
     const fc = this.card(f, side === 'you' ? src.factionId : src.factionId);
-    const units = (src.army || []).map(e => this.unitRow(side, f, e)).filter(Boolean)
+    const pool = this.poolOf(side), used = this.onTable(f, src.army);
+    const units = (src.army || []).map(e => this.unitRow(side, f, e, pool - used)).filter(Boolean)
       .sort((a, b) => (a.dead - b.dead) || (b.deployed - a.deployed) || (a.roleRank - b.roleRank));
     const D = this.D(f);
     const hero = (src.army || []).map(e => D.UNITS.find(u => u.id === e.unitId)).find(u => u && u.role === 'Hero');
@@ -488,7 +526,8 @@ class Component extends DCLogic {
       models: live.reduce((t, u) => t + u.alive, 0),
       supplyOnTable: live.filter(u => u.deployed).reduce((t, u) => t + u.supply, 0),
       onTableCount: live.filter(u => u.deployed).length, reserveCount: live.filter(u => !u.deployed).length,
-      lostSupply: this.lostSupply(f, src.army), resLabel: meta.res, res: fc.resource || '', pool: this.poolFor(st.play.round || 1),
+      lostSupply: this.lostSupply(f, src.army), resLabel: meta.res, res: fc.resource || '', pool: pool === Infinity ? '–' : pool,
+      tableCls: used > pool ? 'sc-vs-chip--over' : '',
       readyCards: Math.max(0, ready)
     };
   }
@@ -530,10 +569,14 @@ class Component extends DCLogic {
     const markers = {};
     this.markerList().forEach(x => { markers[x.num] = { ctrl: x.ctrl, prevCtrl: x.ctrl, active: x.active, activatedRound: x.activatedRound, colour: x.colour,
       removed: x.removed || (sug.removed || []).includes(x.num) }; });
-    const rounds = { ...(st.play.rounds || {}) };
-    if (m) rounds[round] = { you: addYou, foe: addFoe };
+    // A round's points are the new total minus earlier rounds, so manual VP changes made during
+    // the round count toward it; replaying a round (after stepping the round back) drops later ones.
+    const totalYou = (st.play.vpYou || 0) + addYou, totalFoe = (st.play.vpFoe || 0) + addFoe;
+    const rounds = {}, prior = { you: 0, foe: 0 };
+    Object.entries(st.play.rounds || {}).forEach(([k, r]) => { if (+k < round) { rounds[k] = r; prior.you += r.you || 0; prior.foe += r.foe || 0; } });
+    if (m) rounds[round] = { you: Math.max(0, totalYou - prior.you), foe: Math.max(0, totalFoe - prior.foe) };
     this.savePlay({
-      vpYou: (st.play.vpYou || 0) + addYou, vpFoe: (st.play.vpFoe || 0) + addFoe, markers, rounds,
+      vpYou: totalYou, vpFoe: totalFoe, markers, rounds,
       round: last ? round : round + 1, phase: 0,
       ownLostAtStart: this.lostSupply(st.yourFaction, st.yours.army), foeLostAtStart: this.lostSupply(st.opp.faction, st.opp.army)
     });
@@ -560,11 +603,12 @@ class Component extends DCLogic {
       .sort((a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role))
       .map(u => {
         const count = (opp.army || []).filter(e => e.unitId === u.id).length;
+        const taken = !!u.unique && count > 0;
         const art = window.SCTMG_MAKE_PORTRAIT(f, u.id, {}) || {};
         return { name: u.name, role: u.role, roleColor: ROLE_COLOR[u.role], count, img: art.cutout || '',
-          cls: 'sc-vs-tile' + (count ? ' sc-vs-tile--in' : ''),
+          cls: 'sc-vs-tile' + (count ? ' sc-vs-tile--in' : ''), uniqueNote: taken ? 'Unique · in army' : '',
           tiers: ['T1', 'T2', 'T3'].map(label => { const i = u.tiers.findIndex(t => t.tier === label && t.cost > 0);
-            return { label, off: i < 0, add: () => { if (i >= 0) addUnit(u, i); } }; }) };
+            return { label, off: i < 0 || taken, add: () => { if (i >= 0 && !taken) addUnit(u, i); } }; }) };
       });
     const tacCounts = {}; (opp.tactical || []).forEach(id => { tacCounts[id] = (tacCounts[id] || 0) + 1; });
     return {
@@ -610,9 +654,15 @@ class Component extends DCLogic {
       };
     });
     const gameLength = m ? m.gameLength : Math.max(5, round);
+    // Rounds before this one show what was recorded; this round shows points so far
+    // (the total minus earlier rounds), so the line always adds up to the score.
+    const recs = st.play.rounds || {}, before = { you: 0, foe: 0 };
+    Object.entries(recs).forEach(([k, r]) => { if (+k < round) { before.you += r.you || 0; before.foe += r.foe || 0; } });
+    const nowYou = vpYou - before.you, nowFoe = vpFoe - before.foe;
     const rounds = Array.from({ length: gameLength }, (_, i) => {
-      const n = i + 1, rec = (st.play.rounds || {})[n];
-      return { n, you: rec ? rec.you : '–', foe: rec ? rec.foe : '–',
+      const n = i + 1, rec = n < round ? recs[n] : null;
+      const cell = (v, live) => n === round ? (live ? live : '–') : rec ? v : '–';
+      return { n, you: cell(rec && rec.you, nowYou), foe: cell(rec && rec.foe, nowFoe),
         headCls: 'sc-vs-k sc-vs-th' + (n === round ? ' sc-vs-th--now' : ''), cellCls: 'sc-vs-td' + (n === round ? ' sc-vs-td--now' : '') };
     });
     const sug = st.sheet === 'end' ? this.endSuggestion() : null;
