@@ -2003,3 +2003,35 @@ input::placeholder { color: #5b6275; }
 .sc-bc-ab-text { margin: 0 12px 10px 14px; font-size: 13px; line-height: 1.55; color: #c8cede; }
 .sc-bc-use { flex: 0 0 auto; min-width: 58px; min-height: 40px; background: color-mix(in srgb, var(--ph) 18%, #12151f); border: 1px solid color-mix(in srgb, var(--ph) 60%, transparent); color: #e9ecf2; font: 700 12px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; clip-path: var(--sc-corner-8); }
 .sc-bc-ab--spent .sc-bc-ab-sum { color: #6b7388; }
+
+/* ---------- Battle tab: unit rows (same build as VS rows) ---------- */
+.sc-bu { --hp: var(--fc-primary-solid, #8a91a5); background: linear-gradient(90deg, color-mix(in srgb, var(--rc) 11%, transparent), transparent 40%), #10131c; border: 1px solid #232939; border-left: 3px solid var(--rc); clip-path: var(--sc-corner-8); }
+.sc-bu--open { border-color: color-mix(in srgb, var(--rc) 45%, #232939); border-left-color: var(--rc); }
+.sc-bu--dead .sc-bu-row { opacity: .45; }
+.sc-bu-row { display: flex; align-items: center; gap: 8px; height: 96px; box-sizing: border-box; padding: 8px 4px 8px 10px; }
+.sc-bu-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 8px; }
+.sc-bu-line { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.sc-bu-name { flex: 1; min-width: 0; display: flex; align-items: center; gap: 4px; padding: 0; background: none; border: 0; color: #e9ecf2; text-align: left; cursor: pointer; }
+.sc-bu-name b { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font: 700 17px/1.15 Rajdhani, sans-serif; letter-spacing: .02em; }
+.sc-bu-name .sc-lib-chev { flex: 0 0 auto; color: #8a91a5; transition: transform .15s; }
+.sc-bu--open .sc-bu-name .sc-lib-chev { transform: rotate(180deg); }
+.sc-bu-info { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 5px; }
+.sc-bu-info > .sc-vs-k { font-size: 10px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
+.sc-bu .sc-vs-pips { justify-content: flex-start; }
+.sc-bu .sc-vs-pip { background: var(--hp); }
+.sc-bu .sc-vs-pip--lost { background: transparent; }
+.sc-bu .sc-vs-hp { flex-direction: row; }
+.sc-bu-art { flex: 0 0 auto; width: 92px; height: 96px; margin: -8px 0; padding: 0; border: 0; display: grid; place-items: end center; overflow: hidden; cursor: pointer; background: radial-gradient(closest-side, color-mix(in srgb, var(--rc) 30%, transparent), transparent); }
+.sc-bu-art .sc-bu-cut { max-height: 92px; max-width: 100px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+.sc-bu-art .sc-bu-photo { width: 100%; height: 100%; object-fit: cover; -webkit-mask-image: linear-gradient(90deg, transparent, #000 35%); mask-image: linear-gradient(90deg, transparent, #000 35%); }
+.sc-bu .sc-play-body { border-top: 1px solid #1f2430; padding: 12px; }
+.sc-bu-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-bottom: 10px; }
+.sc-bu-tag { font-size: 11px; font-weight: 600; padding: 4px 6px; background: #1a1f2e; border: 1px solid var(--sc-border-input); color: #a7aec2; cursor: pointer; border-radius: 2px; }
+.sc-bu-tags .sc-lib-view { margin-left: auto; }
+@media (max-width: 380px) {
+  .sc-bu-art { width: 76px; }
+  .sc-bu-art .sc-bu-cut { max-width: 84px; }
+}
+.sc-bu-list { display: grid; gap: 12px; }
+.sc-bu-tags .sc-lib-view { display: inline-flex; }
+@media (min-width: 900px) { .sc-bu-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
