@@ -2035,3 +2035,10 @@ input::placeholder { color: #5b6275; }
 .sc-bu-list { display: grid; gap: 12px; }
 .sc-bu-tags .sc-lib-view { display: inline-flex; }
 @media (min-width: 900px) { .sc-bu-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* ---------- Battle tab: big sticky section headings (Cards / On table / Reserves / Destroyed) ---------- */
+.sc-bat-group { margin-bottom: 12px; }
+.sc-bat-group .sc-role-head { margin-bottom: 10px; }
+.sc-role-group.sc-bat-group + .sc-role-group.sc-bat-group { margin-top: 28px; }
+.sc-role-note { font: 700 13px 'Chakra Petch', sans-serif; color: #a7aec2; white-space: nowrap; }
+.sc-bat-group .sc-play-cards-head { justify-content: flex-end; margin: -4px 0 6px; }
