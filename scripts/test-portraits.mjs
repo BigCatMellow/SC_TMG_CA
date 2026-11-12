@@ -17,7 +17,7 @@ let localPhotoCount = 0;
 assert.ok(config && config.version === 1);
 assert.deepEqual(Object.keys(config.factions).sort(), ['protoss','terran','zerg']);
 // Units with no painted-miniature photo show no art (renders/concept art are not used).
-const expectedUnmapped = ['protoss/pylon'];
+const expectedUnmapped = [];
 const unmapped = [];
 const stats = {};
 const controllers = {};
@@ -128,7 +128,7 @@ for (const faction of ['terran','zerg','protoss']) {
   for (const path of conceptArt) assert.ok(!html.includes(path), faction + ' still uses concept/render art: ' + path);
 }
 assert.equal(Object.values(stats).reduce((n,x)=>n+x.total,0),43,'check audit when adding units');
-assert.equal(Object.values(stats).reduce((n,x)=>n+x.covered,0),42);
+assert.equal(Object.values(stats).reduce((n,x)=>n+x.covered,0),43);
 assert.equal(localPhotoCount,22,'all 22 original PDF miniatures must be displayed');
 assert.equal(pdfSource.pdf_sha256,'27639c562e6db9777dd9ba984d0c9f9b581841ec30166848e021f893cd00ea54');
 const terranHtml=read('Terran Army.dc.html');

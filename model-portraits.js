@@ -299,6 +299,14 @@ window.SCTMG_MODEL_PORTRAITS = {
       }
     },
     "protoss": {
+      "pylon": {
+        "kind": "exact-miniature",
+        "src": "portraits/promo/protoss/pylon.jpg",
+        "promo": "Publisher promo image (left model, beside Artanis), supplied by bt 7274; original in portraits-src/remote/protoss-pylon.jpg. All rights remain with the publisher.",
+        "size": "auto 288px",
+        "pos": "right top",
+        "note": "Pylon miniature cropped from a publisher promo image."
+      },
       "immortal": {
         "src": "https://starcraft-tmg.com/files/scaled-thumbs/news/immortal-glory-through-endurance/Immortal%20-%20content%20-%2016x9%20-%201.png/1600_900.webp?ts=1787435967",
         "source": "https://starcraft-tmg.com/news/rules/immortal-glory-through-endurance",
