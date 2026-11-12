@@ -1542,3 +1542,18 @@ input::placeholder { color: #5b6275; }
 .sc-role-name { margin: 0; font: 700 24px/1 Rajdhani, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: var(--role); text-shadow: 0 0 14px color-mix(in srgb, var(--role) 40%, transparent); }
 .sc-role-rule { flex: 1; }
 .sc-role-head .sc-lib-slots { font-size: 13px; }
+
+/* Library cards take their role colour (Hero orange, Elite purple, Core blue, Support green) */
+.sc-role-group .sc-lib-card-bg {
+  border-color: color-mix(in srgb, var(--role) 42%, #272d3c);
+  background: radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--role) 12%, transparent), transparent 55%), var(--sc-card-bg);
+}
+.sc-role-group .sc-lib-card--cutout .sc-lib-card-bg {
+  background:
+    radial-gradient(70px 34px at calc(100% - 120px) 100%, color-mix(in srgb, var(--role) 45%, transparent), transparent),
+    radial-gradient(120% 90% at 0% 0%, color-mix(in srgb, var(--role) 12%, transparent), transparent 55%),
+    var(--sc-card-bg);
+}
+.sc-role-group .sc-lib-card-bg::before { border-color: var(--role); }
+.sc-role-group .sc-lib-card-bg::after { border-color: var(--role); }
+.sc-role-group .sc-lib-card--open .sc-lib-card-bg { border-color: color-mix(in srgb, var(--role) 70%, #272d3c); }
