@@ -1163,7 +1163,7 @@ class Component extends DCLogic {
     if (document.documentElement && document.documentElement.classList) document.documentElement.classList.toggle('sc-snap', this.notchOn());
     if (!this.notchOn()) { this._notchIdx = undefined; return; }
     const top = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sc-sticky-top')) || 0;
-    const line = top + 64;
+    const line = top + 84;
     let idx = 0;
     document.querySelectorAll('.sc-lib-card, .sc-tac-card').forEach(el => { if (el.offsetParent !== null && el.getBoundingClientRect().top <= line) idx++; });
     // No ticks for jumps, tab switches or the first measurement.

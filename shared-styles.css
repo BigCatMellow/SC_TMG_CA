@@ -1916,7 +1916,7 @@ input::placeholder { color: #5b6275; }
 
 /* Library / Tactics: soft "notch" snap. Proximity only settles when you stop near a card. */
 html.sc-snap { scroll-snap-type: y proximity; }
-html.sc-snap .sc-lib-card:not(.sc-lib-card--open) { scroll-snap-align: start; scroll-margin-top: calc(var(--sc-sticky-top, 140px) + 64px); }
+html.sc-snap .sc-lib-card:not(.sc-lib-card--open) { scroll-snap-align: start; scroll-margin-top: calc(var(--sc-sticky-top, 140px) + 46px + var(--sc-lib-rise, 28px) + 10px); }
 html.sc-snap .sc-tac-card { scroll-snap-align: start; scroll-margin-top: calc(var(--sc-sticky-top, 140px) + 52px); }
 
 /* Library: name, chevron, lock note and tags run over the model art instead of wrapping beside it,
