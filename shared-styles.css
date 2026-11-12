@@ -2034,7 +2034,6 @@ input::placeholder { color: #5b6275; }
 }
 .sc-bu-list { display: grid; gap: 12px; }
 .sc-bu-tags .sc-lib-view { display: inline-flex; }
-@media (min-width: 900px) { .sc-bu-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* ---------- Battle tab: big sticky section headings (Cards / On table / Reserves / Destroyed) ---------- */
 .sc-bat-group { margin-bottom: 12px; }
