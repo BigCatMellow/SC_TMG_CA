@@ -111,8 +111,15 @@
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         </button>
         <span class="sc-vs-k" style="flex:1">VS · Battle command</span>
+        <button onClick="{{ newGame }}" class="{{ newGameCls }}">{{ newGameLabel }}</button>
         <button onClick="{{ openScout }}" class="sc-vs-ghost">Edit their army</button>
       </div>
+      <sc-if value="{{ gameOver }}" hint-placeholder-val="{{ false }}">
+        <div class="sc-vs-over" role="status">
+          <div><span class="sc-vs-k">Game over</span><b>{{ gameOverText }}</b><small>{{ gameOverWhy }}</small></div>
+          <button onClick="{{ newGame }}" class="sc-vs-go">{{ newGameLabel }}</button>
+        </div>
+      </sc-if>
 
       <!-- HUD -->
       <div class="sc-vs-hud">
@@ -314,6 +321,9 @@
       </button>
     </sc-for>
   </nav>
+  <sc-if value="{{ undoOn }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-vs-undo" role="status"><span>{{ undoText }}</span><button onClick="{{ undo }}">Undo</button></div>
+  </sc-if>
 </div>
 </sc-if>
 </x-dc>
@@ -616,7 +626,7 @@ class Component extends DCLogic {
     Object.entries(st.play.rounds || {}).forEach(([k, r]) => { if (+k < round) { rounds[k] = r; prior.you += r.you || 0; prior.foe += r.foe || 0; } });
     if (m) rounds[round] = { you: Math.max(0, totalYou - prior.you), foe: Math.max(0, totalFoe - prior.foe) };
     this.savePlay({
-      vpYou: totalYou, vpFoe: totalFoe, markers, rounds,
+      vpYou: totalYou, vpFoe: totalFoe, markers, rounds, finished: last,
       round: last ? round : round + 1, phase: 0,
       ownLostAtStart: this.lostSupply(st.yourFaction, st.yours.army), foeLostAtStart: this.lostSupply(st.opp.faction, st.opp.army)
     });
@@ -625,6 +635,33 @@ class Component extends DCLogic {
       this.saveOpp({ ...this.state.opp, tapped: [] });
     }
     this.setState({ sheet: null, adjYou: 0, adjFoe: 0 });
+  }
+
+  // ---------- new game: both sides, armies kept ----------
+  newGame() {
+    const st = this.state;
+    if (!st.newArmed) {
+      clearTimeout(this._armT); this.setState({ newArmed: true });
+      this._armT = setTimeout(() => this.setState({ newArmed: false }), 4000);
+      return;
+    }
+    clearTimeout(this._armT); clearTimeout(this._undoT);
+    const snap = { play: st.play, yours: st.yours, opp: st.opp };
+    const m = this.mission();
+    const fresh = a => (a || []).map(e => ({ ...e, modelsLost: 0, dmg: 0, deployed: false }));
+    this.savePlay({ round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, rounds: {}, ownLostAtStart: 0, foeLostAtStart: 0, finished: false });
+    this.saveYours({ ...st.yours, army: fresh(st.yours.army), tacticalTapped: [], factionTappedId: null,
+      battleSupplyAvailable: m ? m.supply : st.yours.battleSupplyAvailable });
+    this.saveOpp({ ...st.opp, army: fresh(st.opp.army), tapped: [] });
+    this.setState({ newArmed: false, sheet: null, undoSnap: snap });
+    this._undoT = setTimeout(() => this.setState({ undoSnap: null }), 8000);
+  }
+  undoNewGame() {
+    const u = this.state.undoSnap; if (!u) return;
+    clearTimeout(this._undoT);
+    try { localStorage.setItem('sctmg_play', JSON.stringify(u.play)); } catch (e) {}
+    this.setState({ play: u.play, undoSnap: null });
+    this.saveYours(u.yours); this.saveOpp(u.opp);
   }
 
   // ---------- scout ----------
@@ -724,6 +761,18 @@ class Component extends DCLogic {
         name, color, on: (st.play.phase || 0) === i, cls: 'sc-vs-phase' + ((st.play.phase || 0) === i ? ' sc-vs-phase--on' : ''),
         pick: () => this.savePlay({ phase: i }) })),
       endRoundLabel: last ? 'Final round · score it' : 'End round ' + round + ' →',
+      // Over when the final round is scored, or a side reaches the mission's early-win lead.
+      ...(() => {
+        const early = win && Math.abs(lead) >= win;
+        const over = !!st.play.finished || early;
+        const who = lead > 0 ? 'You win' : lead < 0 ? 'Opponent wins' : 'Draw';
+        return { gameOver: over, gameOverText: who + ' · ' + vpYou + '–' + vpFoe,
+          gameOverWhy: early && !st.play.finished ? (lead > 0 ? 'You' : 'They') + ' reached ' + (/^(8|11|18)/.test(String(win)) ? 'an ' : 'a ') + win + ' point lead' : 'Final round scored' };
+      })(),
+      newGame: () => this.newGame(),
+      newGameLabel: st.newArmed ? 'Tap again: reset both sides' : 'New game',
+      newGameCls: 'sc-vs-ghost' + (st.newArmed ? ' sc-vs-ghost--warn' : ''),
+      undoOn: !!st.undoSnap, undoText: 'New game started: score, casualties and used cards reset', undo: () => this.undoNewGame(),
       openEndRound: () => this.setState({ sheet: 'end', adjYou: 0, adjFoe: 0 }),
       sheetEnd: st.sheet === 'end', closeSheet: () => this.setState({ sheet: null }),
       endTitle: last ? 'Final round' : 'End round',
