@@ -69,4 +69,11 @@ assert.equal(c.state.opp.army.length, 1);
 c.state = { ...c.state, view: 'board', play: { round: 2, vpYou: 7, vpFoe: 2, rounds: { 1: { you: 4, foe: 2 }, 3: { you: 9, foe: 9 } } } };
 const line = c.renderVals().rounds;
 assert.equal(line[0].you, 4); assert.equal(line[1].you, 3, 'current round shows points so far'); assert.equal(line[2].you, '–', 'later rounds are not shown');
+// Every row has one stepper: HP for single-model units with health, models for squads.
+c.state = { ...c.state, yours: { ...c.state.yours, battleSupplyAvailable: 9, army: [{ key: 'h1', unitId: 'kerrigan', tierIdx: 1, modelsLost: 0, deployed: true }, { key: 'h2', unitId: 'zergling', tierIdx: 1, modelsLost: 0, deployed: true }] } };
+let rows = c.renderVals().you.units;
+assert.equal(rows.find(r => r.name === 'Kerrigan').stepLabel, 'HP'); assert.equal(rows.find(r => r.name === 'Kerrigan').showPips, false);
+assert.equal(rows.find(r => r.name === 'Zergling').stepLabel, 'Models');
+rows.find(r => r.name === 'Kerrigan').stepDown();
+assert.equal(c.state.yours.army[0].dmg, 1, 'HP − deals 1 damage');
 console.log('VS mode checks passed.');

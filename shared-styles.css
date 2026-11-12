@@ -1639,11 +1639,11 @@ input::placeholder { color: #5b6275; }
 
 /* Unit rows mirror toward the centre: the model sits on the inner edge (right for you,
    left for the opponent), name and pips hug it, and the controls sit on the outer edge. */
-.sc-vs-unit { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; min-height: 76px; padding: 8px 6px 8px 10px; background: #10131c; border: 1px solid #232939; border-left: 3px solid var(--rc); clip-path: var(--sc-corner-8); }
+.sc-vs-unit { display: flex; flex-direction: row-reverse; align-items: center; gap: 10px; height: 104px; box-sizing: border-box; padding: 8px 6px 8px 10px; background: #10131c; border: 1px solid #232939; border-left: 3px solid var(--rc); clip-path: var(--sc-corner-8); }
 .sc-vs-unit--opp { flex-direction: row; padding: 8px 10px 8px 6px; border-left-width: 1px; border-right: 3px solid var(--rc); }
 .sc-vs-unit--dead { opacity: .45; }
-.sc-vs-unit-art { width: 64px; height: 60px; flex: 0 0 auto; display: grid; place-items: end center; overflow: hidden; background: radial-gradient(closest-side, color-mix(in srgb, var(--rc) 30%, transparent), transparent); }
-.sc-vs-unit-art img { max-height: 64px; max-width: 72px; object-fit: contain; }
+.sc-vs-unit-art { width: 104px; height: 100px; margin: -6px 0; flex: 0 0 auto; display: grid; place-items: end center; overflow: hidden; background: radial-gradient(closest-side, color-mix(in srgb, var(--rc) 30%, transparent), transparent); }
+.sc-vs-unit-art img { max-height: 98px; max-width: 112px; object-fit: contain; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
 .sc-vs-unit--you .sc-vs-unit-art img { transform: scaleX(-1); }
 .sc-vs-unit-main { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
 .sc-vs-unit-line { display: flex; flex-direction: row-reverse; align-items: center; gap: 8px; min-width: 0; }
@@ -1654,15 +1654,15 @@ input::placeholder { color: #5b6275; }
 .sc-vs-unit-info { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
 .sc-vs-unit--opp .sc-vs-unit-info { align-items: flex-start; }
 .sc-vs-unit-info > .sc-vs-k { font-size: 10px; white-space: nowrap; }
-.sc-vs-pips { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 3px; max-width: 260px; }
+.sc-vs-pips { display: flex; flex-wrap: nowrap; justify-content: flex-end; gap: 3px; width: 100%; max-width: 260px; min-height: 12px; }
 .sc-vs-unit--opp .sc-vs-pips { justify-content: flex-start; }
-.sc-vs-pip { width: 12px; height: 12px; padding: 0; border: 0; background: var(--you); cursor: pointer; }
+.sc-vs-pip { flex: 0 1 12px; min-width: 5px; height: 12px; padding: 0; border: 0; background: var(--you); cursor: pointer; }
 .sc-vs-unit--opp .sc-vs-pip { background: var(--opp); }
 .sc-vs-pip--lost, .sc-vs-unit--opp .sc-vs-pip--lost { background: transparent; box-shadow: inset 0 0 0 1px #3a4154; }
-.sc-vs-hp { display: flex; flex-direction: row-reverse; align-items: center; flex-wrap: wrap; gap: 6px; }
+.sc-vs-hp { display: flex; flex-direction: row-reverse; align-items: center; gap: 6px; width: 100%; max-width: 220px; min-height: 12px; }
 .sc-vs-hp-btns { display: inline-flex; gap: 4px; }
 .sc-vs-unit--opp .sc-vs-hp { flex-direction: row; }
-.sc-vs-hp-track { width: clamp(50px, 35%, 120px); height: 6px; background: #232939; display: flex; justify-content: flex-end; }
+.sc-vs-hp-track { flex: 1; min-width: 30px; height: 6px; background: #232939; display: flex; justify-content: flex-end; }
 .sc-vs-unit--opp .sc-vs-hp-track { justify-content: flex-start; }
 .sc-vs-hp-fill { height: 6px; background: linear-gradient(90deg, #35c76b, #b6e64a); }
 .sc-vs-hp-text { font: 700 12px 'Chakra Petch', sans-serif; color: #a7aec2; white-space: nowrap; }
@@ -1783,8 +1783,8 @@ input::placeholder { color: #5b6275; }
   .sc-vs-field--you .sc-vs-col--mid, .sc-vs-field--you .sc-vs-col--opp,
   .sc-vs-field--mid .sc-vs-col--you, .sc-vs-field--mid .sc-vs-col--opp,
   .sc-vs-field--opp .sc-vs-col--you, .sc-vs-field--opp .sc-vs-col--mid { display: none; }
-  .sc-vs-unit-art { width: 52px; }
-  .sc-vs-unit-art img { max-width: 60px; max-height: 58px; }
+  .sc-vs-unit-art { width: 80px; }
+  .sc-vs-unit-art img { max-width: 88px; max-height: 92px; }
   .sc-vs-scout-grid { grid-template-columns: 1fr; }
   .sc-vs-scout-roster { position: static; }
 }
