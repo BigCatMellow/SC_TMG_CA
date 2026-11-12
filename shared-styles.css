@@ -2048,3 +2048,7 @@ input::placeholder { color: #5b6275; }
 .sc-play-top-end { flex: 0 0 auto; min-width: 104px; display: grid; place-content: center; gap: 1px; padding: 6px 14px; background: rgba(53,199,107,0.14); border: 0; border-left: 1px solid rgba(53,199,107,0.45); color: #8fe6ae; cursor: pointer; text-align: center; }
 .sc-play-top-end small { font: 700 10px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: #7fe0a4; }
 .sc-play-top-end b { font: 700 22px/1 'Chakra Petch', sans-serif; }
+
+/* Battle cards: abilities take the card's colour; the phase shows only in its small badge. */
+.sc-bc-ab { border-left-color: var(--role); }
+.sc-bc-use { background: color-mix(in srgb, var(--role) 18%, #12151f); border-color: color-mix(in srgb, var(--role) 60%, transparent); }
