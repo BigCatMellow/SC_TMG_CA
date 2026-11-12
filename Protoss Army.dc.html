@@ -2527,7 +2527,7 @@ class Component extends DCLogic {
           const lockReason = u.role === 'Other' || !u.tiers.some(t => t.cost > 0) ? 'Summoned or placed by an ability'
             : u.factionTag && u.factionTag !== faction.name ? 'Requires ' + u.factionTag
             : noSlots && !inArmy ? 'No ' + role + ' slots with ' + faction.name
-            : needsSlotCard && !inArmy ? 'Needs ' + (/^[AEIOU]/.test(role) ? 'an ' : 'a ') + role + ' slot: ' + slotGivers.slice(0, 2).map(t => t.name).join(' or ') : '';
+            : needsSlotCard && !inArmy ? role + ' slot from ' + slotGivers.slice(0, 2).map(t => t.name).join(' or ') : '';
           return {
             name: u.name, unique: !!u.unique, inArmy, ...art,
             cutout, framed: !!art.portrait && !cutout, expanded,
