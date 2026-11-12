@@ -86,4 +86,8 @@ assert.deepEqual([c.state.yours.army[0].modelsLost, c.state.yours.army[0].dmg], 
 assert.equal(roach().hpText, '7 / 12 HP');
 roach().stepUp(); roach().stepUp();
 assert.deepEqual([c.state.yours.army[0].modelsLost, c.state.yours.army[0].dmg], [0, 3], 'stepping back restores the model as a correction');
+// VS has the army tab bar; other tabs open your army page on that tab.
+const tabs = c.renderVals().navTabs;
+assert.equal(tabs.map(t => t.label).join(','), 'Brood,Library,Tactics,Battle,VS,Codex');
+assert.equal(tabs.find(t => t.label === 'VS').current, 'page');
 console.log('VS mode checks passed.');

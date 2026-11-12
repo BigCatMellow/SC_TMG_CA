@@ -304,6 +304,16 @@
       <button onClick="{{ closeSheet }}" class="sc-vs-ghost" style="width:100%;margin-top:8px">Cancel</button>
     </div>
   </sc-if>
+
+  <!-- ============ BOTTOM TAB BAR: same as the army pages, VS active ============ -->
+  <nav class="sc-vs-tabbar" aria-label="Army sections">
+    <sc-for list="{{ navTabs }}" as="tb" hint-placeholder-count="6">
+      <button onClick="{{ tb.onSelect }}" class="{{ tb.cls }}" aria-current="{{ tb.current }}">
+        <span class="sc-vs-tab-icon"><sc-if value="{{ tb.isBattle }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 14V2M4 2h8l-2 3 2 3H4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isLibrary }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="2" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect></svg></sc-if><sc-if value="{{ tb.isTactics }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"></circle><circle cx="8" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4"></circle><path d="M8 2v2.5M8 11.5V14M2 8h2.5M11.5 8H14" stroke="currentColor" stroke-width="1.4"></path></svg></sc-if><sc-if value="{{ tb.isFaction }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4 4 1-3 3 .8 4L8 11l-3.8 2 .8-4-3-3 4-1 2-4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isVs }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M2.5 2.5l7 7M9.5 9.5l-1.6 1.6M9.5 9.5l1.6-1.6M10 12l2 2M13.5 2.5l-7 7M6.5 9.5l1.6 1.6M6.5 9.5L4.9 7.9M6 12l-2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if><sc-if value="{{ tb.isCodex }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h7.5A2.5 2.5 0 0113 5v8.5H5.5A2.5 2.5 0 013 11V2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M6 5.5h4M6 8h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if></span>
+        <span class="sc-vs-tab-label">{{ tb.label }}</span>
+      </button>
+    </sc-for>
+  </nav>
 </div>
 </sc-if>
 </x-dc>
@@ -725,6 +735,17 @@ class Component extends DCLogic {
       fieldCls: 'sc-vs-field sc-vs-field--' + st.pane,
       openScout: () => this.setState({ view: 'scout' }), closeScout: () => this.setState({ view: 'board' }),
       clearOpp: () => this.saveOpp({ ...st.opp, army: [], tactical: [], tapped: [] }),
+      navTabs: [['faction', ({ zerg: 'Brood', terran: 'Command', protoss: 'Nexus' })[st.yourFaction]], ['library', 'Library'], ['tactics', 'Tactics'], ['battle', 'Battle'], ['vs', 'VS'], ['codex', 'Codex']].map(([id, label]) => ({
+        label, current: id === 'vs' ? 'page' : 'false',
+        isFaction: id === 'faction', isLibrary: id === 'library', isTactics: id === 'tactics', isBattle: id === 'battle', isVs: id === 'vs', isCodex: id === 'codex',
+        cls: 'sc-vs-tab' + (id === 'vs' ? ' sc-vs-tab--on' : ''),
+        // Other tabs open your army page on that tab.
+        onSelect: () => {
+          if (id === 'vs') { window.scrollTo(0, 0); return; }
+          try { localStorage.setItem('sctmg_' + st.yourFaction + '_tab', id); } catch (e) {}
+          window.location.href = VS_FACTIONS[st.yourFaction].page;
+        }
+      })),
       goBack: () => {
         const page = VS_FACTIONS[st.yourFaction].page;
         if (document.referrer && document.referrer.indexOf('Army.dc.html') >= 0 && window.history.length > 1) window.history.back();
