@@ -1671,7 +1671,7 @@ input::placeholder { color: #5b6275; }
 .sc-vs-status--table { border-color: #35c76b; color: #5fd98d; }
 .sc-vs-status--dead { border-color: #f08a8a; color: #f08a8a; }
 .sc-vs-status--full { border-color: #3a4154; color: #5b6275; }
-.sc-vs-sup { flex: 0 0 auto; width: 34px; display: grid; text-align: center; }
+.sc-vs-sup { flex: 0 0 auto; display: flex; align-items: baseline; gap: 3px; padding: 0 2px; }
 .sc-vs-sup b { font: 700 18px 'Chakra Petch', sans-serif; }
 .sc-vs-sup small, .sc-vs-models small { font: 700 9px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #8a91a5; }
 .sc-vs-models { flex: 0 0 auto; display: grid; justify-items: center; gap: 2px; }

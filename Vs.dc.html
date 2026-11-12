@@ -176,6 +176,7 @@
               <div class="sc-vs-unit-main">
                 <div class="sc-vs-unit-line">
                   <div class="sc-vs-unit-name" title="{{ u.name }}"><b>{{ u.shortName }}</b></div>
+                  <div class="sc-vs-sup" title="Supply on the table"><b>{{ u.supply }}</b><small>sup</small></div>
                   <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.deployOff }}" class="{{ u.statusCls }}" title="{{ u.statusTitle }}">{{ u.status }}</button>
                 </div>
                 <div class="sc-vs-unit-line">
@@ -188,7 +189,6 @@
                       <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span></div>
                     </sc-if>
                   </div>
-                  <div class="sc-vs-sup"><b>{{ u.supply }}</b><small>sup</small></div>
                   <div class="sc-vs-models"><small>{{ u.stepLabel }}</small><span class="sc-vs-steps-row"><button onClick="{{ u.stepDown }}" disabled="{{ u.stepDownOff }}" class="sc-vs-step" aria-label="{{ u.stepDownAria }}">−</button><button onClick="{{ u.stepUp }}" disabled="{{ u.stepUpOff }}" class="sc-vs-step" aria-label="{{ u.stepUpAria }}">+</button></span></div>
                 </div>
               </div>
@@ -247,6 +247,7 @@
               <div class="sc-vs-unit-main">
                 <div class="sc-vs-unit-line">
                   <div class="sc-vs-unit-name" title="{{ u.name }}"><b>{{ u.shortName }}</b></div>
+                  <div class="sc-vs-sup" title="Supply on the table"><b>{{ u.supply }}</b><small>sup</small></div>
                   <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.deployOff }}" class="{{ u.statusCls }}" title="{{ u.statusTitle }}">{{ u.status }}</button>
                 </div>
                 <div class="sc-vs-unit-line">
@@ -259,7 +260,6 @@
                       <div class="sc-vs-hp"><span class="sc-vs-hp-track"><span class="sc-vs-hp-fill" style="{{ u.hpBar }}"></span></span><span class="sc-vs-hp-text">{{ u.hpText }}</span></div>
                     </sc-if>
                   </div>
-                  <div class="sc-vs-sup"><b>{{ u.supply }}</b><small>sup</small></div>
                   <div class="sc-vs-models"><small>{{ u.stepLabel }}</small><span class="sc-vs-steps-row"><button onClick="{{ u.stepDown }}" disabled="{{ u.stepDownOff }}" class="sc-vs-step" aria-label="{{ u.stepDownAria }}">−</button><button onClick="{{ u.stepUp }}" disabled="{{ u.stepUpOff }}" class="sc-vs-step" aria-label="{{ u.stepUpAria }}">+</button></span></div>
                 </div>
               </div>
