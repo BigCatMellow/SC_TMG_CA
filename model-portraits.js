@@ -58,6 +58,19 @@ window.SCTMG_MODEL_PORTRAITS = {
         "fallbackSize": "auto 310px",
         "fallbackPos": "right center"
       },
+      "point-defense-drone": {
+        "kind": "exact-miniature",
+        "src": "portraits/promo/terran/point-defense-drone.jpg",
+        "promo": "Publisher promo image (left model, beside a Spec Ops trooper), supplied by bt 7274; original in portraits-src/remote/terran-point-defense-drone.jpg. All rights remain with the publisher.",
+        "size": "auto 288px",
+        "pos": "right top",
+        "note": "Point Defense Drone miniature cropped from a publisher promo image."
+      },
+      "sabotage-drone": {
+        "fallbackId": "point-defense-drone",
+        "kind": "shared-sculpt",
+        "note": "Same drone miniature as the Point Defense Drone, built with different options"
+      },
       "spec-ops-marauder": {
         "fallbackId": "marauder",
         "kind": "shared-sculpt",
@@ -219,8 +232,12 @@ window.SCTMG_MODEL_PORTRAITS = {
       },
       "roachling": {
         "fallbackId": "roach",
-        "kind": "shared-sculpt",
-        "note": "Roach base miniature fallback for summoned Roachling"
+        "kind": "exact-miniature",
+        "src": "portraits/promo/zerg/roachling.jpg",
+        "promo": "Publisher promo image of the Roach family (small model, top centre), supplied by bt 7274; original in portraits-src/remote/zerg-roachling.jpg. All rights remain with the publisher.",
+        "size": "auto 230px",
+        "pos": "right center",
+        "note": "Roachling miniature cropped from a publisher promo image."
       },
       "zergling": {
         "src": "portraits/pdf/zerg/zergling.jpg",
@@ -375,8 +392,13 @@ window.SCTMG_MODEL_PORTRAITS = {
 // so expanding a unit reveals its lower body without recentering the artwork.
 // Error fallbacks replace the image element; they are never stacked behind it.
 window.SCTMG_MAKE_PORTRAIT = function(faction, unitId, localPortraits) {
-  const official = window.SCTMG_MODEL_PORTRAITS?.factions?.[faction]?.[unitId];
-  const local = localPortraits[official?.fallbackId] || localPortraits[unitId];
+  const factionPortraits = window.SCTMG_MODEL_PORTRAITS?.factions?.[faction] || {};
+  const official = factionPortraits[unitId];
+  const baseId = official?.fallbackId;
+  // Shared sculpts with no photo of their own (Vileling, Roachling, Spec Ops Marauder)
+  // borrow the base model's photo and cutout, so they look like every other card.
+  const base = baseId && !official?.src ? factionPortraits[baseId] : null;
+  const local = localPortraits[baseId] || localPortraits[unitId];
   const sources = [];
   function add(src, size, pos) {
     if (src && !sources.some(item => item.src === src)) {
@@ -386,6 +408,7 @@ window.SCTMG_MAKE_PORTRAIT = function(faction, unitId, localPortraits) {
   add(official?.src, official?.size, official?.pos);
   add(official?.fallbackSrc, official?.fallbackSize || official?.size,
       official?.fallbackPos || official?.pos);
+  add(base?.src, base?.size, base?.pos);
   add(local?.src, local?.size, local?.pos);
   if (!sources.length) return { portrait: false };
 
@@ -405,7 +428,7 @@ window.SCTMG_MAKE_PORTRAIT = function(faction, unitId, localPortraits) {
   // Transparent cutout (scripts/cutout-portraits.py) for the first source that has one.
   const cutouts = window.SCTMG_PORTRAIT_CUTOUTS || {};
   // Per-unit cutouts first: one publisher photo can hold several models, each cropped separately.
-  const cutout = cutouts[faction + '/' + unitId] || sources.map(item => cutouts[item.src]).find(Boolean) || '';
+  const cutout = cutouts[faction + '/' + unitId] || (base && cutouts[faction + '/' + baseId]) || sources.map(item => cutouts[item.src]).find(Boolean) || '';
   return {
     cutout,
     viewSrc: cutout || first.src,
