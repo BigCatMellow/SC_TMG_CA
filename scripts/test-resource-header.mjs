@@ -169,8 +169,10 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
     'onClick="{{ r.onExport }}"',
     'onClick="{{ triggerImport }}"'
   ]) assert.ok(sheet.includes(control), faction + ' missing action in management sheet: ' + control);
-  assert.ok(sheet.includes('>Army Management</div>'), faction + ' management sheet heading');
+  assert.ok(sheet.includes('>Army Management</span>') && sheet.includes('>My lists</h2>'), faction + ' management sheet heading');
   assert.ok(sheet.includes('>Saved Rosters</div>'), faction + ' saved roster list preserved');
+  for (const action of ['r.onShare', 'r.onRenameStart', 'r.onDuplicate', 'r.onDeleteStart', 'newList', 'listSaveCurrent'])
+    assert.ok(sheet.includes('onClick="{{ ' + action + ' }}"'), faction + ' list action ' + action);
   assert.ok(sheet.includes('aria-label="Download roster file"'), faction + ' JSON export accessible');
   assert.ok(sheet.includes('<sc-if value="{{ !rosterEmpty }}"'), faction + ' print export requires nonempty army');
 

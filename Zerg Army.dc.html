@@ -119,6 +119,14 @@
 
   <!-- ============ BATTLE TAB ============ -->
   <sc-if value="{{ tabIsBattle }}" hint-placeholder-val="{{ false }}">
+    <!-- Current list: its name, whether it's saved, and Save. Tap the name for My lists. -->
+    <div class="sc-lists-bar">
+      <button onClick="{{ openRosters }}" class="sc-lists-bar-main" aria-label="My lists">
+        <small>List</small><b>{{ listName }}</b>
+      </button>
+      <span class="{{ listStateCls }}">{{ listState }}</span>
+      <button onClick="{{ listBarSave }}" disabled="{{ listBarSaveOff }}" class="sc-lists-bar-save">{{ listBarSaveLabel }}</button>
+    </div>
       <sc-if value="{{ hasRosterWarnings }}" hint-placeholder-val="{{ false }}">
         <button onClick="{{ openIssues }}" class="sc-roster-line" role="alert"><span aria-hidden="true">&#9888;</span> {{ rosterIssueCount }} roster {{ rosterIssueWord }} <span class="sc-roster-line-go">Fix ›</span></button>
       </sc-if>
@@ -685,50 +693,64 @@
   </sc-if>
 
   <sc-if value="{{ sheetRosters }}" hint-placeholder-val="{{ false }}">
-    <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,5,8,0.65);animation:scFade 0.15s ease"></div>
-    <div style="position:fixed;left:0;right:0;bottom:0;z-index:310;display:flex;justify-content:center;pointer-events:none">
-      <div style="width:100%;max-width:480px;max-height:82vh;display:flex;flex-direction:column;pointer-events:auto;background:#141824;border:1px solid rgba(176,110,247,0.4);border-bottom:none;padding:16px 16px calc(20px + env(safe-area-inset-bottom));animation:scSheetUp 0.2s ease;clip-path:var(--sc-corner-14-top)">
-        <div style="width:36px;height:3px;background:var(--sc-border-input);margin:0 auto 14px;border-radius:2px;flex:0 0 auto"></div>
-        <div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5;margin-bottom:10px;flex:0 0 auto">Army Management</div>
-        <sc-if value="{{ !rosterEmpty }}" hint-placeholder-val="{{ false }}">
-          <button onClick="{{ exportArmySheet }}" style="width:100%;min-height:44px;flex:0 0 auto;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px;background:var(--sc-card-bg);border:1px solid #b06ef7;color:#b06ef7;font-family:Rajdhani,sans-serif;font-size:13px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;cursor:pointer;clip-path:var(--sc-corner-8)">
-            <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2v8m0 0L5 7m3 3l3-3M3 12.5h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-            Export Army Sheet
-          </button>
-        </sc-if>
-        <div style="font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;color:#8a91a5;margin-bottom:10px;flex:0 0 auto">Saved Rosters</div>
-
-        <div style="display:flex;gap:8px;margin-bottom:14px;flex:0 0 auto">
-          <input value="{{ newRosterName }}" onChange="{{ onNewRosterNameInput }}" placeholder="Name this roster…" style="flex:1;height:40px;padding:0 12px;background:#0e1119;border:1px solid var(--sc-border-input);color:#e9ecf2;font-size:14px;font-family:inherit">
-          <button onClick="{{ saveCurrentAsRoster }}" style="height:40px;padding:0 16px;background:{{ saveRosterBg }};border:1px solid rgba(176,110,247,0.5);color:{{ saveRosterFg }};font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap">Save</button>
+    <div class="sc-vs-scrim" onClick="{{ closeSheet }}"></div>
+    <div class="sc-vs-info sc-lists" style="--side:var(--fc-primary-solid)" role="dialog" aria-modal="true" aria-label="My lists">
+      <div class="sc-vs-info-head">
+        <div class="sc-vs-info-title">
+          <span class="sc-vs-k" style="color:var(--fc-primary-solid)">Army Management</span>
+          <h2 class="sc-vs-h2">My lists</h2>
+          <span class="{{ listStateCls }}">{{ listName }} · {{ listState }}</span>
         </div>
+        <button onClick="{{ closeSheet }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
+      </div>
 
-        <div style="flex:1;overflow-y:auto;min-height:0">
-          <sc-if value="{{ rostersEmpty }}" hint-placeholder-val="{{ false }}">
-            <div style="padding:24px 8px;text-align:center;color:#5b6275;font-size:13px">No saved rosters yet. Build a roster, name it above, and tap Save.</div>
-          </sc-if>
-          <sc-for list="{{ savedRosterRows }}" as="r" hint-placeholder-count="2">
-            <div style="display:flex;align-items:center;gap:6px;padding:10px 12px;margin-bottom:6px;background:var(--sc-card-bg);border:1px solid var(--sc-border-neutral)">
-              <div style="flex:1;min-width:0">
-                <div style="font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;letter-spacing:0.03em;color:#e9ecf2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</div>
-                <div style="font-size:11px;color:#8a91a5">{{ r.meta }}</div>
-              </div>
-              <sc-if value="{{ r.confirming }}" hint-placeholder-val="{{ false }}">
-                <button onClick="{{ r.onDelete }}" style="height:32px;padding:0 10px;background:rgba(240,74,74,0.18);border:1px solid rgba(240,74,74,0.5);color:#f08a8a;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap">Confirm</button>
-                <button onClick="{{ r.onCancelDelete }}" style="height:32px;padding:0 10px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer">Cancel</button>
-              </sc-if>
-              <sc-if value="{{ !r.confirming }}" hint-placeholder-val="{{ true }}">
-                <button onClick="{{ r.onExport }}" aria-label="Download roster file" title="Export saved roster as JSON" style="width:32px;height:32px;flex:0 0 auto;display:grid;place-items:center;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;cursor:pointer"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2v8m0 0l-3-3m3 3l3-3M3 13h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
-                <button onClick="{{ r.onDeleteStart }}" aria-label="Delete" style="width:32px;height:32px;flex:0 0 auto;display:grid;place-items:center;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;cursor:pointer"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 4.5h10M6.5 4.5V3a1 1 0 011-1h1a1 1 0 011 1v1.5M4.5 4.5l.6 8.4a1 1 0 001 .93h3.8a1 1 0 001-.93l.6-8.4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></svg></button>
-                <button onClick="{{ r.onLoad }}" style="height:32px;padding:0 14px;background:rgba(147,51,234,0.2);border:1px solid rgba(176,110,247,0.5);color:#d9bafc;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap">Load</button>
-              </sc-if>
+      <div class="sc-lists-actions">
+        <button onClick="{{ listSaveCurrent }}" disabled="{{ listSaveOff }}" class="sc-vs-go">{{ listSaveLabel }}</button>
+        <button onClick="{{ newList }}" class="sc-vs-ghost sc-lists-new">{{ newListLabel }}</button>
+      </div>
+      <div class="sc-lists-name">
+        <input value="{{ newRosterName }}" onChange="{{ onNewRosterNameInput }}" placeholder="Name this roster…" aria-label="Name for a new list">
+        <button onClick="{{ saveCurrentAsRoster }}" disabled="{{ saveAsOff }}" class="sc-vs-ghost">Save as new</button>
+      </div>
+
+      <div class="sc-vs-k sc-lists-k">Saved Rosters</div>
+      <sc-if value="{{ rostersEmpty }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">No saved lists yet. Name this army above and tap Save as new.</p></sc-if>
+      <div class="sc-lists-rows">
+        <sc-for list="{{ savedRosterRows }}" as="r" hint-placeholder-count="2">
+          <div class="{{ r.cls }}">
+            <div class="sc-lists-row-top">
+              <button onClick="{{ r.onLoad }}" class="sc-lists-row-main" aria-label="{{ r.loadAria }}">
+                <b>{{ r.name }}<sc-if value="{{ r.current }}" hint-placeholder-val="{{ false }}"><span class="sc-lists-cur">Current</span></sc-if></b>
+                <small>{{ r.meta }}</small>
+              </button>
+              <button onClick="{{ r.onMenu }}" class="sc-lists-more" aria-label="More for {{ r.name }}" aria-expanded="{{ r.menuOpen }}">&#8943;</button>
             </div>
-          </sc-for>
-        </div>
+            <sc-if value="{{ r.confirmingLoad }}" hint-placeholder-val="{{ false }}">
+              <div class="sc-lists-confirm"><span>Unsaved changes will be lost.</span><button onClick="{{ r.onLoadAnyway }}" class="sc-lists-danger">Load anyway</button><button onClick="{{ r.onCancel }}" class="sc-vs-ghost">Cancel</button></div>
+            </sc-if>
+            <sc-if value="{{ r.renaming }}" hint-placeholder-val="{{ false }}">
+              <div class="sc-lists-name"><input value="{{ renameText }}" onChange="{{ onRenameInput }}" aria-label="New name for {{ r.name }}"><button onClick="{{ r.onRenameSave }}" class="sc-vs-ghost">Rename</button></div>
+            </sc-if>
+            <sc-if value="{{ r.confirming }}" hint-placeholder-val="{{ false }}">
+              <div class="sc-lists-confirm"><span>Delete this list?</span><button onClick="{{ r.onDelete }}" class="sc-lists-danger">Delete</button><button onClick="{{ r.onCancelDelete }}" class="sc-vs-ghost">Cancel</button></div>
+            </sc-if>
+            <sc-if value="{{ r.menuOpen }}" hint-placeholder-val="{{ false }}">
+              <div class="sc-lists-menu">
+                <button onClick="{{ r.onShare }}">Share</button>
+                <button onClick="{{ r.onRenameStart }}">Rename</button>
+                <button onClick="{{ r.onDuplicate }}">Duplicate</button>
+                <button onClick="{{ r.onExport }}" aria-label="Download roster file">File</button>
+                <button onClick="{{ r.onDeleteStart }}" class="sc-lists-danger">Delete</button>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
 
-        <input ref="{{ rosterFileRef }}" type="file" accept="application/json,.json" onChange="{{ importRosterFile }}" style="display:none">
-        <button onClick="{{ triggerImport }}" style="margin-top:10px;width:100%;height:40px;flex:0 0 auto;background:none;border:1px dashed var(--sc-border-input);color:#8a91a5;font-family:Rajdhani,sans-serif;font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Import Roster File</button>
-        <button onClick="{{ closeSheet }}" style="margin-top:8px;width:100%;height:44px;flex:0 0 auto;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;cursor:pointer">Close</button>
+      <input ref="{{ rosterFileRef }}" type="file" accept="application/json,.json" onChange="{{ importRosterFile }}" style="display:none">
+      <div class="sc-lists-foot">
+        <button onClick="{{ triggerImport }}" class="sc-vs-ghost">Import file</button>
+        <sc-if value="{{ !rosterEmpty }}" hint-placeholder-val="{{ false }}"><button onClick="{{ exportArmySheet }}" class="sc-vs-ghost">Export Army Sheet</button></sc-if>
       </div>
     </div>
   </sc-if>
@@ -1178,6 +1200,7 @@ class Component extends DCLogic {
         if (saved.battleSupplyAvailable != null) this.state.battleSupplyAvailable = saved.battleSupplyAvailable;
         if (saved.scaleId) this.state.scaleId = saved.scaleId;
         if (saved.factionId) this.state.factionId = saved.factionId;
+        this.state.currentListId = saved.currentListId || null;
       } else {
         // migrate from original app save if present
         const v4 = JSON.parse(localStorage.getItem('sc-tmg-zerg-v4') || 'null');
@@ -1209,7 +1232,7 @@ class Component extends DCLogic {
 
   save() {
     try {
-      localStorage.setItem('sctmg_zerg_v5', JSON.stringify({ army: this.state.army, tactical: this.state.tactical, tacticalTapped: this.state.tacticalTapped, factionTappedId: this.state.factionTappedId, battleSupplyAvailable: this.state.battleSupplyAvailable, scaleId: this.state.scaleId, factionId: this.state.factionId }));
+      localStorage.setItem('sctmg_zerg_v5', JSON.stringify({ army: this.state.army, tactical: this.state.tactical, tacticalTapped: this.state.tacticalTapped, factionTappedId: this.state.factionTappedId, battleSupplyAvailable: this.state.battleSupplyAvailable, scaleId: this.state.scaleId, factionId: this.state.factionId, currentListId: this.state.currentListId || null }));
     } catch (e) {}
   }
   savePlay() {
@@ -1221,6 +1244,64 @@ class Component extends DCLogic {
   }
   saveRosterList() {
     try { localStorage.setItem('sctmg_zerg_rosters_v1', JSON.stringify(this.state.savedRosters)); } catch (e) {}
+  }
+
+  // ---------- lists (saved rosters) ----------
+  // What a list is made of, for comparing the army on screen with its saved list.
+  listSig(src) {
+    const army = (src.army || []).map(e => [e.unitId, e.tierIdx, (e.upgs || []).slice().sort().join('|')].join(':')).sort();
+    return JSON.stringify([army, (src.tactical || []).slice().sort(), src.factionId || '', src.scaleId || '']);
+  }
+  currentList() { return (this.state.savedRosters || []).find(r => r.id === this.state.currentListId) || null; }
+  listDirty() {
+    const cur = this.currentList(), st = this.state;
+    return cur ? this.listSig(st) !== this.listSig(cur) : st.army.length > 0;
+  }
+  listMinerals(src) {
+    const D = this.D();
+    return (src.army || []).reduce((t, e) => {
+      const u = D.UNITS.find(x => x.id === e.unitId), tier = u && u.tiers[e.tierIdx];
+      if (!tier) return t;
+      const ups = this.unitUpgList(u);
+      return t + (tier.cost || 0) + (e.upgs || []).reduce((s, n) => { const x = ups.find(y => y.name === n); return s + (x ? this.upgCostNum(x.cost, e.tierIdx) : 0); }, 0);
+    }, 0);
+  }
+  updateCurrentList() {
+    const cur = this.currentList(); if (!cur) return;
+    const snap = this.snapshotRoster(cur.name);
+    this.setState(s2 => ({ savedRosters: s2.savedRosters.map(r => r.id === cur.id ? { ...snap, id: cur.id, createdAt: cur.createdAt || cur.savedAt } : r) }), () => this.saveRosterList());
+  }
+  duplicateRoster(id) {
+    const r = this.state.savedRosters.find(x => x.id === id); if (!r) return;
+    const copy = { ...r, id: 'r' + Date.now() + Math.floor(Math.random() * 1000), name: r.name + ' (copy)', savedAt: Date.now() };
+    const i = this.state.savedRosters.indexOf(r);
+    this.setState(s2 => ({ savedRosters: [...s2.savedRosters.slice(0, i + 1), copy, ...s2.savedRosters.slice(i + 1)], listMenuId: null }), () => this.saveRosterList());
+  }
+  renameRoster(id, name) {
+    const n = String(name || '').trim(); if (!n) return;
+    this.setState(s2 => ({ savedRosters: s2.savedRosters.map(r => r.id === id ? { ...r, name: n } : r), renameId: null, listMenuId: null }), () => this.saveRosterList());
+  }
+  // New list: an empty army that isn't saved yet. Asks first when there are unsaved changes.
+  newList(force) {
+    if (!force && this.listDirty() && this.state.army.length) { this.setState({ confirmNewList: true }); return; }
+    this.setState({ army: [], tactical: [], tacticalTapped: [], factionTappedId: null, currentListId: null, confirmNewList: false, sheet: null }, () => this.save());
+  }
+  listVals() {
+    const st = this.state, cur = this.currentList(), dirty = this.listDirty();
+    const state = cur ? (dirty ? 'Unsaved changes' : 'Saved') : (st.army.length ? 'Not saved' : 'Empty');
+    return {
+      listName: cur ? cur.name : 'Unsaved army',
+      listState: state, listStateCls: 'sc-lists-state' + (dirty && st.army.length ? ' sc-lists-state--dirty' : ''),
+      listBarSaveLabel: cur ? (dirty ? 'Save' : 'Saved ✓') : 'Save',
+      listBarSaveOff: cur ? !dirty : !st.army.length,
+      listBarSave: () => { if (cur) this.updateCurrentList(); else this.setState({ sheet: { type: 'rosters' }, newRosterName: '' }); },
+      listSaveLabel: cur ? 'Save “' + cur.name + '”' : 'Save', listSaveOff: !cur || !dirty,
+      listSaveCurrent: () => this.updateCurrentList(),
+      saveAsOff: !(st.newRosterName || '').trim() || !st.army.length,
+      newListLabel: st.confirmNewList ? 'Discard changes?' : 'New list',
+      newList: () => this.newList(!!st.confirmNewList),
+      renameText: st.renameText || '', onRenameInput: (ev) => this.setState({ renameText: ev.target.value })
+    };
   }
 
   // ---------- sharing (QR, link, code) ----------
@@ -1258,7 +1339,7 @@ class Component extends DCLogic {
     const name = (this.state.newRosterName || '').trim();
     if (!name) return;
     const entry = this.snapshotRoster(name);
-    this.setState(s2 => ({ savedRosters: [...s2.savedRosters, entry], newRosterName: '' }), () => this.saveRosterList());
+    this.setState(s2 => ({ savedRosters: [...s2.savedRosters, entry], newRosterName: '', currentListId: entry.id }), () => { this.saveRosterList(); this.save(); });
   }
   loadRoster(id) {
     const entry = this.state.savedRosters.find(r => r.id === id);
@@ -1276,7 +1357,7 @@ class Component extends DCLogic {
       battleSupplyAvailable: entry.battleSupplyAvailable != null ? entry.battleSupplyAvailable : 4,
       scaleId: entry.scaleId || this.state.scaleId,
       factionId: loadedFactionId,
-      sheet: null,
+      sheet: null, currentListId: entry.id, confirmLoadId: null, listMenuId: null,
       confirmDeleteRosterId: null
     }, () => this.save());
   }
@@ -3050,23 +3131,35 @@ class Component extends DCLogic {
       gotoLibrary: () => this.setState({ tab: 'library', battlePanel: null, editArmy: false }),
       exportArmySheet: () => this.exportArmySheet(),
       // saved rosters
-      openRosters: () => this.setState({ sheet: { type: 'rosters' }, newRosterName: '', confirmDeleteRosterId: null }),
+      openRosters: () => this.setState({ sheet: { type: 'rosters' }, newRosterName: '', confirmDeleteRosterId: null, confirmLoadId: null, listMenuId: null, renameId: null, confirmNewList: false }),
       sheetRosters: !!(st.sheet && st.sheet.type === 'rosters'),
       ...this.shareVals(),
       rostersEmpty: st.savedRosters.length === 0,
+      ...this.listVals(),
       savedRosterRows: st.savedRosters.map(r => {
-        const n = (r.army || []).length;
+        const n = (r.army || []).length, D = this.D();
+        const card = D.FACTION_CARDS.find(c => c.id === r.factionId);
         const d = new Date(r.savedAt);
         const dateStr = isNaN(d) ? '' : d.toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
+        const current = r.id === st.currentListId, dirty = this.listDirty();
         return {
-          name: r.name,
-          meta: n + ' unit' + (n === 1 ? '' : 's') + (dateStr ? ' · ' + dateStr : ''),
-          confirming: st.confirmDeleteRosterId === r.id,
-          onLoad: () => this.loadRoster(r.id),
+          name: r.name, current, cls: 'sc-lists-row' + (current ? ' sc-lists-row--current' : ''),
+          meta: [card ? card.name : '', n + ' unit' + (n === 1 ? '' : 's'), this.listMinerals(r) + 'm', dateStr].filter(Boolean).join(' · '),
+          loadAria: current ? r.name + ' (current list)' : 'Load ' + r.name,
+          menuOpen: st.listMenuId === r.id, renaming: st.renameId === r.id,
+          confirming: st.confirmDeleteRosterId === r.id, confirmingLoad: st.confirmLoadId === r.id,
+          onLoad: () => { if (current) return; if (dirty && st.army.length) this.setState({ confirmLoadId: r.id, listMenuId: null }); else this.loadRoster(r.id); },
+          onLoadAnyway: () => this.loadRoster(r.id),
+          onCancel: () => this.setState({ confirmLoadId: null }),
+          onMenu: () => this.setState({ listMenuId: st.listMenuId === r.id ? null : r.id, confirmLoadId: null, renameId: null, confirmDeleteRosterId: null }),
+          onShare: () => this.setState({ sheet: { type: 'share', listId: r.id }, shareCopied: false }),
+          onRenameStart: () => this.setState({ renameId: r.id, renameText: r.name, listMenuId: null }),
+          onRenameSave: () => this.renameRoster(r.id, st.renameText),
+          onDuplicate: () => this.duplicateRoster(r.id),
           onExport: () => this.exportRoster(r),
-          onDeleteStart: () => this.setState({ confirmDeleteRosterId: r.id }),
+          onDeleteStart: () => this.setState({ confirmDeleteRosterId: r.id, listMenuId: null }),
           onCancelDelete: () => this.setState({ confirmDeleteRosterId: null }),
-          onDelete: () => this.deleteRoster(r.id)
+          onDelete: () => { this.deleteRoster(r.id); if (current) this.setState({ currentListId: null }, () => this.save()); }
         };
       }),
       newRosterName: st.newRosterName,
