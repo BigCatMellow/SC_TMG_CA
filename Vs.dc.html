@@ -24,7 +24,7 @@
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
-<div class="sc-vs" style="--you:{{ youColor }};--opp:{{ oppColor }}" data-screen-label="VS">
+<div class="sc-vs" style="--you:{{ youColor }};--opp:{{ oppColor }};--you-acc:{{ youAccent }};--opp-acc:{{ oppAccent }}" data-screen-label="VS">
 
   <!-- ================= SCOUT: enter the opponent's army ================= -->
   <sc-if value="{{ viewScout }}" hint-placeholder-val="{{ false }}">
@@ -372,9 +372,9 @@
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{}">
 const VS_FACTIONS = {
-  zerg: { key: 'SCTMG_ZERG', name: 'Zerg', page: 'Zerg Army.dc.html', color: '#b06ef7', logo: 'portraits/factions/zerg.png', res: 'Biomass' },
-  terran: { key: 'SCTMG_TERRAN', name: 'Terran', page: 'Terran Army.dc.html', color: '#4f8df9', logo: 'portraits/factions/terran.png', res: 'Command pts' },
-  protoss: { key: 'SCTMG_PROTOSS', name: 'Protoss', page: 'Protoss Army.dc.html', color: '#f2c860', logo: 'portraits/factions/protoss.png', res: 'Psionic energy' }
+  zerg: { key: 'SCTMG_ZERG', name: 'Zerg', page: 'Zerg Army.dc.html', color: '#b06ef7', accent: '#7ee35b', logo: 'portraits/factions/zerg.png', res: 'Biomass' },
+  terran: { key: 'SCTMG_TERRAN', name: 'Terran', page: 'Terran Army.dc.html', color: '#4f8df9', accent: '#eef1f6', logo: 'portraits/factions/terran.png', res: 'Command pts' },
+  protoss: { key: 'SCTMG_PROTOSS', name: 'Protoss', page: 'Protoss Army.dc.html', color: '#f2c860', accent: '#4fc3ff', logo: 'portraits/factions/protoss.png', res: 'Psionic energy' }
 };
 const ROLE_COLOR = { Hero: '#f2a33c', Elite: '#b06ef7', Core: '#4f8df9', Support: '#35c76b', Other: '#8a91a5' };
 const ROLE_ORDER = ['Hero', 'Elite', 'Core', 'Support', 'Other'];
@@ -544,8 +544,8 @@ class Component extends DCLogic {
     });
     const hpLeft = segs.reduce((t, x) => t + x.left, 0), hpFull = segs.reduce((t, x) => t + x.size, 0);
     // Supply steps: the model counts where losing one more model drops the Unit's Supply
-    // (its Supply Profile bracket). When the next model lost would drop it, that model is
-    // tinted amber and the Supply number warns.
+    // (its Supply Profile bracket). Those models are always shown in the faction's accent
+    // colour; when the next loss would drop Supply, the Supply number warns too.
     const dropAt = {};
     for (let i = Math.max(0, e.tierIdx); i < u.tiers.length; i++) {
       const m = this.minModels(u, i), here = u.tiers[i].supply || 0;
@@ -570,7 +570,7 @@ class Component extends DCLogic {
       statusCls: 'sc-vs-status' + (dead ? ' sc-vs-status--dead' : e.deployed ? ' sc-vs-status--table' : blocked ? ' sc-vs-status--full' : ''),
       supply: supplyNow, alive,
       pips: Array.from({ length: start }, (_, i) => ({
-        cls: 'sc-vs-pip' + (i >= alive ? ' sc-vs-pip--lost' : '') + (atRisk && i === alive - 1 ? ' sc-vs-pip--risk' : ''),
+        cls: 'sc-vs-pip' + (i >= alive ? ' sc-vs-pip--lost' : '') + (dropAt[i + 1] ? ' sc-vs-pip--drop' : ''),
         // Tapping any live model removes one; tapping a lost one brings one back.
         label: u.name + ' model ' + (i + 1) + (i >= alive ? ', lost: tap to restore one' : ', alive: tap to remove one'),
         tap: () => setLost(i >= alive ? lost - 1 : lost + 1)
@@ -578,7 +578,7 @@ class Component extends DCLogic {
       tracksDamage: !dead && multiHp,
       showPips: !(!dead && multiHp),
       hpSegs: segs.slice().reverse().map((x, j) => ({ style: 'flex-grow:' + x.size, fill: 'width:' + Math.round(100 * x.left / x.size) + '%',
-        cls: 'sc-vs-hp-seg' + (atRisk && j === alive - 1 ? ' sc-vs-hp-seg--risk' : '') })),
+        cls: 'sc-vs-hp-seg' + (dropAt[j + 1] ? ' sc-vs-hp-seg--drop' : '') })),
       hpAria: u.name + ': ' + hpLeft + ' of ' + hpFull + ' HP, ' + alive + ' of ' + start + ' models' + (nextDrop ? '. Supply drops to ' + dropAt[nextDrop].to + ' below ' + nextDrop + ' models' : ''),
       supCls: 'sc-vs-sup' + (atRisk ? ' sc-vs-sup--risk' : ''),
       supTitle: atRisk ? 'Lose one more model and Supply drops to ' + dropAt[nextDrop].to : 'Supply on the table',
@@ -875,6 +875,7 @@ class Component extends DCLogic {
     const bump = (k, d) => () => this.savePlay({ [k]: Math.max(0, (st.play[k] || 0) + d) });
     return {
       ready: true, youColor: VS_FACTIONS[st.yourFaction].color, oppColor: VS_FACTIONS[st.opp.faction].color,
+      youAccent: VS_FACTIONS[st.yourFaction].accent, oppAccent: VS_FACTIONS[st.opp.faction].accent,
       viewScout: st.view === 'scout', viewBoard: st.view !== 'scout',
       ...(st.view === 'scout' ? this.scoutVals() : {}),
       you, opp, round, roundOf: m ? '/ ' + m.gameLength : '', missionName: m ? m.name : 'No mission',
