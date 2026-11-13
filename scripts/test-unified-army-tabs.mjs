@@ -121,6 +121,7 @@ for(const faction of ['terran','zerg','protoss']){
   const tileQ=view().quickTiles.find(q=>q.tiers.some(t=>!t.off));
   tileQ.tiers.find(t=>!t.off).add();
   assert.equal(controller.state.army.length,1,faction+' quick tier adds a unit');
+  view().openQbSheet(); assert.equal(view().qbSheet,true,faction+' your army opens as a sheet');
   const rowQ=view().quickRows[0];
   if(rowQ.hasUpgrades){
     rowQ.onUpg(); assert.equal(view().quickRows[0].open,true,faction+' upgrades open on the row');
