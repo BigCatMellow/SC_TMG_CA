@@ -2163,3 +2163,6 @@ input::placeholder { color: #5b6275; }
 .sc-qb-info-tier span { flex: 1; font: 600 13px 'Chakra Petch', sans-serif; }
 .sc-qb-info-tier small { font: 700 12px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--rc); }
 .sc-qb-info-tier:disabled { opacity: .4; cursor: default; }
+/* Quick build: the count and −1 boxes share one width */
+.sc-qb-tile .sc-vs-tile-count { width: 40px; min-width: 40px; padding: 0; box-sizing: border-box; }
+.sc-qb-minus { width: 40px; min-width: 40px; height: 24px; top: 42px; padding: 0; box-sizing: border-box; font-size: 11px; }
