@@ -100,7 +100,7 @@
       <div class="{{ slotStripClass }}" aria-label="Army role slot limits" style="grid-template-columns:repeat({{ slotCols }},minmax(0,1fr))">
         <sc-for list="{{ roleSlots }}" as="sl" hint-placeholder-count="5">
           <div class="sc-slot-cell" title="{{ sl.accessibilityLabel }}" aria-label="{{ sl.accessibilityLabel }}">
-            <span class="sc-slot-role">
+            <span class="sc-slot-role" style="color:{{ sl.roleFg }}">
               <span class="sc-slot-role-long">{{ sl.name }}</span>
               <span class="sc-slot-role-short" aria-hidden="true">{{ sl.short }}</span>
             </span>
@@ -2219,19 +2219,25 @@ class Component extends DCLogic {
   quickVals(battleUnits, faction) {
     const st = this.state, D = this.D();
     const roles = ['Hero', 'Elite', 'Core', 'Support'];
-    const tiles = D.UNITS.filter(u => u.role !== 'Other' && u.tiers.some(t => t.cost > 0) && (!u.factionTag || u.factionTag === faction.name))
-      .sort((a, b) => roles.indexOf(a.role) - roles.indexOf(b.role))
+    // Every unit is listed: summoned ones and other faction cards' units say why they can't be added.
+    const rank = r => { const i = roles.indexOf(r); return i < 0 ? 99 : i; };
+    const tiles = D.UNITS.slice()
+      .sort((a, b) => rank(a.role) - rank(b.role))
       .map(u => {
         const count = st.army.filter(e => e.unitId === u.id).length, taken = !!u.unique && count > 0;
+        const summoned = u.role === 'Other' || !u.tiers.some(t => t.cost > 0);
+        const needs = !summoned && u.factionTag && u.factionTag !== faction.name ? u.factionTag : '';
+        const locked = summoned || !!needs;
         const art = this.portrait(u) || {};
         return { name: u.name, role: u.role, roleColor: this.roleColor(u.role), count, img: art.cutout || art.portrait || '',
-          cls: 'sc-vs-tile sc-qb-tile' + (count ? ' sc-vs-tile--in' : ''), note: taken ? 'Unique · in army' : '',
+          cls: 'sc-vs-tile sc-qb-tile' + (count ? ' sc-vs-tile--in' : '') + (locked ? ' sc-qb-tile--locked' : ''),
+          note: summoned ? 'Summoned by an ability' : needs ? 'Requires ' + needs : taken ? 'Unique · in army' : '',
           onCard: () => this.setState({ qbInfo: u.id }),
           onMinus: () => { const mine = st.army.filter(e => e.unitId === u.id), last = mine[mine.length - 1]; if (last) this.removeWithUndo(last.key, u.name); },
           tiers: u.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost > 0).sort((a, b) => String(a.t.tier).localeCompare(String(b.t.tier))).map(({ t, i }) => ({
-            label: t.tier, cost: t.cost + 'm', off: taken,
+            label: t.tier, cost: t.cost + 'm', off: taken || locked,
             aria: 'Add ' + u.name + ' ' + t.tier + ', ' + t.models + ' models, ' + t.cost + ' minerals',
-            add: () => { if (!taken) this.commitAdd(u.id, i); } })) };
+            add: () => { if (!taken && !locked) this.commitAdd(u.id, i); } })) };
       });
     const rows = battleUnits.map(u => {
       const open = !!(st.qbOpen || {})[u.key], got = u.upgradeCount;
@@ -2304,7 +2310,7 @@ class Component extends DCLogic {
       const name = role.charAt(0).toUpperCase() + role.slice(1);
       return {
         name, short: ({ hero: 'HRO', elite: 'ELT', core: 'CORE', support: 'SPT', air: 'AIR' })[role] || name.charAt(0), used, cap,
-        fg: used > cap ? '#f08a8a' : '#c8cede',
+        fg: used > cap ? '#f08a8a' : '#c8cede', roleFg: this.roleColor(name),
         accessibilityLabel: name + ' slots: ' + used + ' of ' + cap + ' used'
       };
     });

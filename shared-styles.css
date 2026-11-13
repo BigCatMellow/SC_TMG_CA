@@ -2173,3 +2173,6 @@ input::placeholder { color: #5b6275; }
 .sc-qb-fab-k { font-size: 13px; letter-spacing: .14em; }
 .sc-qb-fab-v { flex: 0 0 auto; text-align: left; font-size: 12px; }
 .sc-qb { padding-bottom: 60px; }
+/* Quick build: units you can't add right now (summoned, or another faction card's) */
+.sc-qb-tile--locked .sc-vs-tile-img { opacity: .55; }
+.sc-qb-tile--locked .sc-qb-note { color: #8a91a5; }
