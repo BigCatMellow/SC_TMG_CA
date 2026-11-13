@@ -1451,7 +1451,8 @@ class Component extends DCLogic {
     const entry = this.state.army[idx];
     clearTimeout(this._undoTimer);
     this.setState(s2 => ({ army: s2.army.filter(x => x.key !== key), undo: { name, entry, idx } }), () => this.save());
-    this._undoTimer = setTimeout(() => this.setState({ undo: null }), 6000);
+    // Short window: the toast sits over the bottom of the screen.
+    this._undoTimer = setTimeout(() => this.setState({ undo: null }), 3000);
   }
   resetGame() {
     clearTimeout(this._resetTimer); clearTimeout(this._undoTimer);
@@ -1468,7 +1469,7 @@ class Component extends DCLogic {
       play: { round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, rounds: {}, foeLostAtStart: 0, ownLostAtStart: 0 },
       undo: { type: 'reset', text: 'New game started', snap }
     }, () => { this.save(); this.savePlay(); });
-    this._undoTimer = setTimeout(() => this.setState({ undo: null }), 8000);
+    this._undoTimer = setTimeout(() => this.setState({ undo: null }), 5000);
   }
   undoRemove() {
     const u = this.state.undo;
@@ -2254,7 +2255,9 @@ class Component extends DCLogic {
       libQuickBtnCls: 'sc-qb-seg' + (st.libQuick ? ' sc-qb-seg--on' : ''), libCardsBtnCls: 'sc-qb-seg' + (st.libQuick ? '' : ' sc-qb-seg--on') };
   }
   commitAdd(unitId, tierIdx) {
+    clearTimeout(this._undoTimer);
     this.setState(st => ({
+      undo: null,
       army: [...st.army, { key: 'k' + Date.now(), unitId, tierIdx, upgs: [], modelsLost: 0, deployed: false }],
       sheet: null
     }), () => this.save());
