@@ -270,32 +270,41 @@
             </sc-for>
           </div>
 
-          <div class="sc-role-group sc-bat-group sc-qb-army" style="--role:var(--fc-primary-solid)">
-            <div class="sc-role-head">
-              <span class="sc-role-mark" aria-hidden="true"></span>
-              <h2 class="sc-role-name">Your army</h2>
-              <span class="sc-role-rule" aria-hidden="true"></span>
-              <span class="sc-role-note">{{ quickArmyNote }}</span>
-            </div>
-            <sc-if value="{{ battleEmpty }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">Nothing yet. Tap a tier on any unit above.</p></sc-if>
-            <div class="sc-qb-rows">
-              <sc-for list="{{ quickRows }}" as="r" hint-placeholder-count="4">
-                <div class="{{ r.cls }}" style="--rc:{{ r.roleColor }}">
-                  <div class="sc-qb-row-top">
-                    <div class="sc-qb-row-text"><b>{{ r.name }}</b><small>{{ r.meta }}</small></div>
-                    <sc-if value="{{ r.hasUpgrades }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onUpg }}" class="{{ r.upgBtnCls }}" aria-expanded="{{ r.open }}">{{ r.upgLabel }}</button></sc-if>
-                    <button onClick="{{ r.onRemove }}" class="sc-vs-step" aria-label="Remove {{ r.name }}">−</button>
-                  </div>
-                  <sc-if value="{{ r.open }}" hint-placeholder-val="{{ false }}">
-                    <div class="sc-qb-upgs">
-                      <sc-for list="{{ r.upgrades }}" as="ug" hint-placeholder-count="3"><button onClick="{{ ug.onToggle }}" class="{{ ug.chipCls }}" aria-pressed="{{ ug.on }}"><span>{{ ug.name }}</span><small>{{ ug.cost }}</small></button></sc-for>
-                    </div>
-                    <button onClick="{{ r.onTier }}" class="sc-qb-tierlink">Change tier ›</button>
-                  </sc-if>
-                </div>
-              </sc-for>
-            </div>
+          <!-- Your army floats above the tab bar; tap it to open the list as a sheet. -->
+          <div class="sc-qb-fab-wrap">
+            <button onClick="{{ openQbSheet }}" class="sc-qb-fab" aria-label="Open your army">
+              <span class="sc-qb-fab-k">Your army</span>
+              <span class="sc-qb-fab-v">{{ quickArmyNote }}</span>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 10l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </button>
           </div>
+          <sc-if value="{{ qbSheet }}" hint-placeholder-val="{{ false }}">
+            <div class="sc-qb-scrim" onClick="{{ closeQbSheet }}"></div>
+            <div class="sc-qb-sheet" role="dialog" aria-modal="true" aria-label="Your army">
+              <div class="sc-qb-sheet-head">
+                <div><span class="sc-vs-k">Your army</span><b>{{ quickArmyNote }}</b></div>
+                <button onClick="{{ closeQbSheet }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
+              </div>
+              <sc-if value="{{ battleEmpty }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">Nothing yet. Close this and tap a tier on any unit.</p></sc-if>
+              <div class="sc-qb-rows">
+                <sc-for list="{{ quickRows }}" as="r" hint-placeholder-count="4">
+                  <div class="{{ r.cls }}" style="--rc:{{ r.roleColor }}">
+                    <div class="sc-qb-row-top">
+                      <div class="sc-qb-row-text"><b>{{ r.name }}</b><small>{{ r.meta }}</small></div>
+                      <sc-if value="{{ r.hasUpgrades }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onUpg }}" class="{{ r.upgBtnCls }}" aria-expanded="{{ r.open }}">{{ r.upgLabel }}</button></sc-if>
+                      <button onClick="{{ r.onRemove }}" class="sc-vs-step" aria-label="Remove {{ r.name }}">−</button>
+                    </div>
+                    <sc-if value="{{ r.open }}" hint-placeholder-val="{{ false }}">
+                      <div class="sc-qb-upgs">
+                        <sc-for list="{{ r.upgrades }}" as="ug" hint-placeholder-count="3"><button onClick="{{ ug.onToggle }}" class="{{ ug.chipCls }}" aria-pressed="{{ ug.on }}"><span>{{ ug.name }}</span><small>{{ ug.cost }}</small></button></sc-for>
+                      </div>
+                      <button onClick="{{ r.onTier }}" class="sc-qb-tierlink">Change tier ›</button>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
         </section>
       </sc-if>
       <sc-if value="{{ !libQuick }}" hint-placeholder-val="{{ true }}">
@@ -2211,6 +2220,7 @@ class Component extends DCLogic {
     return { quickTiles: tiles, quickRows: rows,
       quickArmyNote: battleUnits.length + (battleUnits.length === 1 ? ' unit' : ' units') + ' · ' + mins + 'm',
       libQuick: !!st.libQuick, setLibQuick: () => this.setLibView(true), setLibCards: () => this.setLibView(false),
+      qbSheet: !!st.libQuick && !!st.qbSheet, openQbSheet: () => this.setState({ qbSheet: true }), closeQbSheet: () => this.setState({ qbSheet: false }),
       libQuickBtnCls: 'sc-qb-seg' + (st.libQuick ? ' sc-qb-seg--on' : ''), libCardsBtnCls: 'sc-qb-seg' + (st.libQuick ? '' : ' sc-qb-seg--on') };
   }
   commitAdd(unitId, tierIdx) {
