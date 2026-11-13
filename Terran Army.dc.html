@@ -133,6 +133,7 @@
             <div class="sc-bc-head">
               <span class="sc-bc-title"><span class="sc-bc-kind">{{ cc.kind }}<sc-if value="{{ cc.count }}" hint-placeholder-val="{{ false }}"> · <b>{{ cc.count }}</b></sc-if></span><span class="sc-bc-name">{{ cc.name }}</span></span>
             </div>
+            <sc-if value="{{ cc.hasSlots }}" hint-placeholder-val="{{ false }}"><div class="sc-bc-slots" aria-label="Army slots"><sc-for list="{{ cc.slotPills }}" as="sp" hint-placeholder-count="2"><span class="sc-bc-slot" style="--sc:{{ sp.color }}">{{ sp.text }}</span></sc-for></div></sc-if>
             <sc-if value="{{ cc.hasAbilities }}" hint-placeholder-val="{{ true }}">
               <div class="sc-bc-abs">
                 <sc-for list="{{ cc.abilities }}" as="ca" hint-placeholder-count="2">
@@ -1487,7 +1488,7 @@ class Component extends DCLogic {
     const abilities = Array.isArray(card.abilities) ? card.abilities : [];
     const resourceAmount = this.resourceYield(card);
     return {
-      id: card.id, key, name: card.name, kind, copyLabel,
+      id: card.id, key, name: card.name, kind, copyLabel, slots: card.slots || {},
       chev: this.state.expBattleCards[key] !== false ? 180 : 0,
       expandLabel: card.name + (this.state.expBattleCards[key] !== false ? ': hide abilities' : ': view abilities'),
       resource: card.resource || '', hasResource: resourceAmount > 0,
@@ -1671,8 +1672,15 @@ class Component extends DCLogic {
       });
       const tac = this.D().TACTICAL_CARDS.find(t => t.id === c.id);
       const color = !tac ? 'var(--fc-primary-solid)' : ({ creep: '#d46ad9', combat: '#f04a4a', positioning: '#4f8df9', defense: '#38d3e8', support: '#f2c14e' })[tac.category] || 'var(--fc-text-tint)';
+      // Army slots the card gives: a faction card sets the base, each tactical copy adds more.
+      const isFaction = /faction/i.test(c.kind);
+      const slotPills = ['hero', 'elite', 'core', 'support'].filter(k => (c.slots || {})[k] > 0).map(k => {
+        const role = k[0].toUpperCase() + k.slice(1), v = c.slots[k] * (isFaction ? 1 : n);
+        return { text: (isFaction ? '' : '+') + v + ' ' + role, color: this.roleColor(role) };
+      });
       return { name: c.name, kind: c.kind.replace(' Card', ''), color, abilities, hasAbilities: abilities.length > 0,
-        count: n > 1 ? '\u00d7' + n + ' · ' + ready.length + ' ready' : '',
+        slotPills, hasSlots: slotPills.length > 0,
+        count: n > 1 ? '\u00d7' + n : '',
         rowCls: 'sc-bc',
         cls: 'sc-bc-btn' + (allSpent ? ' sc-bc-btn--ready' : ' sc-bc-btn--res'),
         hasButton: allSpent || c.hasResource,

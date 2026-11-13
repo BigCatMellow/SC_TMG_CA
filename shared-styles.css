@@ -2132,3 +2132,7 @@ input::placeholder { color: #5b6275; }
 .sc-qb-tierlink { margin-top: 8px; padding: 6px 0; background: none; border: 0; color: #8a91a5; font: 700 12px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
 .sc-vs-tile-count { display: flex; align-items: center; justify-content: center; }
 .sc-qb-army .sc-role-head::after { display: none; }
+
+/* Roster cards: the army slots each card gives (+1 Elite, +1 Support ...) */
+.sc-bc-slots { display: flex; flex-wrap: wrap; gap: 5px; padding: 0 12px 10px; background: linear-gradient(90deg, color-mix(in srgb, var(--role) 13%, transparent), transparent 75%); }
+.sc-bc-slot { padding: 3px 8px; font: 700 12px 'Chakra Petch', sans-serif; letter-spacing: .03em; color: var(--sc); background: color-mix(in srgb, var(--sc) 12%, #12151f); border: 1px solid color-mix(in srgb, var(--sc) 45%, transparent); }
