@@ -315,9 +315,10 @@
       </div>
       <div class="sc-vs-info-abs">
         <sc-for list="{{ cardInfo.abilities }}" as="a" hint-placeholder-count="2">
-          <div class="sc-vs-info-ab" style="--ph:{{ a.color }}">
+          <div class="{{ a.rowCls }}" style="--ph:{{ a.color }}">
             <div class="sc-vs-info-ab-top"><span class="sc-bc-ph">{{ a.phase }}</span><b>{{ a.name }}</b><span class="{{ a.typeCls }}">{{ a.type }}</span></div>
             <p>{{ a.text }}</p>
+            <sc-if value="{{ a.canUse }}" hint-placeholder-val="{{ true }}"><button onClick="{{ a.use }}" class="{{ a.useCls }}" aria-label="{{ a.useAria }}" aria-pressed="{{ a.isUsed }}">{{ a.useLabel }}</button></sc-if>
           </div>
         </sc-for>
       </div>
@@ -358,7 +359,7 @@
   <nav class="sc-vs-tabbar" aria-label="Army sections">
     <sc-for list="{{ navTabs }}" as="tb" hint-placeholder-count="6">
       <button onClick="{{ tb.onSelect }}" class="{{ tb.cls }}" aria-current="{{ tb.current }}">
-        <span class="sc-vs-tab-icon"><sc-if value="{{ tb.isBattle }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M4 14V2M4 2h8l-2 3 2 3H4" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isLibrary }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="2" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect></svg></sc-if><sc-if value="{{ tb.isTactics }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"></circle><circle cx="8" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4"></circle><path d="M8 2v2.5M8 11.5V14M2 8h2.5M11.5 8H14" stroke="currentColor" stroke-width="1.4"></path></svg></sc-if><sc-if value="{{ tb.isFaction }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4 4 1-3 3 .8 4L8 11l-3.8 2 .8-4-3-3 4-1 2-4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isVs }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M2.5 2.5l7 7M9.5 9.5l-1.6 1.6M9.5 9.5l1.6-1.6M10 12l2 2M13.5 2.5l-7 7M6.5 9.5l1.6 1.6M6.5 9.5L4.9 7.9M6 12l-2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if><sc-if value="{{ tb.isCodex }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h7.5A2.5 2.5 0 0113 5v8.5H5.5A2.5 2.5 0 013 11V2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M6 5.5h4M6 8h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if></span>
+        <span class="sc-vs-tab-icon"><sc-if value="{{ tb.isBattle }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M6 4h8M6 8h8M6 12h8" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path><path d="M2.2 4h.6M2.2 8h.6M2.2 12h.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"></path></svg></sc-if><sc-if value="{{ tb.isLibrary }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="2" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="2" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect><rect x="9" y="9" width="5" height="5" stroke="currentColor" stroke-width="1.4"></rect></svg></sc-if><sc-if value="{{ tb.isTactics }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.4"></circle><circle cx="8" cy="8" r="2.4" stroke="currentColor" stroke-width="1.4"></circle><path d="M8 2v2.5M8 11.5V14M2 8h2.5M11.5 8H14" stroke="currentColor" stroke-width="1.4"></path></svg></sc-if><sc-if value="{{ tb.isFaction }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M8 1l2 4 4 1-3 3 .8 4L8 11l-3.8 2 .8-4-3-3 4-1 2-4z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ tb.isVs }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M2.5 2.5l7 7M9.5 9.5l-1.6 1.6M9.5 9.5l1.6-1.6M10 12l2 2M13.5 2.5l-7 7M6.5 9.5l1.6 1.6M6.5 9.5L4.9 7.9M6 12l-2 2" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if><sc-if value="{{ tb.isCodex }}" hint-placeholder-val="{{ false }}"><svg width="18" height="18" viewBox="0 0 16 16" fill="none"><path d="M3 2.5h7.5A2.5 2.5 0 0113 5v8.5H5.5A2.5 2.5 0 013 11V2.5z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"></path><path d="M6 5.5h4M6 8h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"></path></svg></sc-if></span>
         <span class="sc-vs-tab-label">{{ tb.label }}</span>
       </button>
     </sc-for>
@@ -598,15 +599,24 @@ class Component extends DCLogic {
     const counts = {};
     const tapped = side === 'you' ? (src.tacticalTapped || []) : (src.tapped || []);
     const factionTapped = side === 'you' ? src.factionTappedId === fc.id : tapped.includes('faction');
+    // Which ability each exhausted card was used for, this round (kept with the game, not the army).
+    const cardUsed = (this.state.play.cardUsed || {})[side] || {};
+    const setUsed = (key, name) => {
+      const next = { ...cardUsed }; if (name) next[key] = name; else delete next[key];
+      this.savePlay({ cardUsed: { ...(this.state.play.cardUsed || {}), [side]: next } });
+    };
+    const isSpent = key => key === 'faction' ? factionTapped : tapped.includes(key);
     const toggle = (key) => {
+      if (isSpent(key)) setUsed(key, null);
       if (side === 'you') {
         if (key === 'faction') this.saveYours({ ...src, factionTappedId: factionTapped ? null : fc.id });
         else this.saveYours({ ...src, tacticalTapped: tapped.includes(key) ? tapped.filter(k => k !== key) : [...tapped, key] });
       } else this.saveOpp({ ...src, tapped: tapped.includes(key) ? tapped.filter(k => k !== key) : [...tapped, key] });
     };
-    const cardView = (key, kind, name, spent) => ({ key, kind, name, spent,
+    const cardView = (key, kind, name, spent) => ({ key, kind, name, spent, usedFor: spent ? (cardUsed[key] || '') : '',
       cls: 'sc-vs-card sc-vs-card--' + side + (spent ? ' sc-vs-card--spent' : ''),
-      state: spent ? 'Exhausted' : 'Ready', tap: () => toggle(key),
+      state: spent ? (cardUsed[key] ? 'Used: ' + cardUsed[key] : 'Exhausted') : 'Ready', tap: () => toggle(key),
+      use: (abName) => { if (!isSpent(key)) toggle(key); setUsed(key, abName); },
       open: () => this.setState({ sheet: { type: 'card', side, key } }) });
     const cards = [cardView('faction', 'Faction', fc.name, factionTapped)].concat((src.tactical || []).map(id => {
       const n = counts[id] || 0; counts[id] = n + 1;
@@ -671,9 +681,15 @@ class Component extends DCLogic {
       const id = sh.key === 'faction' ? null : sh.key.split('#')[0];
       const card = id ? this.D(S.f).TACTICAL_CARDS.find(x => x.id === id) : this.card(S.f, S.src.factionId);
       if (c && card) Object.assign(out, { sheetCard: true, cardInfo: { style: '--side:' + S.color, sideLabel: sh.side === 'you' ? 'Your card' : 'Opponent', kind: c.kind,
-        name: c.name, state: (c.spent ? 'Exhausted' : 'Ready') + (card.resource ? ' · exhaust for ' + card.resource : ''),
+        name: c.name, state: c.state + (!c.spent && card.resource ? ' · exhaust for ' + card.resource : ''),
         btn: c.spent ? 'Ready' : card.resource ? 'Spend ' + card.resource : 'Exhaust', btnCls: 'sc-vs-info-btn' + (c.spent ? '' : ' sc-vs-info-btn--go'), toggle: c.tap,
-        abilities: (card.abilities || []).map(a => ({ name: a.name, type: a.type, phase: String(a.phase || '').replace(' Phase', ''), color: this.phaseColor(a.phase), text: a.description,
+        usedNote: c.usedFor ? 'Used for ' + c.usedFor + ' this round' : '',
+        abilities: (card.abilities || []).map(a => ({ name: a.name, type: a.type,
+          canUse: !/passive/i.test(a.type || ''),
+          isUsed: c.usedFor === a.name, useLabel: c.usedFor === a.name ? 'Used ✓' : 'Use',
+          rowCls: 'sc-vs-info-ab' + (c.usedFor === a.name ? ' sc-vs-info-ab--used' : ''),
+          useCls: 'sc-vs-info-use' + (c.usedFor === a.name ? ' sc-vs-info-use--on' : ''),
+          use: () => c.use(a.name), useAria: 'Use ' + a.name + ': exhausts ' + c.name, phase: String(a.phase || '').replace(' Phase', ''), color: this.phaseColor(a.phase), text: a.description,
           typeCls: 'sc-ud-type' + (/^active/i.test(a.type || '') ? ' sc-ud-type--active' : /reaction/i.test(a.type || '') ? ' sc-ud-type--reaction' : '') })) } });
     }
     return out;
@@ -723,7 +739,7 @@ class Component extends DCLogic {
     Object.entries(st.play.rounds || {}).forEach(([k, r]) => { if (+k < round) { rounds[k] = r; prior.you += r.you || 0; prior.foe += r.foe || 0; } });
     if (m) rounds[round] = { you: Math.max(0, totalYou - prior.you), foe: Math.max(0, totalFoe - prior.foe) };
     this.savePlay({
-      vpYou: totalYou, vpFoe: totalFoe, markers, rounds, finished: last,
+      vpYou: totalYou, vpFoe: totalFoe, markers, rounds, finished: last, cardUsed: last ? (st.play.cardUsed || {}) : {},
       round: last ? round : round + 1, phase: 0,
       ownLostAtStart: this.lostSupply(st.yourFaction, st.yours.army), foeLostAtStart: this.lostSupply(st.opp.faction, st.opp.army)
     });
@@ -746,7 +762,7 @@ class Component extends DCLogic {
     const snap = { play: st.play, yours: st.yours, opp: st.opp };
     const m = this.mission();
     const fresh = a => (a || []).map(e => ({ ...e, modelsLost: 0, dmg: 0, deployed: false }));
-    this.savePlay({ round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, rounds: {}, ownLostAtStart: 0, foeLostAtStart: 0, finished: false });
+    this.savePlay({ round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, rounds: {}, ownLostAtStart: 0, foeLostAtStart: 0, finished: false, cardUsed: {} });
     this.saveYours({ ...st.yours, army: fresh(st.yours.army), tacticalTapped: [], factionTappedId: null,
       battleSupplyAvailable: m ? m.supply : st.yours.battleSupplyAvailable });
     this.saveOpp({ ...st.opp, army: fresh(st.opp.army), tapped: [] });

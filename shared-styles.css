@@ -2083,3 +2083,9 @@ input::placeholder { color: #5b6275; }
 .sc-ro-btn { flex: 1; min-height: 44px; background: #1a1f2e; border: 1px solid var(--sc-border-input); color: #e9ecf2; font: 700 13px Rajdhani, sans-serif; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
 .sc-ro-btn--remove { background: rgba(240,74,74,0.1); border-color: rgba(240,74,74,0.35); color: #f08a8a; }
 .sc-bu--roster .sc-upg-edit { margin: 0 0 12px; padding: 0; }
+/* VS card sheet: Use an ability (exhausts the card and remembers which one, for this round) */
+.sc-vs-info-ab { display: grid; }
+.sc-vs-info-use { justify-self: end; margin-top: 8px; min-height: 40px; min-width: 96px; padding: 0 16px; background: #1a1f2e; border: 1px solid #5b6275; color: #e9ecf2; font: 700 12px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+.sc-vs-info-use--on { background: rgba(182,230,74,0.14); border-color: rgba(182,230,74,0.6); color: #c9ec7a; }
+.sc-vs-info-ab--used { background: color-mix(in srgb, #b6e64a 7%, #10131c); border-left-color: #b6e64a; }
+.sc-vs-card i { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
