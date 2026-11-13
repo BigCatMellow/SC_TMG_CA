@@ -154,14 +154,8 @@
       </div>
     </div>
 
-    <!-- Roster: units by role. Deployment and casualties are tracked in VS. -->
+    <!-- Roster: units by role; open a unit to change its tier, upgrades or remove it. Game state is tracked in VS. -->
     <section class="sc-battle-troops" id="sc-battle-troops" aria-label="Troops">
-      <sc-if value="{{ !battleEmpty }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:12px">
-          <span style="font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#8a91a5">Your Army</span>
-          <button onClick="{{ toggleArmyEdit }}" aria-pressed="{{ editArmy }}" style="min-height:36px;padding:6px 12px;background:{{ editArmyBg }};border:1px solid {{ editArmyBorder }};color:{{ editArmyColor }};font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;clip-path:var(--sc-corner-8)">{{ editArmyLabel }}</button>
-        </div>
-      </sc-if>
 
       <!-- empty state -->
       <sc-if value="{{ battleEmpty }}" hint-placeholder-val="{{ false }}">
@@ -200,11 +194,12 @@
                     </div>
                     <button onClick="{{ u.onToggle }}" class="sc-bu-art" aria-label="{{ u.figureLabel }}"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" onError="{{ u.onImgError }}" class="{{ u.imgCls }}" alt="" aria-hidden="true" loading="lazy"></sc-if></button>
                   </div>
-                      <sc-if value="{{ editArmy }}" hint-placeholder-val="{{ false }}">
-                        <div style="display:flex;gap:8px;padding:0 12px 12px">
-                          <button onClick="{{ u.onChangeTier }}" style="flex:1;min-height:40px;background:#1a1f2e;border:1px solid var(--sc-border-input);color:#c8cede;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Change Tier</button>
-                          <button onClick="{{ u.onRemove }}" style="flex:1;min-height:40px;background:rgba(240,74,74,0.1);border:1px solid rgba(240,74,74,0.35);color:#f08a8a;font-family:Rajdhani,sans-serif;font-size:12px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;cursor:pointer">Remove</button>
-                        </div>
+                  <sc-if value="{{ u.expanded }}" hint-placeholder-val="{{ false }}">
+                  <div class="sc-play-body">
+                    <div class="sc-ro-edit">
+                      <button onClick="{{ u.onChangeTier }}" class="sc-ro-btn">Tier {{ u.tierShort }} <span aria-hidden="true">&#9662;</span></button>
+                      <button onClick="{{ u.onRemove }}" class="sc-ro-btn sc-ro-btn--remove">Remove</button>
+                    </div>
                         <sc-if value="{{ u.hasUpgrades }}" hint-placeholder-val="{{ false }}">
                           <div class="sc-upg-edit">
                             <div class="sc-upg-edit-label">Upgrades · {{ u.upgradeCostText }}</div>
@@ -213,9 +208,6 @@
                             </sc-for>
                           </div>
                         </sc-if>
-                      </sc-if>
-                  <sc-if value="{{ u.expanded }}" hint-placeholder-val="{{ false }}">
-                  <div class="sc-play-body">
                     <div class="sc-bu-tags">
                       <sc-for list="{{ u.tags }}" as="tg" hint-placeholder-count="3"><button onClick="{{ tg.onOpen }}" class="sc-bu-tag">{{ tg.name }}</button></sc-for>
                       <sc-if value="{{ u.viewSrc }}" hint-placeholder-val="{{ false }}"><button onClick="{{ u.onView }}" class="sc-lib-view" aria-label="View {{ u.name }} model fullscreen">&#10530; View</button></sc-if>
@@ -2239,6 +2231,7 @@ class Component extends DCLogic {
         deployed: !!e.deployed,
         roleColor: this.roleColor(unit.role),
         upgradeCount: (e.upgs || []).length,
+        tierShort: tier.tier,
         shortName: (() => { const m = unit.name.match(/^(.*\S)\s+\(([^)]+)\)$/); return m && D.UNITS.some(x => x.name === m[2]) ? m[1] : unit.name; })(),
         kLine: unit.role + ' · ' + tier.tier + (unit.unique ? ' · Unique' : ''),
         rowCls: 'sc-bu' + (remaining <= 0 ? ' sc-bu--dead' : '') + (expanded ? ' sc-bu--open' : ''),
@@ -2443,7 +2436,7 @@ class Component extends DCLogic {
             tags: (u.tags || []).map(t => ({ name: t, onOpen: (ev) => { ev.stopPropagation(); this.openTag(t); } })),
             detail: expanded ? { ...this.buildDetail(u, mine.length === 1 ? mine[0] : null), tags: [] } : null,
             upgHint: !expanded || !this.unitUpgList(u).length ? '' : mine.length > 1
-              ? 'You have ' + mine.length + ' of these. Set upgrades for each one in Battle › Edit Army.'
+              ? 'You have ' + mine.length + ' of these. Set upgrades for each one in Roster: open the unit.'
               : mine.length === 1 ? 'Tap an upgrade to buy it. Cost shown is for your tier.' : 'Add this unit to buy upgrades.',
             musteredLabel: mine.length > 1 ? '\u00d7' + mine.length + ' mustered' : mine.length ? 'Mustered · ' + ((u.tiers[mine[0].tierIdx] || {}).tier || '') : '',
             onToggle: (ev) => { if (ev && ev.stopPropagation) ev.stopPropagation(); this.setState(s2 => ({ expLib: { ...s2.expLib, [u.id]: !s2.expLib[u.id] } })); },
