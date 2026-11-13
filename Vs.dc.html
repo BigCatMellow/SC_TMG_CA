@@ -21,6 +21,8 @@
   <script src="portraits/cutout/index.js"></script>
   <script src="missions-data.js"></script>
   <script src="mission-scoring.js"></script>
+  <script src="vendor/qrcode.js"></script>
+  <script src="share-code.js"></script>
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
@@ -112,6 +114,7 @@
         </button>
         <span class="sc-vs-k" style="flex:1">VS · Battle command</span>
         <button onClick="{{ newGame }}" class="{{ newGameCls }}">{{ newGameLabel }}</button>
+        <button onClick="{{ openShare }}" class="sc-vs-ghost">Share</button>
         <button onClick="{{ openScout }}" class="sc-vs-ghost">Edit their army</button>
       </div>
       <sc-if value="{{ gameOver }}" hint-placeholder-val="{{ false }}">
@@ -325,6 +328,62 @@
     </div>
   </sc-if>
 
+  <!-- ================= SHARE ================= -->
+  <sc-if value="{{ sheetShare }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-vs-scrim" onClick="{{ closeSheet }}"></div>
+    <div class="sc-vs-info sc-vs-share" style="--side:var(--you)" role="dialog" aria-modal="true" aria-label="Share your army">
+      <div class="sc-vs-info-head">
+        <div class="sc-vs-info-title">
+          <span class="sc-vs-k" style="color:var(--you)">Share your army</span>
+          <h2 class="sc-vs-h2">{{ share.name }}</h2>
+          <span class="sc-vs-muted">{{ share.line }}</span>
+        </div>
+        <button onClick="{{ closeSheet }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
+      </div>
+      <sc-if value="{{ share.empty }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">Your army is empty. Build it in the Library first.</p></sc-if>
+      <sc-if value="{{ share.qr }}" hint-placeholder-val="{{ false }}">
+        <div class="sc-vs-qr"><img src="{{ share.qr }}" alt="QR code for your army link"></div>
+        <p class="sc-vs-share-tip">Your opponent scans this with their phone's camera, then taps "As my opponent".</p>
+      </sc-if>
+      <div class="sc-vs-share-btns">
+        <button onClick="{{ share.send }}" disabled="{{ share.empty }}" class="sc-vs-go">Send link</button>
+        <button onClick="{{ share.copy }}" disabled="{{ share.empty }}" class="sc-vs-ghost sc-vs-share-copy">{{ share.copyLabel }}</button>
+      </div>
+      <div class="sc-vs-k" style="margin-top:16px">Have a code?</div>
+      <div class="sc-vs-share-paste">
+        <input value="{{ share.paste }}" onChange="{{ share.onPaste }}" placeholder="Paste a code or link" aria-label="Paste an army code or link">
+        <button onClick="{{ share.load }}" class="sc-vs-ghost">Load</button>
+      </div>
+      <sc-if value="{{ share.error }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-share-err" role="alert">{{ share.error }}</p></sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ================= INCOMING ARMY ================= -->
+  <sc-if value="{{ sheetIncoming }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-vs-scrim" onClick="{{ closeSheet }}"></div>
+    <div class="sc-vs-info sc-vs-share" style="--side:{{ incoming.color }}" role="dialog" aria-modal="true" aria-label="Load a shared army">
+      <div class="sc-vs-info-head">
+        <div class="sc-vs-info-title">
+          <span class="sc-vs-k" style="color:{{ incoming.color }}">Shared army · {{ incoming.factionName }}</span>
+          <h2 class="sc-vs-h2">{{ incoming.name }}</h2>
+          <span class="sc-vs-muted">{{ incoming.line }}</span>
+        </div>
+        <button onClick="{{ closeSheet }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
+      </div>
+      <div class="sc-vs-roster-list">
+        <sc-for list="{{ incoming.units }}" as="iu" hint-placeholder-count="4">
+          <div class="sc-vs-roster-row" style="--rc:{{ iu.roleColor }}"><div style="flex:1;min-width:0"><b>{{ iu.name }}</b><small>{{ iu.meta }}</small></div></div>
+        </sc-for>
+      </div>
+      <sc-if value="{{ incoming.skippedNote }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-share-err">{{ incoming.skippedNote }}</p></sc-if>
+      <div class="sc-vs-share-btns">
+        <button onClick="{{ incoming.asOpp }}" class="sc-vs-go">As my opponent</button>
+        <button onClick="{{ incoming.asMine }}" class="sc-vs-ghost sc-vs-share-copy">As my army</button>
+      </div>
+      <p class="sc-vs-share-tip">{{ incoming.mineNote }}</p>
+    </div>
+  </sc-if>
+
   <!-- ================= END ROUND ================= -->
   <sc-if value="{{ sheetEnd }}" hint-placeholder-val="{{ false }}">
     <div class="sc-vs-scrim" onClick="{{ closeSheet }}"></div>
@@ -400,8 +459,11 @@ class Component extends DCLogic {
       const yours = read(ARMY_KEY[yourFaction], { army: [], tactical: [], tacticalTapped: [], factionTappedId: null, battleSupplyAvailable: 4 });
       const opp = read(OPP_KEY, null) || { faction: yourFaction === 'terran' ? 'zerg' : 'terran', factionId: null, army: [], tactical: [], tapped: [] };
       const play = read('sctmg_play', {});
-      const view = (opp.army || []).length ? 'board' : 'scout';
-      this.setState({ ready: true, yourFaction, yours, opp, play, view });
+      // #army=CODE (a shared army link) asks how to load it.
+      const shared = (/[#&]army=([A-Za-z0-9_-]+)/.exec(location.hash) || [])[1];
+      if (shared) { try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {} }
+      const view = shared || (opp.army || []).length ? 'board' : 'scout';
+      this.setState({ ready: true, yourFaction, yours, opp, play, view }, () => { if (shared) this.receiveCode(shared); });
     }, 40);
   }
 
@@ -464,6 +526,65 @@ class Component extends DCLogic {
       return Math.max(y.battleSupplyAvailable || 0, total);
     }
     return m.supply + m.perRound * (round - 1);
+  }
+
+  // ---------- sharing ----------
+  // Your own army for another faction (each faction keeps its own saved army).
+  switchYours(id) {
+    const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || 'null') || d; } catch (e) { return d; } };
+    const yours = read(ARMY_KEY[id], { army: [], tactical: [], tacticalTapped: [], factionTappedId: null, battleSupplyAvailable: 4 });
+    try { localStorage.setItem('sctmg_last_faction', id); } catch (e) {}
+    this.state.yourFaction = id; this.state.yours = yours;
+    this.setState({ yourFaction: id, yours });
+  }
+  receiveCode(code) {
+    try {
+      const data = window.SCTMG_SHARE.decode(code);
+      this.setState({ sheet: { type: 'incoming', data }, shareError: '' });
+    } catch (e) { this.setState({ sheet: { type: 'share' }, shareError: e.message, sharePaste: code }); }
+  }
+  loadShared(data, asMine) {
+    const stamp = Date.now();
+    const army = data.army.map((e, i) => ({ key: (asMine ? 'k' : 'o') + stamp + i, unitId: e.unitId, tierIdx: e.tierIdx, upgs: e.upgs || [],
+      modelsLost: 0, deployed: false, dmg: 0 }));
+    if (asMine) {
+      this.switchYours(data.faction);
+      this.saveYours({ ...this.state.yours, army, factionId: data.factionId, tactical: data.tactical, tacticalTapped: [], factionTappedId: null });
+    } else {
+      this.saveOpp({ faction: data.faction, factionId: data.factionId, army, tactical: data.tactical, tapped: [] });
+    }
+    this.setState({ sheet: null, view: 'board' });
+  }
+  shareVals() {
+    const st = this.state, sh = st.sheet || {}, S = window.SCTMG_SHARE;
+    const out = { sheetShare: false, sheetIncoming: false, share: {}, incoming: {},
+      openShare: () => this.setState({ sheet: { type: 'share' }, shareError: '', shareCopied: false }) };
+    if (!S) return out;
+    if (sh.type === 'share') {
+      const y = st.yours || {}, empty = !(y.army || []).length;
+      const code = empty ? '' : S.encode(st.yourFaction, y), url = empty ? '' : S.link(code);
+      const sum = empty ? { name: VS_FACTIONS[st.yourFaction].name, line: '' } : S.summary(S.decode(code));
+      const copy = text => { try { navigator.clipboard.writeText(text); } catch (e) {} this.setState({ shareCopied: true }); };
+      out.sheetShare = true;
+      out.share = { name: sum.name, line: sum.line, empty, qr: empty ? '' : S.qrDataUrl(url),
+        copyLabel: st.shareCopied ? 'Copied ✓' : 'Copy code',
+        send: () => { if (navigator.share) navigator.share({ title: sum.name + ' · SC TMG army', text: 'Load my army in VS:', url }).catch(() => {}); else copy(url); },
+        copy: () => copy(code), paste: st.sharePaste || '', error: st.shareError || '',
+        onPaste: ev => this.setState({ sharePaste: ev.target.value, shareError: '' }),
+        load: () => this.receiveCode(st.sharePaste || '') };
+    }
+    if (sh.type === 'incoming' && sh.data) {
+      const d = sh.data, D = this.D(d.faction), sum = S.summary(d), f = VS_FACTIONS[d.faction];
+      out.sheetIncoming = true;
+      out.incoming = { name: sum.name, line: sum.line, factionName: f.name, color: f.color,
+        units: d.army.map(e => { const u = D.UNITS.find(x => x.id === e.unitId), t = u.tiers[e.tierIdx] || {};
+          return { name: u.name, roleColor: ROLE_COLOR[u.role] || '#8a91a5',
+            meta: t.tier + ' · ' + this.models(u, e.tierIdx) + (this.models(u, e.tierIdx) === 1 ? ' model' : ' models') + (e.upgs.length ? ' · ' + e.upgs.join(', ') : '') }; }),
+        skippedNote: d.skipped.length ? 'Skipped (not in this version of the app): ' + d.skipped.join(', ') : '',
+        mineNote: 'As my army replaces your saved ' + f.name + ' army.',
+        asOpp: () => this.loadShared(d, false), asMine: () => this.loadShared(d, true) };
+    }
+    return out;
   }
 
   // ---------- saving ----------
@@ -904,6 +1025,7 @@ class Component extends DCLogic {
       openEndRound: () => this.setState({ sheet: 'end', adjYou: 0, adjFoe: 0 }),
       ...this.infoVals(you, opp),
       sheetEnd: st.sheet === 'end', closeSheet: () => this.setState({ sheet: null }),
+      ...this.shareVals(),
       endTitle: last ? 'Final round' : 'End round',
       endHasMission: !!m, endNoMission: !m,
       endNote: sug ? 'Auto-filled from the markers and the supply each side lost this round (you lost ' + sug.ownLost + ', they lost ' + sug.enemyDestroyed + '). Adjust if the table says otherwise.' : '',

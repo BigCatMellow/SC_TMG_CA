@@ -5,7 +5,7 @@ import vm from 'node:vm';
 
 const read = f => readFileSync(new URL('../' + f, import.meta.url), 'utf8');
 const html = read('Vs.dc.html');
-for (const f of ['terran-data.js', 'zerg-data.js', 'protoss-data.js', 'wave3-data.js', 'model-portraits.js', 'missions-data.js', 'mission-scoring.js'])
+for (const f of ['terran-data.js', 'zerg-data.js', 'protoss-data.js', 'wave3-data.js', 'model-portraits.js', 'missions-data.js', 'mission-scoring.js', 'vendor/qrcode.js', 'share-code.js'])
   assert.ok(html.includes('<script src="' + f + '"></script>'), 'VS loads ' + f);
 assert.ok(html.indexOf('<script src="./resume.js"></script>') < html.indexOf('<script src="./support.js"></script>'), 'VS resumes like other pages');
 assert.ok(!/\{\{[^}]*(&&|\|\||\?)[^}]*\}\}/.test(html), 'no expressions in template holes');
@@ -25,7 +25,8 @@ const script = html.slice(html.indexOf('data-dc-script data-props="{}">') + 'dat
 const store = new Map();
 const world = { localStorage: { getItem: k => store.has(k) ? store.get(k) : null, setItem: (k, v) => store.set(k, String(v)) } };
 world.window = world;
-for (const f of ['terran-data.js', 'zerg-data.js', 'protoss-data.js', 'wave3-data.js', 'model-portraits.js', 'missions-data.js', 'mission-scoring.js'])
+Object.assign(world, { btoa, atob, TextEncoder, TextDecoder, location: { href: 'https://example.org/app/Vs.dc.html', hash: '', search: '', pathname: '/app/Vs.dc.html' } });
+for (const f of ['terran-data.js', 'zerg-data.js', 'protoss-data.js', 'wave3-data.js', 'model-portraits.js', 'missions-data.js', 'mission-scoring.js', 'share-code.js'])
   vm.runInNewContext(read(f), world);
 class Stub { constructor() { this.props = {}; } setState(n, cb) { this.state = { ...this.state, ...(typeof n === 'function' ? n(this.state) : n) }; cb && cb(); } }
 const Component = vm.runInNewContext(script + '\nComponent', { DCLogic: Stub, window: world, localStorage: world.localStorage, Math, JSON, Object, Array, Number, String, Date, setInterval, clearInterval, setTimeout, clearTimeout });
@@ -133,4 +134,21 @@ assert.match(zl.supCls, /--risk/, 'Zergling at 13: next loss drops Supply');
 assert.deepEqual(ro.hpSegs.map((s, i) => /--drop/.test(s.cls) ? i : -1).filter(i => i >= 0), [1, 3], 'Roach 6: the 4th and 2nd models are marked');
 assert.ok(!/--risk/.test(ro.supCls), 'Roach at 5 models: no Supply warning yet');
 assert.match(c.renderVals().youAccent, /^#/, 'faction accent passed to the board');
+// Sharing: your army becomes a code; a code loads as the opponent or as your army.
+c.renderVals().openShare();
+let sv2 = c.renderVals();
+assert.equal(sv2.sheetShare, true, 'share sheet opens');
+assert.match(sv2.share.copyLabel, /Copy/);
+const myCode = world.SCTMG_SHARE.encode(c.state.yourFaction, c.state.yours);
+c.receiveCode(world.SCTMG_SHARE.link(myCode));
+sv2 = c.renderVals();
+assert.equal(sv2.sheetIncoming, true, 'a code opens the load prompt');
+assert.equal(sv2.incoming.units.length, c.state.yours.army.length);
+sv2.incoming.asOpp();
+assert.equal(c.state.opp.faction, c.state.yourFaction, 'loaded as the opponent');
+assert.equal(c.state.opp.army.length, c.state.yours.army.length);
+assert.equal(JSON.parse(store.get('sctmg_opp_v1')).army.length, c.state.yours.army.length, 'opponent saved');
+c.receiveCode('not a code');
+assert.match(c.renderVals().share.error, /could not be read/, 'bad codes explain themselves');
+c.setState({ sheet: null });
 console.log('VS mode checks passed.');

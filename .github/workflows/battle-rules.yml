@@ -51,6 +51,8 @@ jobs:
         run: npm run test:vs
       - name: Verify keyword glossary against the Core Rules
         run: npm run test:keywords
+      - name: Verify army share codes
+        run: npm run test:share
       - name: Check committed NotebookLM study sources
         run: npm run test:study
       - name: Check faction data generator output
