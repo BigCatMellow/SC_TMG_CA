@@ -122,4 +122,13 @@ assert.equal(c.state.yours.army[0].modelsLost, 0); assert.equal(c.state.opp.army
 assert.equal(c.state.yours.army.length, 1, 'your army list is kept'); assert.deepEqual(c.state.opp.tapped.length, 0);
 c.renderVals().undo();
 assert.equal(c.state.play.vpFoe, 12, 'undo restores the game'); assert.equal(c.state.opp.army[0].modelsLost, 2);
+// Supply steps: a yellow mark where losing one more model drops Supply.
+c.state = { ...c.state, view: 'board', sheet: null, yours: { ...c.state.yours, army: [
+  { key: 's1', unitId: 'zergling', tierIdx: 0, modelsLost: 0, deployed: true },
+  { key: 's2', unitId: 'roach', tierIdx: 0, modelsLost: 0, dmg: 0, deployed: true }] } };
+let sv = c.renderVals().you.units;
+const zl = sv.find(u => u.key === 's1'), ro = sv.find(u => u.key === 's2');
+assert.deepEqual(zl.pips.map((p, i) => /--drop/.test(p.cls) ? i : -1).filter(i => i >= 0), [5, 11], 'Zergling 18: marks before the 13th and 7th model');
+assert.deepEqual(ro.hpSegs.map((s, i) => /--drop/.test(s.cls) ? i : -1).filter(i => i >= 0), [0, 2], 'Roach 6: marks at 4 and 2 models');
+assert.match(ro.hpAria, /Supply drops to 1 below 4 models/);
 console.log('VS mode checks passed.');

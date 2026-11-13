@@ -2089,3 +2089,9 @@ input::placeholder { color: #5b6275; }
 .sc-vs-info-use--on { background: rgba(182,230,74,0.14); border-color: rgba(182,230,74,0.6); color: #c9ec7a; }
 .sc-vs-info-ab--used { background: color-mix(in srgb, #b6e64a 7%, #10131c); border-left-color: #b6e64a; }
 .sc-vs-card i { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+/* VS: yellow line where losing one more model drops the Unit's Supply */
+.sc-vs-hp-track { height: 14px; align-items: center; }
+.sc-vs-hp-seg--drop, .sc-vs-pip--drop { position: relative; overflow: visible; }
+.sc-vs-hp-seg--drop::after, .sc-vs-pip--drop::after { content: ''; position: absolute; top: -3px; bottom: -3px; right: -2px; width: 2px; background: #ffd23f; box-shadow: 0 0 4px rgba(255,210,63,0.7); pointer-events: none; }
+.sc-vs-pip--drop::after { right: -2.5px; }
