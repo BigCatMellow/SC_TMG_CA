@@ -113,6 +113,20 @@ for(const faction of ['terran','zerg','protoss']){
   assert.equal(controller.state.tab,'library');
   assert.equal(controller.state.editArmy,false);
   assert.ok(view().tabs.every(t=>t.id!=='roster'));
+  // Library Quick build: tap a tier to add; upgrades toggle on the army rows.
+  assert.ok(html.includes('list="{{ quickTiles }}"')&&html.includes('list="{{ quickRows }}"')&&html.includes('list="{{ r.upgrades }}"'),faction+' quick build template');
+  view().setLibQuick();
+  assert.equal(view().libQuick,true,faction+' quick view on');
+  const tileQ=view().quickTiles.find(q=>q.tiers.some(t=>!t.off));
+  tileQ.tiers.find(t=>!t.off).add();
+  assert.equal(controller.state.army.length,1,faction+' quick tier adds a unit');
+  const rowQ=view().quickRows[0];
+  if(rowQ.hasUpgrades){
+    rowQ.onUpg(); assert.equal(view().quickRows[0].open,true,faction+' upgrades open on the row');
+    view().quickRows[0].upgrades[0].onToggle(ev);
+    assert.equal(controller.state.army[0].upgs.length,1,faction+' quick upgrade toggles');
+  }
+  controller.state.army=[]; view().setLibCards();
   console.log(faction+': first-tab engagement sizes, Battle editing and existing management passed');
 }
 console.log('Roster tab consolidation checks passed for all factions');
