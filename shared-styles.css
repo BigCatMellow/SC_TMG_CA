@@ -2099,3 +2099,4 @@ input::placeholder { color: #5b6275; }
 .sc-vs-unit .sc-vs-pip--drop { background: var(--acc); }
 .sc-vs-unit .sc-vs-pip--lost { background: transparent; }
 .sc-vs-sup--risk b, .sc-vs-sup--risk small { color: var(--acc) !important; }
+.sc-vs-tile-count { display: flex; align-items: center; justify-content: center; }

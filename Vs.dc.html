@@ -28,20 +28,20 @@
 
   <!-- ================= SCOUT: enter the opponent's army ================= -->
   <sc-if value="{{ viewScout }}" hint-placeholder-val="{{ false }}">
-    <div class="sc-vs-scout">
+    <div class="sc-vs-scout" style="{{ scoutStyle }}">
       <header class="sc-vs-scout-head">
         <button onClick="{{ closeScout }}" class="sc-vs-back" aria-label="Back to VS">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M10 3L5 8l5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg>
         </button>
         <div style="flex:1;min-width:0">
-          <div class="sc-vs-k" style="color:var(--opp)">Intel · Opponent army</div>
-          <h1 class="sc-vs-h1">Scout the enemy</h1>
+          <div class="sc-vs-k" style="color:{{ scoutColor }}">{{ scoutKicker }}</div>
+          <h1 class="sc-vs-h1">{{ scoutTitle }}</h1>
         </div>
-        <button onClick="{{ clearOpp }}" class="sc-vs-ghost">Clear</button>
+        <sc-if value="{{ !scoutMine }}" hint-placeholder-val="{{ true }}"><button onClick="{{ clearOpp }}" class="sc-vs-ghost">Clear</button></sc-if>
       </header>
       <div class="sc-vs-scout-grid">
         <section aria-label="Their faction" class="sc-vs-scout-side">
-          <div class="sc-vs-k">1 · Their faction</div>
+          <div class="sc-vs-k">{{ scoutStep1 }}</div>
           <div class="sc-vs-facs">
             <sc-for list="{{ scoutFactions }}" as="f" hint-placeholder-count="3">
               <button onClick="{{ f.pick }}" class="{{ f.cls }}" style="--c:{{ f.color }}" aria-pressed="{{ f.on }}"><span class="sc-vs-dia" style="background:{{ f.color }}"></span>{{ f.name }}</button>
@@ -62,7 +62,7 @@
         </section>
 
         <section aria-label="Their units" class="sc-vs-scout-units">
-          <div class="sc-vs-k">4 · Units they brought <small>tap a tier to add one</small></div>
+          <div class="sc-vs-k">{{ scoutStep4 }} <small>tap a tier to add one</small></div>
           <div class="sc-vs-tiles">
             <sc-for list="{{ scoutUnits }}" as="u" hint-placeholder-count="8">
               <div class="{{ u.cls }}" style="--rc:{{ u.roleColor }}">
@@ -82,7 +82,7 @@
         </section>
 
         <section aria-label="Their roster" class="sc-vs-scout-roster">
-          <div class="sc-vs-k" style="color:var(--opp)">Their roster</div>
+          <div class="sc-vs-k" style="color:{{ scoutColor }}">{{ scoutRosterTitle }}</div>
           <div class="sc-vs-stats">
             <div><span class="sc-vs-k">Minerals</span><b style="color:#f2c14e">{{ oppMinerals }}</b></div>
             <div><span class="sc-vs-k">Supply</span><b>{{ oppSupplyTotal }}</b></div>
@@ -97,7 +97,8 @@
               </div>
             </sc-for>
           </div>
-          <button onClick="{{ closeScout }}" class="sc-vs-go">Deploy to VS →</button>
+          <sc-if value="{{ scoutMine }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">Saved to your army. Upgrades and roster checks are in Roster.</p></sc-if>
+          <button onClick="{{ closeScout }}" class="sc-vs-go">{{ scoutGo }}</button>
         </section>
       </div>
     </div>
@@ -112,6 +113,7 @@
         </button>
         <span class="sc-vs-k" style="flex:1">VS · Battle command</span>
         <button onClick="{{ newGame }}" class="{{ newGameCls }}">{{ newGameLabel }}</button>
+        <button onClick="{{ openBuild }}" class="sc-vs-ghost">Quick build</button>
         <button onClick="{{ openScout }}" class="sc-vs-ghost">Edit their army</button>
       </div>
       <sc-if value="{{ gameOver }}" hint-placeholder-val="{{ false }}">
@@ -400,8 +402,10 @@ class Component extends DCLogic {
       const yours = read(ARMY_KEY[yourFaction], { army: [], tactical: [], tacticalTapped: [], factionTappedId: null, battleSupplyAvailable: 4 });
       const opp = read(OPP_KEY, null) || { faction: yourFaction === 'terran' ? 'zerg' : 'terran', factionId: null, army: [], tactical: [], tapped: [] };
       const play = read('sctmg_play', {});
-      const view = (opp.army || []).length ? 'board' : 'scout';
-      this.setState({ ready: true, yourFaction, yours, opp, play, view });
+      // ?build=1 opens the quick builder for your own army.
+      const build = /[?&]build=1/.test(location.search);
+      const view = build || !(opp.army || []).length ? 'scout' : 'board';
+      this.setState({ ready: true, yourFaction, yours, opp, play, view, scoutWho: build ? 'you' : 'opp' });
     }, 40);
   }
 
@@ -464,6 +468,14 @@ class Component extends DCLogic {
       return Math.max(y.battleSupplyAvailable || 0, total);
     }
     return m.supply + m.perRound * (round - 1);
+  }
+
+  // Quick build: pick another faction for your own army (each faction keeps its own saved army).
+  switchYours(id) {
+    const read = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || 'null') || d; } catch (e) { return d; } };
+    const yours = read(ARMY_KEY[id], { army: [], tactical: [], tacticalTapped: [], factionTappedId: null, battleSupplyAvailable: 4 });
+    try { localStorage.setItem('sctmg_last_faction', id); } catch (e) {}
+    this.setState({ yourFaction: id, yours });
   }
 
   // ---------- saving ----------
@@ -793,16 +805,19 @@ class Component extends DCLogic {
 
   // ---------- scout ----------
   scoutVals() {
-    const st = this.state, opp = st.opp, f = opp.faction, D = this.D(f);
+    // Same picker for scouting the opponent and for quick-building your own army.
+    const st = this.state, mine = st.scoutWho === 'you';
+    const opp = mine ? st.yours : st.opp, f = mine ? st.yourFaction : opp.faction, D = this.D(f);
+    const save = next => mine ? this.saveYours(next) : this.saveOpp(next);
     const fc = this.card(f, opp.factionId);
     const roster = (opp.army || []).map(e => {
       const u = D.UNITS.find(x => x.id === e.unitId); if (!u) return null;
       const t = u.tiers[e.tierIdx] || {};
       return { name: u.name, roleColor: ROLE_COLOR[u.role], cost: t.cost || 0, supply: t.supply || 0, models: this.models(u, e.tierIdx),
         meta: t.tier + ' · ' + this.models(u, e.tierIdx) + ' models · ' + (t.supply || 0) + ' sup · ' + (t.cost || 0) + 'm',
-        remove: () => this.saveOpp({ ...opp, army: opp.army.filter(x => x.key !== e.key) }) };
+        remove: () => save({ ...opp, army: opp.army.filter(x => x.key !== e.key) }) };
     }).filter(Boolean);
-    const addUnit = (u, i) => this.saveOpp({ ...opp, army: [...(opp.army || []), { key: 'o' + Date.now() + Math.floor(Math.random() * 1000), unitId: u.id, tierIdx: i, modelsLost: 0, deployed: false, dmg: 0 }] });
+    const addUnit = (u, i) => save({ ...opp, army: [...(opp.army || []), { key: (mine ? 'k' : 'o') + Date.now() + Math.floor(Math.random() * 1000), unitId: u.id, tierIdx: i, modelsLost: 0, deployed: false, dmg: 0, ...(mine ? { upgs: [] } : {}) }] });
     const units = D.UNITS.filter(u => u.tiers.some(t => t.cost > 0) && (!u.factionTag || u.factionTag === fc.name))
       .sort((a, b) => ROLE_ORDER.indexOf(a.role) - ROLE_ORDER.indexOf(b.role))
       .map(u => {
@@ -818,16 +833,23 @@ class Component extends DCLogic {
     return {
       scoutFactions: Object.entries(VS_FACTIONS).map(([id, x]) => ({ name: x.name, color: x.color, on: id === f,
         cls: 'sc-vs-fac' + (id === f ? ' sc-vs-fac--on' : ''),
-        pick: () => { if (id !== f) this.saveOpp({ faction: id, factionId: null, army: [], tactical: [], tapped: [] }); } })),
+        pick: () => { if (id === f) return; if (mine) this.switchYours(id); else save({ faction: id, factionId: null, army: [], tactical: [], tapped: [] }); } })),
       scoutCards: D.FACTION_CARDS.map(c => ({ name: c.name, on: c.id === fc.id,
         slots: Object.entries(c.slots || {}).map(([k, v]) => v + ' ' + k).join(' · '),
-        cls: 'sc-vs-pill' + (c.id === fc.id ? ' sc-vs-pill--on' : ''), pick: () => this.saveOpp({ ...opp, factionId: c.id }) })),
+        cls: 'sc-vs-pill' + (c.id === fc.id ? ' sc-vs-pill--on' : ''), pick: () => save({ ...opp, factionId: c.id }) })),
       scoutTacs: D.TACTICAL_CARDS.filter(t => !t.factionTag || t.factionTag === fc.name).map(t => ({ name: t.name, count: tacCounts[t.id] || 0,
         label: t.name + (tacCounts[t.id] ? ' ×' + tacCounts[t.id] : ''),
         cls: 'sc-vs-tac' + (tacCounts[t.id] ? ' sc-vs-tac--on' : ''),
-        add: () => this.saveOpp({ ...opp, tactical: [...(opp.tactical || []), t.id] }),
-        remove: () => { const i = opp.tactical.lastIndexOf(t.id); if (i >= 0) this.saveOpp({ ...opp, tactical: opp.tactical.filter((_, j) => j !== i), tapped: [] }); } })),
+        add: () => save({ ...opp, tactical: [...(opp.tactical || []), t.id] }),
+        remove: () => { const i = opp.tactical.lastIndexOf(t.id); if (i >= 0) save({ ...opp, tactical: opp.tactical.filter((_, j) => j !== i), ...(mine ? { tacticalTapped: [] } : { tapped: [] }) }); } })),
       scoutUnits: units, oppRoster: roster, oppRosterEmpty: roster.length === 0,
+      scoutMine: mine, scoutColor: mine ? 'var(--you)' : 'var(--opp)',
+      scoutStyle: mine ? '--opp:var(--you)' : '',
+      scoutKicker: mine ? 'Quick build · Your army' : 'Intel · Opponent army',
+      scoutTitle: mine ? 'Build your army' : 'Scout the enemy',
+      scoutStep1: mine ? '1 · Your faction' : '1 · Their faction', scoutStep4: mine ? '4 · Units' : '4 · Units they brought',
+      scoutRosterTitle: mine ? 'Your roster' : 'Their roster', scoutGo: mine ? 'Done →' : 'Deploy to VS →',
+      scoutBuildHref: VS_FACTIONS[f].page,
       oppMinerals: roster.reduce((t, r) => t + r.cost, 0), oppSupplyTotal: roster.reduce((t, r) => t + r.supply, 0),
       oppModelsTotal: roster.reduce((t, r) => t + r.models, 0)
     };
@@ -916,8 +938,10 @@ class Component extends DCLogic {
       applyEnd: () => this.applyEnd(),
       paneTabs: paneDefs.map(([id, label]) => ({ label, on: st.pane === id, cls: 'sc-vs-pane' + (st.pane === id ? ' sc-vs-pane--on' : ''), pick: () => this.setState({ pane: id }) })),
       fieldCls: 'sc-vs-field sc-vs-field--' + st.pane,
-      openScout: () => this.setState({ view: 'scout' }), closeScout: () => this.setState({ view: 'board' }),
-      clearOpp: () => this.saveOpp({ ...st.opp, army: [], tactical: [], tapped: [] }),
+      openScout: () => this.setState({ view: 'scout', scoutWho: 'opp' }), closeScout: () => this.setState({ view: 'board' }),
+      openBuild: () => this.setState({ view: 'scout', scoutWho: 'you' }),
+      clearOpp: () => st.scoutWho === 'you' ? this.saveYours({ ...st.yours, army: [], tactical: [], tacticalTapped: [], factionTappedId: null })
+        : this.saveOpp({ ...st.opp, army: [], tactical: [], tapped: [] }),
       navTabs: [['faction', ({ zerg: 'Brood', terran: 'Command', protoss: 'Nexus' })[st.yourFaction]], ['library', 'Library'], ['tactics', 'Tactics'], ['battle', 'Roster'], ['vs', 'VS'], ['codex', 'Codex']].map(([id, label]) => ({
         label, current: id === 'vs' ? 'page' : 'false',
         isFaction: id === 'faction', isLibrary: id === 'library', isTactics: id === 'tactics', isBattle: id === 'battle', isVs: id === 'vs', isCodex: id === 'codex',

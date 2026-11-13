@@ -133,4 +133,17 @@ assert.match(zl.supCls, /--risk/, 'Zergling at 13: next loss drops Supply');
 assert.deepEqual(ro.hpSegs.map((s, i) => /--drop/.test(s.cls) ? i : -1).filter(i => i >= 0), [1, 3], 'Roach 6: the 4th and 2nd models are marked');
 assert.ok(!/--risk/.test(ro.supCls), 'Roach at 5 models: no Supply warning yet');
 assert.match(c.renderVals().youAccent, /^#/, 'faction accent passed to the board');
+// Quick build: the scout picker, pointed at your own army.
+c.renderVals().openBuild();
+let qb = c.renderVals();
+assert.equal(qb.viewScout, true); assert.equal(qb.scoutMine, true); assert.equal(qb.scoutTitle, 'Build your army');
+const before = c.state.yours.army.length;
+const tile = qb.scoutUnits.find(u => u.tiers.some(t => !t.off));
+tile.tiers.find(t => !t.off).add();
+assert.equal(c.state.yours.army.length, before + 1, 'quick build adds to your army');
+assert.equal(JSON.parse(store.get('sctmg_zerg_v5')).army.length, before + 1, 'saved to your army key');
+assert.equal(c.state.yours.army.at(-1).upgs.length, 0, 'new entries carry an upgrade list');
+c.renderVals().oppRoster.at(-1).remove();
+assert.equal(c.state.yours.army.length, before, 'quick build removes from your army');
+c.renderVals().closeScout();
 console.log('VS mode checks passed.');
