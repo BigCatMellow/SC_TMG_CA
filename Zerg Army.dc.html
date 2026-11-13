@@ -2190,7 +2190,7 @@ class Component extends DCLogic {
           cls: 'sc-vs-tile sc-qb-tile' + (count ? ' sc-vs-tile--in' : ''), note: taken ? 'Unique · in army' : '',
           onCard: () => { this.setLibView(false); this.setState(s2 => ({ expLib: { ...(s2.expLib || {}), [u.id]: true } }), () => setTimeout(() => {
             const el = document.querySelector('[data-unit-id="' + u.id + '"]'); if (el) el.scrollIntoView({ block: 'start' }); window.scrollBy(0, -140); }, 60)); },
-          tiers: u.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost > 0).map(({ t, i }) => ({
+          tiers: u.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost > 0).sort((a, b) => String(a.t.tier).localeCompare(String(b.t.tier))).map(({ t, i }) => ({
             label: t.tier, cost: t.cost + 'm', off: taken,
             aria: 'Add ' + u.name + ' ' + t.tier + ', ' + t.models + ' models, ' + t.cost + ' minerals',
             add: () => { if (!taken) this.commitAdd(u.id, i); } })) };
