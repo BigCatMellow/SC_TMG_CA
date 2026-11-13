@@ -105,6 +105,25 @@ for(const faction of ['terran','zerg','protoss']){
   assert.equal(view().sheetRosters,true,faction+' saved roster manager accessible');
   assert.equal(typeof view().exportArmySheet,'function',faction+' print/export accessible');
   controller.state.sheet=null;
+  // Lists: save as new makes it current; edits mark it unsaved; Save updates it; load asks first.
+  controller.state.savedRosters=[]; controller.state.currentListId=null;
+  assert.equal(view().listState,'Not saved',faction+' new army is not saved');
+  controller.state.newRosterName='Test list'; view().saveCurrentAsRoster();
+  assert.equal(view().listName,'Test list'); assert.equal(view().listState,'Saved',faction+' saved list is current');
+  controller.state.tactical=[...controller.state.tactical,controller.D().TACTICAL_CARDS[0].id];
+  assert.equal(view().listState,'Unsaved changes',faction+' edits show as unsaved');
+  view().listBarSave(); assert.equal(view().listState,'Saved',faction+' Save updates the current list');
+  assert.equal(controller.state.savedRosters.length,1,faction+' Save does not duplicate');
+  view().savedRosterRows[0].onDuplicate(); assert.equal(controller.state.savedRosters.length,2);
+  assert.match(controller.state.savedRosters[1].name,/\(copy\)$/,faction+' duplicate');
+  controller.state.renameText='Renamed'; view().savedRosterRows[1].onRenameSave();
+  assert.equal(controller.state.savedRosters[1].name,'Renamed',faction+' rename');
+  controller.state.tactical=[];
+  view().savedRosterRows[1].onLoad(); assert.equal(view().savedRosterRows[1].confirmingLoad,true,faction+' load asks about unsaved changes');
+  view().savedRosterRows[1].onLoadAnyway(); assert.equal(view().listName,'Renamed',faction+' loaded list becomes current');
+  view().newList(); assert.equal(view().listName,'Unsaved army'); assert.equal(controller.state.army.length,0,faction+' new list starts empty');
+  controller.loadRoster(controller.state.savedRosters[0].id);
+  controller.state.sheet=null;
   battleUnit().onRemove(ev);
   assert.equal(controller.state.army.length,0,faction+' remove unit from Battle');
   assert.equal(view().battleEmpty,true);

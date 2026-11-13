@@ -2189,3 +2189,38 @@ input::placeholder { color: #5b6275; }
 .sc-vs-share-err { margin: 8px 0 0; color: #f08a8a; font-size: 13px; }
 .sc-vs-share .sc-vs-roster-list { display: grid; gap: 6px; margin-bottom: 10px; }
 .sc-vs-share .sc-vs-go { background: var(--side); }
+
+/* ---------- Lists: bar on Roster and the My lists sheet ---------- */
+.sc-lists-bar { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; padding: 8px 8px 8px 12px; background: #10131c; border: 1px solid #232939; border-left: 3px solid var(--fc-primary-solid); }
+.sc-lists-bar-main { flex: 1; min-width: 0; display: grid; gap: 1px; padding: 0; background: none; border: 0; color: #e9ecf2; text-align: left; cursor: pointer; }
+.sc-lists-bar-main small { font: 700 10px Rajdhani, sans-serif; letter-spacing: .16em; text-transform: uppercase; color: #8a91a5; }
+.sc-lists-bar-main b { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font: 700 16px Rajdhani, sans-serif; }
+.sc-lists-state { font: 600 12px 'Chakra Petch', sans-serif; color: #8a91a5; white-space: nowrap; }
+.sc-lists-state--dirty { color: #f2c14e; }
+.sc-lists-bar-save { flex: 0 0 auto; min-height: 40px; padding: 0 14px; background: color-mix(in srgb, var(--fc-primary-solid) 20%, #161a27); border: 1px solid var(--fc-primary-solid); color: #e9ecf2; font: 700 12px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; cursor: pointer; }
+.sc-lists-bar-save:disabled { background: #161a27; border-color: var(--sc-border-input); color: #8a91a5; cursor: default; }
+.sc-lists { max-width: 480px; }
+.sc-lists .sc-vs-go { background: var(--fc-primary-solid); min-height: 46px; }
+.sc-lists .sc-vs-go:disabled { opacity: .35; }
+.sc-lists-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.sc-lists-new { min-height: 46px; }
+.sc-lists-name { display: flex; gap: 8px; margin-top: 8px; }
+.sc-lists-name input { flex: 1; min-width: 0; height: 42px; padding: 0 12px; background: #0e111a; border: 1px solid var(--sc-border-input); color: #e9ecf2; font-size: 14px; }
+.sc-lists-k { margin: 18px 0 8px; }
+.sc-lists-rows { display: grid; gap: 6px; }
+.sc-lists-row { background: #10131c; border: 1px solid #232939; }
+.sc-lists-row--current { border-color: color-mix(in srgb, var(--fc-primary-solid) 55%, #232939); box-shadow: inset 3px 0 0 var(--fc-primary-solid); }
+.sc-lists-row-top { display: flex; align-items: stretch; }
+.sc-lists-row-main { flex: 1; min-width: 0; display: grid; gap: 2px; padding: 10px 12px; background: none; border: 0; color: #e9ecf2; text-align: left; cursor: pointer; }
+.sc-lists-row-main b { display: flex; align-items: center; gap: 8px; font: 700 15px Rajdhani, sans-serif; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.sc-lists-row-main small { font: 600 12px 'Chakra Petch', sans-serif; color: #8a91a5; }
+.sc-lists-cur { padding: 1px 6px; font: 700 10px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--fc-primary-solid); border: 1px solid var(--fc-primary-solid); }
+.sc-lists-more { flex: 0 0 auto; width: 48px; background: none; border: 0; border-left: 1px solid #232939; color: #c8cede; font-size: 20px; cursor: pointer; }
+.sc-lists-menu, .sc-lists-confirm { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 0 10px 10px; }
+.sc-lists-menu button { flex: 1 1 auto; min-height: 38px; padding: 0 10px; background: #161a27; border: 1px solid var(--sc-border-input); color: #c8cede; font: 700 12px Rajdhani, sans-serif; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.sc-lists-confirm span { flex: 1 1 100%; font-size: 13px; color: #f2c14e; }
+.sc-lists-confirm button { min-height: 38px; padding: 0 12px; }
+.sc-lists-row .sc-lists-name { padding: 0 10px 10px; margin-top: 0; }
+.sc-lists .sc-lists-danger, .sc-lists-menu .sc-lists-danger { background: rgba(240,74,74,0.14); border: 1px solid rgba(240,74,74,0.5); color: #f08a8a; font: 700 12px Rajdhani, sans-serif; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.sc-lists-foot { display: flex; gap: 8px; margin-top: 16px; }
+.sc-lists-foot button { flex: 1; min-height: 42px; }
