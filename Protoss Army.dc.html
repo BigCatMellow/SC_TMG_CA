@@ -289,8 +289,8 @@
           <!-- Your army floats above the tab bar; tap it to open the list as a sheet. -->
           <div class="sc-qb-fab-wrap">
             <button onClick="{{ openQbSheet }}" class="sc-qb-fab" aria-label="Open your army">
-              <span class="sc-qb-fab-k">Your army</span>
-              <span class="sc-qb-fab-v">{{ quickArmyNote }}</span>
+              <span class="sc-qb-fab-k">Army</span>
+              <span class="sc-qb-fab-v">{{ quickArmyShort }}</span>
               <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 10l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
             </button>
           </div>
@@ -2247,6 +2247,7 @@ class Component extends DCLogic {
     const mins = battleUnits.reduce((t, u) => t + u.cost, 0);
     return { quickTiles: tiles, quickRows: rows,
       quickArmyNote: battleUnits.length + (battleUnits.length === 1 ? ' unit' : ' units') + ' · ' + mins + 'm',
+      quickArmyShort: battleUnits.length + ' · ' + mins + 'm',
       libQuick: !!st.libQuick, setLibQuick: () => this.setLibView(true), setLibCards: () => this.setLibView(false),
       ...this.qbInfoVals(tiles),
       qbSheet: !!st.libQuick && !!st.qbSheet, openQbSheet: () => this.setState({ qbSheet: true }), closeQbSheet: () => this.setState({ qbSheet: false }),
