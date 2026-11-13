@@ -146,6 +146,10 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   const issueChip = title.match(/      <sc-if value="\{\{ hasRosterWarnings \}\}"[^\n]*?<\/sc-if>\n/);
   assert.ok(issueChip && issueChip[0].includes('onClick="{{ openIssues }}"'), faction + ' roster issues chip in title row');
   title = title.replace(issueChip[0], '');
+  // The Share button was added beside Rosters and Search; strip it so the rest of the header still matches.
+  const shareButton = title.match(/      <button onClick="\{\{ openShare \}\}"[\s\S]*?<\/button>\n/);
+  assert.ok(shareButton, faction + ' header Share button');
+  title = title.replace(shareButton[0], '');
   const newButton = title.match(/      <button onClick="\{\{ openRosters \}\}" aria-label="Rosters: save, load and export"[\s\S]*?<\/button>\n/);
   assert.ok(newButton, faction + ' management button beside Search');
   assert.equal((title.match(/onClick="\{\{ openRosters \}\}"/g) || []).length, 1, faction + ' one header management action');

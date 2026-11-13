@@ -31,6 +31,8 @@
   <script src="mission-scoring.js"></script>
   <script src="codex-examples.js"></script>
   <script src="plain-english.js"></script>
+  <script src="vendor/qrcode.js"></script>
+  <script src="share-code.js"></script>
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
@@ -54,6 +56,9 @@
       <sc-if value="{{ hasRosterWarnings }}" hint-placeholder-val="{{ false }}"><button onClick="{{ openIssues }}" class="sc-issue-chip" aria-label="{{ rosterIssueCount }} roster issues"><svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M8 2.2L14.5 13.5h-13L8 2.2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path><path d="M8 6.5v3.2M8 11.6v.1" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>{{ rosterIssueCount }}</button></sc-if>
       <button onClick="{{ openRosters }}" aria-label="Rosters: save, load and export" title="Rosters: save, load and export" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#c8cede;background:#141824;border:1px solid var(--sc-border-neutral);cursor:pointer;clip-path:var(--sc-corner-8)">
         <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="2.5" y="5.5" width="11" height="8" stroke="currentColor" stroke-width="1.5"></rect><path d="M4.5 3.5h7M6.5 1.8h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path></svg>
+      </button>
+      <button onClick="{{ openShare }}" aria-label="Share this army" title="Share this army" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#c8cede;background:#141824;border:1px solid var(--sc-border-neutral);cursor:pointer;clip-path:var(--sc-corner-8)">
+        <svg width="17" height="17" viewBox="0 0 16 16" fill="none" aria-hidden="true"><circle cx="4" cy="8" r="1.9" stroke="currentColor" stroke-width="1.4"></circle><circle cx="12" cy="3.6" r="1.9" stroke="currentColor" stroke-width="1.4"></circle><circle cx="12" cy="12.4" r="1.9" stroke="currentColor" stroke-width="1.4"></circle><path d="M5.7 7.1l4.6-2.6M5.7 8.9l4.6 2.6" stroke="currentColor" stroke-width="1.4"></path></svg>
       </button>
       <button onClick="{{ openSearch }}" aria-label="Search everything" style="width:40px;height:40px;flex:0 0 auto;display:grid;place-items:center;color:#c8cede;background:#141824;border:1px solid var(--sc-border-neutral);cursor:pointer;clip-path:var(--sc-corner-8)">
         <svg width="17" height="17" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="4.4" stroke="currentColor" stroke-width="1.6"></circle><path d="M10.4 10.4L14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg>
@@ -655,6 +660,30 @@
   </sc-if>
 
   <!-- ============ SAVED ROSTERS SHEET ============ -->
+  <!-- ============ SHARE (QR, link, code) ============ -->
+  <sc-if value="{{ sheetShare }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-vs-scrim" onClick="{{ closeSheet }}"></div>
+    <div class="sc-vs-info sc-vs-share" style="--side:var(--fc-primary-solid)" role="dialog" aria-modal="true" aria-label="Share this army">
+      <div class="sc-vs-info-head">
+        <div class="sc-vs-info-title">
+          <span class="sc-vs-k" style="color:var(--fc-primary-solid)">{{ share.kicker }}</span>
+          <h2 class="sc-vs-h2">{{ share.name }}</h2>
+          <span class="sc-vs-muted">{{ share.line }}</span>
+        </div>
+        <button onClick="{{ closeSheet }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
+      </div>
+      <sc-if value="{{ share.empty }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">This army is empty. Add units in the Library first.</p></sc-if>
+      <sc-if value="{{ share.qr }}" hint-placeholder-val="{{ false }}">
+        <div class="sc-vs-qr"><img src="{{ share.qr }}" alt="QR code for this army"></div>
+        <p class="sc-vs-share-tip">Scan with a phone camera to open it in VS, as an opponent or as their own army.</p>
+      </sc-if>
+      <div class="sc-vs-share-btns">
+        <button onClick="{{ share.send }}" disabled="{{ share.empty }}" class="sc-vs-go">Send link</button>
+        <button onClick="{{ share.copy }}" disabled="{{ share.empty }}" class="sc-vs-ghost sc-vs-share-copy">{{ share.copyLabel }}</button>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ sheetRosters }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:300;background:rgba(4,5,8,0.65);animation:scFade 0.15s ease"></div>
     <div style="position:fixed;left:0;right:0;bottom:0;z-index:310;display:flex;justify-content:center;pointer-events:none">
@@ -1192,6 +1221,26 @@ class Component extends DCLogic {
   }
   saveRosterList() {
     try { localStorage.setItem('sctmg_protoss_rosters_v1', JSON.stringify(this.state.savedRosters)); } catch (e) {}
+  }
+
+  // ---------- sharing (QR, link, code) ----------
+  // Shares the current army, or a saved list when the sheet names one.
+  shareVals() {
+    const st = this.state, sh = st.sheet || {}, S = window.SCTMG_SHARE;
+    const out = { sheetShare: false, share: {}, openShare: () => this.setState({ sheet: { type: 'share' }, shareCopied: false }) };
+    if (!S || sh.type !== 'share') return out;
+    const list = sh.listId ? (st.savedRosters || []).find(r => r.id === sh.listId) : null;
+    const src = list || { army: st.army, tactical: st.tactical, factionId: st.factionId };
+    const empty = !(src.army || []).length;
+    const code = empty ? '' : S.encode('protoss', src), url = empty ? '' : S.link(code);
+    const sum = empty ? { name: '', line: '' } : S.summary(S.decode(code));
+    const copy = text => { try { navigator.clipboard.writeText(text); } catch (e) {} this.setState({ shareCopied: true }); };
+    out.sheetShare = true;
+    out.share = { kicker: list ? 'Share list · ' + list.name : 'Share this army', name: sum.name, line: sum.line, empty,
+      qr: empty ? '' : S.qrDataUrl(url), copyLabel: st.shareCopied ? 'Copied ✓' : 'Copy code',
+      send: () => { if (navigator.share) navigator.share({ title: (list ? list.name : sum.name) + ' · SC TMG army', text: 'Load my army in VS:', url }).catch(() => {}); else copy(url); },
+      copy: () => copy(code) };
+    return out;
   }
 
   // ---------- saved rosters ----------
@@ -2994,6 +3043,7 @@ class Component extends DCLogic {
       // saved rosters
       openRosters: () => this.setState({ sheet: { type: 'rosters' }, newRosterName: '', confirmDeleteRosterId: null }),
       sheetRosters: !!(st.sheet && st.sheet.type === 'rosters'),
+      ...this.shareVals(),
       rostersEmpty: st.savedRosters.length === 0,
       savedRosterRows: st.savedRosters.map(r => {
         const n = (r.army || []).length;

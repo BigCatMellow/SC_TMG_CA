@@ -113,6 +113,8 @@ for(const faction of ['terran','zerg','protoss']){
   assert.equal(controller.state.tab,'library');
   assert.equal(controller.state.editArmy,false);
   assert.ok(view().tabs.every(t=>t.id!=='roster'));
+  // Share is on every army header and opens the QR / link sheet.
+  assert.ok(html.includes('onClick="{{ openShare }}"')&&html.includes('<script src="share-code.js"></script>')&&html.includes('<script src="vendor/qrcode.js"></script>'),faction+' header Share');
   // Library Quick build: tap a tier to add; upgrades toggle on the army rows.
   assert.ok(html.includes('list="{{ quickTiles }}"')&&html.includes('list="{{ quickRows }}"')&&html.includes('list="{{ r.upgrades }}"'),faction+' quick build template');
   view().setLibQuick();
