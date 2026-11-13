@@ -93,7 +93,7 @@ roach().stepUp(); roach().stepUp();
 assert.deepEqual([c.state.yours.army[0].modelsLost, c.state.yours.army[0].dmg], [0, 3], 'stepping back restores the model as a correction');
 // VS has the army tab bar; other tabs open your army page on that tab.
 const tabs = c.renderVals().navTabs;
-assert.equal(tabs.map(t => t.label).join(','), 'Brood,Library,Tactics,Battle,VS,Codex');
+assert.equal(tabs.map(t => t.label).join(','), 'Brood,Library,Tactics,Roster,VS,Codex');
 assert.equal(tabs.find(t => t.label === 'VS').current, 'page');
 // New game: shows game over at the early-win lead; two taps reset both sides (armies kept); Undo restores.
 c.state = { ...c.state, view: 'board', newArmed: false, play: { round: 4, vpYou: 4, vpFoe: 12, missionId: 'supply-drop', rounds: {} },

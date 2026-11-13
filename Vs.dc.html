@@ -887,7 +887,7 @@ class Component extends DCLogic {
       fieldCls: 'sc-vs-field sc-vs-field--' + st.pane,
       openScout: () => this.setState({ view: 'scout' }), closeScout: () => this.setState({ view: 'board' }),
       clearOpp: () => this.saveOpp({ ...st.opp, army: [], tactical: [], tapped: [] }),
-      navTabs: [['faction', ({ zerg: 'Brood', terran: 'Command', protoss: 'Nexus' })[st.yourFaction]], ['library', 'Library'], ['tactics', 'Tactics'], ['battle', 'Battle'], ['vs', 'VS'], ['codex', 'Codex']].map(([id, label]) => ({
+      navTabs: [['faction', ({ zerg: 'Brood', terran: 'Command', protoss: 'Nexus' })[st.yourFaction]], ['library', 'Library'], ['tactics', 'Tactics'], ['battle', 'Roster'], ['vs', 'VS'], ['codex', 'Codex']].map(([id, label]) => ({
         label, current: id === 'vs' ? 'page' : 'false',
         isFaction: id === 'faction', isLibrary: id === 'library', isTactics: id === 'tactics', isBattle: id === 'battle', isVs: id === 'vs', isCodex: id === 'codex',
         cls: 'sc-vs-tab' + (id === 'vs' ? ' sc-vs-tab--on' : ''),

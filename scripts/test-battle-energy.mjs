@@ -27,16 +27,8 @@ for (const faction of units) {
   const battleEnd = html.indexOf('<!-- ============ LIBRARY TAB ============ -->', battleStart);
   assert.ok(battleStart > 0 && battleEnd > battleStart, faction + ' battle markup boundaries');
   const battleHtml = html.slice(battleStart,battleEnd);
-  for (const binding of [
-    'list="{{ battleCards }}"','{{ ab.name }}','list="{{ ab.segs }}"','{{ ab.phaseShort }}',
-    'onClick="{{ tc.onExpand }}"','onClick="{{ tc.onResource }}"',
-    'onClick="{{ tc.onAbility }}"','onClick="{{ tc.onReady }}"',
-    'onClick="{{ finishResourcePayment }}"','{{ paymentTotal }} {{ paymentResource }}',
-    'onClick="{{ refreshTactical }}"'
-  ]) assert.ok(battleHtml.includes(binding), faction + ' missing Battle UI: ' + binding);
-  assert.ok(battleHtml.includes('Unused energy is lost'), faction + ' no banking guidance');
-  assert.ok(!battleHtml.includes('onClick="{{ tc.onToggle }}"'),
-    faction + ' card heading must not silently exhaust on tap');
+  // Card spending moved to VS; Roster only lists the cards.
+  assert.ok(!battleHtml.includes('onClick="{{ tc.onToggle }}"') && !battleHtml.includes('{{ cc.onTap }}'), faction + ' Roster does not exhaust cards');
 
   const script = html.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)?.[1];
   assert.ok(script, faction + ' controller');

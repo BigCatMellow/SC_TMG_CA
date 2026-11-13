@@ -103,7 +103,7 @@ const titleSizingChanges = [
 for (const faction of ['terran', 'zerg', 'protoss']) {
   const html = read(faction[0].toUpperCase() + faction.slice(1) + ' Army.dc.html');
   assert.equal((html.match(/class="\{\{ resourceStripClass \}\}"/g) || []).length, 1, faction + ' resource row');
-  assert.ok(html.includes('<sc-if value="{{ !tabIsBattle }}"'), faction + ' battle HUD stays separate');
+  assert.ok(!html.includes('class="{{ battleSupplyStripClass }}"'), faction + ' Roster shows army totals, not a deployment HUD');
   const resourcePosition = html.indexOf('class="{{ resourceStripClass }}"');
   const slotPosition = html.indexOf('class="{{ slotStripClass }}"');
   const battlePosition = html.indexOf('<!-- ============ BATTLE TAB ============ -->');
