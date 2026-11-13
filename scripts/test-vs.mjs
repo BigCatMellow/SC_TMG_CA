@@ -44,6 +44,18 @@ v.opp.units[0].pips[0].tap();
 for (let i = 0; i < 6; i++) c.renderVals().opp.units[0].lose();
 assert.equal(c.state.opp.army[0].modelsLost, 7, 'casualties tracked on the opponent');
 assert.equal(JSON.parse(store.get('sctmg_opp_v1')).army[0].modelsLost, 7, 'opponent saved');
+// Using a card ability exhausts the card and remembers which ability, for this round.
+c.renderVals().you.cards[0].open();
+v = c.renderVals();
+assert.equal(v.sheetCard, true, 'card sheet opens');
+const abName = v.cardInfo.abilities[0].name;
+v.cardInfo.abilities[0].use();
+v = c.renderVals();
+assert.equal(v.you.cards[0].spent, true, 'Use exhausts the card');
+assert.equal(v.you.cards[0].state, 'Used: ' + abName, 'card remembers the ability used');
+assert.equal(v.cardInfo.abilities[0].isUsed, true, 'sheet marks the used ability');
+assert.equal(JSON.parse(store.get('sctmg_play')).cardUsed.you.faction, abName, 'kept with the game');
+c.setState({ sheet: null });
 c.renderVals().openEndRound();
 v = c.renderVals();
 assert.equal(v.sheetEnd, true);
@@ -54,6 +66,7 @@ const play = JSON.parse(store.get('sctmg_play'));
 assert.equal(play.round, 2, 'round advances');
 assert.ok(play.vpYou > 0 && play.rounds['1'].you === play.vpYou, 'scoreline records the round');
 assert.deepEqual(JSON.parse(store.get('sctmg_zerg_v5')).tacticalTapped, [], 'your cards are readied');
+assert.deepEqual(play.cardUsed, {}, 'used abilities clear at the end of the round');
 assert.equal(JSON.parse(store.get('sctmg_zerg_v5')).battleSupplyAvailable, 8, 'your pool follows the mission');
 // Your casualties made in VS land in your army save.
 c.renderVals().you.units[0].lose();
