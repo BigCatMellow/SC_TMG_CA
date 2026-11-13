@@ -117,6 +117,7 @@ for(const faction of ['terran','zerg','protoss']){
   assert.ok(html.includes('list="{{ quickTiles }}"')&&html.includes('list="{{ quickRows }}"')&&html.includes('list="{{ r.upgrades }}"'),faction+' quick build template');
   view().setLibQuick();
   assert.equal(view().libQuick,true,faction+' quick view on');
+  for(const q of view().quickTiles){const ls=q.tiers.map(t=>t.label);assert.equal(ls.join(),[...ls].sort().join(),faction+' '+q.name+' tiers low to high');}
   const tileQ=view().quickTiles.find(q=>q.tiers.some(t=>!t.off));
   tileQ.tiers.find(t=>!t.off).add();
   assert.equal(controller.state.army.length,1,faction+' quick tier adds a unit');
