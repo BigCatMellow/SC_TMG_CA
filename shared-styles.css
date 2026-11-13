@@ -2089,3 +2089,9 @@ input::placeholder { color: #5b6275; }
 .sc-vs-info-use--on { background: rgba(182,230,74,0.14); border-color: rgba(182,230,74,0.6); color: #c9ec7a; }
 .sc-vs-info-ab--used { background: color-mix(in srgb, #b6e64a 7%, #10131c); border-left-color: #b6e64a; }
 .sc-vs-card i { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+/* VS: when the next model lost would drop Supply, that model and the Supply number turn amber */
+.sc-vs-hp-seg--risk i { background: #e8b53a !important; }
+.sc-vs-hp-seg--risk { background: rgba(232,181,58,0.22); }
+.sc-vs-pip--risk, .sc-vs-unit--opp .sc-vs-pip--risk { background: #e8b53a; }
+.sc-vs-sup--risk b, .sc-vs-sup--risk small { color: #e8b53a !important; }

@@ -183,7 +183,7 @@
               <div class="sc-vs-unit-main">
                 <div class="sc-vs-unit-line">
                   <button onClick="{{ u.info }}" class="sc-vs-unit-name" title="{{ u.name }}" aria-label="{{ u.infoAria }}"><b><span class="sc-vs-i" aria-hidden="true">i</span>{{ u.shortName }}</b></button>
-                  <div class="sc-vs-sup" title="Supply on the table"><b>{{ u.supply }}</b><small>sup</small></div>
+                  <div class="{{ u.supCls }}" title="{{ u.supTitle }}"><b>{{ u.supply }}</b><small>sup</small></div>
                   <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.deployOff }}" class="{{ u.statusCls }}" title="{{ u.statusTitle }}">{{ u.status }}</button>
                 </div>
                 <div class="sc-vs-unit-line">
@@ -193,7 +193,7 @@
                       <sc-for list="{{ u.pips }}" as="p" hint-placeholder-count="6"><button onClick="{{ p.tap }}" class="{{ p.cls }}" aria-label="{{ p.label }}"></button></sc-for>
                     </div></sc-if>
                     <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
-                      <div class="sc-vs-hp"><span class="sc-vs-hp-track" role="img" aria-label="{{ u.hpAria }}"><sc-for list="{{ u.hpSegs }}" as="hs" hint-placeholder-count="3"><span class="sc-vs-hp-seg" style="{{ hs.style }}"><i style="{{ hs.fill }}"></i></span></sc-for></span><span class="sc-vs-hp-text">{{ u.hpText }}</span></div>
+                      <div class="sc-vs-hp"><span class="sc-vs-hp-track" role="img" aria-label="{{ u.hpAria }}"><sc-for list="{{ u.hpSegs }}" as="hs" hint-placeholder-count="3"><span class="{{ hs.cls }}" style="{{ hs.style }}"><i style="{{ hs.fill }}"></i></span></sc-for></span><span class="sc-vs-hp-text">{{ u.hpText }}</span></div>
                     </sc-if>
                   </div>
                   <div class="sc-vs-models"><small>{{ u.stepLabel }}</small><span class="sc-vs-steps-row"><button onClick="{{ u.stepDown }}" disabled="{{ u.stepDownOff }}" class="sc-vs-step" aria-label="{{ u.stepDownAria }}">−</button><button onClick="{{ u.stepUp }}" disabled="{{ u.stepUpOff }}" class="sc-vs-step" aria-label="{{ u.stepUpAria }}">+</button></span></div>
@@ -254,7 +254,7 @@
               <div class="sc-vs-unit-main">
                 <div class="sc-vs-unit-line">
                   <button onClick="{{ u.info }}" class="sc-vs-unit-name" title="{{ u.name }}" aria-label="{{ u.infoAria }}"><b><span class="sc-vs-i" aria-hidden="true">i</span>{{ u.shortName }}</b></button>
-                  <div class="sc-vs-sup" title="Supply on the table"><b>{{ u.supply }}</b><small>sup</small></div>
+                  <div class="{{ u.supCls }}" title="{{ u.supTitle }}"><b>{{ u.supply }}</b><small>sup</small></div>
                   <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.deployOff }}" class="{{ u.statusCls }}" title="{{ u.statusTitle }}">{{ u.status }}</button>
                 </div>
                 <div class="sc-vs-unit-line">
@@ -264,7 +264,7 @@
                       <sc-for list="{{ u.pips }}" as="p" hint-placeholder-count="6"><button onClick="{{ p.tap }}" class="{{ p.cls }}" aria-label="{{ p.label }}"></button></sc-for>
                     </div></sc-if>
                     <sc-if value="{{ u.tracksDamage }}" hint-placeholder-val="{{ false }}">
-                      <div class="sc-vs-hp"><span class="sc-vs-hp-track" role="img" aria-label="{{ u.hpAria }}"><sc-for list="{{ u.hpSegs }}" as="hs" hint-placeholder-count="3"><span class="sc-vs-hp-seg" style="{{ hs.style }}"><i style="{{ hs.fill }}"></i></span></sc-for></span><span class="sc-vs-hp-text">{{ u.hpText }}</span></div>
+                      <div class="sc-vs-hp"><span class="sc-vs-hp-track" role="img" aria-label="{{ u.hpAria }}"><sc-for list="{{ u.hpSegs }}" as="hs" hint-placeholder-count="3"><span class="{{ hs.cls }}" style="{{ hs.style }}"><i style="{{ hs.fill }}"></i></span></sc-for></span><span class="sc-vs-hp-text">{{ u.hpText }}</span></div>
                     </sc-if>
                   </div>
                   <div class="sc-vs-models"><small>{{ u.stepLabel }}</small><span class="sc-vs-steps-row"><button onClick="{{ u.stepDown }}" disabled="{{ u.stepDownOff }}" class="sc-vs-step" aria-label="{{ u.stepDownAria }}">−</button><button onClick="{{ u.stepUp }}" disabled="{{ u.stepUpOff }}" class="sc-vs-step" aria-label="{{ u.stepUpAria }}">+</button></span></div>
@@ -543,6 +543,17 @@ class Component extends DCLogic {
       return { size, left };
     });
     const hpLeft = segs.reduce((t, x) => t + x.left, 0), hpFull = segs.reduce((t, x) => t + x.size, 0);
+    // Supply steps: the model counts where losing one more model drops the Unit's Supply
+    // (its Supply Profile bracket). When the next model lost would drop it, that model is
+    // tinted amber and the Supply number warns.
+    const dropAt = {};
+    for (let i = Math.max(0, e.tierIdx); i < u.tiers.length; i++) {
+      const m = this.minModels(u, i), here = u.tiers[i].supply || 0;
+      const next = i + 1 < u.tiers.length && this.minModels(u, i + 1) > 0 ? (u.tiers[i + 1].supply || 0) : 0;
+      if (m > 1 && m <= start && here > next) dropAt[m] = { from: here, to: next };
+    }
+    const nextDrop = Object.keys(dropAt).map(Number).filter(m => m <= alive).sort((a, b) => b - a)[0];
+    const atRisk = !dead && !!nextDrop && alive === nextDrop;
     const multiHp = hp > 1 || shd > 0;
     const supplyNow = this.supplyNow(u, e);
     const blocked = !dead && !e.deployed && supplyNow > free;
@@ -559,15 +570,18 @@ class Component extends DCLogic {
       statusCls: 'sc-vs-status' + (dead ? ' sc-vs-status--dead' : e.deployed ? ' sc-vs-status--table' : blocked ? ' sc-vs-status--full' : ''),
       supply: supplyNow, alive,
       pips: Array.from({ length: start }, (_, i) => ({
-        cls: 'sc-vs-pip' + (i >= alive ? ' sc-vs-pip--lost' : ''),
+        cls: 'sc-vs-pip' + (i >= alive ? ' sc-vs-pip--lost' : '') + (atRisk && i === alive - 1 ? ' sc-vs-pip--risk' : ''),
         // Tapping any live model removes one; tapping a lost one brings one back.
         label: u.name + ' model ' + (i + 1) + (i >= alive ? ', lost: tap to restore one' : ', alive: tap to remove one'),
         tap: () => setLost(i >= alive ? lost - 1 : lost + 1)
       })),
       tracksDamage: !dead && multiHp,
       showPips: !(!dead && multiHp),
-      hpSegs: segs.slice().reverse().map(x => ({ style: 'flex-grow:' + x.size, fill: 'width:' + Math.round(100 * x.left / x.size) + '%' })),
-      hpAria: u.name + ': ' + hpLeft + ' of ' + hpFull + ' HP, ' + alive + ' of ' + start + ' models',
+      hpSegs: segs.slice().reverse().map((x, j) => ({ style: 'flex-grow:' + x.size, fill: 'width:' + Math.round(100 * x.left / x.size) + '%',
+        cls: 'sc-vs-hp-seg' + (atRisk && j === alive - 1 ? ' sc-vs-hp-seg--risk' : '') })),
+      hpAria: u.name + ': ' + hpLeft + ' of ' + hpFull + ' HP, ' + alive + ' of ' + start + ' models' + (nextDrop ? '. Supply drops to ' + dropAt[nextDrop].to + ' below ' + nextDrop + ' models' : ''),
+      supCls: 'sc-vs-sup' + (atRisk ? ' sc-vs-sup--risk' : ''),
+      supTitle: atRisk ? 'Lose one more model and Supply drops to ' + dropAt[nextDrop].to : 'Supply on the table',
       hpText: hpLeft + ' / ' + hpFull + ' HP',
       dmgUp: () => setDmg(1), dmgDown: () => setDmg(-1),
       lose: () => setLost(lost + 1), heal: () => setLost(lost - 1),
