@@ -244,6 +244,60 @@
   <!-- ============ LIBRARY TAB ============ -->
   <sc-if value="{{ tabIsLibrary }}" hint-placeholder-val="{{ false }}">
     <div style="padding:14px">
+      <!-- Library view: Quick (tap a tier to add, upgrades on your army rows) or Cards (full unit cards) -->
+      <div class="sc-qb-switch" role="tablist" aria-label="Library view">
+        <button onClick="{{ setLibQuick }}" class="{{ libQuickBtnCls }}" role="tab" aria-selected="{{ libQuick }}">Quick build</button>
+        <button onClick="{{ setLibCards }}" class="{{ libCardsBtnCls }}" role="tab" aria-selected="{{ !libQuick }}">Unit cards</button>
+      </div>
+      <sc-if value="{{ libQuick }}" hint-placeholder-val="{{ false }}">
+        <section class="sc-qb" aria-label="Quick build">
+          <div class="sc-vs-k">Units <small>tap a tier to add one · tap the model for its card</small></div>
+          <div class="sc-vs-tiles sc-qb-tiles">
+            <sc-for list="{{ quickTiles }}" as="q" hint-placeholder-count="8">
+              <div class="{{ q.cls }}" style="--rc:{{ q.roleColor }}">
+                <button onClick="{{ q.onCard }}" class="sc-qb-figure" aria-label="{{ q.name }}: open its card"><sc-if value="{{ q.img }}" hint-placeholder-val="{{ false }}"><img src="{{ q.img }}" alt="" aria-hidden="true" loading="lazy" class="sc-vs-tile-img"></sc-if></button>
+                <sc-if value="{{ q.count }}" hint-placeholder-val="{{ false }}"><span class="sc-vs-tile-count">×{{ q.count }}</span></sc-if>
+                <div class="sc-vs-tile-body">
+                  <div class="sc-vs-k" style="font-size:9px;color:{{ q.roleColor }}">{{ q.role }}</div>
+                  <div class="sc-vs-tile-name">{{ q.name }}</div>
+                  <sc-if value="{{ q.note }}" hint-placeholder-val="{{ false }}"><div class="sc-qb-note">{{ q.note }}</div></sc-if>
+                  <div class="sc-vs-tiers">
+                    <sc-for list="{{ q.tiers }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.add }}" disabled="{{ t.off }}" class="sc-vs-tier sc-qb-tier" aria-label="{{ t.aria }}"><b>{{ t.label }}</b><small>{{ t.cost }}</small></button></sc-for>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div class="sc-role-group sc-bat-group sc-qb-army" style="--role:var(--fc-primary-solid)">
+            <div class="sc-role-head">
+              <span class="sc-role-mark" aria-hidden="true"></span>
+              <h2 class="sc-role-name">Your army</h2>
+              <span class="sc-role-rule" aria-hidden="true"></span>
+              <span class="sc-role-note">{{ quickArmyNote }}</span>
+            </div>
+            <sc-if value="{{ battleEmpty }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">Nothing yet. Tap a tier on any unit above.</p></sc-if>
+            <div class="sc-qb-rows">
+              <sc-for list="{{ quickRows }}" as="r" hint-placeholder-count="4">
+                <div class="{{ r.cls }}" style="--rc:{{ r.roleColor }}">
+                  <div class="sc-qb-row-top">
+                    <div class="sc-qb-row-text"><b>{{ r.name }}</b><small>{{ r.meta }}</small></div>
+                    <sc-if value="{{ r.hasUpgrades }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onUpg }}" class="{{ r.upgBtnCls }}" aria-expanded="{{ r.open }}">{{ r.upgLabel }}</button></sc-if>
+                    <button onClick="{{ r.onRemove }}" class="sc-vs-step" aria-label="Remove {{ r.name }}">−</button>
+                  </div>
+                  <sc-if value="{{ r.open }}" hint-placeholder-val="{{ false }}">
+                    <div class="sc-qb-upgs">
+                      <sc-for list="{{ r.upgrades }}" as="ug" hint-placeholder-count="3"><button onClick="{{ ug.onToggle }}" class="{{ ug.chipCls }}" aria-pressed="{{ ug.on }}"><span>{{ ug.name }}</span><small>{{ ug.cost }}</small></button></sc-for>
+                    </div>
+                    <button onClick="{{ r.onTier }}" class="sc-qb-tierlink">Change tier ›</button>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+      <sc-if value="{{ !libQuick }}" hint-placeholder-val="{{ true }}">
       <sc-for list="{{ libraryGroups }}" as="grp" hint-placeholder-count="3">
         <div class="sc-role-group" style="--role:{{ grp.color }}" data-sec="{{ grp.role }}" data-sec-note="{{ grp.secNote }}">
           <div class="sc-role-head" onClick="{{ grp.onHead }}" role="button" aria-label="{{ grp.headAria }}">
@@ -254,7 +308,7 @@
           </div>
           <div class="sc-lib-list">
             <sc-for list="{{ grp.entries }}" as="en" hint-placeholder-count="2">
-              <div class="{{ en.cardClass }}">
+              <div class="{{ en.cardClass }}" data-unit-id="{{ en.unitId }}">
                 <div class="sc-lib-card-bg"></div>
                 <div class="sc-lib-head">
                   <sc-if value="{{ en.framed }}" hint-placeholder-val="{{ false }}"><span class="sc-lib-frame"><span class="sc-lib-frame-art"><img loading="lazy" src="{{ en.portrait }}" onError="{{ en.onPortraitError }}" alt="" aria-hidden="true" style="{{ en.portraitImgStyle }}"></span><span class="sc-lib-frame-shade"></span></span></sc-if>
@@ -290,6 +344,7 @@
           </div>
         </div>
       </sc-for>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -1054,6 +1109,7 @@ class Component extends DCLogic {
         markers: play.markers || {}, ownLostAtStart: play.ownLostAtStart || 0 };
       localStorage.setItem('sctmg_last_faction', 'zerg');
       this.state.cardsCompact = localStorage.getItem('sctmg_cards_compact') !== '';
+      this.state.libQuick = localStorage.getItem('sctmg_zerg_libview') === 'quick';
       const lastTab = localStorage.getItem('sctmg_zerg_tab');
       if (['faction', 'library', 'tactics', 'battle', 'codex'].includes(lastTab)) this.state.tab = lastTab;
       const saved = JSON.parse(localStorage.getItem('sctmg_zerg_v5') || 'null');
@@ -2109,6 +2165,46 @@ class Component extends DCLogic {
     if (opts.length === 1) { this.commitAdd(unit.id, opts[0].i); return; }
     this.setState({ sheet: { type: 'tier', unitId: unit.id, mode: 'add' } });
   }
+  setLibView(quick) {
+    this.setState({ libQuick: quick });
+    try { localStorage.setItem('sctmg_zerg_libview', quick ? 'quick' : 'cards'); } catch (e) {}
+  }
+  // Quick build: one tile per unit you can field, with a button per buyable tier.
+  quickVals(battleUnits, faction) {
+    const st = this.state, D = this.D();
+    const roles = ['Hero', 'Elite', 'Core', 'Support'];
+    const tiles = D.UNITS.filter(u => u.role !== 'Other' && u.tiers.some(t => t.cost > 0) && (!u.factionTag || u.factionTag === faction.name))
+      .sort((a, b) => roles.indexOf(a.role) - roles.indexOf(b.role))
+      .map(u => {
+        const count = st.army.filter(e => e.unitId === u.id).length, taken = !!u.unique && count > 0;
+        const art = this.portrait(u) || {};
+        return { name: u.name, role: u.role, roleColor: this.roleColor(u.role), count, img: art.cutout || art.portrait || '',
+          cls: 'sc-vs-tile sc-qb-tile' + (count ? ' sc-vs-tile--in' : ''), note: taken ? 'Unique · in army' : '',
+          onCard: () => { this.setLibView(false); this.setState(s2 => ({ expLib: { ...(s2.expLib || {}), [u.id]: true } }), () => setTimeout(() => {
+            const el = document.querySelector('[data-unit-id="' + u.id + '"]'); if (el) el.scrollIntoView({ block: 'start' }); window.scrollBy(0, -140); }, 60)); },
+          tiers: u.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost > 0).map(({ t, i }) => ({
+            label: t.tier, cost: t.cost + 'm', off: taken,
+            aria: 'Add ' + u.name + ' ' + t.tier + ', ' + t.models + ' models, ' + t.cost + ' minerals',
+            add: () => { if (!taken) this.commitAdd(u.id, i); } })) };
+      });
+    const rows = battleUnits.map(u => {
+      const open = !!(st.qbOpen || {})[u.key], got = u.upgradeCount;
+      return { name: u.name, roleColor: u.roleColor, open, hasUpgrades: u.hasUpgrades,
+        cls: 'sc-qb-row' + (open ? ' sc-qb-row--open' : ''),
+        meta: u.tierShort + ' · ' + u.startingModels + (u.startingModels === 1 ? ' model' : ' models') + ' · ' + u.supply + ' sup · ' + u.cost + 'm',
+        upgLabel: got ? got + ' upg ' + (open ? '▴' : '▾') : '+ Upgrades',
+        upgBtnCls: 'sc-qb-upgbtn' + (got ? ' sc-qb-upgbtn--on' : ''),
+        onUpg: () => this.setState(s2 => ({ qbOpen: { ...(s2.qbOpen || {}), [u.key]: !open } })),
+        onRemove: () => this.removeWithUndo(u.key, u.name),
+        onTier: u.onChangeTier,
+        upgrades: u.upgrades.map(ug => ({ ...ug, chipCls: 'sc-qb-chip' + (ug.on ? ' sc-qb-chip--on' : '') })) };
+    });
+    const mins = battleUnits.reduce((t, u) => t + u.cost, 0);
+    return { quickTiles: tiles, quickRows: rows,
+      quickArmyNote: battleUnits.length + (battleUnits.length === 1 ? ' unit' : ' units') + ' · ' + mins + 'm',
+      libQuick: !!st.libQuick, setLibQuick: () => this.setLibView(true), setLibCards: () => this.setLibView(false),
+      libQuickBtnCls: 'sc-qb-seg' + (st.libQuick ? ' sc-qb-seg--on' : ''), libCardsBtnCls: 'sc-qb-seg' + (st.libQuick ? '' : ' sc-qb-seg--on') };
+  }
   commitAdd(unitId, tierIdx) {
     this.setState(st => ({
       army: [...st.army, { key: 'k' + Date.now(), unitId, tierIdx, upgs: [], modelsLost: 0, deployed: false }],
@@ -2423,6 +2519,7 @@ class Component extends DCLogic {
             : needsSlotCard && !inArmy ? 'Slot via ' + slotGivers[0].name.replace(/\s*\(.*\)$/, '') + (slotGivers.length > 1 ? ' +' + (slotGivers.length - 1) : '') : '';
           const lockFull = needsSlotCard && !inArmy ? role + ' slot from ' + slotGivers.map(t => t.name).join(' or ') : lockReason;
           return {
+            unitId: u.id,
             name: u.name, unique: !!u.unique, inArmy, ...art,
             // Closed cards drop a "(Zergling)" style base-unit suffix so the name stays clear of the art.
             headName: expanded ? u.name : (() => { const m = u.name.match(/^(.*\S)\s+\(([^)]+)\)$/); return m && D.UNITS.some(x => x.name === m[2]) ? m[1] : u.name; })(),
@@ -2795,6 +2892,7 @@ class Component extends DCLogic {
       // battle
       battleEmpty: battleUnits.length === 0, battleGroups,
       rosterCardsNote: '1 faction · ' + (st.tactical || []).length + ' tactical',
+      ...this.quickVals(battleUnits, faction),
       battleSupplyStripClass: st.resourcesCompact ? 'sc-battle-supply-strip sc-battle-supply-strip--compact' : 'sc-battle-supply-strip',
       battleSupplyFreeClass: battleSupplyUsed > st.battleSupplyAvailable ?
         'sc-battle-supply-free sc-battle-supply-free--over' : 'sc-battle-supply-free',
