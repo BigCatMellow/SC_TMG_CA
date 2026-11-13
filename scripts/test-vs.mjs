@@ -122,15 +122,15 @@ assert.equal(c.state.yours.army[0].modelsLost, 0); assert.equal(c.state.opp.army
 assert.equal(c.state.yours.army.length, 1, 'your army list is kept'); assert.deepEqual(c.state.opp.tapped.length, 0);
 c.renderVals().undo();
 assert.equal(c.state.play.vpFoe, 12, 'undo restores the game'); assert.equal(c.state.opp.army[0].modelsLost, 2);
-// Supply warning: when the next model lost would drop Supply, that model turns amber and Supply warns.
+// Supply steps: the models whose loss drops Supply are always marked (faction accent colour).
 c.state = { ...c.state, view: 'board', sheet: null, yours: { ...c.state.yours, army: [
   { key: 's1', unitId: 'zergling', tierIdx: 0, modelsLost: 5, deployed: true },
   { key: 's2', unitId: 'roach', tierIdx: 0, modelsLost: 1, dmg: 0, deployed: true }] } };
 let sv = c.renderVals().you.units;
 const zl = sv.find(u => u.key === 's1'), ro = sv.find(u => u.key === 's2');
-assert.deepEqual(zl.pips.map((p, i) => /--risk/.test(p.cls) ? i : -1).filter(i => i >= 0), [12], 'Zergling at 13 models: the 13th is at risk');
-assert.match(zl.supCls, /--risk/); assert.match(zl.supTitle, /drops to 1/);
-assert.ok(!ro.hpSegs.some(s => /--risk/.test(s.cls)) && !/--risk/.test(ro.supCls), 'Roach at 5 models: no warning yet');
-c.state = { ...c.state, yours: { ...c.state.yours, army: [{ key: 's2', unitId: 'roach', tierIdx: 0, modelsLost: 2, dmg: 1, deployed: true }] } };
-assert.deepEqual(c.renderVals().you.units[0].hpSegs.map((s, i) => /--risk/.test(s.cls) ? i : -1).filter(i => i >= 0), [3], 'Roach at 4 models: the 4th is at risk');
+assert.deepEqual(zl.pips.map((p, i) => /--drop/.test(p.cls) ? i : -1).filter(i => i >= 0), [6, 12], 'Zergling 18: the 13th and 7th models are marked');
+assert.match(zl.supCls, /--risk/, 'Zergling at 13: next loss drops Supply');
+assert.deepEqual(ro.hpSegs.map((s, i) => /--drop/.test(s.cls) ? i : -1).filter(i => i >= 0), [1, 3], 'Roach 6: the 4th and 2nd models are marked');
+assert.ok(!/--risk/.test(ro.supCls), 'Roach at 5 models: no Supply warning yet');
+assert.match(c.renderVals().youAccent, /^#/, 'faction accent passed to the board');
 console.log('VS mode checks passed.');

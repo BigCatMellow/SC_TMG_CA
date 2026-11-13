@@ -2090,10 +2090,11 @@ input::placeholder { color: #5b6275; }
 .sc-vs-info-ab--used { background: color-mix(in srgb, #b6e64a 7%, #10131c); border-left-color: #b6e64a; }
 .sc-vs-card i { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
 
-/* VS: when the next model lost would drop Supply, that model is striped and the Supply number turns amber */
-/* Hazard stripes in the team's own colour, so it stands out for every faction (Protoss is gold). */
-.sc-vs-hp-seg--risk i { background: repeating-linear-gradient(135deg, var(--you) 0 3px, #10131c 3px 6px) !important; }
-.sc-vs-unit--opp .sc-vs-hp-seg--risk i { background: repeating-linear-gradient(135deg, var(--opp) 0 3px, #10131c 3px 6px) !important; }
-.sc-vs-pip--risk { background: repeating-linear-gradient(135deg, var(--you) 0 2px, #10131c 2px 4px); box-shadow: inset 0 0 0 1px var(--you); }
-.sc-vs-unit--opp .sc-vs-pip--risk { background: repeating-linear-gradient(135deg, var(--opp) 0 2px, #10131c 2px 4px); box-shadow: inset 0 0 0 1px var(--opp); }
-.sc-vs-sup--risk b, .sc-vs-sup--risk small { color: #e8b53a !important; }
+/* VS: models whose loss drops the Unit's Supply, in the faction accent (Zerg green, Protoss blue, Terran white) */
+.sc-vs-unit--you { --acc: var(--you-acc, #ffd23f); }
+.sc-vs-unit--opp { --acc: var(--opp-acc, #ffd23f); }
+.sc-vs-hp-seg--drop i { background: var(--acc) !important; }
+.sc-vs-hp-seg--drop { background: color-mix(in srgb, var(--acc) 18%, #232939); }
+.sc-vs-pip--drop, .sc-vs-unit--opp .sc-vs-pip--drop { background: var(--acc); }
+.sc-vs-pip--drop.sc-vs-pip--lost { background: transparent; box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--acc) 55%, transparent); }
+.sc-vs-sup--risk b, .sc-vs-sup--risk small { color: var(--acc) !important; }
