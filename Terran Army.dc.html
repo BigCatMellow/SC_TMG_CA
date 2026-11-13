@@ -257,7 +257,7 @@
             <sc-for list="{{ quickTiles }}" as="q" hint-placeholder-count="8">
               <div class="{{ q.cls }}" style="--rc:{{ q.roleColor }}">
                 <button onClick="{{ q.onCard }}" class="sc-qb-figure" aria-label="{{ q.name }}: stats, weapons and abilities"><sc-if value="{{ q.img }}" hint-placeholder-val="{{ false }}"><img src="{{ q.img }}" alt="" aria-hidden="true" loading="lazy" class="sc-vs-tile-img"></sc-if></button>
-                <sc-if value="{{ q.count }}" hint-placeholder-val="{{ false }}"><span class="sc-vs-tile-count">×{{ q.count }}</span><button onClick="{{ q.onMinus }}" class="sc-qb-minus" aria-label="Remove one {{ q.name }}">−1</button></sc-if>
+                <sc-if value="{{ q.count }}" hint-placeholder-val="{{ false }}"><div class="sc-qb-count"><span class="sc-vs-tile-count">×{{ q.count }}</span><button onClick="{{ q.onMinus }}" class="sc-qb-minus" aria-label="Remove one {{ q.name }}">−</button></div></sc-if>
                 <div class="sc-vs-tile-body">
                   <div class="sc-vs-k" style="font-size:9px;color:{{ q.roleColor }}">{{ q.role }}</div>
                   <div class="sc-vs-tile-name">{{ q.name }}</div>
