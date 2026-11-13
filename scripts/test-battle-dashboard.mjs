@@ -51,9 +51,12 @@ for(const faction of ['terran','zerg','protoss']){
  for(const token of ['list="{{ battleGroups }}"','class="{{ u.rowCls }}"','class="sc-bu-row"','list="{{ u.tags }}"','class="sc-vs-sup"','class="sc-bu-list"','{{ u.rosterLine }}',
    'list="{{ u.play.weapons }}"','list="{{ u.play.abilities }}"','list="{{ u.play.stats }}"','onClick="{{ pa.onOpen }}"'])
    assert.ok(troops.includes(token),file+' roster unit rows missing '+token);
- for(const action of ['toggleArmyEdit','u.onChangeTier','u.onRemove','u.onToggle','gotoLibrary'])
+ for(const action of ['u.onChangeTier','u.onRemove','u.onToggle','gotoLibrary'])
    assert.ok(troops.includes('onClick="{{ '+action+' }}"'),file+' missing roster control '+action);
  assert.equal((troops.match(/onClick="\{\{ u\.onChangeTier \}\}"/g)||[]).length,1,file+' tier control exactly once');
+ // Editing is always on: open a unit to change tier, upgrades or remove it. No Edit Army mode.
+ assert.ok(!troops.includes('{{ editArmy }}')&&!troops.includes('toggleArmyEdit'),file+' no Edit Army mode on Roster');
+ assert.ok(troops.indexOf('class="sc-ro-edit"')>troops.indexOf('<sc-if value="{{ u.expanded }}"'),file+' edit controls sit in the opened unit');
  assert.ok(!troops.includes('{{ u.cost }}'),file+' mineral cost is not shown on roster rows');
  // Roster problems are one line at the top; the issue sheet lists each fix.
  assert.ok(battle.includes('class="sc-roster-line"')&&battle.includes('onClick="{{ openIssues }}"'),file+' one-line roster alert');
@@ -342,7 +345,7 @@ for(const faction of ['terran','zerg','protoss']){
  c.state.searchQ=anyAbility.name.slice(0,6);
  assert.ok(view().searchGroups.some(g=>/Abilities/.test(g.name)),faction+' search finds abilities like '+anyAbility.name);
  c.state.searchQ='';
- // Upgrades can be bought from Battle › Edit Army and cost minerals.
+ // Upgrades can be bought from Roster (open the unit) and cost minerals.
  const upUnit=DD.UNITS.find(u=>Object.keys(u.upgrades||{}).length&&u.tiers.some(t=>t.cost>0)&&!u.factionTag);
  if(upUnit){
    const tierIdx=upUnit.tiers.findIndex(t=>t.cost>0);

@@ -24,10 +24,8 @@ for(const faction of ['terran','zerg','protoss']){
     faction+' engagement size selector on first faction tab');
   assert.equal((html.match(/list="\{\{ scales \}\}"/g)||[]).length,1,
     faction+' exactly one engagement size selector');
-  assert.ok(battle.includes('onClick="{{ toggleArmyEdit }}"')&&
-    battle.includes('aria-pressed="{{ editArmy }}"'),faction+' explicit Edit Army control');
-  const gated=/<sc-if value="\{\{ editArmy \}\}"[\s\S]*?<button onClick="\{\{ u.onChangeTier \}\}"[\s\S]*?<button onClick="\{\{ u.onRemove \}\}"/;
-  assert.match(battle,gated,faction+' tier/removal controls hidden outside Edit Army');
+  const opened=/<sc-if value="\{\{ u.expanded \}\}"[\s\S]*?<button onClick="\{\{ u.onChangeTier \}\}"[\s\S]*?<button onClick="\{\{ u.onRemove \}\}"/;
+  assert.match(battle,opened,faction+' tier/removal controls are in the opened unit, no Edit Army mode');
   assert.ok(!battle.includes('onClick="{{ u.stepDown }}"')&&!battle.includes('onClick="{{ u.toggleDeploy }}"'),faction+' game tracking lives in VS, not Roster');
   assert.ok(battle.includes('list="{{ cardChips }}"'),faction+' Roster lists the cards');
   assert.ok(battle.includes('Add units from the Library'),faction+' empty state has correct navigation');

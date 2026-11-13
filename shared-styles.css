@@ -2079,3 +2079,7 @@ input::placeholder { color: #5b6275; }
 .sc-bu--roster .sc-bu-row { height: 88px; }
 .sc-bu--roster .sc-bu-main { gap: 6px; }
 .sc-bu-sub { font: 600 13px 'Chakra Petch', sans-serif; color: #a7aec2; }
+.sc-ro-edit { display: flex; gap: 8px; margin-bottom: 10px; }
+.sc-ro-btn { flex: 1; min-height: 44px; background: #1a1f2e; border: 1px solid var(--sc-border-input); color: #e9ecf2; font: 700 13px Rajdhani, sans-serif; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
+.sc-ro-btn--remove { background: rgba(240,74,74,0.1); border-color: rgba(240,74,74,0.35); color: #f08a8a; }
+.sc-bu--roster .sc-upg-edit { margin: 0 0 12px; padding: 0; }
