@@ -2151,3 +2151,15 @@ input::placeholder { color: #5b6275; }
 .sc-qb-sheet-head { position: sticky; top: -14px; z-index: 1; display: flex; align-items: center; gap: 10px; margin: -14px -14px 12px; padding: 14px; background: #141824; }
 .sc-qb-sheet-head > div { flex: 1; display: grid; gap: 2px; }
 .sc-qb-sheet-head b { font: 700 18px Rajdhani, sans-serif; color: #e9ecf2; }
+
+/* Quick build: −1 under the count; unit info sheet */
+.sc-qb-minus { position: absolute; left: 10px; top: 44px; z-index: 2; min-width: 36px; height: 30px; padding: 0 6px; background: #12151f; border: 1px solid var(--rc); color: #e9ecf2; font: 700 13px 'Chakra Petch', sans-serif; cursor: pointer; }
+.sc-qb-tile .sc-vs-tile-count { z-index: 2; }
+.sc-qb-info-head { align-items: flex-end; }
+.sc-qb-info-img { width: 84px; height: 84px; object-fit: contain; object-position: center bottom; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+.sc-qb-info-tiers { display: grid; gap: 6px; margin-bottom: 14px; }
+.sc-qb-info-tier { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 0 12px; background: #10131c; border: 1px solid #232939; border-left: 3px solid var(--rc); color: #c8cede; text-align: left; cursor: pointer; }
+.sc-qb-info-tier b { font: 700 15px 'Chakra Petch', sans-serif; color: #e9ecf2; }
+.sc-qb-info-tier span { flex: 1; font: 600 13px 'Chakra Petch', sans-serif; }
+.sc-qb-info-tier small { font: 700 12px Rajdhani, sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--rc); }
+.sc-qb-info-tier:disabled { opacity: .4; cursor: default; }

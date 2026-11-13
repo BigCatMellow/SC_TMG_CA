@@ -121,6 +121,10 @@ for(const faction of ['terran','zerg','protoss']){
   const tileQ=view().quickTiles.find(q=>q.tiers.some(t=>!t.off));
   tileQ.tiers.find(t=>!t.off).add();
   assert.equal(controller.state.army.length,1,faction+' quick tier adds a unit');
+  view().quickTiles.find(q=>q.count).onCard(); assert.equal(view().qbInfoOpen,true,faction+' model opens its info sheet');
+  assert.ok(view().qbInfo.detail.stats.length>0,faction+' info sheet has stats'); view().closeQbInfo();
+  const nBefore=controller.state.army.length; view().quickTiles.find(q=>q.count).onMinus();
+  assert.equal(controller.state.army.length,nBefore-1,faction+' −1 removes one'); tileQ.tiers.find(t=>!t.off).add();
   view().openQbSheet(); assert.equal(view().qbSheet,true,faction+' your army opens as a sheet');
   const rowQ=view().quickRows[0];
   if(rowQ.hasUpgrades){

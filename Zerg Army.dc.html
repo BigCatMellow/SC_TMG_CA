@@ -252,12 +252,12 @@
       </div>
       <sc-if value="{{ libQuick }}" hint-placeholder-val="{{ false }}">
         <section class="sc-qb" aria-label="Quick build">
-          <div class="sc-vs-k">Units <small>tap a tier to add one · tap the model for its card</small></div>
+          <div class="sc-vs-k">Units <small>tap a tier to add one · tap the model for its info</small></div>
           <div class="sc-vs-tiles sc-qb-tiles">
             <sc-for list="{{ quickTiles }}" as="q" hint-placeholder-count="8">
               <div class="{{ q.cls }}" style="--rc:{{ q.roleColor }}">
-                <button onClick="{{ q.onCard }}" class="sc-qb-figure" aria-label="{{ q.name }}: open its card"><sc-if value="{{ q.img }}" hint-placeholder-val="{{ false }}"><img src="{{ q.img }}" alt="" aria-hidden="true" loading="lazy" class="sc-vs-tile-img"></sc-if></button>
-                <sc-if value="{{ q.count }}" hint-placeholder-val="{{ false }}"><span class="sc-vs-tile-count">×{{ q.count }}</span></sc-if>
+                <button onClick="{{ q.onCard }}" class="sc-qb-figure" aria-label="{{ q.name }}: stats, weapons and abilities"><sc-if value="{{ q.img }}" hint-placeholder-val="{{ false }}"><img src="{{ q.img }}" alt="" aria-hidden="true" loading="lazy" class="sc-vs-tile-img"></sc-if></button>
+                <sc-if value="{{ q.count }}" hint-placeholder-val="{{ false }}"><span class="sc-vs-tile-count">×{{ q.count }}</span><button onClick="{{ q.onMinus }}" class="sc-qb-minus" aria-label="Remove one {{ q.name }}">−1</button></sc-if>
                 <div class="sc-vs-tile-body">
                   <div class="sc-vs-k" style="font-size:9px;color:{{ q.roleColor }}">{{ q.role }}</div>
                   <div class="sc-vs-tile-name">{{ q.name }}</div>
@@ -269,6 +269,22 @@
               </div>
             </sc-for>
           </div>
+
+          <!-- Unit info: tap a model to read its stats, weapons and abilities without leaving Quick build. -->
+          <sc-if value="{{ qbInfoOpen }}" hint-placeholder-val="{{ false }}">
+            <div class="sc-qb-scrim" onClick="{{ closeQbInfo }}"></div>
+            <div class="sc-qb-sheet" style="--rc:{{ qbInfo.roleColor }}" role="dialog" aria-modal="true" aria-label="{{ qbInfo.name }}">
+              <div class="sc-qb-sheet-head sc-qb-info-head">
+                <sc-if value="{{ qbInfo.img }}" hint-placeholder-val="{{ false }}"><img src="{{ qbInfo.img }}" alt="" aria-hidden="true" class="sc-qb-info-img"></sc-if>
+                <div><span class="sc-vs-k" style="color:{{ qbInfo.roleColor }}">{{ qbInfo.role }}</span><b>{{ qbInfo.name }}</b></div>
+                <button onClick="{{ closeQbInfo }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
+              </div>
+              <div class="sc-qb-info-tiers">
+                <sc-for list="{{ qbInfo.tiers }}" as="it" hint-placeholder-count="2"><button onClick="{{ it.add }}" disabled="{{ it.off }}" class="sc-qb-info-tier"><b>{{ it.label }}</b><span>{{ it.text }}</span><small>+ Add</small></button></sc-for>
+              </div>
+              <dc-import name="UnitDetail" detail="{{ qbInfo.detail }}" hint-size="100%,300px"></dc-import>
+            </div>
+          </sc-if>
 
           <!-- Your army floats above the tab bar; tap it to open the list as a sheet. -->
           <div class="sc-qb-fab-wrap">
@@ -2182,6 +2198,17 @@ class Component extends DCLogic {
     if (opts.length === 1) { this.commitAdd(unit.id, opts[0].i); return; }
     this.setState({ sheet: { type: 'tier', unitId: unit.id, mode: 'add' } });
   }
+  qbInfoVals(tiles) {
+    const st = this.state, u = st.libQuick && st.qbInfo ? this.D().UNITS.find(x => x.id === st.qbInfo) : null;
+    if (!u) return { qbInfoOpen: false, qbInfo: {}, closeQbInfo: () => this.setState({ qbInfo: null }) };
+    const tile = tiles.find(q => q.name === u.name) || { tiers: [] };
+    return { qbInfoOpen: true, closeQbInfo: () => this.setState({ qbInfo: null }),
+      qbInfo: { name: u.name, role: u.role + (u.unique ? ' · Unique' : ''), roleColor: this.roleColor(u.role), img: tile.img,
+        tiers: u.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost > 0).sort((a, b) => String(a.t.tier).localeCompare(String(b.t.tier)))
+          .map(({ t, i }) => { const tb = tile.tiers.find(x => x.label === t.tier) || {};
+            return { label: t.tier, text: t.models + ' models · ' + (t.supply || 0) + ' sup · ' + t.cost + 'm', off: !!tb.off, add: () => { if (tb.add) tb.add(); } }; }),
+        detail: { ...this.buildDetail(u, null), tags: (u.tags || []).map(n => ({ name: n, onOpen: () => this.openTag(n) })) } } };
+  }
   setLibView(quick) {
     this.setState({ libQuick: quick });
     try { localStorage.setItem('sctmg_zerg_libview', quick ? 'quick' : 'cards'); } catch (e) {}
@@ -2197,8 +2224,8 @@ class Component extends DCLogic {
         const art = this.portrait(u) || {};
         return { name: u.name, role: u.role, roleColor: this.roleColor(u.role), count, img: art.cutout || art.portrait || '',
           cls: 'sc-vs-tile sc-qb-tile' + (count ? ' sc-vs-tile--in' : ''), note: taken ? 'Unique · in army' : '',
-          onCard: () => { this.setLibView(false); this.setState(s2 => ({ expLib: { ...(s2.expLib || {}), [u.id]: true } }), () => setTimeout(() => {
-            const el = document.querySelector('[data-unit-id="' + u.id + '"]'); if (el) el.scrollIntoView({ block: 'start' }); window.scrollBy(0, -140); }, 60)); },
+          onCard: () => this.setState({ qbInfo: u.id }),
+          onMinus: () => { const mine = st.army.filter(e => e.unitId === u.id), last = mine[mine.length - 1]; if (last) this.removeWithUndo(last.key, u.name); },
           tiers: u.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost > 0).sort((a, b) => String(a.t.tier).localeCompare(String(b.t.tier))).map(({ t, i }) => ({
             label: t.tier, cost: t.cost + 'm', off: taken,
             aria: 'Add ' + u.name + ' ' + t.tier + ', ' + t.models + ' models, ' + t.cost + ' minerals',
@@ -2220,6 +2247,7 @@ class Component extends DCLogic {
     return { quickTiles: tiles, quickRows: rows,
       quickArmyNote: battleUnits.length + (battleUnits.length === 1 ? ' unit' : ' units') + ' · ' + mins + 'm',
       libQuick: !!st.libQuick, setLibQuick: () => this.setLibView(true), setLibCards: () => this.setLibView(false),
+      ...this.qbInfoVals(tiles),
       qbSheet: !!st.libQuick && !!st.qbSheet, openQbSheet: () => this.setState({ qbSheet: true }), closeQbSheet: () => this.setState({ qbSheet: false }),
       libQuickBtnCls: 'sc-qb-seg' + (st.libQuick ? ' sc-qb-seg--on' : ''), libCardsBtnCls: 'sc-qb-seg' + (st.libQuick ? '' : ' sc-qb-seg--on') };
   }
