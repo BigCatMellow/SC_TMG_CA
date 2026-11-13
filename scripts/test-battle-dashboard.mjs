@@ -137,6 +137,15 @@ for(const faction of ['terran','zerg','protoss']){
  aggregate=view().tacticalPreview.find(t=>t.name===duplicateCard.name);
  assert.equal(aggregate.ready,0);
  assert.match(aggregate.className,/--exhausted$/);
+ // Roster cards show the army slots they give; copies add up, the faction card is the base.
+ const slotCard=c.D().TACTICAL_CARDS.find(t=>!t.unique && Object.values(t.slots||{}).some(v=>v>0));
+ if(slotCard){
+   c.state.tactical=[slotCard.id,slotCard.id];
+   const sc=view().cardChips.find(x=>x.name===slotCard.name);
+   const [k,v]=Object.entries(slotCard.slots).find(([,v])=>v>0);
+   assert.ok(sc.slotPills.some(p=>p.text==='+'+(v*2)+' '+k[0].toUpperCase()+k.slice(1)),faction+' tactical slots shown, doubled for two copies');
+   assert.ok(view().cardChips[0].slotPills.every(p=>!p.text.startsWith('+')),faction+' faction card shows its base slots');
+ }
  view().refreshTactical();
  c.state.tactical=[];
  view().closeBattlePanel();
