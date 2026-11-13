@@ -118,6 +118,10 @@ for(const faction of ['terran','zerg','protoss']){
   view().setLibQuick();
   assert.equal(view().libQuick,true,faction+' quick view on');
   for(const q of view().quickTiles){const ls=q.tiers.map(t=>t.label);assert.equal(ls.join(),[...ls].sort().join(),faction+' '+q.name+' tiers low to high');}
+  assert.equal(view().quickTiles.length,controller.D().UNITS.length,faction+' quick build lists every unit');
+  const other=controller.D().UNITS.find(u=>u.role==='Other');
+  if(other) assert.equal(view().quickTiles.find(q=>q.name===other.name).note,'Summoned by an ability',faction+' summoned units explained');
+  assert.ok(view().roleSlots.every(s=>s.roleFg),faction+' slot labels use role colours');
   const tileQ=view().quickTiles.find(q=>q.tiers.some(t=>!t.off));
   tileQ.tiers.find(t=>!t.off).add();
   assert.equal(controller.state.army.length,1,faction+' quick tier adds a unit');
