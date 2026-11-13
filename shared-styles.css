@@ -2074,3 +2074,8 @@ input::placeholder { color: #5b6275; }
 .sc-vs-info-ab-top b { font: 700 15px Rajdhani, sans-serif; color: #e9ecf2; }
 .sc-vs-info-ab-top .sc-ud-type { margin-left: auto; }
 .sc-vs-info-ab p { margin: 6px 0 0; font-size: 13px; line-height: 1.55; color: #c8cede; }
+
+/* ---------- Roster tab (was Battle): units by role, no game tracking ---------- */
+.sc-bu--roster .sc-bu-row { height: 88px; }
+.sc-bu--roster .sc-bu-main { gap: 6px; }
+.sc-bu-sub { font: 600 13px 'Chakra Petch', sans-serif; color: #a7aec2; }

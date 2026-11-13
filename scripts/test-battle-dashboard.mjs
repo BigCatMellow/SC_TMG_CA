@@ -37,85 +37,27 @@ for(const faction of ['terran','zerg','protoss']){
  const end=html.indexOf('<!-- ============ LIBRARY TAB ============ -->',start);
  assert.ok(start>=0&&end>start,file+' Battle section boundaries');
  const battle=html.slice(start,end);
- const inline=battle.slice(0,battle.indexOf('    <sc-if value="{{ sheetBattleTactical }}"'));
- const tactical=battle.slice(battle.indexOf('    <sc-if value="{{ sheetBattleTactical }}"'),
-   battle.indexOf('<section class="sc-battle-troops"'));
+ // The Battle tab is now Roster: army management only. Game tracking lives in VS.
+ const header=html.slice(html.indexOf('<!-- play HUD, scoreboard layout'),html.indexOf('<!-- ============ BATTLE TAB ============ -->'));
+ assert.ok(!header.includes('battleSupplyStripClass'),file+' no deployment strip on Roster');
+ assert.ok(header.includes('class="{{ resourceStripClass }}"')&&header.includes('class="{{ slotStripClass }}"'),file+' Roster shows army totals and slots');
+ for(const gone of ['openMission','openEndRound','openBattleTactical','sheetBattleTactical','cc.onTap','ca.onUse','u.toggleDeploy','u.stepDown','u.stepUp','u.pips','u.hpSegs'])
+   assert.ok(!battle.includes('{{ '+gone+' }}'),file+' Roster has no game control '+gone);
+ // Cards: faction card and picks, abilities readable inline.
+ for(const token of ['list="{{ cardChips }}"','list="{{ cc.abilities }}"','onClick="{{ ca.onToggle }}"','class="{{ cc.rowCls }}"','{{ rosterCardsNote }}'])
+   assert.ok(battle.includes(token),file+' roster cards missing '+token);
  const troops=battle.slice(battle.indexOf('<section class="sc-battle-troops"'));
- assert.ok(troops.length>0,file+' Troops are inline on the Battle tab');
- assert.ok(!battle.includes('sheetBattleTroops'),file+' Troops no longer hide in a sheet');
- assert.equal((inline.match(/class="sc-battle-overview-card sc-battle-overview-card--/g)||[]).length,0,
-   file+' no summary card: cards are tap-to-spend chips');
- for(const token of ['list="{{ cardChips }}"','onClick="{{ cc.onTap }}"','onClick="{{ openBattleTactical }}"',
-   'onClick="{{ openMission }}"','onClick="{{ openEndRound }}"'])
-   assert.ok(inline.includes(token),file+' play strip missing '+token);
- // Card abilities are readable straight from the Battle tab: one tap opens the text.
- for(const token of ['list="{{ cc.abilities }}"','onClick="{{ ca.onToggle }}"','onClick="{{ ca.onUse }}"','class="{{ cc.rowCls }}"'])
-   assert.ok(inline.includes(token),file+' inline card abilities missing '+token);
- assert.ok(html.includes('onClick="{{ sheetAction }}"'),file+' ability sheet can use the card');
- assert.ok(!/<div class="sc-model-stepper">\s*<div class="sc-model-stepper">/.test(html),file+' stepper markup nested once');
- // One supply recorder: the header strip opens the pool sheet; no second stepper inline.
- assert.ok(!inline.includes('{{ battleSupplyDown }}'),file+' supply pool is adjusted in one place only');
- const poolSheet=html.slice(html.indexOf('<sc-if value="{{ sheetPool }}"'),html.indexOf('<!-- ============ MISSION SHEET ============ -->'));
- for(const token of ['onClick="{{ battleSupplyDown }}"','onClick="{{ battleSupplyUp }}"','onClick="{{ usePoolSuggestion }}"'])
-   assert.ok(poolSheet.includes(token),file+' pool sheet missing '+token);
- assert.equal((html.match(/\{\{ battleSupplyDown \}\}/g)||[]).length,1,file+' exactly one pool stepper');
- const header=html.slice(html.indexOf('<!-- play HUD, scoreboard layout'),
-   html.indexOf('<!-- ============ BATTLE TAB ============ -->'));
- const scoreboard=header.indexOf('class="{{ scoreboardClass }}"');
- const supplyStrip=header.indexOf('class="{{ battleSupplyStripClass }}"');
- const resources=header.indexOf('class="{{ resourceStripClass }}"');
- assert.ok(scoreboard>=0 && supplyStrip>scoreboard && resources>supplyStrip,
-   file+' supply readout must sit between scoreboard and build resources');
- assert.ok(header.slice(scoreboard,supplyStrip).includes('</div></div>'),
-   file+' original scoreboard remains intact');
- assert.ok(header.includes('<sc-if value="{{ tabIsBattle }}"'),
-   file+' supply strip should only appear in Battle');
- for(const binding of ['battleSupplyUsed','battleSupplyAvailable','battleSupplyRemaining',
-   'battleSupplyFreeClass','battleSupplyAria','openPool']){
-   assert.ok(header.includes('{{ '+binding+' }}') || header.includes('onClick="{{ '+binding+' }}"'),
-     file+' Battle-only supply row missing '+binding);
- }
- for(const token of ['list="{{ u.play.weapons }}"','list="{{ u.play.abilities }}"','list="{{ u.play.stats }}"','onClick="{{ pa.onOpen }}"'])
-   assert.ok(troops.includes(token),file+' unit play view missing '+token);
- // Unit rows are built like VS rows: one height, status button, one stepper.
- for(const token of ['class="{{ u.rowCls }}"','class="sc-bu-row"','list="{{ u.tags }}"','class="sc-vs-sup"','class="sc-bu-list"',
-   'onClick="{{ u.toggleDeploy }}"','onClick="{{ u.stepDown }}"','onClick="{{ u.stepUp }}"','list="{{ u.hpSegs }}"','list="{{ u.pips }}"'])
-   assert.ok(troops.includes(token),file+' battle unit rows missing '+token);
- assert.ok(!troops.includes('{{ u.cost }}'),file+' mineral cost is not shown on battle cards');
- for(const sheet of ['sheetMission','sheetEndRound']) assert.ok(html.includes('{{ '+sheet+' }}'),file+' missing '+sheet);
- // Roster problems are one line on the Battle tab; the issue sheet lists each fix.
- assert.ok(inline.includes('class="sc-roster-line"')&&inline.includes('onClick="{{ openIssues }}"'),file+' one-line roster alert');
+ assert.ok(troops.length>0,file+' units are inline on the Roster tab');
+ for(const token of ['list="{{ battleGroups }}"','class="{{ u.rowCls }}"','class="sc-bu-row"','list="{{ u.tags }}"','class="sc-vs-sup"','class="sc-bu-list"','{{ u.rosterLine }}',
+   'list="{{ u.play.weapons }}"','list="{{ u.play.abilities }}"','list="{{ u.play.stats }}"','onClick="{{ pa.onOpen }}"'])
+   assert.ok(troops.includes(token),file+' roster unit rows missing '+token);
+ for(const action of ['toggleArmyEdit','u.onChangeTier','u.onRemove','u.onToggle','gotoLibrary'])
+   assert.ok(troops.includes('onClick="{{ '+action+' }}"'),file+' missing roster control '+action);
+ assert.equal((troops.match(/onClick="\{\{ u\.onChangeTier \}\}"/g)||[]).length,1,file+' tier control exactly once');
+ assert.ok(!troops.includes('{{ u.cost }}'),file+' mineral cost is not shown on roster rows');
+ // Roster problems are one line at the top; the issue sheet lists each fix.
+ assert.ok(battle.includes('class="sc-roster-line"')&&battle.includes('onClick="{{ openIssues }}"'),file+' one-line roster alert');
  assert.ok(html.includes('list="{{ rosterIssues }}"')&&html.includes('onClick="{{ issue.onFix }}"'),file+' issue sheet lists each fix');
- assert.ok(!inline.includes('Fits ·')&&!html.includes("'Fits · needs '"),file+' no "Fits" line when a unit fits');
- for (const label of ['Deployment','Supply','Used','Pool','Free'])
-   assert.ok(header.includes('>'+label+'</span>'),
-     file+' supply HUD missing clearly labeled '+label+' field');
- assert.ok(battle.indexOf('sc-battle-overview-card--tactical')<battle.indexOf('<section class="sc-battle-troops"'),
-   file+' Tactical summary must appear above Troops');
- for(const binding of ['openBattleTactical','battleCardsReady','battleCardsTotal',
-   'paymentTotal','paymentResource'])
-   assert.ok(inline.includes('{{ '+binding+' }}')||inline.includes('onClick="{{ '+binding+' }}"'),
-     file+' missing summary binding '+binding);
- assert.ok(!inline.includes('list="{{ battleCards }}"'),file+' tactical cards should only be in modal');
- assert.ok(troops.includes('list="{{ battleGroups }}"'),file+' unit cards are inline in Troops');
- assert.ok(!tactical.includes('list="{{ battleGroups }}"'),file+' unit cards are not in the Tactical modal');
- assert.ok(tactical.includes('list="{{ battleCards }}"'),file+' tactical details preserved');
- for(const action of ['tc.onResource','tc.onAbility','tc.onReady','tc.onExpand',
-   'refreshTactical','finishResourcePayment'])
-   assert.ok(tactical.includes('onClick="{{ '+action+' }}"'),
-     file+' missing tactical action '+action);
- for(const action of ['toggleArmyEdit','u.onChangeTier',
-   'u.onRemove','u.toggleDeploy','u.stepDown','u.stepUp','u.onToggle','gotoLibrary'])
-   assert.ok(troops.includes('onClick="{{ '+action+' }}"'),file+' missing troop control '+action);
- assert.equal((troops.match(/onClick="\{\{ u\.onChangeTier \}\}"/g)||[]).length,1,
-   file+' tier control exactly once');
- assert.ok(troops.indexOf('<sc-if value="{{ editArmy }}"') <
-   troops.indexOf('class="sc-play-body"'),
-   file+' change tier and remove should be directly accessible in Edit Army mode');
- assert.ok(tactical.includes('role="dialog" aria-modal="true"'),file+' Tactical accessible modal');
- assert.ok(tactical.includes('onClick="{{ closeBattlePanel }}"'),file+' Tactical close control');
- for(const flag of ['tc.showResource','tc.showAbility','tc.showPassive'])
-   assert.ok(tactical.includes('{{ '+flag+' }}'),file+' card actions use precomputed '+flag);
  assert.ok(!/\{\{[^}]*&&[^}]*\}\}/.test(html),file+' templates cannot evaluate &&');
  const script=html.match(/<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/)?.[1];
  assert.ok(script,file+' controller not found');
@@ -222,7 +164,6 @@ for(const faction of ['terran','zerg','protoss']){
    chip0().onTap();
    assert.equal(view().battleFaction.tapped,true,'Chip spends a ready card');
    assert.ok(view().paymentTotal>0,'Spent resource counts toward the payment');
-   assert.match(chip0().rowCls,/--spent/);
    chip0().onTap();
    assert.equal(view().battleFaction.tapped,false,'Chip readies a spent card');
  }

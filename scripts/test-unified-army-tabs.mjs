@@ -28,10 +28,8 @@ for(const faction of ['terran','zerg','protoss']){
     battle.includes('aria-pressed="{{ editArmy }}"'),faction+' explicit Edit Army control');
   const gated=/<sc-if value="\{\{ editArmy \}\}"[\s\S]*?<button onClick="\{\{ u.onChangeTier \}\}"[\s\S]*?<button onClick="\{\{ u.onRemove \}\}"/;
   assert.match(battle,gated,faction+' tier/removal controls hidden outside Edit Army');
-  assert.ok(battle.includes('onClick="{{ u.stepDown }}"')&&
-    battle.includes('onClick="{{ u.stepUp }}"')&&battle.includes('onClick="{{ u.toggleDeploy }}"'),faction+' Battle controls preserved');
-  assert.ok(battle.includes('list="{{ battleCards }}"')&&
-    battle.includes('onClick="{{ tc.onResource }}"'),faction+' Battle card features preserved');
+  assert.ok(!battle.includes('onClick="{{ u.stepDown }}"')&&!battle.includes('onClick="{{ u.toggleDeploy }}"'),faction+' game tracking lives in VS, not Roster');
+  assert.ok(battle.includes('list="{{ cardChips }}"'),faction+' Roster lists the cards');
   assert.ok(battle.includes('Add units from the Library'),faction+' empty state has correct navigation');
   assert.ok(!nav.includes('tb.isRoster'),faction+' Roster icon removed');
   for(const action of ['openRosters','exportArmySheet','saveCurrentAsRoster','triggerImport']){
@@ -61,7 +59,7 @@ for(const faction of ['terran','zerg','protoss']){
   assert.equal(controller.state.scaleId,'standard',faction+' existing default size');
   assert.deepEqual(view().tabs.map(t=>t.label),
     [faction==='terran'?'Command':faction==='protoss'?'Nexus':'Brood',
-      'Library','Tactics','Battle','VS','Codex'],faction+' six navigation tabs (VS opens the scoreboard)');
+      'Library','Tactics','Roster','VS','Codex'],faction+' six navigation tabs (VS opens the scoreboard)');
   const D=controller.D();
   const engagementScales=D.ENGAGEMENT_SCALES;
   assert.equal(view().scales.length,3,faction+' all engagement sizes available');
@@ -116,7 +114,7 @@ for(const faction of ['terran','zerg','protoss']){
   view().tabs.find(t=>t.label==='Library').onSelect();
   assert.equal(controller.state.tab,'library');
   assert.equal(controller.state.editArmy,false);
-  assert.ok(view().tabs.every(t=>t.label!=='Roster'));
+  assert.ok(view().tabs.every(t=>t.id!=='roster'));
   console.log(faction+': first-tab engagement sizes, Battle editing and existing management passed');
 }
 console.log('Roster tab consolidation checks passed for all factions');
