@@ -118,6 +118,12 @@ for(const [f,expectedSet] of Object.entries(expected)){
   assert.ok(c.renderVals().rosterWarnings.some(x=>x.includes('requires')),'Twilight Templar wrong-faction warning');
  }
 }
+// Zagara's Broodmother is an upgrade on the card with no published price: kept, at 0m.
+const zagara=w.SCTMG_ZERG.UNITS.find(u=>u.id==='zagara');
+const brood=Object.values(zagara.upgrades||{}).flat().find(u=>u.name==='Broodmother');
+assert.ok(brood,'Zagara Broodmother upgrade listed');
+assert.equal(brood.cost,0,'Broodmother costs 0m until a price is published');
+assert.match(brood.description,/no price has been published/i,'Broodmother explains its 0m cost');
 const rules=load('Rules.dc.html');
 assert.ok(rules.includes('wave3-data.js'),'rules must load current cards');
 assert.ok(purchasable>=11 && cards===4,'expected new Wave 3 catalogue');

@@ -1489,7 +1489,7 @@ const extra = {
               "name": "Broodmother",
               "cost": 0,
               "type": "Active (1 BM)",
-              "description": "Not priced in the Oct 2026 Cost Table (shown here at 0m; agree it with your opponent). Apply one of the following effects to all Friendly units (Line of Sight is not required). You cannot apply the effect chosen in the previous Game Round: Units of Size 1 gain a +1 Modifier to all IMPACT Rolls. All weapons of Size 2 Units gain CRITICAL HIT (1). Units of Size 3 or more gain TOUGH (1)."
+              "description": "No price has been published (it is not in the Oct 2026 Cost Table), so it costs 0m for now. Apply one of the following effects to all Friendly units (Line of Sight is not required). You cannot apply the effect chosen in the previous Game Round: Units of Size 1 gain a +1 Modifier to all IMPACT Rolls. All weapons of Size 2 Units gain CRITICAL HIT (1). Units of Size 3 or more gain TOUGH (1)."
             }
           ]
         },
