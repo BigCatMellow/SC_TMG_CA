@@ -265,29 +265,6 @@
       </div>
       <sc-if value="{{ libQuick }}" hint-placeholder-val="{{ false }}">
         <section class="sc-qb" aria-label="Quick build">
-          <!-- Tactical cards first: they decide your slots. Tap + to add, tap a name for its abilities. -->
-          <div class="sc-qb-tacs-head">
-            <div class="sc-vs-k">Tactical cards <small>{{ quickTacNote }}</small></div>
-            <button onClick="{{ toggleQuickTacs }}" class="sc-qb-tacs-toggle" aria-expanded="{{ quickTacsOpen }}">{{ quickTacsToggle }}</button>
-          </div>
-          <sc-if value="{{ quickTacsOpen }}" hint-placeholder-val="{{ true }}">
-            <div class="sc-vs-tiles sc-qb-tiles sc-qb-tacs">
-              <sc-for list="{{ quickTacs }}" as="qt" hint-placeholder-count="6">
-                <div class="{{ qt.cls }}" style="--rc:{{ qt.color }}">
-                  <button onClick="{{ qt.onInfo }}" class="sc-qb-tac-hit" aria-label="{{ qt.name }}: abilities"></button>
-                  <sc-if value="{{ qt.count }}" hint-placeholder-val="{{ false }}"><div class="sc-qb-count sc-qb-count--right"><span class="sc-vs-tile-count" aria-label="{{ qt.count }} in army">×{{ qt.count }}</span><button onClick="{{ qt.onRemove }}" class="sc-qb-minus" aria-label="Remove one {{ qt.name }}">−</button></div></sc-if>
-                  <div class="sc-vs-tile-body">
-                    <div class="sc-vs-k" style="font-size:9px;color:{{ qt.color }}">{{ qt.cat }}</div>
-                    <div class="sc-vs-tile-name">{{ qt.name }}</div>
-                    <sc-if value="{{ qt.note }}" hint-placeholder-val="{{ false }}"><div class="sc-qb-note">{{ qt.note }}</div></sc-if>
-                    <div class="sc-qb-tac-slots"><sc-for list="{{ qt.slots }}" as="sp" hint-placeholder-count="1"><span class="sc-bc-slot" style="--sc:{{ sp.color }}">{{ sp.label }}</span></sc-for></div>
-                    <button onClick="{{ qt.onAdd }}" disabled="{{ qt.addOff }}" class="sc-vs-tier sc-qb-tier sc-qb-tac-add" aria-label="{{ qt.addAria }}"><b>{{ qt.addLabel }}</b><small>{{ qt.gas }}</small></button>
-                  </div>
-                </div>
-              </sc-for>
-            </div>
-          </sc-if>
-
           <div class="sc-vs-k">Units <small>tap a tier to add one · tap the model for its info</small></div>
           <div class="sc-vs-tiles sc-qb-tiles">
             <sc-for list="{{ quickTiles }}" as="q" hint-placeholder-count="8">
@@ -319,27 +296,6 @@
                 <sc-for list="{{ qbInfo.tiers }}" as="it" hint-placeholder-count="2"><button onClick="{{ it.add }}" disabled="{{ it.off }}" class="sc-qb-info-tier"><b>{{ it.label }}</b><span>{{ it.text }}</span><small>+ Add</small></button></sc-for>
               </div>
               <dc-import name="UnitDetail" detail="{{ qbInfo.detail }}" hint-size="100%,300px"></dc-import>
-            </div>
-          </sc-if>
-
-          <!-- Tactical card info -->
-          <sc-if value="{{ qbTacOpen }}" hint-placeholder-val="{{ false }}">
-            <div class="sc-qb-scrim" onClick="{{ closeQbTac }}"></div>
-            <div class="sc-qb-sheet" style="--rc:{{ qbTac.color }}" role="dialog" aria-modal="true" aria-label="{{ qbTac.name }}">
-              <div class="sc-qb-sheet-head">
-                <div><span class="sc-vs-k" style="color:{{ qbTac.color }}">{{ qbTac.kicker }}</span><b>{{ qbTac.name }}</b></div>
-                <button onClick="{{ closeQbTac }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
-              </div>
-              <sc-if value="{{ qbTac.hasSlots }}" hint-placeholder-val="{{ false }}"><div class="sc-bc-slots" style="padding:0 0 10px;background:none"><sc-for list="{{ qbTac.slots }}" as="sp" hint-placeholder-count="1"><span class="sc-bc-slot" style="--sc:{{ sp.color }}">{{ sp.label }}</span></sc-for></div></sc-if>
-              <div class="sc-vs-info-abs">
-                <sc-for list="{{ qbTac.abilities }}" as="a" hint-placeholder-count="2">
-                  <div class="sc-vs-info-ab" style="--side:{{ qbTac.color }};--ph:{{ a.phFg }}">
-                    <div class="sc-vs-info-ab-top"><span class="sc-bc-ph">{{ a.phase }}</span><b>{{ a.name }}</b><span class="{{ a.typeCls }}">{{ a.type }}</span></div>
-                    <p>{{ a.text }}</p>
-                  </div>
-                </sc-for>
-              </div>
-              <button onClick="{{ qbTac.onAdd }}" disabled="{{ qbTac.addOff }}" class="sc-qb-info-tier" style="margin-top:12px;width:100%"><b>{{ qbTac.addLabel }}</b><span>{{ qbTac.addNote }}</span><small>+ Add</small></button>
             </div>
           </sc-if>
 
@@ -446,6 +402,80 @@
   <!-- ============ TACTICS TAB ============ -->
   <sc-if value="{{ tabIsTactics }}" hint-placeholder-val="{{ false }}">
     <div style="padding:14px">
+      <!-- Tactics view: Quick build (tap + to add, tap a tile for abilities) or full Card details -->
+      <div class="sc-qb-switch" role="tablist" aria-label="Tactics view">
+        <button onClick="{{ setTacQuick }}" class="{{ tacQuickBtnCls }}" role="tab" aria-selected="{{ tacQuick }}">Quick build</button>
+        <button onClick="{{ setTacCards }}" class="{{ tacCardsBtnCls }}" role="tab" aria-selected="{{ !tacQuick }}">Full cards</button>
+      </div>
+      <sc-if value="{{ tacQuick }}" hint-placeholder-val="{{ false }}">
+        <section aria-label="Tactical cards quick build">
+          <div class="sc-vs-k">Tactical cards <small>{{ quickTacNote }}</small></div>
+          <div class="sc-vs-tiles sc-qb-tiles sc-qb-tacs">
+            <sc-for list="{{ quickTacs }}" as="qt" hint-placeholder-count="6">
+              <div class="{{ qt.cls }}" style="--rc:{{ qt.color }}">
+                <button onClick="{{ qt.onInfo }}" class="sc-qb-tac-hit" aria-label="{{ qt.name }}: abilities"></button>
+                <sc-if value="{{ qt.count }}" hint-placeholder-val="{{ false }}"><div class="sc-qb-count sc-qb-count--right"><span class="sc-vs-tile-count" aria-label="{{ qt.count }} in army">×{{ qt.count }}</span><button onClick="{{ qt.onRemove }}" class="sc-qb-minus" aria-label="Remove one {{ qt.name }}">−</button></div></sc-if>
+                <div class="sc-vs-tile-body">
+                  <div class="sc-vs-k" style="font-size:9px;color:{{ qt.color }}">{{ qt.cat }}</div>
+                  <div class="sc-vs-tile-name">{{ qt.name }}</div>
+                  <sc-if value="{{ qt.note }}" hint-placeholder-val="{{ false }}"><div class="sc-qb-note">{{ qt.note }}</div></sc-if>
+                  <div class="sc-qb-tac-slots"><sc-for list="{{ qt.slots }}" as="sp" hint-placeholder-count="1"><span class="sc-bc-slot" style="--sc:{{ sp.color }}">{{ sp.label }}</span></sc-for></div>
+                  <button onClick="{{ qt.onAdd }}" disabled="{{ qt.addOff }}" class="sc-vs-tier sc-qb-tier sc-qb-tac-add" aria-label="{{ qt.addAria }}"><b>{{ qt.addLabel }}</b><small>{{ qt.gas }}</small></button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <!-- Tactical card info -->
+          <sc-if value="{{ qbTacOpen }}" hint-placeholder-val="{{ false }}">
+            <div class="sc-qb-scrim" onClick="{{ closeQbTac }}"></div>
+            <div class="sc-qb-sheet" style="--rc:{{ qbTac.color }}" role="dialog" aria-modal="true" aria-label="{{ qbTac.name }}">
+              <div class="sc-qb-sheet-head">
+                <div><span class="sc-vs-k" style="color:{{ qbTac.color }}">{{ qbTac.kicker }}</span><b>{{ qbTac.name }}</b></div>
+                <button onClick="{{ closeQbTac }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
+              </div>
+              <sc-if value="{{ qbTac.hasSlots }}" hint-placeholder-val="{{ false }}"><div class="sc-bc-slots" style="padding:0 0 10px;background:none"><sc-for list="{{ qbTac.slots }}" as="sp" hint-placeholder-count="1"><span class="sc-bc-slot" style="--sc:{{ sp.color }}">{{ sp.label }}</span></sc-for></div></sc-if>
+              <div class="sc-vs-info-abs">
+                <sc-for list="{{ qbTac.abilities }}" as="a" hint-placeholder-count="2">
+                  <div class="sc-vs-info-ab" style="--side:{{ qbTac.color }};--ph:{{ a.phFg }}">
+                    <div class="sc-vs-info-ab-top"><span class="sc-bc-ph">{{ a.phase }}</span><b>{{ a.name }}</b><span class="{{ a.typeCls }}">{{ a.type }}</span></div>
+                    <p>{{ a.text }}</p>
+                  </div>
+                </sc-for>
+              </div>
+              <button onClick="{{ qbTac.onAdd }}" disabled="{{ qbTac.addOff }}" class="sc-qb-info-tier" style="margin-top:12px;width:100%"><b>{{ qbTac.addLabel }}</b><span>{{ qbTac.addNote }}</span><small>+ Add</small></button>
+            </div>
+          </sc-if>
+
+          <!-- Your cards float above the tab bar; tap to list them as a sheet. -->
+          <div class="sc-qb-fab-wrap">
+            <button onClick="{{ openTacSheet }}" class="sc-qb-fab" aria-label="Open your tactical cards">
+              <span class="sc-qb-fab-k">Cards</span>
+              <span class="sc-qb-fab-v">{{ quickTacShort }}</span>
+              <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="M4 10l4-4 4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+            </button>
+          </div>
+          <sc-if value="{{ tacSheet }}" hint-placeholder-val="{{ false }}">
+            <div class="sc-qb-scrim" onClick="{{ closeTacSheet }}"></div>
+            <div class="sc-qb-sheet" role="dialog" aria-modal="true" aria-label="Your tactical cards">
+              <div class="sc-qb-sheet-head">
+                <div><span class="sc-vs-k">Your tactical cards</span><b>{{ quickTacSum }}</b></div>
+                <button onClick="{{ closeTacSheet }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
+              </div>
+              <sc-if value="{{ !quickTacsInArmy }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">No cards yet. Close this and tap + on any card.</p></sc-if>
+              <div class="sc-qb-rows">
+                <sc-for list="{{ quickTacRows }}" as="tr" hint-placeholder-count="2">
+                  <div class="sc-qb-row" style="--rc:{{ tr.color }}"><div class="sc-qb-row-top">
+                    <div class="sc-qb-row-text"><b>{{ tr.name }}</b><small>{{ tr.meta }}</small></div>
+                    <button onClick="{{ tr.onRemove }}" class="sc-vs-step" aria-label="Remove one {{ tr.name }}">−</button>
+                  </div></div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </section>
+      </sc-if>
+      <sc-if value="{{ !tacQuick }}" hint-placeholder-val="{{ true }}">
       <sc-for list="{{ tacticalGroups }}" as="grp" hint-placeholder-count="3">
         <div class="sc-role-group sc-tac-group" style="--role:{{ grp.color }}" data-sec="{{ grp.secLabel }}" data-sec-note="{{ grp.secNote }}">
           <div class="sc-role-head" onClick="{{ grp.onHead }}" role="button" aria-label="{{ grp.headAria }}">
@@ -503,6 +533,7 @@
           </div>
         </div>
       </sc-for>
+      </sc-if>
     </div>
   </sc-if>
 
@@ -1243,6 +1274,7 @@ class Component extends DCLogic {
       localStorage.setItem('sctmg_last_faction', 'protoss');
       this.state.cardsCompact = localStorage.getItem('sctmg_cards_compact') !== '';
       this.state.libQuick = localStorage.getItem('sctmg_protoss_libview') === 'quick';
+      this.state.tacQuick = localStorage.getItem('sctmg_protoss_tacview') === 'quick';
       const lastTab = localStorage.getItem('sctmg_protoss_tab');
       if (['faction', 'library', 'tactics', 'battle', 'codex'].includes(lastTab)) this.state.tab = lastTab;
       const saved = JSON.parse(localStorage.getItem('sctmg_protoss_v1') || 'null');
@@ -2397,6 +2429,10 @@ class Component extends DCLogic {
             return { label: t.tier, text: t.models + ' models · ' + (t.supply || 0) + ' sup · ' + t.cost + 'm', off: !!tb.off, add: () => { if (tb.add) tb.add(); } }; }),
         detail: { ...this.buildDetail(u, null), tags: (u.tags || []).map(n => ({ name: n, onOpen: () => this.openTag(n) })) } } };
   }
+  setTacView(quick) {
+    this.setState({ tacQuick: quick });
+    try { localStorage.setItem('sctmg_protoss_tacview', quick ? 'quick' : 'cards'); } catch (e) {}
+  }
   setLibView(quick) {
     this.setState({ libQuick: quick });
     try { localStorage.setItem('sctmg_protoss_libview', quick ? 'quick' : 'cards'); } catch (e) {}
@@ -2463,13 +2499,16 @@ class Component extends DCLogic {
         onInfo: () => this.setState({ qbTacName: c.name }), raw: c, card };
     }));
     const picked = tacs.filter(x => x.count);
-    const tacInfo = st.libQuick && st.qbTacName ? tacs.find(x => x.name === st.qbTacName) : null;
+    const tacInfo = st.tacQuick && st.qbTacName ? tacs.find(x => x.name === st.qbTacName) : null;
     return { quickTiles: tiles, quickRows: rows,
       quickArmyNote: battleUnits.length + (battleUnits.length === 1 ? ' unit' : ' units') + ' · ' + mins + 'm',
       quickArmyShort: battleUnits.length + ' · ' + mins + 'm',
-      quickTacs: tacs, quickTacsOpen: st.qbTacsOpen !== false,
-      quickTacsToggle: st.qbTacsOpen !== false ? 'Hide ▴' : 'Show ▾',
-      toggleQuickTacs: () => this.setState({ qbTacsOpen: st.qbTacsOpen === false }),
+      quickTacs: tacs,
+      tacQuick: !!st.tacQuick, setTacQuick: () => this.setTacView(true), setTacCards: () => this.setTacView(false),
+      tacQuickBtnCls: 'sc-qb-seg' + (st.tacQuick ? ' sc-qb-seg--on' : ''), tacCardsBtnCls: 'sc-qb-seg' + (st.tacQuick ? '' : ' sc-qb-seg--on'),
+      tacSheet: !!st.tacQuick && !!st.tacSheet, openTacSheet: () => this.setState({ tacSheet: true }), closeTacSheet: () => this.setState({ tacSheet: false }),
+      quickTacShort: picked.reduce((n, x) => n + x.count, 0) + ' · ' + picked.reduce((n, x) => n + x.count * (x.card.cost || 0), 0) + 'g',
+      quickTacSum: (() => { const n = picked.reduce((a, x) => a + x.count, 0), g = picked.reduce((a, x) => a + x.count * (x.card.cost || 0), 0); return n + (n === 1 ? ' card' : ' cards') + ' · ' + g + ' gas'; })(),
       quickTacNote: picked.length ? picked.reduce((n, x) => n + x.count, 0) + ' picked · tap + to add' : 'tap + to add · tap a name to read it',
       quickTacsInArmy: picked.length > 0,
       quickTacRows: picked.map(x => ({ name: x.name + (x.count > 1 ? ' ×' + x.count : ''), color: x.color, onRemove: x.onRemove,
