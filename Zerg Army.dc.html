@@ -25,6 +25,7 @@
   </style>
   <script src="zerg-data.js"></script>
   <script src="wave3-data.js"></script>
+  <script src="unit-effects.js"></script>
   <script src="model-portraits.js"></script>
   <script src="portraits/cutout/index.js"></script>
   <script src="missions-data.js"></script>
@@ -203,6 +204,7 @@
                         <div class="sc-bu-info">
                           <span class="sc-vs-k" style="color:{{ u.roleColor }}">{{ u.kLine }}</span>
                           <span class="sc-bu-sub">{{ u.rosterLine }}</span>
+                          <sc-if value="{{ u.upgNames }}" hint-placeholder-val="{{ false }}"><span class="sc-bu-upgs">▲ {{ u.upgNames }}</span></sc-if>
                         </div>
                       </div>
                     </div>
@@ -218,7 +220,7 @@
                           <div class="sc-upg-edit">
                             <div class="sc-upg-edit-label">Upgrades · {{ u.upgradeCostText }}</div>
                             <sc-for list="{{ u.upgrades }}" as="ug" hint-placeholder-count="2">
-                              <button onClick="{{ ug.onToggle }}" class="{{ ug.cls }}" aria-pressed="{{ ug.on }}"><span class="sc-upg-box" aria-hidden="true"></span><span class="sc-upg-name">{{ ug.name }}</span><span class="sc-upg-cost">{{ ug.cost }}</span></button>
+                              <button onClick="{{ ug.onToggle }}" class="{{ ug.cls }}" aria-pressed="{{ ug.on }}"><span class="sc-upg-box" aria-hidden="true"></span><span class="sc-upg-name">{{ ug.name }}<small>{{ ug.summary }}</small></span><span class="sc-upg-cost">{{ ug.cost }}</span></button>
                             </sc-for>
                           </div>
                         </sc-if>
@@ -226,13 +228,14 @@
                       <sc-for list="{{ u.tags }}" as="tg" hint-placeholder-count="3"><button onClick="{{ tg.onOpen }}" class="sc-bu-tag">{{ tg.name }}</button></sc-for>
                       <sc-if value="{{ u.viewSrc }}" hint-placeholder-val="{{ false }}"><button onClick="{{ u.onView }}" class="sc-lib-view" aria-label="View {{ u.name }} model fullscreen">&#10530; View</button></sc-if>
                     </div>
-                    <div class="sc-play-stats"><sc-for list="{{ u.play.stats }}" as="ps" hint-placeholder-count="4"><span><small>{{ ps.k }}</small>{{ ps.v }}</span></sc-for></div>
+                    <div class="sc-play-stats"><sc-for list="{{ u.play.stats }}" as="ps" hint-placeholder-count="4"><span class="{{ ps.cls }}" title="{{ ps.title }}"><small>{{ ps.k }}</small>{{ ps.v }}<sc-if value="{{ ps.alt }}" hint-placeholder-val="{{ false }}"><em>{{ ps.alt }}</em></sc-if></span></sc-for></div>
                     <sc-for list="{{ u.play.weapons }}" as="pw" hint-placeholder-count="2">
-                      <div class="sc-play-weapon">
+                      <div class="{{ pw.cls }}">
                         <span class="sc-play-wname">{{ pw.name }}</span>
                         <span class="sc-phase-chip" style="background:{{ pw.phBg }};color:{{ pw.phFg }}">{{ pw.phase }}</span>
                         <span class="sc-play-wstats" aria-label="{{ pw.line }}"><sc-for list="{{ pw.segs }}" as="ws" hint-placeholder-count="5"><span class="{{ ws.cls }}"><small>{{ ws.l }}</small>{{ ws.v }}</span></sc-for></span>
                         <sc-if value="{{ pw.surge }}" hint-placeholder-val="{{ false }}"><span class="sc-play-wsurge">{{ pw.surge }}</span></sc-if>
+                        <sc-if value="{{ pw.modNote }}" hint-placeholder-val="{{ false }}"><span class="sc-play-wmod">{{ pw.modNote }}</span></sc-if>
                       </div>
                     </sc-for>
                     <sc-if value="{{ u.play.hasAbilities }}" hint-placeholder-val="{{ true }}">
@@ -331,13 +334,13 @@
                 <sc-for list="{{ quickRows }}" as="r" hint-placeholder-count="4">
                   <div class="{{ r.cls }}" style="--rc:{{ r.roleColor }}">
                     <div class="sc-qb-row-top">
-                      <div class="sc-qb-row-text"><b>{{ r.name }}</b><small>{{ r.meta }}</small></div>
+                      <div class="sc-qb-row-text"><b>{{ r.name }}</b><small>{{ r.meta }}</small><sc-if value="{{ r.upgNames }}" hint-placeholder-val="{{ false }}"><small class="sc-bu-upgs">▲ {{ r.upgNames }}</small></sc-if></div>
                       <sc-if value="{{ r.hasUpgrades }}" hint-placeholder-val="{{ false }}"><button onClick="{{ r.onUpg }}" class="{{ r.upgBtnCls }}" aria-expanded="{{ r.open }}">{{ r.upgLabel }}</button></sc-if>
                       <button onClick="{{ r.onRemove }}" class="sc-vs-step" aria-label="Remove {{ r.name }}">−</button>
                     </div>
                     <sc-if value="{{ r.open }}" hint-placeholder-val="{{ false }}">
                       <div class="sc-qb-upgs">
-                        <sc-for list="{{ r.upgrades }}" as="ug" hint-placeholder-count="3"><button onClick="{{ ug.onToggle }}" class="{{ ug.chipCls }}" aria-pressed="{{ ug.on }}"><span>{{ ug.name }}</span><small>{{ ug.cost }}</small></button></sc-for>
+                        <sc-for list="{{ r.upgrades }}" as="ug" hint-placeholder-count="3"><button onClick="{{ ug.onToggle }}" class="{{ ug.chipCls }}" aria-pressed="{{ ug.on }}"><span>{{ ug.name }}<em>{{ ug.summary }}</em></span><small>{{ ug.cost }}</small></button></sc-for>
                       </div>
                       <button onClick="{{ r.onTier }}" class="sc-qb-tierlink">Change tier ›</button>
                     </sc-if>
@@ -1853,13 +1856,15 @@ class Component extends DCLogic {
   playView(unit, entry) {
     const d = this.buildDetail(unit, entry);
     const pick = ['SHD', 'SPD', 'EVD', 'ARM', 'HP'];
-    const stats = pick.map(k => d.stats.find(x => x.k === k)).filter(Boolean);
+    const stats = pick.map(k => d.stats.find(x => x.k === k)).filter(Boolean)
+      .map(x => ({ ...x, cls: x.mod ? 'sc-play-stat--mod' : '', alt: x.alt || '', title: x.src ? 'Changed by ' + x.src : '' }));
     const short = { 'Movement Phase': 'Move', 'Assault Phase': 'Assault', 'Combat Phase': 'Combat', 'Scoring Phase': 'Scoring', 'Any Phase': 'Any' };
     const weapons = (d.weapons || []).map(w => {
       const c = {}; (w.chips || []).forEach(ch => { c[ch.k] = ch.v; });
       const rng = c.RNG === 'E' ? 'Melee' : c.RNG + '"';
       const surge = c.SURGE && c.SURGE !== '-' ? 'Surge ' + c.SURGE + (c['S.DIE'] && c['S.DIE'] !== '-' ? ' ' + c['S.DIE'] : '') : '';
-      return { name: w.name, phase: w.phase, phBg: w.phBg, phFg: w.phFg,
+      return { name: w.name, phase: w.phase, phBg: w.phBg, phFg: w.phFg, modNote: w.modNote || '',
+        cls: 'sc-play-weapon' + (w.mod ? ' sc-play-weapon--mod' : ''),
         line: rng + ' · ' + c.TGT + ' · RoA ' + c.RoA + ' · Hit ' + c.HIT + ' · Dmg ' + c.DMG, surge,
         segs: [{ l: '', v: rng }, { l: '', v: c.TGT }, { l: 'RoA', v: c.RoA }, { l: 'Hit', v: c.HIT }, { l: 'Dmg', v: c.DMG }].map(x => ({ ...x, cls: x.l ? 'sc-ws' : 'sc-ws sc-ws--bare' })) };
     });
@@ -2133,11 +2138,15 @@ class Component extends DCLogic {
 
   buildDetail(unit, entry) {
     const s = unit.stats;
-    const stats = [
+    let stats = [
       { k: 'SPD', v: s.speed }, { k: 'EVD', v: s.evade }, { k: 'ARM', v: s.armour },
-      { k: 'HP', v: String(s.hp) }, { k: 'SIZE', v: String(s.size) }
+      { k: 'HP', v: String(s.hp) }, { k: 'SIZE', v: s.size == null ? '-' : String(s.size) }
     ];
     if (s.shield) stats.unshift({ k: 'SHD', v: String(s.shield) });
+    // Bought upgrades change the numbers (unit-effects.js); Active ones are used in VS.
+    const FX = window.SCTMG_EFFECTS;
+    const fx = FX && entry ? FX.forUnit(unit, entry.upgs || [], [], []) : { stats: {}, weapons: {} };
+    if (FX) stats = FX.applyStats(stats, fx.stats);
     // Show the weapon profiles for this roster, including purchased replacements.
     // A SPECIALIST changes one model only, so retain the parent weapon too.
     const selected = entry ? this.unitUpgList(unit).filter(up => (entry.upgs || []).includes(up.name)) : [];
@@ -2155,16 +2164,23 @@ class Component extends DCLogic {
           ? { ...w, keywords: [...up.modifies.changes.keywords] } : w);
       }
     }
-    const weapons = effectiveWeapons.map(w => ({
-      name: w.name,
-      ...this.phaseBadge(w.phase + ' Phase'),
-      phase: w.phase,
-      chips: [
-        { k: 'RNG', v: String(w.range) }, { k: 'TGT', v: w.target }, { k: 'RoA', v: String(w.roa) }, { k: 'HIT', v: w.hit },
-        { k: 'SURGE', v: w.surge }, { k: 'S.DIE', v: w.sDie }, { k: 'DMG', v: String(w.damage) }
-      ],
-      kwSegs: w.keywords && w.keywords.length ? this.segs(w.keywords.join(', ')) : null
-    }));
+    const weapons = effectiveWeapons.map(w0 => {
+      const w = FX ? FX.applyWeapon(w0, FX.forWeapon(fx.weapons, w0)) : { ...w0, notes: [], changed: [] };
+      const from = selected.find(up => up.weaponProfile && up.weaponProfile.name === w.name);
+      const notes = [from ? 'Upgrade: ' + from.name : '', ...w.notes].filter(Boolean);
+      return {
+        name: w.name,
+        ...this.phaseBadge(w.phase + ' Phase'),
+        phase: w.phase,
+        modNote: notes.join(' · '), mod: notes.length > 0, modKeys: w.changed,
+        chips: [
+          { k: 'RNG', v: String(w.range) }, { k: 'TGT', v: w.target }, { k: 'RoA', v: String(w.roa) }, { k: 'HIT', v: w.hit },
+          { k: 'SURGE', v: w.surge }, { k: 'S.DIE', v: w.sDie }, { k: 'DMG', v: String(w.damage) }
+        ],
+        kwSegs: w.keywords && w.keywords.length ? this.segs(w.keywords.join(', ')) : null
+      };
+    });
+
     const order = ['Any Phase', 'Movement Phase', 'Assault Phase', 'Combat Phase', 'Scoring Phase'];
     const groupsMap = {};
     (unit.abilities || []).forEach(a => { (groupsMap[a.phase] = groupsMap[a.phase] || []).push(a); });
@@ -2179,6 +2195,7 @@ class Component extends DCLogic {
       const on = entry ? (entry.upgs || []).includes(u.name) : false;
       return {
         name: u.name, cost: entry ? this.upgCostNum(u.cost, entry.tierIdx) + 'm' : this.upgCostLabel(u.cost), type: u.type, phase: u.phase.replace(' Phase', ''),
+        summary: window.SCTMG_EFFECTS ? window.SCTMG_EFFECTS.summary(u, unit) : '',
         ...this.phaseBadge(u.phase),
         segs: this.segs(u.description),
         interactive: !!entry, on,
@@ -2480,6 +2497,7 @@ class Component extends DCLogic {
         onUpg: () => this.setState(s2 => ({ qbOpen: { ...(s2.qbOpen || {}), [u.key]: !open } })),
         onRemove: () => this.removeWithUndo(u.key, u.name),
         onTier: u.onChangeTier,
+        upgNames: open ? '' : u.upgrades.filter(ug => ug.on).map(ug => ug.name).join(' · '),
         upgrades: u.upgrades.map(ug => ({ ...ug, chipCls: 'sc-qb-chip' + (ug.on ? ' sc-qb-chip--on' : '') })) };
     });
     const mins = battleUnits.reduce((t, u) => t + u.cost, 0);
@@ -2631,7 +2649,7 @@ class Component extends DCLogic {
         ...art, cutout: battleCutout, framed: !!art.portrait && !battleCutout,
         upgrades: this.unitUpgList(unit).map(ug => {
           const on = (e.upgs || []).includes(ug.name);
-          return { name: ug.name, on, cost: this.upgCostNum(ug.cost, e.tierIdx) + 'm',
+          return { name: ug.name, on, cost: this.upgCostNum(ug.cost, e.tierIdx) + 'm', summary: window.SCTMG_EFFECTS ? window.SCTMG_EFFECTS.summary(ug, unit) : '',
             cls: 'sc-upg-row' + (on ? ' sc-upg-row--on' : ''),
             onToggle: (ev) => { ev.stopPropagation(); this.toggleUpgrade(e.key, ug.name); } };
         }),
@@ -2745,7 +2763,8 @@ class Component extends DCLogic {
     const battleGroups = rosterRoles.map(r => {
       const entries = battleUnits.filter(u => u.role === r).map(decorate).map(u => ({ ...u,
         rowCls: 'sc-bu sc-bu--roster' + (u.expanded ? ' sc-bu--open' : ''),
-        rosterLine: u.startingModels + (u.startingModels === 1 ? ' model' : ' models') + (u.upgradeCount ? ' · ' + u.upgradeCount + (u.upgradeCount === 1 ? ' upgrade' : ' upgrades') : '') }));
+        rosterLine: u.startingModels + (u.startingModels === 1 ? ' model' : ' models'),
+        upgNames: u.upgrades.filter(ug => ug.on).map(ug => ug.name).join(' · ') }));
       const sup = entries.reduce((s, u) => s + u.supply, 0);
       return { role: r, color: this.roleColor(r), entries, secNote: entries.length + (entries.length === 1 ? ' unit' : ' units') + ' · ' + sup + ' sup' };
     }).filter(g => g.entries.length);
