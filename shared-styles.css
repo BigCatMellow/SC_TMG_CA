@@ -2226,3 +2226,16 @@ input::placeholder { color: #5b6275; }
 .sc-lists-foot button { flex: 1; min-height: 42px; }
 /* Quick build: a second tier's count and − sit in the right corner */
 .sc-qb-count--right { left: auto; right: 10px; }
+
+/* Quick build: tactical cards as tiles, same shape as the unit tiles */
+.sc-qb-tacs-head { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.sc-qb-tacs-toggle { background:none; border:0; color:#8a91a5; font:inherit; font-size:12px; padding:6px 2px; cursor:pointer; }
+.sc-qb-tacs { margin:4px 0 18px; }
+.sc-qb-tile.sc-qb-tac { min-height:150px; }
+.sc-qb-tac-hit { position:absolute; inset:0; z-index:1; padding:0; background:none; border:0; cursor:pointer; }
+.sc-qb-tac .sc-vs-tile-body { z-index:2; pointer-events:none; }
+.sc-qb-tac .sc-vs-tile-body button { pointer-events:auto; }
+.sc-qb-tac .sc-vs-tile-name { padding-right:40px; }
+.sc-qb-tac-slots { display:flex; flex-wrap:wrap; gap:4px; min-height:20px; margin-bottom:8px; }
+.sc-qb-tac-slots .sc-bc-slot { font-size:10.5px; padding:1px 6px; }
+.sc-qb-tac-add { width:100%; }

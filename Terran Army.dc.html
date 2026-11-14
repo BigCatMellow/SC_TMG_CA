@@ -265,6 +265,29 @@
       </div>
       <sc-if value="{{ libQuick }}" hint-placeholder-val="{{ false }}">
         <section class="sc-qb" aria-label="Quick build">
+          <!-- Tactical cards first: they decide your slots. Tap + to add, tap a name for its abilities. -->
+          <div class="sc-qb-tacs-head">
+            <div class="sc-vs-k">Tactical cards <small>{{ quickTacNote }}</small></div>
+            <button onClick="{{ toggleQuickTacs }}" class="sc-qb-tacs-toggle" aria-expanded="{{ quickTacsOpen }}">{{ quickTacsToggle }}</button>
+          </div>
+          <sc-if value="{{ quickTacsOpen }}" hint-placeholder-val="{{ true }}">
+            <div class="sc-vs-tiles sc-qb-tiles sc-qb-tacs">
+              <sc-for list="{{ quickTacs }}" as="qt" hint-placeholder-count="6">
+                <div class="{{ qt.cls }}" style="--rc:{{ qt.color }}">
+                  <button onClick="{{ qt.onInfo }}" class="sc-qb-tac-hit" aria-label="{{ qt.name }}: abilities"></button>
+                  <sc-if value="{{ qt.count }}" hint-placeholder-val="{{ false }}"><div class="sc-qb-count sc-qb-count--right"><span class="sc-vs-tile-count" aria-label="{{ qt.count }} in army">×{{ qt.count }}</span><button onClick="{{ qt.onRemove }}" class="sc-qb-minus" aria-label="Remove one {{ qt.name }}">−</button></div></sc-if>
+                  <div class="sc-vs-tile-body">
+                    <div class="sc-vs-k" style="font-size:9px;color:{{ qt.color }}">{{ qt.cat }}</div>
+                    <div class="sc-vs-tile-name">{{ qt.name }}</div>
+                    <sc-if value="{{ qt.note }}" hint-placeholder-val="{{ false }}"><div class="sc-qb-note">{{ qt.note }}</div></sc-if>
+                    <div class="sc-qb-tac-slots"><sc-for list="{{ qt.slots }}" as="sp" hint-placeholder-count="1"><span class="sc-bc-slot" style="--sc:{{ sp.color }}">{{ sp.label }}</span></sc-for></div>
+                    <button onClick="{{ qt.onAdd }}" disabled="{{ qt.addOff }}" class="sc-vs-tier sc-qb-tier sc-qb-tac-add" aria-label="{{ qt.addAria }}"><b>{{ qt.addLabel }}</b><small>{{ qt.gas }}</small></button>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
           <div class="sc-vs-k">Units <small>tap a tier to add one · tap the model for its info</small></div>
           <div class="sc-vs-tiles sc-qb-tiles">
             <sc-for list="{{ quickTiles }}" as="q" hint-placeholder-count="8">
@@ -299,6 +322,27 @@
             </div>
           </sc-if>
 
+          <!-- Tactical card info -->
+          <sc-if value="{{ qbTacOpen }}" hint-placeholder-val="{{ false }}">
+            <div class="sc-qb-scrim" onClick="{{ closeQbTac }}"></div>
+            <div class="sc-qb-sheet" style="--rc:{{ qbTac.color }}" role="dialog" aria-modal="true" aria-label="{{ qbTac.name }}">
+              <div class="sc-qb-sheet-head">
+                <div><span class="sc-vs-k" style="color:{{ qbTac.color }}">{{ qbTac.kicker }}</span><b>{{ qbTac.name }}</b></div>
+                <button onClick="{{ closeQbTac }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
+              </div>
+              <sc-if value="{{ qbTac.hasSlots }}" hint-placeholder-val="{{ false }}"><div class="sc-bc-slots" style="padding:0 0 10px;background:none"><sc-for list="{{ qbTac.slots }}" as="sp" hint-placeholder-count="1"><span class="sc-bc-slot" style="--sc:{{ sp.color }}">{{ sp.label }}</span></sc-for></div></sc-if>
+              <div class="sc-vs-info-abs">
+                <sc-for list="{{ qbTac.abilities }}" as="a" hint-placeholder-count="2">
+                  <div class="sc-vs-info-ab" style="--side:{{ qbTac.color }};--ph:{{ a.phFg }}">
+                    <div class="sc-vs-info-ab-top"><span class="sc-bc-ph">{{ a.phase }}</span><b>{{ a.name }}</b><span class="{{ a.typeCls }}">{{ a.type }}</span></div>
+                    <p>{{ a.text }}</p>
+                  </div>
+                </sc-for>
+              </div>
+              <button onClick="{{ qbTac.onAdd }}" disabled="{{ qbTac.addOff }}" class="sc-qb-info-tier" style="margin-top:12px;width:100%"><b>{{ qbTac.addLabel }}</b><span>{{ qbTac.addNote }}</span><small>+ Add</small></button>
+            </div>
+          </sc-if>
+
           <!-- Your army floats above the tab bar; tap it to open the list as a sheet. -->
           <div class="sc-qb-fab-wrap">
             <button onClick="{{ openQbSheet }}" class="sc-qb-fab" aria-label="Open your army">
@@ -315,6 +359,18 @@
                 <button onClick="{{ closeQbSheet }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
               </div>
               <sc-if value="{{ battleEmpty }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">Nothing yet. Close this and tap a tier on any unit.</p></sc-if>
+              <sc-if value="{{ quickTacsInArmy }}" hint-placeholder-val="{{ false }}">
+                <div class="sc-vs-k" style="margin:2px 0 6px">Tactical cards</div>
+                <div class="sc-qb-rows" style="margin-bottom:12px">
+                  <sc-for list="{{ quickTacRows }}" as="tr" hint-placeholder-count="2">
+                    <div class="sc-qb-row" style="--rc:{{ tr.color }}"><div class="sc-qb-row-top">
+                      <div class="sc-qb-row-text"><b>{{ tr.name }}</b><small>{{ tr.meta }}</small></div>
+                      <button onClick="{{ tr.onRemove }}" class="sc-vs-step" aria-label="Remove one {{ tr.name }}">−</button>
+                    </div></div>
+                  </sc-for>
+                </div>
+                <div class="sc-vs-k" style="margin:2px 0 6px">Units</div>
+              </sc-if>
               <div class="sc-qb-rows">
                 <sc-for list="{{ quickRows }}" as="r" hint-placeholder-count="4">
                   <div class="{{ r.cls }}" style="--rc:{{ r.roleColor }}">
@@ -2357,7 +2413,7 @@ class Component extends DCLogic {
     try { localStorage.setItem('sctmg_terran_libview', quick ? 'quick' : 'cards'); } catch (e) {}
   }
   // Quick build: one tile per unit you can field, with a button per buyable tier.
-  quickVals(battleUnits, faction) {
+  quickVals(battleUnits, faction, tacticalGroups) {
     const st = this.state, D = this.D();
     const roles = ['Hero', 'Elite', 'Core', 'Support'];
     // Every unit is listed: summoned ones and other faction cards' units say why they can't be added.
@@ -2403,9 +2459,39 @@ class Component extends DCLogic {
         upgrades: u.upgrades.map(ug => ({ ...ug, chipCls: 'sc-qb-chip' + (ug.on ? ' sc-qb-chip--on' : '') })) };
     });
     const mins = battleUnits.reduce((t, u) => t + u.cost, 0);
+    // Tactical cards in Quick build: one compact row per card, grouped by category colour.
+    const tacs = (tacticalGroups || []).flatMap(g => g.cards.map((c, i) => {
+      const card = D.TACTICAL_CARDS.find(x => x.name === c.name) || {};
+      return { name: c.name, color: g.color, cat: g.name.replace(/ · .*$/, ''), count: c.count,
+        costText: (card.cost ? ' · ' + card.cost + ' gas' : '') + (card.supply ? ' · ' + card.supply + ' sup' : '') + (c.lockReason ? ' · ' + c.lockReason : ''),
+        cls: 'sc-vs-tile sc-qb-tile sc-qb-tac' + (c.count ? ' sc-vs-tile--in' : '') + (!c.canAdd && !c.count ? ' sc-qb-tile--locked' : ''),
+        note: c.lockReason, gas: card.cost ? card.cost + ' gas' : 'free',
+        addLabel: c.count ? (c.single ? '✓ Added' : '+ Another') : (c.lockReason ? 'Locked' : !c.canAdd && card.category === 'creep' ? 'Creep picked' : '+ Add'),
+        slots: c.slotChips.map(s => ({ label: s.label.replace(/ (\w)/, (m, a) => ' ' + a.toUpperCase()), color: s.color })),
+        addOff: !c.canAdd, addGlyph: c.count && c.single ? '✓' : '+',
+        addAria: c.canAdd ? 'Add ' + c.name : c.name + (c.count ? ' is in your army' : ' can\'t be added'),
+        onAdd: (ev) => c.onAdd(ev || { stopPropagation() {} }), onRemove: (ev) => c.onRemove(ev || { stopPropagation() {} }),
+        onInfo: () => this.setState({ qbTacName: c.name }), raw: c, card };
+    }));
+    const picked = tacs.filter(x => x.count);
+    const tacInfo = st.libQuick && st.qbTacName ? tacs.find(x => x.name === st.qbTacName) : null;
     return { quickTiles: tiles, quickRows: rows,
       quickArmyNote: battleUnits.length + (battleUnits.length === 1 ? ' unit' : ' units') + ' · ' + mins + 'm',
       quickArmyShort: battleUnits.length + ' · ' + mins + 'm',
+      quickTacs: tacs, quickTacsOpen: st.qbTacsOpen !== false,
+      quickTacsToggle: st.qbTacsOpen !== false ? 'Hide ▴' : 'Show ▾',
+      toggleQuickTacs: () => this.setState({ qbTacsOpen: st.qbTacsOpen === false }),
+      quickTacNote: picked.length ? picked.reduce((n, x) => n + x.count, 0) + ' picked · tap + to add' : 'tap + to add · tap a name to read it',
+      quickTacsInArmy: picked.length > 0,
+      quickTacRows: picked.map(x => ({ name: x.name + (x.count > 1 ? ' ×' + x.count : ''), color: x.color, onRemove: x.onRemove,
+        meta: [x.cat, ...x.slots.map(s => s.label)].join(' · ') + (x.card.cost ? ' · ' + x.card.cost + ' gas' : '') })),
+      qbTacOpen: !!tacInfo, closeQbTac: () => this.setState({ qbTacName: null }),
+      qbTac: tacInfo ? { name: tacInfo.name, color: tacInfo.color, kicker: tacInfo.cat + tacInfo.costText,
+        slots: tacInfo.slots, hasSlots: tacInfo.slots.length > 0,
+        abilities: (tacInfo.card.abilities || []).map(a => ({ name: a.name, type: a.type, typeCls: this.abilityTypeCls(a.type), phase: a.phase.replace(' Phase', ''),
+          phFg: this.phaseBadge(a.phase).phFg, text: a.description })),
+        addOff: tacInfo.addOff, addLabel: tacInfo.count ? 'In army ×' + tacInfo.count : tacInfo.addOff ? (tacInfo.note || 'Creep picked · remove yours first') : 'Add to army', addNote: tacInfo.slots.map(s => s.label).join(' · '),
+        onAdd: () => { tacInfo.onAdd(); } } : {},
       libQuick: !!st.libQuick, setLibQuick: () => this.setLibView(true), setLibCards: () => this.setLibView(false),
       ...this.qbInfoVals(tiles),
       qbSheet: !!st.libQuick && !!st.qbSheet, openQbSheet: () => this.setState({ qbSheet: true }), closeQbSheet: () => this.setState({ qbSheet: false }),
@@ -3097,7 +3183,7 @@ class Component extends DCLogic {
       // battle
       battleEmpty: battleUnits.length === 0, battleGroups,
       rosterCardsNote: '1 faction · ' + (st.tactical || []).length + ' tactical',
-      ...this.quickVals(battleUnits, faction),
+      ...this.quickVals(battleUnits, faction, tacticalGroups),
       battleSupplyStripClass: st.resourcesCompact ? 'sc-battle-supply-strip sc-battle-supply-strip--compact' : 'sc-battle-supply-strip',
       battleSupplyFreeClass: battleSupplyUsed > st.battleSupplyAvailable ?
         'sc-battle-supply-free sc-battle-supply-free--over' : 'sc-battle-supply-free',
