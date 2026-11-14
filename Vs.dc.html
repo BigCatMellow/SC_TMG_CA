@@ -795,14 +795,13 @@ class Component extends DCLogic {
       && !/SPECIALIST/.test((x.weaponProfile && x.weaponProfile.keywords || []).join(' '))).map(x => x.modifies.weapon));
     let list = (u.weapons || []).filter(w => (!w.replaces || (e.upgs || []).includes(w.name)) && !replaced.has(w.name)).map(w => ({ ...w, from: '' }));
     upgs.forEach(x => { if (x.weaponProfile && !list.some(w => w.name === x.weaponProfile.name)) list.push({ ...x.weaponProfile, from: x.name }); });
-    const weapons = list.map(w => {
-      const mods = fx.weapons[w.name] || [];
-      const set = Object.assign({}, ...mods.map(m => m.fx.set || {}));
-      const kw = [...(w.keywords || []), ...mods.flatMap(m => m.fx.keywords || [])];
-      const notes = [w.from ? 'Upgrade: ' + w.from : '', ...mods.map(m => m.src + ': ' + [...(m.fx.keywords || []), ...Object.entries(m.fx.set || {}).map(([k, v]) => (k === 'sDie' ? 'S.Die ' : 'Surge ') + v)].join(', '))].filter(Boolean);
-      return { name: w.name, phase: w.phase, phFg: this.phaseColor(w.phase), modNote: notes.join(' · '), mod: notes.length > 0, modKeys: Object.keys(set),
+    const weapons = list.map(w0 => {
+      const w = FX ? FX.applyWeapon(w0, FX.forWeapon(fx.weapons, w0)) : { ...w0, notes: [], changed: [] };
+      const notes = [w.from ? 'Upgrade: ' + w.from : '', ...w.notes].filter(Boolean);
+      const kw = w.keywords || [];
+      return { name: w.name, phase: w.phase, phFg: this.phaseColor(w.phase), modNote: notes.join(' · '), mod: notes.length > 0, modKeys: w.changed,
         chips: [{ k: 'RNG', v: String(w.range) }, { k: 'TGT', v: w.target }, { k: 'RoA', v: String(w.roa) }, { k: 'HIT', v: w.hit },
-          { k: 'SURGE', v: set.surge || w.surge }, { k: 'S.DIE', v: set.sDie || w.sDie }, { k: 'DMG', v: String(w.damage) }],
+          { k: 'SURGE', v: w.surge }, { k: 'S.DIE', v: w.sDie }, { k: 'DMG', v: String(w.damage) }],
         kwSegs: kw.length ? this.plainSegs(kw.join(', ')) : null };
     });
     const order = ['Any Phase', 'Movement Phase', 'Assault Phase', 'Combat Phase', 'Scoring Phase'];
@@ -832,8 +831,8 @@ class Component extends DCLogic {
         const setBoosts = next => this.savePlay({ boosts: { ...(this.state.play.boosts || {}), [sh.side]: { ...((this.state.play.boosts || {})[sh.side] || {}), [e.key]: next } } });
         const boosts = ud.boosts.map(b => {
           const spent = b.card && b.card.view.spent && !b.on;
-          return { name: b.name, from: b.from, text: b.text, cost: b.passive ? 'Always on' : b.cost || (b.card ? 'Exhausts card' : ''),
-            canUse: !b.passive && !spent, usedElsewhere: spent, label: b.on ? 'On ✓' : 'Use',
+          return { name: b.name, from: b.from, text: b.text, isCard: !!b.card, on: b.on, cost: b.passive ? 'Always on' : b.cost || (b.card ? 'Exhausts card' : ''),
+            canUse: !b.passive && !spent, usedElsewhere: spent, label: b.on ? (b.changes ? 'On ✓' : 'Used ✓') : 'Use',
             cls: 'sc-ud-boost' + (b.on ? ' sc-ud-boost--on' : '') + (b.passive ? ' sc-ud-boost--passive' : ''),
             btnCls: 'sc-ud-boost-btn' + (b.on ? ' sc-ud-boost-btn--on' : ''),
             toggle: () => {
@@ -846,7 +845,9 @@ class Component extends DCLogic {
           roleColor: row.roleColor, sub: row.role + ' · ' + row.tier,
           upgradeLine: (e.upgs || []).join(' · '), hasUpgradeLine: (e.upgs || []).length > 0,
           state: row.status + ' · ' + (row.tracksDamage ? row.hpText : row.alive + ' model' + (row.alive === 1 ? '' : 's') + ' left'),
-          detail: { ...ud.detail, boosts } } });
+          // Card bonuses fit most units, so they fold away unless one is on; upgrades always show.
+          detail: { ...ud.detail, boosts: boosts.filter(b => !b.isCard || b.on), cardBoosts: boosts.filter(b => b.isCard && !b.on),
+            cardBoostOpen: !!this.state.cardBoostOpen, cardBoostToggle: () => this.setState(s2 => ({ cardBoostOpen: !s2.cardBoostOpen })) } } });
       }
     }
     if (sh && sh.type === 'card') {

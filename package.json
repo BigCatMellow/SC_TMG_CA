@@ -27,6 +27,7 @@
     "check:remote-portraits": "node scripts/check-remote-portraits.mjs",
     "test:vs": "node scripts/test-vs.mjs",
     "test:keywords": "node scripts/test-keywords.mjs",
-    "test:share": "node scripts/test-share.mjs"
+    "test:share": "node scripts/test-share.mjs",
+    "test:effects": "node scripts/test-effects.mjs"
   }
 }
