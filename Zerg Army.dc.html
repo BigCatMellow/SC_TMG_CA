@@ -271,16 +271,18 @@
             <button onClick="{{ toggleQuickTacs }}" class="sc-qb-tacs-toggle" aria-expanded="{{ quickTacsOpen }}">{{ quickTacsToggle }}</button>
           </div>
           <sc-if value="{{ quickTacsOpen }}" hint-placeholder-val="{{ true }}">
-            <div class="sc-qb-tacs">
+            <div class="sc-vs-tiles sc-qb-tiles sc-qb-tacs">
               <sc-for list="{{ quickTacs }}" as="qt" hint-placeholder-count="6">
-                <div class="{{ qt.cls }}" style="--cc:{{ qt.color }}">
-                  <button onClick="{{ qt.onInfo }}" class="sc-qb-tac-name" aria-label="{{ qt.name }}: abilities">
-                    <b>{{ qt.name }}</b>
-                    <small><span style="color:{{ qt.color }}">{{ qt.cat }}</span>{{ qt.costText }}</small>
-                  </button>
-                  <div class="sc-qb-tac-slots"><sc-for list="{{ qt.slots }}" as="sp" hint-placeholder-count="1"><span class="sc-bc-slot" style="--sc:{{ sp.color }}">{{ sp.label }}</span></sc-for></div>
-                  <sc-if value="{{ qt.count }}" hint-placeholder-val="{{ false }}"><span class="sc-qb-tac-count">×{{ qt.count }}</span><button onClick="{{ qt.onRemove }}" class="sc-qb-tac-btn" aria-label="Remove one {{ qt.name }}">−</button></sc-if>
-                  <button onClick="{{ qt.onAdd }}" disabled="{{ qt.addOff }}" class="sc-qb-tac-btn sc-qb-tac-add" aria-label="{{ qt.addAria }}">{{ qt.addGlyph }}</button>
+                <div class="{{ qt.cls }}" style="--rc:{{ qt.color }}">
+                  <button onClick="{{ qt.onInfo }}" class="sc-qb-tac-hit" aria-label="{{ qt.name }}: abilities"></button>
+                  <sc-if value="{{ qt.count }}" hint-placeholder-val="{{ false }}"><div class="sc-qb-count sc-qb-count--right"><span class="sc-vs-tile-count" aria-label="{{ qt.count }} in army">×{{ qt.count }}</span><button onClick="{{ qt.onRemove }}" class="sc-qb-minus" aria-label="Remove one {{ qt.name }}">−</button></div></sc-if>
+                  <div class="sc-vs-tile-body">
+                    <div class="sc-vs-k" style="font-size:9px;color:{{ qt.color }}">{{ qt.cat }}</div>
+                    <div class="sc-vs-tile-name">{{ qt.name }}</div>
+                    <sc-if value="{{ qt.note }}" hint-placeholder-val="{{ false }}"><div class="sc-qb-note">{{ qt.note }}</div></sc-if>
+                    <div class="sc-qb-tac-slots"><sc-for list="{{ qt.slots }}" as="sp" hint-placeholder-count="1"><span class="sc-bc-slot" style="--sc:{{ sp.color }}">{{ sp.label }}</span></sc-for></div>
+                    <button onClick="{{ qt.onAdd }}" disabled="{{ qt.addOff }}" class="sc-vs-tier sc-qb-tier sc-qb-tac-add" aria-label="{{ qt.addAria }}"><b>{{ qt.addLabel }}</b><small>{{ qt.gas }}</small></button>
+                  </div>
                 </div>
               </sc-for>
             </div>
@@ -2450,7 +2452,9 @@ class Component extends DCLogic {
       const card = D.TACTICAL_CARDS.find(x => x.name === c.name) || {};
       return { name: c.name, color: g.color, cat: g.name.replace(/ · .*$/, ''), count: c.count,
         costText: (card.cost ? ' · ' + card.cost + ' gas' : '') + (card.supply ? ' · ' + card.supply + ' sup' : '') + (c.lockReason ? ' · ' + c.lockReason : ''),
-        cls: 'sc-qb-tac' + (c.count ? ' sc-qb-tac--in' : '') + (!c.canAdd && !c.count ? ' sc-qb-tac--off' : ''),
+        cls: 'sc-vs-tile sc-qb-tile sc-qb-tac' + (c.count ? ' sc-vs-tile--in' : '') + (!c.canAdd && !c.count ? ' sc-qb-tile--locked' : ''),
+        note: c.lockReason, gas: card.cost ? card.cost + ' gas' : 'free',
+        addLabel: c.count ? (c.single ? '✓ Added' : '+ Another') : (c.lockReason ? 'Locked' : !c.canAdd && card.category === 'creep' ? 'Creep picked' : '+ Add'),
         slots: c.slotChips.map(s => ({ label: s.label.replace(/ (\w)/, (m, a) => ' ' + a.toUpperCase()), color: s.color })),
         addOff: !c.canAdd, addGlyph: c.count && c.single ? '✓' : '+',
         addAria: c.canAdd ? 'Add ' + c.name : c.name + (c.count ? ' is in your army' : ' can\'t be added'),
@@ -2474,7 +2478,7 @@ class Component extends DCLogic {
         slots: tacInfo.slots, hasSlots: tacInfo.slots.length > 0,
         abilities: (tacInfo.card.abilities || []).map(a => ({ name: a.name, type: a.type, typeCls: this.abilityTypeCls(a.type), phase: a.phase.replace(' Phase', ''),
           phFg: this.phaseBadge(a.phase).phFg, text: a.description })),
-        addOff: tacInfo.addOff, addLabel: tacInfo.count ? 'In army ×' + tacInfo.count : 'Add to army', addNote: tacInfo.slots.map(s => s.label).join(' · '),
+        addOff: tacInfo.addOff, addLabel: tacInfo.count ? 'In army ×' + tacInfo.count : tacInfo.addOff ? (tacInfo.note || 'Creep picked · remove yours first') : 'Add to army', addNote: tacInfo.slots.map(s => s.label).join(' · '),
         onAdd: () => { tacInfo.onAdd(); } } : {},
       libQuick: !!st.libQuick, setLibQuick: () => this.setLibView(true), setLibCards: () => this.setLibView(false),
       ...this.qbInfoVals(tiles),
