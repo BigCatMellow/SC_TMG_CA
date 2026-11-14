@@ -2277,3 +2277,4 @@ input::placeholder { color: #5b6275; }
 .sc-ud-boost-more { min-height: 40px; padding: 0 12px; background: transparent; border: 1px dashed #3a4154; color: #c8cede; font: 700 12px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; text-align: left; cursor: pointer; }
 .sc-bu-info { min-width: 0; }
 .sc-bu-info .sc-bu-upgs { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.sc-bu { min-width: 0; }

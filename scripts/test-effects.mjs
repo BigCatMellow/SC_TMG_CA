@@ -54,4 +54,33 @@ assert.equal(E.applyWeapon(gc, E.forWeapon(fx.weapons, gc)).roa, String(+gc.roa 
 // Guidance raises the Glaive Cannon's ANTI-EVADE (1) to (2) instead of listing both.
 const gcK = E.applyWeapon(gc, E.forWeapon(E.forUnit(adept, ['Guidance'], [], []).weapons, gc)).keywords;
 assert.ok(gcK.includes('ANTI-EVADE (2)') && !gcK.includes('ANTI-EVADE (1)'));
+
+// BUFF Speed doesn't stack (FAQ v1.3): Glial + Wild Mutation on, plus flat Accelerating Creep, is 5/8 and 7/10 on creep.
+fx = E.forUnit(roach, ['Glial Reconstitution'], [{ id: 'kerrigans-swarm', key: 'faction' }, { id: 'accelerating-creep', key: 'accelerating-creep' }],
+  ['u:Glial Reconstitution:0', 'c:faction:Wild Mutation:0']);
+assert.deepEqual([stat(roach, fx, 'SPD').v, stat(roach, fx, 'SPD').alt], ['5/8', '7/10 on creep']);
+
+// "First weapon used" bonuses are a note, not applied to every weapon.
+const goliath = unit(w.SCTMG_TERRAN, 'Goliath');
+fx = E.forUnit(goliath, [], [{ id: 'armory', key: 'armory' }], ['c:armory:Vehicle Weapons:0']);
+for (const gw of goliath.weapons.filter(x => x.range !== 'E')) {
+  const out = E.applyWeapon(gw, E.forWeapon(fx.weapons, gw));
+  assert.ok(!out.keywords.includes('CRITICAL HIT (1)') && /first weapon used/.test(out.notes.join(' ')));
+}
+
+// Units that can't move or burrow aren't offered move or burrow bonuses.
+const bile = unit(w.SCTMG_ZERG, 'Bile Launcher');
+if (bile) {
+  fx = E.forUnit(bile, [], [{ id: 'zerg-swarm', key: 'z' }, { id: 'evolution-chamber', key: 'e' }, { id: 'hatchery', key: 'h' }, { id: 'overseer', key: 'o' }], []);
+  const names = fx.boosts.map(b => b.name);
+  for (const n of ['Rapid Burrowing', 'Lie in Wait', 'Extended Claws', 'Pneumatized Carapace']) assert.ok(!names.includes(n), n + ' offered to Bile Launcher');
+}
+
+// Siege Mode lasts past End round; other bonuses don't.
+assert.ok(E.kept('u:Mode Transformation:0') && !E.kept('u:Glial Reconstitution:0'));
+
+// Weapon swaps say what they lose.
+const immortal = unit(w.SCTMG_PROTOSS, 'Immortal');
+const lpd = Object.values(immortal.upgrades).flat().find(x => x.name === 'Left Phase Disruptor');
+assert.match(E.summary(lpd, immortal), /Dmg 2 → 1.*loses/);
 console.log('effects ok');

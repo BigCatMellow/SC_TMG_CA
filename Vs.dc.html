@@ -602,6 +602,17 @@ class Component extends DCLogic {
     this.setState({ opp: next });
     try { localStorage.setItem(OPP_KEY, JSON.stringify(next)); } catch (e) {}
   }
+  // Bonuses that are a lasting status (Siege Mode) stay on after End round; the rest clear.
+  lastingBoosts(all) {
+    const FX = window.SCTMG_EFFECTS, out = {};
+    if (!FX) return out;
+    Object.entries(all || {}).forEach(([side, units]) => Object.entries(units || {}).forEach(([key, ids]) => {
+      const keep = (ids || []).filter(FX.kept);
+      if (keep.length) ((out[side] = out[side] || {})[key] = keep);
+    }));
+    return out;
+  }
+
   savePlay(patch) {
     const play = { ...this.state.play, ...patch };
     this.setState({ play });
@@ -642,7 +653,10 @@ class Component extends DCLogic {
     const lost = Math.min(start, e.modelsLost || 0);
     const alive = start - lost;
     const dead = alive <= 0;
-    const hp = Number(u.stats && u.stats.hp) || 1, shd = Number(u.stats && u.stats.shield) || 0;
+    // Upgrades that add HP (Kinetic Foam) count for damage too.
+    const FXh = window.SCTMG_EFFECTS;
+    const hpUp = FXh ? ((FXh.forUnit(u, e.upgs || [], [], []).stats.HP || []).filter(m => !m.fx.when).reduce((n, m) => n + (m.fx.add || 0), 0)) : 0;
+    const hp = (Number(u.stats && u.stats.hp) || 1) + hpUp, shd = Number(u.stats && u.stats.shield) || 0;
     const pool = hp + (lost === 0 ? shd : 0);
     const dmg = e.dmg || 0;
     const art = window.SCTMG_MAKE_PORTRAIT(f, u.id, {}) || {};
@@ -782,7 +796,7 @@ class Component extends DCLogic {
   plainSegs(text) { return [{ t: String(text || ''), plain: true, kw: false }]; }
   unitDetail(u, e, ctx = {}) {
     const s = u.stats || {};
-    let stats = [{ k: 'SPD', v: s.speed }, { k: 'EVD', v: s.evade }, { k: 'ARM', v: s.armour }, { k: 'HP', v: String(s.hp) }, { k: 'SIZE', v: String(s.size) }];
+    let stats = [{ k: 'SPD', v: s.speed }, { k: 'EVD', v: s.evade }, { k: 'ARM', v: s.armour }, { k: 'HP', v: String(s.hp) }, { k: 'SIZE', v: s.size == null ? '-' : String(s.size) }];
     if (s.shield) stats.unshift({ k: 'SHD', v: String(s.shield) });
     const upgList = Object.entries(u.upgrades || {}).flatMap(([ph, l]) => (l || []).map(x => ({ ...x, phase: ph })));
     const upgs = upgList.filter(x => (e.upgs || []).includes(x.name));
@@ -836,7 +850,11 @@ class Component extends DCLogic {
             cls: 'sc-ud-boost' + (b.on ? ' sc-ud-boost--on' : '') + (b.passive ? ' sc-ud-boost--passive' : ''),
             btnCls: 'sc-ud-boost-btn' + (b.on ? ' sc-ud-boost-btn--on' : ''),
             toggle: () => {
-              if (b.on) return setBoosts(boostsOn.filter(x => x !== b.id));
+              if (b.on) {
+                // Undo a mis-tap: ready the card again if this bonus is what exhausted it.
+                if (b.card && b.card.view.spent && b.card.view.usedFor === b.name) b.card.view.tap();
+                return setBoosts(boostsOn.filter(x => x !== b.id));
+              }
               if (b.card && !b.card.view.spent) b.card.view.use(b.name);
               setBoosts([...boostsOn, b.id]);
             } };
@@ -913,7 +931,7 @@ class Component extends DCLogic {
     Object.entries(st.play.rounds || {}).forEach(([k, r]) => { if (+k < round) { rounds[k] = r; prior.you += r.you || 0; prior.foe += r.foe || 0; } });
     if (m) rounds[round] = { you: Math.max(0, totalYou - prior.you), foe: Math.max(0, totalFoe - prior.foe) };
     this.savePlay({
-      vpYou: totalYou, vpFoe: totalFoe, markers, rounds, finished: last, cardUsed: last ? (st.play.cardUsed || {}) : {}, boosts: last ? (st.play.boosts || {}) : {},
+      vpYou: totalYou, vpFoe: totalFoe, markers, rounds, finished: last, cardUsed: last ? (st.play.cardUsed || {}) : {}, boosts: last ? (st.play.boosts || {}) : this.lastingBoosts(st.play.boosts),
       round: last ? round : round + 1, phase: 0,
       ownLostAtStart: this.lostSupply(st.yourFaction, st.yours.army), foeLostAtStart: this.lostSupply(st.opp.faction, st.opp.army)
     });

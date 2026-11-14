@@ -17,7 +17,7 @@
     'Adrenal Glands': [{ weapons: ['Claws', 'Shredding Claws'], keywords: ['PRECISION (2)'] }],
     'Hydriodic Bile': [{ weapons: ['Acid Saliva'], set: { surge: 'Light', sDie: 'D3+1' } }],
     'Grooved Spines': [{ weapons: ['Needle Spines'], keywords: ['LONG RANGE (16")'] }],
-    'Glial Reconstitution': [{ boost: true, cost: '1 BM', stat: 'speed', add: 1, alt: { add: 2, when: 'on creep' },
+    'Glial Reconstitution': [{ boost: true, buff: true, cost: '1 BM', stat: 'speed', add: 1, alt: { add: 2, when: 'on creep' },
       text: '+1 Speed this round (+2 on creep)' }],
     'Creep Speed': [{ stat: 'speed', add: 2, when: 'on creep' }],
     'Ancillary Carapace': [{ remind: true, text: 'TOUGH (1) on the first Armour Roll each Activation' }],
@@ -37,7 +37,7 @@
     'Grenades - Frag': [{ weapons: ['C-14 Rifle'], set: { sDie: 'D6' }, when: 'vs targets within 8"' }],
     'Slugthrower': [{ weapons: ['C-14 Rifle'], keywords: ['ANTI-EVADE (1)'], when: 'vs targets within 8"' }],
     'Combat Shield': [{ boost: true, cost: '1 CP', text: 'Can always Evade Close Combat Attacks and Special Ability damage' }],
-    'Mode Transformation': [{ boost: true, cost: '1 CP', stat: 'size', set: '3', text: 'Siege Mode: Size counts as 3' }],
+    'Mode Transformation': [{ boost: true, keep: true, cost: '1 CP', stat: 'size', set: '3', text: 'Siege Mode: Size counts as 3' }],
     'Shaped Blast': [{ boost: true, cost: '0 CP', text: 'Once per game in Siege Mode: weapon gains PINPOINT and LOCKED IN (4)' }],
     'Smart Shells': [{ boost: true, cost: '0 CP', text: 'Once per game in Siege Mode: weapon gains INDIRECT FIRE and LONG RANGE (24")' }],
     'Seeker Missile': [{ boost: true, cost: '1 CP', text: 'Mark an enemy within 12": end of Assault, HITS 4 (2) if Stationary or within 8"' }],
@@ -51,10 +51,10 @@
     // ---- Protoss
     'Guidance': [{ weapons: ['Glaive Cannon'], keywords: ['ANTI-EVADE (2)'] }],
     'Resonating Glaives': [{ boost: true, cost: '1 PE', weapons: ['Glaive Cannon'], add: { roa: 1 }, text: 'Glaive Cannon +1 RoA' }],
-    'Leg Enhancements': [{ boost: true, cost: '1 PE', text: 'Free 2" Move (does not use its action)' }],
+    'Leg Enhancements': [{ boost: true, move: true, cost: '1 PE', text: 'Free 2" Move (does not use its action)' }],
     'Shield Overcharge': [{ boost: true, cost: '1 PE', text: 'Reaction: if Shielded, TOUGH (2) on this Armour Roll' }],
     'Path of Shadows': [{ boost: true, cost: '1 PE', text: 'Gains HIDDEN until it performs another action' }],
-    'Zealous Round': [{ boost: true, cost: '0 PE', text: 'Reaction when damaged before activating: count as Activated to take 2 less damage' }],
+    'Zealous Round': [{ boost: true, cost: '0 PE', text: 'When damaged before it activates: count as Activated to take 2 less damage' }],
     'Farsight': [{ boost: true, cost: '1 PE', text: 'A friendly unit within 12" can Evade any attack until end of round' }],
     'Hallucination': [{ boost: true, cost: '0 PE', text: 'Reaction: a friendly unit within 4" being shot can Evade that attack' }],
     'Solid-Field Projectors': [{ boost: true, cost: '1 PE', text: 'Force Field within 8": Size 2 or lower can\'t cross it' }],
@@ -70,11 +70,11 @@
   const first = (weapons, keywords, extra) => ({ boost: true, weapons, keywords, first: true, ...extra });
   const CARDS = {
     // ---- Zerg
-    'kerrigans-swarm': { 'Wild Mutation': [{ boost: true, stat: 'speed', add: 1, weapons: 'all', keywords: ['PRECISION (1)'], first: true,
+    'kerrigans-swarm': { 'Wild Mutation': [{ boost: true, buff: true, stat: 'speed', add: 1, weapons: 'all', keywords: ['PRECISION (1)'], first: true,
       text: 'On creep: +1 Speed, first weapon used gains PRECISION (1)' }] },
     'zerg-swarm': {
-      'Brood Instinct': [{ boost: true, stat: 'evade', better: 1, text: 'Reaction: +1 to this Evade Roll' }],
-      'Rapid Burrowing': [{ boost: true, needs: 'ground', text: 'Gains Burrowed, even if already Activated' }] },
+      'Brood Instinct': [{ boost: true, needs: 'evade', stat: 'evade', better: 1, text: 'Reaction: +1 to this Evade Roll' }],
+      'Rapid Burrowing': [{ boost: true, needs: 'burrow', text: 'Gains Burrowed, even if already Activated' }] },
     'zagaras-swarm': {
       'Instinctive Reaction': [{ boost: true, text: 'Reaction: can Evade this Close Combat Attack' }],
       'Scourge Queen': [first('melee', ['INSTANT', 'PRECISION (4)'], { first: false, needs: 'melee', text: 'If it outnumbers the engaged enemies: melee weapons gain INSTANT and PRECISION (4)' })] },
@@ -88,18 +88,20 @@
     'lair': { 'Predation': [{ boost: true, needs: 'melee', weapons: 'melee', keywords: ['INSTANT'] }] },
     'spawning-pool': { 'Feral Rage': [first('melee', ['PRECISION (2)'], { needs: 'melee' })] },
     'spawning-pool-six': { 'Feral Rage': [first('melee', ['PRECISION (2)'], { needs: 'melee' })] },
-    'hatchery': { 'Lie in Wait': [{ boost: true, needs: 'ground', text: 'Gains Burrowed' }] },
-    'overseer': { 'Pneumatized Carapace': [{ boost: true, text: 'Reaction: roll another D6 for Charge Distance, use the higher' }] },
+    'hatchery': { 'Lie in Wait': [{ boost: true, needs: 'burrow', text: 'Gains Burrowed' }] },
+    'overseer': { 'Pneumatized Carapace': [{ boost: true, move: true, text: 'Reaction: roll another D6 for Charge Distance, use the higher' }] },
     'roach-warren': { 'Nasty Surprise': [{ boost: true, needs: 'ground', text: 'Loses Burrowed' }] },
     // ---- Terran
+    'nova-covert-ops': { 'Mark for Death': [first('all', ['CRITICAL HIT (1)', 'PRECISION (1)'], { when: 'vs the marked enemy unit',
+      text: 'Mark an enemy: friendly attacks on it gain CRITICAL HIT (1) and PRECISION (1) on the first weapon used' })] },
     'terran-armed-forces': { 'Tactical Retreat': [{ boost: true, text: 'Ignores the Disengage penalty this round' }] },
     'armory': {
       'Vehicle Plating': [{ boost: true, needs: 'mechanical', text: 'Reaction: TOUGH (1) on this Armour Roll' }],
       'Vehicle Weapons': [first('ranged', ['CRITICAL HIT (1)'], { needs: 'mechanical' })] },
-    'barracks': { 'Go! Go! Go!': [{ boost: true, needs: 'biological', text: 'Free 2" Move (does not use its action)' }] },
-    'barracks-proxy': { 'Go! Go! Go!': [{ boost: true, needs: 'biological', text: 'Free 2" Move (does not use its action)' }] },
+    'barracks': { 'Go! Go! Go!': [{ boost: true, move: true, needs: 'biological', text: 'Free 2" Move (does not use its action)' }] },
+    'barracks-proxy': { 'Go! Go! Go!': [{ boost: true, move: true, needs: 'biological', text: 'Free 2" Move (does not use its action)' }] },
     'barracks-tech-lab': {
-      'Go! Go! Go!': [{ boost: true, needs: 'biological', text: 'Free 2" Move (does not use its action)' }],
+      'Go! Go! Go!': [{ boost: true, move: true, needs: 'biological', text: 'Free 2" Move (does not use its action)' }],
       "Let's Have a Blast!": [first('ranged', ['ANTI-EVADE (1)'], { needs: 'biological' })] },
     'engineering-bay': {
       'Infantry Armor': [{ boost: true, needs: 'biological', text: 'Reaction: TOUGH (1) on this Armour Roll' }],
@@ -113,19 +115,19 @@
     // ---- Protoss
     'daelaam': { "Dae'Uhl": [{ boost: true, text: 'Reaction: take 2 less damage (minimum 1)' }] },
     'nerazim': {
-      'Might of the Nerazim': [{ boost: true, stat: 'speed', add: 2, weapons: 'all', keywords: ['CRITICAL HIT (2)'], first: true,
+      'Might of the Nerazim': [{ boost: true, buff: true, stat: 'speed', add: 2, weapons: 'all', keywords: ['CRITICAL HIT (2)'], first: true,
         text: 'When it loses HIDDEN: +2 Speed, first weapon used gains CRITICAL HIT (2)' }],
       'Darkness Descends': [{ boost: true, needs: 'biological', text: 'Gains HIDDEN until end of round' }] },
     'forge': {
       'Ground Armor': [{ boost: true, needs: 'ground', text: 'Reaction: TOUGH (1) on this Armour Roll' }],
       'Ground Weapons': [first('ranged', ['CRITICAL HIT (1)'], { needs: 'ground' })] },
     'gate-chronoboosted': {
-      'Zealous Charge': [{ boost: true, stat: 'speed', add: 2, text: '+2 Speed this round' }],
+      'Zealous Charge': [{ boost: true, buff: true, stat: 'speed', add: 2, text: '+2 Speed this round' }],
       'Quick Strikes': [first('melee', ['PRECISION (2)'], { needs: 'melee' })] },
     'gateway': { 'Quick Strikes': [first('melee', ['PRECISION (2)'], { needs: 'melee' })] },
     'warp-gate': { 'Quick Strikes': [first('melee', ['PRECISION (2)'], { needs: 'melee' })] },
     'nexus': { 'Ancient Pride': [first('all', ['INSTANT'])] },
-    'observer': { 'Gravitic Boosters': [{ boost: true, text: 'Reaction: +1 to Charge Distance' }] },
+    'observer': { 'Gravitic Boosters': [{ boost: true, move: true, text: 'Reaction: +1 to Charge Distance' }] },
     'power-field': { 'Guardian Shell': [{ boost: true, needs: 'ground', text: 'Reaction: DODGE (2) on this Armour Roll' }] },
     'twilight-council': {
       'Veil of Shadows': [{ boost: true, text: 'Reaction after a PLACE effect: HEAL (2)' }],
@@ -140,8 +142,11 @@
   const better = (v, n) => /^\d\+$/.test(String(v)) ? Math.max(2, parseInt(v, 10) - n) + '+' : v;
   const isMelee = w => w.range === 'E' || w.phase === 'Combat';
   const allAbilities = unit => [...(unit.abilities || []), ...Object.values(unit.phaseAbilities || {}).flat()];
+  const text = unit => allAbilities(unit).map(a => a.name + ' ' + (a.description || '')).join(' ');
   const fits = (fx, unit) => {
-    const tags = unit.tags || [];
+    const tags = unit.tags || [], st = unit.stats || {};
+    // Units that can't move (Speed "-") get no speed, move or charge bonuses.
+    if ((fx.stat === 'speed' || fx.move || fx.needs === 'charge') && (st.speed === '-' || st.speed === undefined)) return false;
     // A bonus for ranged or melee weapons only reaches units that carry one.
     if (fx.weapons === 'ranged' && !(unit.weapons || []).some(w => !isMelee(w))) return false;
     if (fx.weapons === 'melee' && !(unit.weapons || []).some(isMelee)) return false;
@@ -150,7 +155,9 @@
       case 'biological': return tags.includes('Biological');
       case 'mechanical': return tags.includes('Mechanical');
       case 'mech-ground': return tags.includes('Mechanical') && tags.includes('Ground');
-      case 'charge': return allAbilities(unit).some(a => /IMPACT|Devastating Charge/.test(a.name + ' ' + (a.description || '')));
+      case 'charge': return /Devastating Charge|resolve (the )?IMPACT/i.test(text(unit));
+      case 'burrow': return tags.includes('Ground') && !/cannot gain the BURROWED/i.test(text(unit));
+      case 'evade': return /^\d\+$/.test(String(st.evade));
       case 'ranged': return (unit.weapons || []).some(w => !isMelee(w));
       case 'melee': return (unit.weapons || []).some(isMelee);
       default: return true;
@@ -202,7 +209,7 @@
       Object.entries(fx.set || {}).forEach(([k, v]) => parts.push((k === 'sDie' ? 'S.Die ' : 'Surge ') + v));
       Object.entries(fx.add || {}).forEach(([k, n]) => parts.push('+' + n + (k === 'roa' ? ' RoA' : '" Range')));
       out.notes.push(m.src + ': ' + parts.join(', ') + (fx.when ? ' ' + fx.when : '') + (fx.first ? ' (first weapon used)' : ''));
-      if (fx.when) continue;
+      if (fx.when || fx.first) continue; // conditional, or only the one weapon the player picks
       // A keyword it already has with a number is replaced (ANTI-EVADE (1) becomes ANTI-EVADE (2)).
       (fx.keywords || []).forEach(k => {
         const base = k.replace(/\s*\(.*\)$/, ''), i = out.keywords.findIndex(x => x.replace(/\s*\(.*\)$/, '') === base);
@@ -226,35 +233,52 @@
       const isTarget = /\+$/.test(String(start));
       const step = (v, n) => n ? (isTarget ? better(v, n) : addTo(v, n)) : v;
       const amt = f => f.better || f.add || 0;
-      const base = mods.filter(m => !m.fx.when).reduce((n, m) => n + amt(m.fx), 0);
+      // Amount from each change under a condition (null = unconditional). Flat modifiers add up;
+      // BUFFs to the same stat don't stack, so only the biggest counts (FAQ v1.3).
+      const total = c => {
+        let flat = 0, buff = 0;
+        mods.forEach(m => {
+          const f = m.fx, n = f.when ? (f.when === c ? amt(f) : 0) : f.alt && f.alt.when === c ? amt(f.alt) : amt(f);
+          if (f.buff) buff = Math.max(buff, n); else flat += n;
+        });
+        return flat + buff;
+      };
+      const base = total(null);
       const conds = [...new Set(mods.flatMap(m => [m.fx.when, m.fx.alt && m.fx.alt.when]).filter(Boolean))];
-      const notes = conds.map(c => step(start, mods.reduce((n, m) => n + (m.fx.when === c ? amt(m.fx)
-        : m.fx.alt && m.fx.alt.when === c ? amt(m.fx.alt) : m.fx.when ? 0 : amt(m.fx)), 0)) + ' ' + c);
-      return { ...st, v: step(start, base), alt: notes.join(' · '), mod: true, src: [...new Set(mods.map(m => m.src))].join(', ') };
+      const notes = conds.map(c => step(start, total(c)) + ' ' + c);
+      const v = step(start, base);
+      if (v === st.v && !notes.length) return st; // nothing changed (e.g. +1 Evade on a unit that can't Evade)
+      return { ...st, v, alt: notes.join(' · '), mod: true, src: [...new Set(mods.map(m => m.src))].join(', ') };
     });
   }
 
   // One short line saying what an upgrade does, for the Roster and Library upgrade pickers.
   const STAT_NAME = { speed: 'Speed', armour: 'Armour', evade: 'Evade', hp: 'HP', size: 'Size' };
-  const FIELD = [['range', v => v === 'E' ? 'Melee' : 'Range ' + v + '"'], ['roa', v => 'RoA ' + v], ['hit', v => 'Hit ' + v],
-    ['surge', v => 'Surge ' + v], ['sDie', v => 'S.Die ' + v], ['damage', v => 'Dmg ' + v]];
+  const FIELD = [['range', v => v === 'E' ? 'Melee' : 'Range ' + v + '"'], ['target', v => 'Targets ' + v], ['roa', v => 'RoA ' + v],
+    ['hit', v => 'Hit ' + v], ['surge', v => 'Surge ' + v], ['sDie', v => 'S.Die ' + v], ['damage', v => 'Dmg ' + v]];
+  const plainVal = (k, v) => k === 'range' ? (v === 'E' ? 'Melee' : v + '"') : String(v);
   function summary(upg, unit) {
     if (upg.type === 'Weapon') {
-      const wp = upg.weaponProfile || {}, kw = (wp.keywords || []).filter(k => k !== 'SPECIALIST' && k !== 'SIDEARM');
+      const wp = upg.weaponProfile || {}, skip = k => k === 'SPECIALIST' || k === 'SIDEARM';
+      const kw = (wp.keywords || []).filter(k => !skip(k));
       const one = (wp.keywords || []).includes('SPECIALIST') ? ' (one model)' : '';
       const old = upg.modifies && upg.modifies.weapon && ((unit && unit.weapons) || []).find(w => w.name === upg.modifies.weapon);
       if (!wp.name) return String(upg.description || '').replace(/\.\s+/, ': ').replace(/\.$/, '');
       if (old) {
-        const diff = FIELD.filter(([k]) => wp[k] !== undefined && String(wp[k]) !== String(old[k]) && wp[k] !== '-').map(([k, f]) => f(wp[k]));
-        const newKw = kw.filter(k => !(old.keywords || []).includes(k));
-        const what = [...diff, ...newKw].join(', ');
+        // Old -> new for every value that changes, plus keywords gained and lost.
+        const diff = FIELD.filter(([k]) => wp[k] !== undefined && String(wp[k]) !== String(old[k]))
+          .map(([k, f]) => old[k] !== undefined && old[k] !== '-' ? f(plainVal(k, old[k])).replace(/"$/, '') + ' → ' + plainVal(k, wp[k]) : f(wp[k]));
+        const gained = kw.filter(k => !(old.keywords || []).includes(k));
+        const lost = (old.keywords || []).filter(k => !skip(k) && !kw.includes(k));
+        const what = [...diff, ...gained, ...(lost.length ? ['loses ' + lost.join(', ')] : [])].join(', ');
         return 'Replaces ' + old.name + one + (what ? ': ' + what : '');
       }
       return (upg.modifies && upg.modifies.weapon ? 'Replaces ' + upg.modifies.weapon : 'Adds ' + wp.name) + one + ': ' +
         FIELD.filter(([k]) => wp[k] !== undefined && wp[k] !== '-').map(([k, f]) => f(wp[k])).concat(kw).join(', ');
     }
+    const how = /^Reaction/.test(upg.type) ? 'Reaction' : /^Active/.test(upg.type) ? 'Use' : '';
     return (UPGRADES[upg.name] || []).map(fx => {
-      if (fx.text) return (fx.boost && fx.cost && !/^Reaction/.test(fx.text) ? 'Use (' + fx.cost + '): ' : '') + fx.text;
+      if (fx.text) return (how ? how + (fx.cost ? ' (' + fx.cost + ')' : '') + ': ' : '') + (how ? fx.text.replace(/^Reaction:\s*/, '').replace(/^./, c => c.toUpperCase()) : fx.text);
       const when = fx.when ? ' ' + fx.when : '';
       if (fx.stat) return (fx.set !== undefined ? STAT_NAME[fx.stat] + ' ' + fx.set : '+' + (fx.add || fx.better) + ' ' + STAT_NAME[fx.stat]) + when;
       if (fx.weapons) {
@@ -266,5 +290,11 @@
     }).filter(Boolean).join('; ');
   }
 
-  root.SCTMG_EFFECTS = { UPGRADES, CARDS, forUnit, forWeapon, applyWeapon, applyStats, summary };
+  // Bonuses that last past End round (a status such as Siege Mode).
+  function kept(id) {
+    const m = /^u:(.*):(\d+)$/.exec(id);
+    return !!(m && UPGRADES[m[1]] && UPGRADES[m[1]][+m[2]] && UPGRADES[m[1]][+m[2]].keep);
+  }
+
+  root.SCTMG_EFFECTS = { UPGRADES, CARDS, forUnit, forWeapon, applyWeapon, applyStats, summary, kept };
 })(window);

@@ -2140,7 +2140,7 @@ class Component extends DCLogic {
     const s = unit.stats;
     let stats = [
       { k: 'SPD', v: s.speed }, { k: 'EVD', v: s.evade }, { k: 'ARM', v: s.armour },
-      { k: 'HP', v: String(s.hp) }, { k: 'SIZE', v: String(s.size) }
+      { k: 'HP', v: String(s.hp) }, { k: 'SIZE', v: s.size == null ? '-' : String(s.size) }
     ];
     if (s.shield) stats.unshift({ k: 'SHD', v: String(s.shield) });
     // Bought upgrades change the numbers (unit-effects.js); Active ones are used in VS.
