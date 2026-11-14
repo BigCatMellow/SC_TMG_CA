@@ -730,7 +730,7 @@ window.SCTMG_BATTLE_RULES = {
           "name": "Existing Companion Data",
           "items": [
             {
-              "t": "Current clickable keyword tooltips are provided by the companion's faction datasets, which have not all been verified against the 2026 PDF."
+              "t": "Clickable keyword tooltips follow the Part 11 glossary with FAQ v1.3 (11 Nov 2026) rulings folded in; checked against the PDFs on 14 Nov 2026."
             },
             {
               "t": "If a keyword or card seems inconsistent with this reference, check the PDF page and record the discrepancy before a game."
@@ -885,7 +885,7 @@ window.SCTMG_BATTLE_RULES = {
               "t": "During an Activation, the player is limited to one Reaction. REPEATABLE does not bypass that limit; it allows use in distinct Activations when otherwise legal."
             },
             {
-              "t": "Reaction triggers can also occur outside Activations. Follow the FAQ's one-Reaction-per-trigger limit; when both players react outside an Activation, resolve the First Player Marker holder first."
+              "t": "Reactions can also be used outside Activations, whenever their trigger happens. Outside an Activation each player may resolve only one Reaction per Phase; when both players react to the same trigger, the First Player Marker holder resolves first."
             },
             {
               "t": "Exhausted Tactical Cards cannot use any of their abilities until refreshed, and excess CP/BM/PE paid by exhausting cards cannot be banked."
@@ -896,16 +896,13 @@ window.SCTMG_BATTLE_RULES = {
           "name": "Keywords",
           "items": [
             {
-              "t": "PRECISION, SURGE and CRITICAL HIT apply to the combined weapon Batch, not separately to each model. Range, LoS and certain roll modifiers are checked per model."
-            },
-            {
-              "t": "When a Close Combat Batch is split among multiple enemies, keyword dice modifiers can be assigned to one target pool or divided across them."
+              "t": "A Batch rolls one Surge Die, and PRECISION (X) or CRITICAL HIT (X) moves up to X dice for the whole Batch, not X per model (Core Rules 8.7.4, Part 11). Range and LoS are checked per model."
             },
             {
               "t": "Effects described as 'while within' are checked at the beginning and end of actions/abilities, and apply as soon as conditions are satisfied."
             },
             {
-              "t": "PLACE is not a movement action: it does not automatically remove Creep Tumors or Force Fields. Size 1 Raptors cannot cross Force Fields if specifically prohibited."
+              "t": "PLACE is not a movement action: it does not remove Creep Tumors or Force Fields. Force Fields stop Units of Size 2 or lower, so Raptors (Size 1) cannot cross them even though they can cross other terrain."
             },
             {
               "t": "Numerical bonuses from different named sources may stack; identical BUFF Speed effects do not stack, even if different sources grant them."
@@ -934,7 +931,7 @@ window.SCTMG_BATTLE_RULES = {
               "t": "Artefact Hunt: Flying and BURROWED Units may CLAIM a marker despite normally being unable to Control or Contest one. Claimed markers have their own carrier restrictions."
             },
             {
-              "t": "Artefact Hunt: Adepts carrying a claimed marker cannot resolve Psionic Transfer to teleport; follow the mission's DROP restrictions."
+              "t": "Artefact Hunt: a Unit carrying a claimed marker cannot use teleport abilities (Psionic Transfer, Deep Tunnel and the like) to move it; it must carry the artefact back on foot."
             },
             {
               "t": "Supply Drop: roll for Mission Marker Activation BEFORE the Priority Roll."

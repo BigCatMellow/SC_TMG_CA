@@ -60,7 +60,7 @@ const KEYWORDS = {
           { phase: 'Movement Phase', name: 'Omega Network', type: 'Active', description: 'If there is no Friendly Omega Worm on the battlefield, place a Friendly Omega Worm Unit anywhere on GROUND LEVEL of the battlefield, more than 10" away from any Enemy model.' }
         ]
       },
-      { id: 'zerg-swarm', name: 'Zerg Swarm', unique: true, resource: '+1 BM', slots: { elite: 1, core: 3, support: 1 },
+      { id: 'zerg-swarm', name: 'Zerg Swarm', unique: true, resource: '+1 BM', slots: { elite: 1, core: 3, support: 1, air: 1 },
         abilities: [
           { phase: 'Any Phase', name: 'Brood Instinct', type: 'Reaction', description: 'Use before a Friendly Unit makes an Evade Roll. Apply a +1 Modifier to that roll.' },
           { phase: 'Any Phase', name: 'Zerg Creep', type: 'Passive', description: 'During Army Building, select exactly one Creep Card and add it to their Army List, paying its listed cost (if any).' },
@@ -513,8 +513,8 @@ const KEYWORDS = {
   ],
   "stats": {
     "shield": null,
-    "speed": "5/9",
-    "evade": "5+",
+    "speed": "4/8",
+    "evade": "4+",
     "armour": "6+",
     "hp": 1,
     "size": 1
@@ -547,8 +547,8 @@ const KEYWORDS = {
       "target": "Ground",
       "roa": 2,
       "hit": "4+",
-      "surge": "-",
-      "sDie": "-",
+      "surge": "Light",
+      "sDie": "D3",
       "damage": 1,
       "keywords": []
     }
@@ -563,11 +563,6 @@ const KEYWORDS = {
   ],
   "phaseAbilities": {
     "Assault Phase": [
-      {
-        "name": "Adrenal Overload",
-        "type": "Active (1 Biomass)",
-        "description": "This Unit gains a +1 Modifier to all IMPACT Hit Rolls."
-      },
       {
         "name": "Metabolic Boost",
         "type": "Active (1 Biomass)",
@@ -857,6 +852,12 @@ const KEYWORDS = {
         "cost": 10,
         "type": "Active (1 Biomass)",
         "description": "This Unit gains BUFF Speed (1), or BUFF Speed (2) when ON CREEP."
+      },
+      {
+        "name": "Tunneling Claws",
+        "cost": 10,
+        "type": "Passive",
+        "description": "While BURROWED, this Unit can Move and Run without losing BURROWED and may move through other Units' bases."
       }
     ],
     "Assault Phase": [
@@ -865,14 +866,6 @@ const KEYWORDS = {
         "cost": 10,
         "type": "Passive",
         "description": "Acid Saliva gains Surge Type Light and S Dice D3+1."
-      }
-    ],
-    "Any Phase": [
-      {
-        "name": "Tunneling Claws",
-        "cost": 10,
-        "type": "Passive",
-        "description": "While BURROWED, this Unit can Move and Run without losing BURROWED and may move through other Units' bases."
       }
     ]
   }

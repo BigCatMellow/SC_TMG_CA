@@ -257,5 +257,5 @@ SOURCE OF TRUTH
 - For template weapons, unusual casualty cases, and unresolved disputes, consult the full rule and accompanying diagrams.
 
 EXISTING COMPANION DATA
-- Current clickable keyword tooltips are provided by the companion's faction datasets, which have not all been verified against the 2026 PDF.
+- Clickable keyword tooltips follow the Part 11 glossary with FAQ v1.3 (11 Nov 2026) rulings folded in; checked against the PDFs on 14 Nov 2026.
 - If a keyword or card seems inconsistent with this reference, check the PDF page and record the discrepancy before a game.

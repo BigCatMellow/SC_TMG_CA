@@ -76,6 +76,7 @@ window.SCTMG_RULES = {
             { t: 'Choose an **unengaged** on-table unit.' },
             { t: 'Move the Leading Model up to Speed, then set the rest in Coherency.' },
             { t: 'A normal Move cannot end within **1 inch** of an enemy ground unit.' },
+            { t: 'A Move or Run must actually change the unit\'s position. If it does not move, it counts as a **Hold** (FAQ v1.3).' },
             { t: 'All standard pathing, terrain, elevation, and gap-clearance rules still apply.' }
           ]},
         { name: 'Disengage', items: [
@@ -103,7 +104,9 @@ window.SCTMG_RULES = {
             { t: 'An **engaged** attacker may only target the enemy unit(s) it is already engaged with.' },
             { t: 'Each **batch** is all models using the same weapon profile at the same target.' },
             { t: 'Resolve one batch **completely** before declaring the next batch.' },
-            { t: 'If a unit has multiple weapon profiles, separate batches can target different enemy units.' }
+            { t: 'If a unit has multiple weapon profiles, separate batches can target different enemy units.' },
+            { t: 'Casualties are limited by **visibility, not range**: any target model visible to an attacker can be removed, even if it is outside weapon range (FAQ v1.3).' },
+            { t: 'Evade (when allowed) is rolled against the whole Damage Pool, **including Surge** dice. Surge skips Armour, not Evade (FAQ v1.3).' }
           ]},
         { name: 'Attack Sequence', ordered: true, items: [
             { t: 'Build the Attack Pool.' },
@@ -149,7 +152,7 @@ window.SCTMG_RULES = {
             { t: 'If a model has more than one eligible melee weapon, the controlling player chooses one.' }
           ]},
         { name: 'Multiple Enemy Units', items: [
-            { t: 'If a unit is engaged with more than one enemy unit, declare how attack dice are split **before rolling**.' },
+            { t: 'If a unit is engaged with more than one enemy unit, each model attacks an enemy unit it is in Fighting or Supporting Rank with; decide this **before rolling**.' },
             { t: 'Declare which target receives the Surge Die **before rolling**.' },
             { t: 'That declaration is **binding**.' }
           ]},
@@ -173,6 +176,7 @@ window.SCTMG_RULES = {
             { t: '**Burrowed** units cannot contest or control.' },
             { t: 'Control is determined by eligible **Current Supply**, not model count.' },
             { t: 'A tie does **not** transfer control.' },
+            { t: 'Deactivated Mission Markers can still be controlled (FAQ v1.3).' },
             { t: 'Control is **sticky**: once a player controls a marker, it stays theirs until the enemy wins a later comparison with higher Supply.' }
           ]},
         { name: 'End of Game & Refresh', items: [
@@ -180,8 +184,9 @@ window.SCTMG_RULES = {
             { t: 'If a player has no models on the battlefield and no units in Reserves, the surviving player gains **+10 VP**.' },
             { t: 'At the start of the final Scoring Phase, units still in Reserves are treated as destroyed for scoring.' },
             { t: 'End-of-round effects resolve **before** Cleanup & Refresh.' },
-            { t: 'Cleanup removes temporary tokens (keeping Damage Markers, Mission Markers, Faction Indicators).' },
-            { t: 'Exhausted Tactical Cards and Faction Cards refresh here — **not earlier**.' }
+            { t: 'Cleanup removes temporary tokens (keeping **STAY IN PLAY** tokens, Damage Markers, Mission Markers and the Faction Indicators that show control).' },
+            { t: 'Exhausted Tactical Cards and Faction Cards refresh here — **not earlier**.' },
+            { t: 'Then the player with **fewer VP** takes the First Player Marker for the next round; if tied, roll off.' }
           ]}
       ]
     },
@@ -220,7 +225,7 @@ window.SCTMG_RULES = {
             { t: 'A multi-charge only succeeds if **all** declared targets can be reached legally.' }
           ]},
         { name: 'I am in melee with multiple enemy units', items: [
-            { t: 'You **must split attack dice** before rolling.' },
+            { t: 'Each model attacks an enemy it is ranked against; **decide before rolling**.' },
             { t: 'You **must declare** which target gets the Surge Die before rolling.' },
             { t: 'You **cannot** assign results after seeing the dice.' }
           ]},
@@ -247,7 +252,9 @@ window.SCTMG_RULES = {
             { t: 'Must be triggered immediately **before** declaring an action or immediately **after** one fully resolves.' },
             { t: '**Cannot** be used in the middle of an action.' },
             { t: '**Cannot** normally be used while the unit is in Reserves.' },
-            { t: 'Each named Active ability is usually once per round per unit unless it is **Repeatable**.' }
+            { t: 'Each named Active ability is usually once per round per unit unless it is **Repeatable**.' },
+            { t: 'A unit may use any number of **differently named** Active abilities or Tactical Cards in one activation, if it can pay for them (FAQ v1.3).' },
+            { t: 'A Tactical Card\'s Active ability still needs an activated unit on the battlefield, even if the card affects something else (FAQ v1.3).' }
           ]},
         { name: 'Passive Abilities', items: [
             { t: '**Always on** while the unit is on the battlefield.' },
@@ -258,7 +265,8 @@ window.SCTMG_RULES = {
             { t: 'Trigger in direct response to a defined event.' },
             { t: 'Must be declared at the **exact trigger moment**.' },
             { t: '**Cannot** be used retroactively.' },
-            { t: 'Each player may resolve only **one Reaction per Activation**.' },
+            { t: 'Each player may resolve only **one Reaction per Activation**. REPEATABLE does not change this.' },
+            { t: 'Reactions can also trigger **outside an activation**; then each player gets only one Reaction per phase, and the First Player Marker holder resolves first (FAQ v1.3).' },
             { t: 'If both players react to the same trigger, the Active Player resolves first.' }
           ]},
         { name: 'Resource Payment Rules', items: [
@@ -284,7 +292,7 @@ window.SCTMG_RULES = {
             { t: 'Treating a failed multi-charge as a partial success.' },
             { t: 'Forgetting Close Ranks in Combat.' },
             { t: 'Giving melee attacks an Evade Roll automatically.' },
-            { t: 'Failing to split dice before rolling when engaged with multiple enemy units.' },
+            { t: 'Deciding which enemy each model attacks after rolling, when engaged with multiple enemy units.' },
             { t: 'Using visibility-based casualty removal when engaged casualty priority is required.' },
             { t: 'Counting model count instead of Current Supply for Mission Marker control.' },
             { t: 'Letting Flying, Burrowed, or Out-of-Coherency units contest markers.' },

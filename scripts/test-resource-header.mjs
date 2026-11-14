@@ -218,7 +218,8 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   const firstSlots = slots();
   const factionCard = D.FACTION_CARDS.find(x => x.id === controller.state.factionId) || D.FACTION_CARDS[0];
   // Hero, Elite, Core and Support always show (0/0 included) so the strip keeps its shape; Air only when used.
-  const shownRoles = roles.filter(r => r !== 'air' || (factionCard.slots?.[r] || 0) > 0);
+  // An empty army never shows Air, even when the Faction Card grants an Air slot (no Air units exist yet).
+  const shownRoles = roles.filter(r => r !== 'air');
   assert.deepEqual(firstSlots.map(x => x.name.toLowerCase()), shownRoles,
     faction + ' role counts in fixed order, main roles always shown');
   assert.equal(controller.renderVals().slotCols, Math.max(1, shownRoles.length), faction + ' slot strip column count');
@@ -234,7 +235,7 @@ for (const faction of ['terran', 'zerg', 'protoss']) {
   if (grantingCard) {
     controller.state.tactical = [grantingCard.id];
     const updated = slots();
-    for (const role of roles.filter(r => (factionCard.slots?.[r] || 0) + (grantingCard.slots?.[r] || 0) > 0)) {
+    for (const role of roles.filter(r => r !== 'air' && (factionCard.slots?.[r] || 0) + (grantingCard.slots?.[r] || 0) > 0)) {
       assert.equal(updated.find(x => x.name.toLowerCase() === role).cap,
         (factionCard.slots?.[role] || 0) + (grantingCard.slots?.[role] || 0),
         faction + ' tactical bonus for ' + role);

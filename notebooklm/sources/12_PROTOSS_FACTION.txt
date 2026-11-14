@@ -5,7 +5,7 @@ Current points: https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Cost-Tab
 
 =================================================================
 FACTION CARD: Daelaam
-Slots: {"elite":1,"core":3,"support":1}
+Slots: {"elite":1,"core":3,"support":1,"air":1}
 
 =================================================================
 FACTION CARD: Khalai

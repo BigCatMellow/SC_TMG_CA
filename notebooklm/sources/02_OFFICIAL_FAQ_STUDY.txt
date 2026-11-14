@@ -53,14 +53,13 @@ ABILITIES AND REACTIONS
 - An Active ability on a Tactical Card still requires an active Unit present on the battlefield, even if the ability affects something else.
 - A Unit may use multiple differently named Active abilities in one Activation if costs are paid. A named Active ability is limited to once per Unit per Round unless explicitly stated otherwise.
 - During an Activation, the player is limited to one Reaction. REPEATABLE does not bypass that limit; it allows use in distinct Activations when otherwise legal.
-- Reaction triggers can also occur outside Activations. Follow the FAQ's one-Reaction-per-trigger limit; when both players react outside an Activation, resolve the First Player Marker holder first.
+- Reactions can also be used outside Activations, whenever their trigger happens. Outside an Activation each player may resolve only one Reaction per Phase; when both players react to the same trigger, the First Player Marker holder resolves first.
 - Exhausted Tactical Cards cannot use any of their abilities until refreshed, and excess CP/BM/PE paid by exhausting cards cannot be banked.
 
 KEYWORDS
-- PRECISION, SURGE and CRITICAL HIT apply to the combined weapon Batch, not separately to each model. Range, LoS and certain roll modifiers are checked per model.
-- When a Close Combat Batch is split among multiple enemies, keyword dice modifiers can be assigned to one target pool or divided across them.
+- A Batch rolls one Surge Die, and PRECISION (X) or CRITICAL HIT (X) moves up to X dice for the whole Batch, not X per model (Core Rules 8.7.4, Part 11). Range and LoS are checked per model.
 - Effects described as 'while within' are checked at the beginning and end of actions/abilities, and apply as soon as conditions are satisfied.
-- PLACE is not a movement action: it does not automatically remove Creep Tumors or Force Fields. Size 1 Raptors cannot cross Force Fields if specifically prohibited.
+- PLACE is not a movement action: it does not remove Creep Tumors or Force Fields. Force Fields stop Units of Size 2 or lower, so Raptors (Size 1) cannot cross them even though they can cross other terrain.
 - Numerical bonuses from different named sources may stack; identical BUFF Speed effects do not stack, even if different sources grant them.
 =================================================================
 FAQ: Missions, Markers & Scoring
@@ -70,7 +69,7 @@ Exceptions to normal control and scoring
 MISSION MARKERS
 - Mission Markers can be controlled while their card is Deactivated; activation state does not remove existing control.
 - Artefact Hunt: Flying and BURROWED Units may CLAIM a marker despite normally being unable to Control or Contest one. Claimed markers have their own carrier restrictions.
-- Artefact Hunt: Adepts carrying a claimed marker cannot resolve Psionic Transfer to teleport; follow the mission's DROP restrictions.
+- Artefact Hunt: a Unit carrying a claimed marker cannot use teleport abilities (Psionic Transfer, Deep Tunnel and the like) to move it; it must carry the artefact back on foot.
 - Supply Drop: roll for Mission Marker Activation BEFORE the Priority Roll.
 - During mission/deployment draft, removing a duplicate card removes that physical copy, not all cards with the same name.
 
