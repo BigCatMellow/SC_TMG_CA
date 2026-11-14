@@ -6,3 +6,6 @@ agent-rules/generated/
 
 # Screenshots generated during automated responsive checks
 /artifacts/
+
+# Locally collected publisher exports (never commit)
+/command-center-exports/
