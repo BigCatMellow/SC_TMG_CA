@@ -148,6 +148,14 @@ for(const faction of ['terran','zerg','protoss']){
   assert.equal(controller.state.army.length,1,faction+' quick tier adds a unit');
   view().quickTiles.find(q=>q.count).onCard(); assert.equal(view().qbInfoOpen,true,faction+' model opens its info sheet');
   assert.ok(view().qbInfo.detail.stats.length>0,faction+' info sheet has stats'); view().closeQbInfo();
+  const two=view().quickTiles.find(q=>q.tiers.filter(x=>!x.off).length===2&&!controller.D().UNITS.find(u=>u.name===q.name).unique);
+  if(two){
+    const tl=two.tiers.filter(x=>!x.off); tl[0].add(); tl[1].add(); tl[1].add();
+    const cs=view().quickTiles.find(q=>q.name===two.name).counts;
+    assert.deepEqual(cs.map(c=>c.label+':'+c.count+':'+/--right/.test(c.cls)).join(),tl[0].label+':1:false,'+tl[1].label+':2:true',faction+' per-tier counts, left and right');
+    cs[1].onMinus(); assert.equal(view().quickTiles.find(q=>q.name===two.name).counts[1].count,1,faction+' − removes from that tier');
+    const twoId=controller.D().UNITS.find(u=>u.name===two.name).id; controller.state.army=controller.state.army.filter(e=>e.unitId!==twoId);
+  }
   const nBefore=controller.state.army.length; view().quickTiles.find(q=>q.count).onMinus();
   assert.equal(controller.state.army.length,nBefore-1,faction+' −1 removes one'); tileQ.tiers.find(t=>!t.off).add();
   view().openQbSheet(); assert.equal(view().qbSheet,true,faction+' your army opens as a sheet');

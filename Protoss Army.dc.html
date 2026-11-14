@@ -270,7 +270,7 @@
             <sc-for list="{{ quickTiles }}" as="q" hint-placeholder-count="8">
               <div class="{{ q.cls }}" style="--rc:{{ q.roleColor }}">
                 <button onClick="{{ q.onCard }}" class="sc-qb-figure" aria-label="{{ q.name }}: stats, weapons and abilities"><sc-if value="{{ q.img }}" hint-placeholder-val="{{ false }}"><img src="{{ q.img }}" alt="" aria-hidden="true" loading="lazy" class="sc-vs-tile-img"></sc-if></button>
-                <sc-if value="{{ q.count }}" hint-placeholder-val="{{ false }}"><div class="sc-qb-count"><span class="sc-vs-tile-count">×{{ q.count }}</span><button onClick="{{ q.onMinus }}" class="sc-qb-minus" aria-label="Remove one {{ q.name }}">−</button></div></sc-if>
+                <sc-for list="{{ q.counts }}" as="qc" hint-placeholder-count="1"><div class="{{ qc.cls }}"><span class="sc-vs-tile-count" aria-label="{{ qc.aria }}">×{{ qc.count }}</span><button onClick="{{ qc.onMinus }}" class="sc-qb-minus" aria-label="Remove one {{ qc.label }} {{ q.name }}">−</button></div></sc-for>
                 <div class="sc-vs-tile-body">
                   <div class="sc-vs-k" style="font-size:9px;color:{{ q.roleColor }}">{{ q.role }}</div>
                   <div class="sc-vs-tile-name">{{ q.name }}</div>
@@ -2364,6 +2364,16 @@ class Component extends DCLogic {
           note: summoned ? 'Summoned by an ability' : needs ? 'Requires ' + needs : taken ? 'Unique · in army' : '',
           onCard: () => this.setState({ qbInfo: u.id }),
           onMinus: () => { const mine = st.army.filter(e => e.unitId === u.id), last = mine[mine.length - 1]; if (last) this.removeWithUndo(last.key, u.name); },
+          // One count per buyable tier: the lower tier in the left corner, the higher in the right.
+          counts: (() => {
+            const buy = u.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost > 0).sort((a, b) => String(a.t.tier).localeCompare(String(b.t.tier)));
+            return buy.map((x, k) => {
+              const mine = st.army.filter(e => e.unitId === u.id && (buy.length === 1 || e.tierIdx === x.i));
+              return { count: mine.length, label: x.t.tier, aria: mine.length + ' at ' + x.t.tier,
+                cls: 'sc-qb-count' + (k > 0 ? ' sc-qb-count--right' : ''),
+                onMinus: () => { const last = mine[mine.length - 1]; if (last) this.removeWithUndo(last.key, u.name + ' ' + x.t.tier); } };
+            }).filter(c => c.count > 0);
+          })(),
           tiers: u.tiers.map((t, i) => ({ t, i })).filter(x => x.t.cost > 0).sort((a, b) => String(a.t.tier).localeCompare(String(b.t.tier))).map(({ t, i }) => ({
             label: t.tier, cost: t.cost + 'm', off: taken || locked,
             aria: 'Add ' + u.name + ' ' + t.tier + ', ' + t.models + ' models, ' + t.cost + ' minerals',
@@ -2394,7 +2404,7 @@ class Component extends DCLogic {
     clearTimeout(this._undoTimer);
     this.setState(st => ({
       undo: null,
-      army: [...st.army, { key: 'k' + Date.now(), unitId, tierIdx, upgs: [], modelsLost: 0, deployed: false }],
+      army: [...st.army, { key: 'k' + Date.now() + Math.random().toString(36).slice(2, 6), unitId, tierIdx, upgs: [], modelsLost: 0, deployed: false }],
       sheet: null
     }), () => this.save());
   }
