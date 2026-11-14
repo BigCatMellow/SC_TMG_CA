@@ -405,7 +405,7 @@
       <!-- Tactics view: Quick build (tap + to add, tap a tile for abilities) or full Card details -->
       <div class="sc-qb-switch" role="tablist" aria-label="Tactics view">
         <button onClick="{{ setTacQuick }}" class="{{ tacQuickBtnCls }}" role="tab" aria-selected="{{ tacQuick }}">Quick build</button>
-        <button onClick="{{ setTacCards }}" class="{{ tacCardsBtnCls }}" role="tab" aria-selected="{{ !tacQuick }}">Card details</button>
+        <button onClick="{{ setTacCards }}" class="{{ tacCardsBtnCls }}" role="tab" aria-selected="{{ !tacQuick }}">Full cards</button>
       </div>
       <sc-if value="{{ tacQuick }}" hint-placeholder-val="{{ false }}">
         <section aria-label="Tactical cards quick build">
