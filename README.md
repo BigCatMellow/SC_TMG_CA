@@ -133,6 +133,7 @@ One screen for both armies and the score.
 - [Playtesting process](docs/playtesting.md)
 - [UI overhaul retro](docs/retro-2026-11-ui-overhaul.md)
 - [NotebookLM study sources](notebooklm/README.md)
+- [Command Center extraction tools](scripts/command-center-extraction/README.md): browser scripts that export rules, faction cards, mission JPGs and deployment maps
 
 **Checks**
 - Every `scripts/test-*.mjs` runs on each pull request (the required **rules** check). Run them all locally with:
