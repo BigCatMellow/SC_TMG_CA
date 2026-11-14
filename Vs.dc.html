@@ -17,6 +17,7 @@
   <script src="zerg-data.js"></script>
   <script src="protoss-data.js"></script>
   <script src="wave3-data.js"></script>
+  <script src="unit-effects.js"></script>
   <script src="model-portraits.js"></script>
   <script src="portraits/cutout/index.js"></script>
   <script src="missions-data.js"></script>
@@ -299,6 +300,7 @@
         </div>
         <button onClick="{{ closeSheet }}" class="sc-vs-info-x" aria-label="Close">&#10005;</button>
       </div>
+      <sc-if value="{{ info.hasUpgradeLine }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-upgline"><b>Upgrades</b> {{ info.upgradeLine }}</p></sc-if>
       <dc-import name="UnitDetail" detail="{{ info.detail }}" hint-size="100%,300px"></dc-import>
     </div>
   </sc-if>
@@ -778,25 +780,41 @@ class Component extends DCLogic {
     return { Movement: '#4f8df9', Assault: '#f9822f', Combat: '#f04a4a', Scoring: '#35c76b', Any: '#c99af7' }[String(ph || '').replace(' Phase', '')] || '#8a91a5';
   }
   plainSegs(text) { return [{ t: String(text || ''), plain: true, kw: false }]; }
-  unitDetail(u, e) {
+  unitDetail(u, e, ctx = {}) {
     const s = u.stats || {};
-    const stats = [{ k: 'SPD', v: s.speed }, { k: 'EVD', v: s.evade }, { k: 'ARM', v: s.armour }, { k: 'HP', v: String(s.hp) }, { k: 'SIZE', v: String(s.size) }];
+    let stats = [{ k: 'SPD', v: s.speed }, { k: 'EVD', v: s.evade }, { k: 'ARM', v: s.armour }, { k: 'HP', v: String(s.hp) }, { k: 'SIZE', v: String(s.size) }];
     if (s.shield) stats.unshift({ k: 'SHD', v: String(s.shield) });
-    const upgs = Object.entries(u.upgrades || {}).flatMap(([ph, l]) => (l || []).map(x => ({ ...x, phase: ph })))
-      .filter(x => (e.upgs || []).includes(x.name));
-    const weapons = (u.weapons || []).filter(w => !w.replaces || (e.upgs || []).includes(w.name)).map(w => ({
-      name: w.name, phase: w.phase, phFg: this.phaseColor(w.phase),
-      chips: [{ k: 'RNG', v: String(w.range) }, { k: 'TGT', v: w.target }, { k: 'RoA', v: String(w.roa) }, { k: 'HIT', v: w.hit },
-        { k: 'SURGE', v: w.surge }, { k: 'S.DIE', v: w.sDie }, { k: 'DMG', v: String(w.damage) }],
-      kwSegs: (w.keywords || []).length ? this.plainSegs(w.keywords.join(', ')) : null }));
+    const upgList = Object.entries(u.upgrades || {}).flatMap(([ph, l]) => (l || []).map(x => ({ ...x, phase: ph })));
+    const upgs = upgList.filter(x => (e.upgs || []).includes(x.name));
+    // What the bought upgrades and the side's cards do to this unit's numbers.
+    const FX = window.SCTMG_EFFECTS;
+    const fx = FX ? FX.forUnit(u, e.upgs || [], ctx.cards || [], ctx.active || []) : { stats: {}, weapons: {}, boosts: [] };
+    if (FX) stats = FX.applyStats(stats, fx.stats);
+    // Weapons as fielded: bought replacements swap in, SPECIALIST weapons sit alongside the original.
+    const replaced = new Set(upgs.filter(x => x.type === 'Weapon' && !x.specialist && x.modifies && x.modifies.weapon
+      && !/SPECIALIST/.test((x.weaponProfile && x.weaponProfile.keywords || []).join(' '))).map(x => x.modifies.weapon));
+    let list = (u.weapons || []).filter(w => (!w.replaces || (e.upgs || []).includes(w.name)) && !replaced.has(w.name)).map(w => ({ ...w, from: '' }));
+    upgs.forEach(x => { if (x.weaponProfile && !list.some(w => w.name === x.weaponProfile.name)) list.push({ ...x.weaponProfile, from: x.name }); });
+    const weapons = list.map(w => {
+      const mods = fx.weapons[w.name] || [];
+      const set = Object.assign({}, ...mods.map(m => m.fx.set || {}));
+      const kw = [...(w.keywords || []), ...mods.flatMap(m => m.fx.keywords || [])];
+      const notes = [w.from ? 'Upgrade: ' + w.from : '', ...mods.map(m => m.src + ': ' + [...(m.fx.keywords || []), ...Object.entries(m.fx.set || {}).map(([k, v]) => (k === 'sDie' ? 'S.Die ' : 'Surge ') + v)].join(', '))].filter(Boolean);
+      return { name: w.name, phase: w.phase, phFg: this.phaseColor(w.phase), modNote: notes.join(' · '), mod: notes.length > 0, modKeys: Object.keys(set),
+        chips: [{ k: 'RNG', v: String(w.range) }, { k: 'TGT', v: w.target }, { k: 'RoA', v: String(w.roa) }, { k: 'HIT', v: w.hit },
+          { k: 'SURGE', v: set.surge || w.surge }, { k: 'S.DIE', v: set.sDie || w.sDie }, { k: 'DMG', v: String(w.damage) }],
+        kwSegs: kw.length ? this.plainSegs(kw.join(', ')) : null };
+    });
     const order = ['Any Phase', 'Movement Phase', 'Assault Phase', 'Combat Phase', 'Scoring Phase'];
     const g = {};
     (u.abilities || []).forEach(a => (g[a.phase] = g[a.phase] || []).push(a));
     Object.entries(u.phaseAbilities || {}).forEach(([ph, l]) => (g[ph] = g[ph] || []).push(...l));
-    upgs.filter(x => x.type !== 'Weapon').forEach(x => (g[x.phase] = g[x.phase] || []).push({ ...x, type: x.type + ' · upgrade' }));
     const abilityGroups = order.filter(ph => g[ph]).map(ph => ({ phase: ph.replace(' Phase', ''), phFg: this.phaseColor(ph),
       items: g[ph].map(a => ({ name: a.name, type: a.type, segs: this.plainSegs(a.description) })) }));
-    return { stats, weapons, abilityGroups, upgrades: [], tags: (u.tags || []).map(t => ({ name: t, onOpen: () => {} })) };
+    // Bought upgrades keep their full text at the bottom, marked as bought.
+    const upgrades = upgs.map(x => ({ name: x.name, cost: x.type === 'Weapon' ? 'Weapon' : x.type, phase: x.phase.replace(' Phase', ''),
+      phBg: 'rgba(242,193,78,0.14)', phFg: '#f2c14e', segs: this.plainSegs(x.description), interactive: false, on: true }));
+    return { detail: { stats, weapons, abilityGroups, upgrades, tags: (u.tags || []).map(t => ({ name: t, onOpen: () => {} })) }, boosts: fx.boosts };
   }
   infoVals(you, opp) {
     const sh = this.state.sheet;
@@ -806,10 +824,30 @@ class Component extends DCLogic {
     if (sh && sh.type === 'unit') {
       const S = sideOf(sh.side), row = S.v.units.find(x => x.key === sh.key);
       const e = (S.src.army || []).find(x => x.key === sh.key), u = e && this.D(S.f).UNITS.find(x => x.id === e.unitId);
-      if (row && u) Object.assign(out, { sheetUnit: true, info: { style: '--side:' + S.color, sideLabel: S.label, name: u.name, img: row.img,
-        roleColor: row.roleColor, sub: row.role + ' · ' + row.tier + ((e.upgs || []).length ? ' · ' + e.upgs.length + ' upgrade' + (e.upgs.length > 1 ? 's' : '') : ''),
-        state: row.status + ' · ' + (row.tracksDamage ? row.hpText : row.alive + ' model' + (row.alive === 1 ? '' : 's') + ' left'),
-        detail: this.unitDetail(u, e) } });
+      if (row && u) {
+        // Cards this side has in play, so their bonuses can show on the unit.
+        const cards = (S.v.cards || []).map(c => ({ id: c.key === 'faction' ? S.src.factionId || (this.card(S.f, S.src.factionId) || {}).id : c.key.split('#')[0], key: c.key, name: c.name, view: c }));
+        const boostsOn = ((this.state.play.boosts || {})[sh.side] || {})[e.key] || [];
+        const ud = this.unitDetail(u, e, { cards, active: boostsOn });
+        const setBoosts = next => this.savePlay({ boosts: { ...(this.state.play.boosts || {}), [sh.side]: { ...((this.state.play.boosts || {})[sh.side] || {}), [e.key]: next } } });
+        const boosts = ud.boosts.map(b => {
+          const spent = b.card && b.card.view.spent && !b.on;
+          return { name: b.name, from: b.from, text: b.text, cost: b.passive ? 'Always on' : b.cost || (b.card ? 'Exhausts card' : ''),
+            canUse: !b.passive && !spent, usedElsewhere: spent, label: b.on ? 'On ✓' : 'Use',
+            cls: 'sc-ud-boost' + (b.on ? ' sc-ud-boost--on' : '') + (b.passive ? ' sc-ud-boost--passive' : ''),
+            btnCls: 'sc-ud-boost-btn' + (b.on ? ' sc-ud-boost-btn--on' : ''),
+            toggle: () => {
+              if (b.on) return setBoosts(boostsOn.filter(x => x !== b.id));
+              if (b.card && !b.card.view.spent) b.card.view.use(b.name);
+              setBoosts([...boostsOn, b.id]);
+            } };
+        });
+        Object.assign(out, { sheetUnit: true, info: { style: '--side:' + S.color, sideLabel: S.label, name: u.name, img: row.img,
+          roleColor: row.roleColor, sub: row.role + ' · ' + row.tier,
+          upgradeLine: (e.upgs || []).join(' · '), hasUpgradeLine: (e.upgs || []).length > 0,
+          state: row.status + ' · ' + (row.tracksDamage ? row.hpText : row.alive + ' model' + (row.alive === 1 ? '' : 's') + ' left'),
+          detail: { ...ud.detail, boosts } } });
+      }
     }
     if (sh && sh.type === 'card') {
       const S = sideOf(sh.side), c = S.v.cards.find(x => x.key === sh.key);
@@ -874,7 +912,7 @@ class Component extends DCLogic {
     Object.entries(st.play.rounds || {}).forEach(([k, r]) => { if (+k < round) { rounds[k] = r; prior.you += r.you || 0; prior.foe += r.foe || 0; } });
     if (m) rounds[round] = { you: Math.max(0, totalYou - prior.you), foe: Math.max(0, totalFoe - prior.foe) };
     this.savePlay({
-      vpYou: totalYou, vpFoe: totalFoe, markers, rounds, finished: last, cardUsed: last ? (st.play.cardUsed || {}) : {},
+      vpYou: totalYou, vpFoe: totalFoe, markers, rounds, finished: last, cardUsed: last ? (st.play.cardUsed || {}) : {}, boosts: last ? (st.play.boosts || {}) : {},
       round: last ? round : round + 1, phase: 0,
       ownLostAtStart: this.lostSupply(st.yourFaction, st.yours.army), foeLostAtStart: this.lostSupply(st.opp.faction, st.opp.army)
     });
@@ -897,7 +935,7 @@ class Component extends DCLogic {
     const snap = { play: st.play, yours: st.yours, opp: st.opp };
     const m = this.mission();
     const fresh = a => (a || []).map(e => ({ ...e, modelsLost: 0, dmg: 0, deployed: false }));
-    this.savePlay({ round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, rounds: {}, ownLostAtStart: 0, foeLostAtStart: 0, finished: false, cardUsed: {} });
+    this.savePlay({ round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, rounds: {}, ownLostAtStart: 0, foeLostAtStart: 0, finished: false, cardUsed: {}, boosts: {} });
     this.saveYours({ ...st.yours, army: fresh(st.yours.army), tacticalTapped: [], factionTappedId: null,
       battleSupplyAvailable: m ? m.supply : st.yours.battleSupplyAvailable });
     this.saveOpp({ ...st.opp, army: fresh(st.opp.army), tapped: [] });

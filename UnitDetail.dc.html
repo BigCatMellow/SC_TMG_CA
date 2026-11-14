@@ -21,21 +21,35 @@
   <!-- profile: one strip, health stands out -->
   <div class="sc-ud-stats" style="grid-template-columns:repeat({{ statCols }},minmax(0,1fr))">
     <sc-for list="{{ stats }}" as="stt" hint-placeholder-count="5">
-      <div class="{{ stt.cls }}"><small>{{ stt.k }}</small><b>{{ stt.v }}</b></div>
+      <div class="{{ stt.cls }}" title="{{ stt.src }}"><small>{{ stt.k }}</small><b>{{ stt.v }}</b><sc-if value="{{ stt.alt }}" hint-placeholder-val="{{ false }}"><em class="sc-ud-alt">{{ stt.alt }}</em></sc-if></div>
     </sc-for>
   </div>
+
+  <!-- boosts from upgrades and cards that must be used (Vs only) -->
+  <sc-if value="{{ hasBoosts }}" hint-placeholder-val="{{ false }}">
+    <div class="sc-ud-boosts" aria-label="Boosts from upgrades and cards">
+      <sc-for list="{{ boosts }}" as="bs" hint-placeholder-count="2">
+        <div class="{{ bs.cls }}">
+          <div class="sc-ud-boost-text"><b>{{ bs.name }}<small>{{ bs.from }} · {{ bs.cost }}</small></b><span>{{ bs.text }}</span></div>
+          <sc-if value="{{ bs.canUse }}" hint-placeholder-val="{{ true }}"><button onClick="{{ bs.toggle }}" class="{{ bs.btnCls }}">{{ bs.label }}</button></sc-if>
+          <sc-if value="{{ bs.usedElsewhere }}" hint-placeholder-val="{{ false }}"><span class="sc-ud-boost-note">Card used</span></sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </sc-if>
 
   <!-- weapons -->
   <sc-if value="{{ hasWeapons }}" hint-placeholder-val="{{ false }}">
     <section class="sc-ud-sec">
       <div class="sc-ud-head"><span>Weapons</span><i></i></div>
       <sc-for list="{{ weapons }}" as="wp" hint-placeholder-count="2">
-        <div class="sc-ud-wpn" style="--ph:{{ wp.phFg }}">
+        <div class="{{ wp.cls }}" style="--ph:{{ wp.phFg }}">
           <div class="sc-ud-wpn-top"><b>{{ wp.name }}</b><span class="sc-ud-pill">{{ wp.phase }}</span></div>
+          <sc-if value="{{ wp.mod }}" hint-placeholder-val="{{ false }}"><div class="sc-ud-wpn-mod">{{ wp.modNote }}</div></sc-if>
           <div class="sc-ud-wpn-main">
             <sc-for list="{{ wp.main }}" as="m" hint-placeholder-count="4"><div><small>{{ m.k }}</small><b>{{ m.v }}</b></div></sc-for>
           </div>
-          <div class="sc-ud-wpn-sub"><span>{{ wp.target }}</span><sc-if value="{{ wp.surge }}" hint-placeholder-val="{{ false }}"><span class="sc-ud-surge">{{ wp.surge }}</span></sc-if></div>
+          <div class="sc-ud-wpn-sub"><span>{{ wp.target }}</span><sc-if value="{{ wp.surge }}" hint-placeholder-val="{{ false }}"><span class="{{ wp.surgeCls }}">{{ wp.surge }}</span></sc-if></div>
           <sc-if value="{{ wp.kwSegs }}" hint-placeholder-val="{{ false }}">
             <div class="sc-ud-wpn-kw"><sc-for list="{{ wp.kwSegs }}" as="sg" hint-placeholder-count="1"><sc-if value="{{ sg.kw }}" hint-placeholder-val="{{ false }}"><span onClick="{{ sg.onOpen }}" class="sc-ud-kw">{{ sg.t }}</span></sc-if><sc-if value="{{ sg.plain }}" hint-placeholder-val="{{ true }}"><span>{{ sg.t }}</span></sc-if></sc-for></div>
           </sc-if>
@@ -117,7 +131,8 @@ class Component extends DCLogic {
       const m = {}; (w.chips || []).forEach(c => { m[c.k] = c.v; });
       const has = v => v && v !== '-' && v !== '—';
       const rng = m.RNG === 'E' ? 'Melee' : /^\d+$/.test(m.RNG || '') ? m.RNG + '"' : (m.RNG || '-');
-      return { ...w,
+      return { ...w, cls: 'sc-ud-wpn' + (w.mod ? ' sc-ud-wpn--mod' : ''),
+        surgeCls: 'sc-ud-surge' + ((w.modKeys || []).some(k => k === 'surge' || k === 'sDie') ? ' sc-ud-surge--mod' : ''),
         main: [{ k: 'Range', v: rng }, { k: 'Attacks', v: m.RoA || '-' }, { k: 'Hit', v: m.HIT || '-' }, { k: 'Damage', v: m.DMG || '-' }],
         target: 'Targets ' + (m.TGT || '-'),
         surge: has(m.SURGE) ? 'Surge vs ' + m.SURGE + (has(m['S.DIE']) ? ' · ' + m['S.DIE'] : '') : '' };
@@ -127,13 +142,14 @@ class Component extends DCLogic {
     return {
       tags: d.tags || [],
       hasTags: (d.tags || []).length > 0,
-      stats: stats.map(x => ({ ...x, cls: 'sc-ud-stat' + (statCls[x.k] || '') })),
+      stats: stats.map(x => ({ ...x, alt: x.alt || '', src: x.src ? 'Changed by ' + x.src : '', cls: 'sc-ud-stat' + (statCls[x.k] || '') + (x.mod ? ' sc-ud-stat--mod' : '') })),
       statCols: Math.max(stats.length, 1),
       weapons,
       hasWeapons: weapons.length > 0,
       abilityGroups, hasAbilities: abilityGroups.length > 0,
       upgrades,
       hasUpgrades: upgrades.length > 0,
+      boosts: d.boosts || [], hasBoosts: (d.boosts || []).length > 0,
       legendOpen: this.state.legend,
       legendLabel: this.state.legend ? 'Hide abbreviations' : 'What do SPD, RoA, S.DIE mean?',
       toggleLegend: (ev) => { if (ev) ev.stopPropagation(); this.setState(s => ({ legend: !s.legend })); },
