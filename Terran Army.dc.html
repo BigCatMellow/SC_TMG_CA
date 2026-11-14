@@ -2578,9 +2578,10 @@ class Component extends DCLogic {
       const u = D.UNITS.find(x => x.id === e.unitId);
       if (u && usedSlots[u.role.toLowerCase()] !== undefined) usedSlots[u.role.toLowerCase()] += (u.tiers[e.tierIdx]?.supply || 0);
     });
-    // The four main roles always show (0/0 included) so the strip never changes shape; Air only when used.
+    // The four main roles always show (0/0 included) so the strip never changes shape. Air only once an Air unit is
+    // in the army: some Faction Cards grant an Air slot, but no Air units are released yet.
     const roleSlots = ['hero', 'elite', 'core', 'support', 'air'].filter(role =>
-      role !== 'air' || (baseSlots[role] || 0) > 0 || (usedSlots[role] || 0) > 0).map(role => {
+      role !== 'air' || (usedSlots[role] || 0) > 0).map(role => {
       const used = usedSlots[role] || 0;
       const cap = baseSlots[role] || 0;
       const name = role.charAt(0).toUpperCase() + role.slice(1);

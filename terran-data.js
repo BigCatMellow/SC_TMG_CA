@@ -55,13 +55,13 @@ const KEYWORDS = {
     // DATA: Faction Cards
     // ============================================================================
     const ZERG_FACTION_CARDS = [
-  { id: 'raynors-raiders', name: "Raynor's Raiders", unique: true, resource: '+1 CP', slots: { hero: 1, core: 3, support: 1 },
+  { id: 'raynors-raiders', name: "Raynor's Raiders", unique: true, resource: '+1 CP', slots: { hero: 1, core: 3, support: 1, air: 1 },
     abilities: [
-      { phase: 'Movement Phase', name: 'Rapid Reinforcements', type: 'Active', description: 'Place a Friendly Point Defence Drone Unit anywhere on the battlefield, more than 1" away from any Enemy model. Remove this Unit at the End of the Round.' },
+      { phase: 'Movement Phase', name: 'Rapid Ingress', type: 'Active', description: 'Set a Friendly Point Defence Drone Unit anywhere on the battlefield, more than 1" away from any Enemy model. Remove this Unit at the End of the Round.' },
       { phase: 'Movement Phase', name: 'Ready for Pickup?', type: 'Active', description: 'Once per Game. The active Unit resolves the PLACE (12) effect. Models placed by this effect cannot be set up Within the Engagement Range of any Enemy Unit. This resolves instead of performing a standard action.' }
     ]
   },
-  { id: 'terran-armed-forces', name: 'Terran Armed Forces', unique: true, resource: '+1 CP', slots: { elite: 1, core: 3, support: 1 },
+  { id: 'terran-armed-forces', name: 'Terran Armed Forces', unique: true, resource: '+1 CP', slots: { elite: 1, core: 3, support: 1, air: 1 },
     abilities: [
       { phase: 'Movement Phase', name: 'Tactical Retreat', type: 'Active', description: 'The active Unit ignores the Disengage penalty for the remainder of the Round.' },
       { phase: 'Movement Phase', name: 'Terran Tenacity', type: 'Active', description: 'Once per Game. Immediately claim the First Player Marker. No other player may claim the First Player Marker for the remainder of this Phase.' }

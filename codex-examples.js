@@ -1,7 +1,7 @@
 // StarCraft TMG Companion — explanatory worked scenarios.
 // These are teaching examples, NOT official or exhaustive rule wording.
 // See rules-data.js and battle-rules-data.js; source labels below refer to
-// the 2026 Core Rules and publisher FAQ v1.1 (25 Sep 2026).
+// the 2026 Core Rules and publisher FAQ v1.3 (11 Nov 2026).
 // Keep each example in sync with the cited rule before changing it.
 window.SCTMG_CODEX_EXAMPLES = [
   {
@@ -106,7 +106,7 @@ window.SCTMG_CODEX_EXAMPLES = [
       'Only then declare and resolve the separate SIDEARM Batch against its legal target.'
     ],
     takeaway: 'Do not predeclare all later Batch targets before finishing the first Batch.',
-    source: 'Core Rules §8.7.3–8.7.5 · pp. 60–64; publisher FAQ v1.1 · p. 4',
+    source: 'Core Rules §8.7.3–8.7.5 · pp. 60–64; publisher FAQ v1.3',
     keywords: ['SIDEARM', 'PRECISION', 'CRITICAL HIT'], tags: []
   },
   {
@@ -121,7 +121,7 @@ window.SCTMG_CODEX_EXAMPLES = [
       'Any Surge-generated hits that bypass Armour still face Evade if the defender is entitled to that roll.'
     ],
     takeaway: 'Never grant Evade automatically to every defender or every melee target.',
-    source: 'Core Rules §8.7.3–8.7.5 · pp. 60–64; publisher FAQ v1.1 · pp. 2–3',
+    source: 'Core Rules §8.7.3–8.7.5 · pp. 60–64; publisher FAQ v1.3',
     keywords: ['ANTI-EVADE'], tags: []
   },
   {
@@ -166,7 +166,7 @@ window.SCTMG_CODEX_EXAMPLES = [
       'You cannot wait for the Charge roll, see the result, and retroactively declare the same earlier-triggered Reaction.'
     ],
     takeaway: 'Follow the specific card trigger; a later Reaction needs a separate qualifying trigger.',
-    source: 'Core Rules §10.1–10.5.2 · pp. 79–81; publisher FAQ v1.1 · pp. 3–5',
+    source: 'Core Rules §10.1–10.5.2 · pp. 79–81; publisher FAQ v1.3',
     keywords: ['INSTANT'], tags: []
   },
   {
@@ -181,7 +181,7 @@ window.SCTMG_CODEX_EXAMPLES = [
       'Check the attacker’s Engagement status and the target’s legality independently.'
     ],
     takeaway: 'PINPOINT is not permission to ignore every Engagement rule.',
-    source: 'Core Rules p. 88; publisher FAQ v1.1 · p. 4',
+    source: 'Core Rules p. 88; publisher FAQ v1.3',
     keywords: ['PINPOINT'], tags: []
   },
   {
@@ -226,7 +226,7 @@ window.SCTMG_CODEX_EXAMPLES = [
       'Later HEAL may remove accumulated Damage but does not restore the lost SHIELDED status.'
     ],
     takeaway: 'Check the strict greater-than threshold, not greater-than-or-equal-to.',
-    source: 'Core Rules Part 11 · p. 89; publisher FAQ v1.1 · pp. 2–4',
+    source: 'Core Rules Part 11 · p. 89; publisher FAQ v1.3',
     keywords: ['SHIELDED', 'HEAL', 'NON-LETHAL DAMAGE'], tags: []
   }
 ];

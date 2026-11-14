@@ -9,7 +9,7 @@ Slots: {"hero":1,"elite":2,"core":3}
 
 =================================================================
 FACTION CARD: Zerg Swarm
-Slots: {"elite":1,"core":3,"support":1}
+Slots: {"elite":1,"core":3,"support":1,"air":1}
 
 =================================================================
 Kerrigan | Hero | Biological, Psionic, Ground
@@ -94,12 +94,11 @@ Upgrade Tunneling Claws (10 Minerals): While BURROWED, this Unit can Move and Ru
 
 =================================================================
 Zergling | Core | Biological, Light, Ground
-Stats: SPD 5/9; EVADE 5+; ARMOUR 6+; HP 1; SIZE 1; SHIELD —
+Stats: SPD 4/8; EVADE 4+; ARMOUR 6+; HP 1; SIZE 1; SHIELD —
 Buy 12 models: 150 Minerals / Supply 1
 Buy 18 models: 210 Minerals / Supply 2
-Weapon Claws (Combat): Range E, RoA 2, Hit 4+, Target Ground, Surge -, SDie -, DMG 1; 
+Weapon Claws (Combat): Range E, RoA 2, Hit 4+, Target Ground, Surge Light, SDie D3, DMG 1; 
 Ability Squadron (Passive, Any Phase): This Unit's Horizontal Coherency is 4".
-Ability Adrenal Overload (Active (1 Biomass), See card): This Unit gains a +1 Modifier to all IMPACT Hit Rolls.
 Ability Metabolic Boost (Active (1 Biomass), See card): When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit's Speed characteristic.
 Ability Devastating Charge (Passive, See card): Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 5+ effect.
 Upgrade Burrow Ambush (20/30 Minerals): When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
@@ -133,8 +132,8 @@ Ability Regeneration (Passive, See card): When Activated while BURROWED, resolve
 Ability Devastating Charge (Passive, See card): Immediately after a successful Charge, resolve IMPACT (1) 4+.
 Upgrade Burrow Ambush (20 Minerals): When nominated to Deploy from Reserves, resolve PLACE (18) from the controlling player's Entry Edge. No model may be Within 10" of an Enemy model. Activation ends.
 Upgrade Glial Reconstitution (10 Minerals): This Unit gains BUFF Speed (1), or BUFF Speed (2) when ON CREEP.
-Upgrade Hydriodic Bile (10 Minerals): Acid Saliva gains Surge Type Light and S Dice D3+1.
 Upgrade Tunneling Claws (10 Minerals): While BURROWED, this Unit can Move and Run without losing BURROWED and may move through other Units' bases.
+Upgrade Hydriodic Bile (10 Minerals): Acid Saliva gains Surge Type Light and S Dice D3+1.
 
 =================================================================
 Swarmling (Zergling) | Core | Biological, Light, Ground

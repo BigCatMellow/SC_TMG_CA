@@ -315,6 +315,22 @@ window.SCTMG_MODEL_PORTRAITS = {
         "pos": "right center",
         "note": "Official painted Immortal sculpt"
       },
+      "zeratul": {
+        "kind": "exact-miniature",
+        "src": "portraits/promo/protoss/zeratul.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-W2-Card-Sheets-A4_EN.pdf",
+        "promo": "Painted miniature photo embedded in the official Protoss Wave 2 card sheet (page 2). All rights remain with the publisher.",
+        "size": "auto 290px",
+        "pos": "right center"
+      },
+      "nerazim-watchers": {
+        "kind": "exact-miniature",
+        "src": "portraits/promo/protoss/nerazim-watchers.jpg",
+        "source": "https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-W2-Card-Sheets-A4_EN.pdf",
+        "promo": "Painted miniature photo embedded in the official Protoss Wave 2 card sheet (page 3). All rights remain with the publisher.",
+        "size": "auto 290px",
+        "pos": "right center"
+      },
       "tassadar": {
         "src": "https://starcraft-tmg.com/files/scaled-thumbs/news/protoss-tassadar-high-templar-wave-3/1%20protoss%20w3%20-%20content%20-%2016x9%20%281%29.png/1920_1080.webp?ts=1792145010",
         "source": "https://starcraft-tmg.com/news/rules/protoss-tassadar-high-templar-wave-3",
