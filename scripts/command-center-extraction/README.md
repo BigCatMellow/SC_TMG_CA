@@ -2,7 +2,53 @@
 
 Archived Firefox Developer Tools console scripts for collecting data from the Archon Studio **StarCraft TMG Command Center** (Beta v1.4 in the 2026-11-13 inspections). These scripts are **not** used by the companion at runtime.
 
-## Quick start
+## Automated export (recommended)
+
+The [Python Playwright exporter](export_all.py) runs **all four collection tasks in one browser session**, without repeated Firefox Console pasting. It opens the Command Center, uses **Enter as Guest** when needed, navigates each page, and writes files locally. It does **not** access saved credentials or push publisher content to GitHub.
+
+Requirements: **Python 3.10+**, a network connection, and Playwright's Chromium browser. From the repository root, install once:
+
+```shell
+python -m pip install playwright
+```
+
+```shell
+python -m playwright install chromium
+```
+
+Run the full extraction:
+
+```shell
+python scripts/command-center-extraction/export_all.py
+```
+
+Outputs are written to an ignored folder, \`command-center-exports/YYYY-MM-DD_HHMMSS/\`:
+
+- \`starcraft-complete-rules.txt\`: all Game Rules text from the nested accordion.
+- \`starcraft-all-factions-and-cards.txt\`: all three factions' cards with statistics, abilities, weapons, and upgrades.
+- \`missions/*.jpg\`: each official Mission Card **rendered from its full-size HTML card** (high-resolution screenshot, not the website's native JPG export); \`missions/mission-index.json\` stores its visible fields.
+- \`deployment-maps.zip\`: original image files downloaded from the official map page, bundled with an index.
+- \`report.json\`: per-step results, historic-count warnings, errors, and missing numbered parts.
+
+Run only one source, if needed:
+
+```shell
+python scripts/command-center-extraction/export_all.py --only maps
+```
+
+Other flags: \`--headless\` for unattended guest-mode browser, \`--output DIR\` to choose the local destination, \`--url URL\` if the source domain changes, or \`--browser-path PATH\` for a locally installed Chromium executable. By default, the browser window is visible. The script reports failure for missing parts, missing factions, image-download errors, or an inaccessible source, and continues other collections when possible. Its historical counts are **warnings**, not hard limits.
+
+Offline parser tests (the Playwright dependency must be installed):
+
+```shell
+python -m unittest discover -s scripts/command-center-extraction -p test_export_all.py
+```
+
+**Verification:** The Python helpers were syntax-checked and exercised offline against the 2026-11-13 HTML snapshots and exported text: Parts 1–12, 94 cards, all 14 rendered mission cards, and all 13 map entries into a ZIP. Live browser execution against the publisher's current site is **not yet verified**. Card layout fidelity depends on the site's live CSS loading successfully; inspect the generated JPGs before relying on them.
+
+## Manual Firefox Console scripts (fallback)
+
+### Quick start
 
 1. Visit the original Command Center in Firefox and sign in or enter as guest as appropriate.
 2. Open the correct menu page, clear search / format filters, press **F12** and choose **Console**.
