@@ -22,13 +22,13 @@ Run the full extraction:
 python scripts/command-center-extraction/export_all.py
 ```
 
-Outputs are written to an ignored folder, \`command-center-exports/YYYY-MM-DD_HHMMSS/\`:
+Outputs are written to an ignored folder, `command-center-exports/YYYY-MM-DD_HHMMSS/`:
 
-- \`starcraft-complete-rules.txt\`: all Game Rules text from the nested accordion.
-- \`starcraft-all-factions-and-cards.txt\`: all three factions' cards with statistics, abilities, weapons, and upgrades.
-- \`missions/*.jpg\`: each official Mission Card **rendered from its full-size HTML card** (high-resolution screenshot, not the website's native JPG export); \`missions/mission-index.json\` stores its visible fields.
-- \`deployment-maps.zip\`: original image files downloaded from the official map page, bundled with an index.
-- \`report.json\`: per-step results, historic-count warnings, errors, and missing numbered parts.
+- `starcraft-complete-rules.txt`: all Game Rules text from the nested accordion.
+- `starcraft-all-factions-and-cards.txt`: all three factions' cards with statistics, abilities, weapons, and upgrades.
+- `missions/*.jpg`: each official Mission Card **rendered from its full-size HTML card** (high-resolution screenshot, not the website's native JPG export); `missions/mission-index.json` stores its visible fields.
+- `deployment-maps.zip`: original image files downloaded from the official map page, bundled with an index.
+- `report.json`: per-step results, historic-count warnings, errors, and missing numbered parts.
 
 Run only one source, if needed:
 
@@ -36,7 +36,7 @@ Run only one source, if needed:
 python scripts/command-center-extraction/export_all.py --only maps
 ```
 
-Other flags: \`--headless\` for unattended guest-mode browser, \`--output DIR\` to choose the local destination, \`--url URL\` if the source domain changes, or \`--browser-path PATH\` for a locally installed Chromium executable. By default, the browser window is visible. The script reports failure for missing parts, missing factions, image-download errors, or an inaccessible source, and continues other collections when possible. Its historical counts are **warnings**, not hard limits.
+Other flags: `--headless` for unattended guest-mode browser, `--output DIR` to choose the local destination, `--url URL` if the source domain changes, or `--browser-path PATH` for a locally installed Chromium executable. By default, the browser window is visible. The script reports failure for missing parts, missing factions, image-download errors, or an inaccessible source, and continues other collections when possible. Its historical counts are **warnings**, not hard limits.
 
 Offline parser tests (the Playwright dependency must be installed):
 
