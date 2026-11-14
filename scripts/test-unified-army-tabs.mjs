@@ -163,11 +163,14 @@ for(const faction of ['terran','zerg','protoss']){
   assert.ok(html.includes('list="{{ quickTacs }}"')&&html.includes('list="{{ quickTacRows }}"'),faction+' quick build tactical strip');
   assert.equal(view().quickTacs.length,controller.D().TACTICAL_CARDS.length,faction+' strip lists every tactical card');
   const tacSaved=controller.state.tactical.slice(); controller.state.tactical=[];
+  assert.ok(!html.slice(html.indexOf('LIBRARY TAB'),html.indexOf('tabIsTactics }}')).includes('quickTacs }}'),faction+' tactical tiles live in Tactics, not Library');
+  view().setTacQuick(); assert.equal(view().tacQuick,true,faction+' Tactics has its own quick build');
   const qt=view().quickTacs.find(x=>!x.addOff); qt.onAdd();
   assert.equal(view().quickTacs.find(x=>x.name===qt.name).count,1,faction+' + adds a tactical card');
   assert.equal(view().quickTacRows.length,1,faction+' army sheet lists the card');
   view().quickTacs.find(x=>x.name===qt.name).onInfo(); assert.equal(view().qbTacOpen,true,faction+' card name opens its abilities');
   assert.ok(view().qbTac.abilities.length>0,faction+' card sheet has abilities'); view().closeQbTac();
+  view().openTacSheet(); assert.equal(view().tacSheet,true,faction+' cards sheet opens'); view().closeTacSheet();
   view().quickTacRows[0].onRemove(); assert.equal(view().quickTacRows.length,0,faction+' − removes the card');
   controller.state.tactical=tacSaved;
   const rowQ=view().quickRows[0];
