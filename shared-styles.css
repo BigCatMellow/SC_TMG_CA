@@ -2226,3 +2226,22 @@ input::placeholder { color: #5b6275; }
 .sc-lists-foot button { flex: 1; min-height: 42px; }
 /* Quick build: a second tier's count and − sit in the right corner */
 .sc-qb-count--right { left: auto; right: 10px; }
+
+/* Quick build: tactical cards strip */
+.sc-qb-tacs-head { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.sc-qb-tacs-toggle { background:none; border:0; color:var(--sc-text-muted, #8a91a5); font:inherit; font-size:12px; padding:6px 2px; cursor:pointer; }
+.sc-qb-tacs { display:flex; flex-direction:column; gap:6px; margin:4px 0 16px; }
+.sc-qb-tac { display:flex; align-items:center; gap:6px; padding:6px 6px 6px 10px; border-radius:2px;
+  background:rgba(255,255,255,0.03); border:1px solid var(--sc-border-neutral, rgba(255,255,255,0.08)); border-left:3px solid var(--cc); }
+.sc-qb-tac--in { background:rgba(255,255,255,0.06); border-color:color-mix(in srgb, var(--cc) 55%, transparent); }
+.sc-qb-tac--off { opacity:.5; }
+.sc-qb-tac-name { flex:1; min-width:0; text-align:left; background:none; border:0; padding:2px 0; color:inherit; font:inherit; cursor:pointer; }
+.sc-qb-tac-name b { display:block; font-size:13.5px; line-height:1.25; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sc-qb-tac-name small { display:block; font-size:11px; color:var(--sc-text-muted, #8a91a5); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.sc-qb-tac-slots { display:flex; flex-wrap:wrap; gap:3px; justify-content:flex-end; max-width:38%; }
+.sc-qb-tac-slots .sc-bc-slot { font-size:10.5px; padding:1px 6px; }
+.sc-qb-tac-count { min-width:30px; text-align:center; font-weight:700; font-size:13px; color:var(--cc); }
+.sc-qb-tac-btn { width:34px; height:34px; flex:none; border-radius:2px; border:1px solid var(--sc-border-neutral, rgba(255,255,255,0.12));
+  background:rgba(255,255,255,0.05); color:inherit; font-size:18px; line-height:1; cursor:pointer; }
+.sc-qb-tac-add { border-color:color-mix(in srgb, var(--cc) 55%, transparent); color:var(--cc); }
+.sc-qb-tac-btn:disabled { opacity:.35; cursor:default; }
