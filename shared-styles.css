@@ -2224,3 +2224,5 @@ input::placeholder { color: #5b6275; }
 .sc-lists .sc-lists-danger, .sc-lists-menu .sc-lists-danger { background: rgba(240,74,74,0.14); border: 1px solid rgba(240,74,74,0.5); color: #f08a8a; font: 700 12px Rajdhani, sans-serif; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
 .sc-lists-foot { display: flex; gap: 8px; margin-top: 16px; }
 .sc-lists-foot button { flex: 1; min-height: 42px; }
+/* Quick build: a second tier's count and − sit in the right corner */
+.sc-qb-count--right { left: auto; right: 10px; }
