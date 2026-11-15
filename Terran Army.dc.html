@@ -917,6 +917,12 @@
                 <sc-for list="{{ scoreMarkers }}" as="mk" hint-placeholder-count="3"><button onClick="{{ mk.onColour }}" class="{{ mk.colourCls }}"><b>M{{ mk.num }}</b><small>{{ mk.colourLabel }}</small></button></sc-for>
               </div>
             </sc-if>
+            <sc-if value="{{ scoreNeedsSabotage }}" hint-placeholder-val="{{ false }}">
+              <div class="sc-play-sheet-h sc-play-sheet-h--sub">Sabotage level · tap to change</div>
+              <div class="sc-score-row">
+                <sc-for list="{{ scoreMarkers }}" as="mk" hint-placeholder-count="3"><button onClick="{{ mk.onLevel }}" class="sc-score-mk sc-score-mk--small" aria-label="{{ mk.levelAria }}"><b>M{{ mk.num }}</b><small>{{ mk.levelLabel }}</small></button></sc-for>
+              </div>
+            </sc-if>
             <sc-if value="{{ scoreMapHint }}" hint-placeholder-val="{{ false }}"><div class="sc-play-sheet-meta">{{ scoreMapHint }}</div></sc-if>
           </sc-if>
           <div class="sc-score-inputs">
@@ -2009,11 +2015,15 @@ class Component extends DCLogic {
     const saved = this.state.play.markers || {};
     const nums = S ? S.markerNums(this.scoreMap(), m && m.type) : [];
     const r = S && m ? S.rules(m) : null;
+    let zone = null;
+    try { zone = (JSON.parse(localStorage.getItem('sctmg_play') || 'null') || {}).youColour || null; } catch (e) {}
     const markers = nums.map(num => {
       const prev = saved[num] || {};
       return { num, ctrl: prev.ctrl || 'neutral', prevCtrl: prev.ctrl || 'neutral',
         active: prev.active != null ? prev.active : !(r && r.tracksActivation),
-        activatedRound: prev.activatedRound || null, removed: !!prev.removed, colour: prev.colour || 'neutral' };
+        activatedRound: prev.activatedRound || null, removed: !!prev.removed, level: Math.min(3, Math.max(1, prev.level || 1)),
+        // The zone colour picked in VS fills in marker colours that were never set by hand.
+        colour: prev.colour && prev.colour !== 'neutral' ? prev.colour : (zone && S ? S.markerColour(num, zone) : 'neutral') };
     });
     const ownLost = Math.max(0, this.lostSupplyNow() - (this.state.play.ownLostAtStart || 0));
     this.setState({ sheet: { type: 'endround' }, scoreDraft: { round: this.state.play.round, markers, enemyDestroyed: 0, ownLost,
@@ -2058,11 +2068,13 @@ class Component extends DCLogic {
             ? { ...y, active: !y.active, activatedRound: !y.active ? round : null } : y) })),
           colourLabel: { neutral: 'Neutral', you: 'Your colour', them: 'Their colour' }[x.colour],
           colourCls: 'sc-score-mk sc-score-mk--small sc-score-mk--' + x.colour,
-          onColour: () => this.draft(dd => ({ ...dd, markers: dd.markers.map(y => y.num === x.num ? { ...y, colour: cycle[y.colour] } : y) }))
+          onColour: () => this.draft(dd => ({ ...dd, markers: dd.markers.map(y => y.num === x.num ? { ...y, colour: cycle[y.colour] } : y) })),
+          levelLabel: 'Level ' + (x.level || 1), levelAria: 'Marker ' + x.num + ' Sabotage Level ' + (x.level || 1) + '. Tap to change',
+          onLevel: () => this.draft(dd => ({ ...dd, markers: dd.markers.map(y => y.num === x.num ? { ...y, level: (y.level || 1) >= 3 ? 1 : (y.level || 1) + 1 } : y) }))
         };
       }),
       scoreHasMarkers: live.length > 0,
-      scoreNeedsActive: r.tracksActivation, scoreNeedsColour: r.usesColour,
+      scoreNeedsActive: r.tracksActivation, scoreNeedsColour: r.usesColour, scoreNeedsSabotage: !!r.usesSabotage,
       scoreMapHint: this.scoreMap() ? '' : 'No map picked: showing the usual markers. Pick a map in War Room for its exact markers.',
       scoreNote: res.note,
       scoreInputs: inputs,
@@ -2088,7 +2100,7 @@ class Component extends DCLogic {
       ownLost: d.ownLost, quartersYou: d.quartersYou, quartersFoe: d.quartersFoe, gathersYou: d.gathersYou, gathersFoe: d.gathersFoe });
     const markers = {};
     d.markers.forEach(x => { markers[x.num] = { ctrl: x.ctrl, active: x.active, activatedRound: x.activatedRound,
-      colour: x.colour, removed: x.removed || res.removed.includes(x.num) }; });
+      colour: x.colour, level: x.level || 1, removed: x.removed || res.removed.includes(x.num) }; });
     // Points per round feed the VS scoreline.
     let rounds = {};
     try { rounds = (JSON.parse(localStorage.getItem('sctmg_play') || 'null') || {}).rounds || {}; } catch (e) {}

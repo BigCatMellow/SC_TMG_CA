@@ -223,12 +223,21 @@
           <div class="sc-vs-panel">
             <div class="sc-vs-panel-head"><span class="sc-vs-k">Mission markers</span><span class="sc-vs-muted">tap: nobody → you → them</span></div>
             <sc-if value="{{ noMarkers }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-muted">Pick a mission in the War Room to track markers.</p></sc-if>
+            <sc-if value="{{ needsColour }}" hint-placeholder-val="{{ false }}">
+              <div class="sc-vs-zone">
+                <span class="sc-vs-k">Your zone</span>
+                <button onClick="{{ pickRed }}" class="{{ redCls }}" aria-pressed="{{ youRed }}">Red</button>
+                <button onClick="{{ pickBlue }}" class="{{ blueCls }}" aria-pressed="{{ youBlue }}">Blue</button>
+                <span class="sc-vs-muted">{{ zoneHint }}</span>
+              </div>
+            </sc-if>
             <div class="sc-vs-markers">
               <sc-for list="{{ markers }}" as="m" hint-placeholder-count="5">
                 <div class="sc-vs-marker">
-                  <button onClick="{{ m.cycle }}" class="{{ m.cls }}" aria-label="{{ m.aria }}">M{{ m.num }}</button>
+                  <button onClick="{{ m.cycle }}" class="{{ m.cls }}" aria-label="{{ m.aria }}">M{{ m.num }}<sc-if value="{{ m.dot }}" hint-placeholder-val="{{ false }}"><i class="sc-vs-mk-dot" style="background:{{ m.dot }}" aria-hidden="true"></i></sc-if></button>
                   <span class="sc-vs-k" style="font-size:9px;color:{{ m.color }}">{{ m.holder }}</span>
                   <sc-if value="{{ m.canActivate }}" hint-placeholder-val="{{ false }}"><button onClick="{{ m.activate }}" class="sc-vs-link">{{ m.activateLabel }}</button></sc-if>
+                  <sc-if value="{{ m.canSabotage }}" hint-placeholder-val="{{ false }}"><button onClick="{{ m.sabotage }}" class="sc-vs-link" aria-label="{{ m.sabotageAria }}">{{ m.sabotageLabel }}</button></sc-if>
                 </div>
               </sc-for>
             </div>
@@ -394,15 +403,18 @@
       <h2 class="sc-vs-h2">Round {{ round }} score</h2>
       <sc-if value="{{ endHasMission }}" hint-placeholder-val="{{ false }}">
         <p class="sc-vs-muted">{{ endNote }}</p>
+        <sc-if value="{{ endMissionNote }}" hint-placeholder-val="{{ false }}"><p class="sc-vs-end-note">{{ endMissionNote }}</p></sc-if>
         <div class="sc-vs-end-cols">
           <div>
             <div class="sc-vs-k" style="color:var(--you)">You</div>
             <sc-for list="{{ endYou }}" as="l" hint-placeholder-count="2"><div class="sc-vs-end-line"><span>{{ l.label }}</span><b>+{{ l.vp }}</b></div></sc-for>
+            <sc-for list="{{ endInYou }}" as="q" hint-placeholder-count="0"><div class="sc-vs-end-adj sc-vs-end-in"><span>{{ q.label }}</span><button onClick="{{ q.down }}" class="sc-vs-step" aria-label="Lower {{ q.label }}">−</button><b>{{ q.value }}</b><button onClick="{{ q.up }}" class="sc-vs-step" aria-label="Raise {{ q.label }}">+</button></div></sc-for>
             <div class="sc-vs-end-adj"><span>Adjust</span><button onClick="{{ adjYouDown }}" class="sc-vs-step" aria-label="Lower your points">−</button><b>{{ endYouTotal }}</b><button onClick="{{ adjYouUp }}" class="sc-vs-step" aria-label="Raise your points">+</button></div>
           </div>
           <div>
             <div class="sc-vs-k" style="color:var(--opp)">Opponent</div>
             <sc-for list="{{ endFoe }}" as="l" hint-placeholder-count="2"><div class="sc-vs-end-line"><span>{{ l.label }}</span><b>+{{ l.vp }}</b></div></sc-for>
+            <sc-for list="{{ endInFoe }}" as="q" hint-placeholder-count="0"><div class="sc-vs-end-adj sc-vs-end-in"><span>{{ q.label }}</span><button onClick="{{ q.down }}" class="sc-vs-step" aria-label="Lower {{ q.label }}">−</button><b>{{ q.value }}</b><button onClick="{{ q.up }}" class="sc-vs-step" aria-label="Raise {{ q.label }}">+</button></div></sc-for>
             <div class="sc-vs-end-adj"><span>Adjust</span><button onClick="{{ adjFoeDown }}" class="sc-vs-step" aria-label="Lower their points">−</button><b>{{ endFoeTotal }}</b><button onClick="{{ adjFoeUp }}" class="sc-vs-step" aria-label="Raise their points">+</button></div>
           </div>
         </div>
@@ -446,7 +458,7 @@ const ARMY_KEY = { zerg: 'sctmg_zerg_v5', terran: 'sctmg_terran_v1', protoss: 's
 class Component extends DCLogic {
   state = {
     ready: false, view: 'board', sheet: null, pane: 'you',
-    yourFaction: 'zerg', yours: null, opp: null, play: {}, adjYou: 0, adjFoe: 0
+    yourFaction: 'zerg', yours: null, opp: null, play: {}, adjYou: 0, adjFoe: 0, endIn: {}
   };
 
   componentDidMount() {
@@ -892,10 +904,13 @@ class Component extends DCLogic {
     const m = this.mission(), S = window.SCTMG_SCORE;
     if (!m || !S) return [];
     const r = S.rules(m), saved = this.state.play.markers || {};
+    const zone = ['red', 'blue'].includes(this.state.play.youColour) ? this.state.play.youColour : null;
     return S.markerNums(this.map(), m.type).map(num => {
       const p = saved[num] || {};
       return { num, ctrl: p.ctrl || 'neutral', prevCtrl: p.prevCtrl || p.ctrl || 'neutral', active: p.active != null ? p.active : !r.tracksActivation,
-        activatedRound: p.activatedRound || null, removed: !!p.removed, colour: p.colour || 'neutral' };
+        activatedRound: p.activatedRound || null, removed: !!p.removed, level: Math.min(3, Math.max(1, p.level || 1)),
+        // Once you say which zone colour you took, each marker's colour follows from its number.
+        colour: zone ? S.markerColour(num, zone) : (p.colour || 'neutral') };
     });
   }
   setMarker(num, patch) {
@@ -911,7 +926,9 @@ class Component extends DCLogic {
     const enemyDestroyed = Math.max(0, this.lostSupply(st.opp.faction, st.opp.army) - (st.play.foeLostAtStart || 0));
     const ownLost = Math.max(0, this.lostSupply(st.yourFaction, st.yours.army) - (st.play.ownLostAtStart || 0));
     if (!m || !S) return { you: [], foe: [], youTotal: 0, foeTotal: 0, removed: [], enemyDestroyed, ownLost };
-    const res = S.suggest({ mission: m, round, markers: this.markerList(), enemyDestroyed, ownLost, quartersYou: 0, quartersFoe: 0, gathersYou: 0, gathersFoe: 0 });
+    const q = st.endIn || {};
+    const res = S.suggest({ mission: m, round, markers: this.markerList(), enemyDestroyed, ownLost,
+      quartersYou: q.quartersYou || 0, quartersFoe: q.quartersFoe || 0, gathersYou: q.gathersYou || 0, gathersFoe: q.gathersFoe || 0 });
     return { ...res, enemyDestroyed, ownLost };
   }
   applyEnd() {
@@ -922,7 +939,7 @@ class Component extends DCLogic {
     const addYou = m ? Math.max(0, sug.youTotal + st.adjYou) : 0;
     const addFoe = m ? Math.max(0, sug.foeTotal + st.adjFoe) : 0;
     const markers = {};
-    this.markerList().forEach(x => { markers[x.num] = { ctrl: x.ctrl, prevCtrl: x.ctrl, active: x.active, activatedRound: x.activatedRound, colour: x.colour,
+    this.markerList().forEach(x => { markers[x.num] = { ctrl: x.ctrl, prevCtrl: x.ctrl, active: x.active, activatedRound: x.activatedRound, colour: x.colour, level: x.level,
       removed: x.removed || (sug.removed || []).includes(x.num) }; });
     // A round's points are the new total minus earlier rounds, so manual VP changes made during
     // the round count toward it; replaying a round (after stepping the round back) drops later ones.
@@ -939,7 +956,7 @@ class Component extends DCLogic {
       this.saveYours({ ...this.state.yours, tacticalTapped: [], factionTappedId: null, battleSupplyAvailable: this.poolFor(round + 1) });
       this.saveOpp({ ...this.state.opp, tapped: [] });
     }
-    this.setState({ sheet: null, adjYou: 0, adjFoe: 0 });
+    this.setState({ sheet: null, adjYou: 0, adjFoe: 0, endIn: {} });
   }
 
   // ---------- new game: both sides, armies kept ----------
@@ -954,7 +971,7 @@ class Component extends DCLogic {
     const snap = { play: st.play, yours: st.yours, opp: st.opp };
     const m = this.mission();
     const fresh = a => (a || []).map(e => ({ ...e, modelsLost: 0, dmg: 0, deployed: false }));
-    this.savePlay({ round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, rounds: {}, ownLostAtStart: 0, foeLostAtStart: 0, finished: false, cardUsed: {}, boosts: {} });
+    this.savePlay({ round: 1, phase: 0, vpYou: 0, vpFoe: 0, markers: {}, youColour: null, rounds: {}, ownLostAtStart: 0, foeLostAtStart: 0, finished: false, cardUsed: {}, boosts: {} });
     this.saveYours({ ...st.yours, army: fresh(st.yours.army), tacticalTapped: [], factionTappedId: null,
       battleSupplyAvailable: m ? m.supply : st.yours.battleSupplyAvailable });
     this.saveOpp({ ...st.opp, army: fresh(st.opp.army), tapped: [] });
@@ -1023,6 +1040,9 @@ class Component extends DCLogic {
     const win = m ? (window.SCTMG_SCORE.rules(m).earlyWinLead || 0) : 0;
     const span = win || 12;
     const pct = Math.min(50, Math.abs(lead) / span * 50);
+    const mr = m ? window.SCTMG_SCORE.rules(m) : {};
+    const zone = ['red', 'blue'].includes(st.play.youColour) ? st.play.youColour : null;
+    const dotOf = n => (!mr.usesColour || n === 5) ? '' : n % 2 ? '#e5484d' : '#4c8dff';
     const markers = this.markerList().map(x => {
       const c = x.removed ? { holder: 'Removed', color: '#5b6275' } : x.ctrl === 'you' ? { holder: 'You', color: 'var(--you)' } : x.ctrl === 'them' ? { holder: 'Them', color: 'var(--opp)' } : { holder: x.active ? 'Nobody' : 'Inactive', color: '#8a91a5' };
       const r = window.SCTMG_SCORE.rules(m);
@@ -1030,6 +1050,10 @@ class Component extends DCLogic {
         cls: 'sc-vs-mk sc-vs-mk--' + (x.removed ? 'gone' : x.ctrl) + (x.active ? '' : ' sc-vs-mk--off'),
         aria: 'Marker ' + x.num + ': ' + c.holder + '. Tap to change who holds it',
         cycle: () => { if (x.removed) return; this.setMarker(x.num, { ctrl: x.ctrl === 'neutral' ? 'you' : x.ctrl === 'you' ? 'them' : 'neutral' }); },
+        dot: x.removed ? '' : dotOf(x.num),
+        canSabotage: !!r.usesSabotage && !x.removed,
+        sabotageLabel: 'Level ' + x.level, sabotageAria: 'Marker ' + x.num + ' Sabotage Level ' + x.level + '. Tap to change',
+        sabotage: () => this.setMarker(x.num, { level: x.level >= 3 ? 1 : x.level + 1 }),
         canActivate: !!r.tracksActivation && !x.removed,
         activateLabel: x.active ? 'Active R' + (x.activatedRound || round) : 'Activate',
         activate: () => this.setMarker(x.num, x.active ? { active: false, activatedRound: null } : { active: true, activatedRound: round })
@@ -1048,6 +1072,13 @@ class Component extends DCLogic {
         headCls: 'sc-vs-k sc-vs-th' + (n === round ? ' sc-vs-th--now' : ''), cellCls: 'sc-vs-td' + (n === round ? ' sc-vs-td--now' : '') };
     });
     const sug = st.sheet === 'end' ? this.endSuggestion() : null;
+    // Things only the table knows: quarters won (Divide and Conquer), Gather actions (Gather the Resources).
+    const endIn = side => {
+      const step = (label, key) => ({ label, value: (st.endIn || {})[key] || 0,
+        up: () => this.setState(s => ({ endIn: { ...s.endIn, [key]: ((s.endIn || {})[key] || 0) + 1 } })),
+        down: () => this.setState(s => ({ endIn: { ...s.endIn, [key]: Math.max(0, ((s.endIn || {})[key] || 0) - 1) } })) });
+      return [mr.usesQuarters && round >= (mr.startRound || 1) ? step('Quarters won', 'quarters' + side) : null, mr.usesGather ? step('Gather actions', 'gathers' + side) : null].filter(Boolean);
+    };
     const last = !!(m && round >= m.gameLength);
     const paneDefs = [['you', 'Your forces'], ['mid', 'Battlefield'], ['opp', 'Opponent']];
     const bump = (k, d) => () => this.savePlay({ [k]: Math.max(0, (st.play[k] || 0) + d) });
@@ -1063,6 +1094,11 @@ class Component extends DCLogic {
       leadBar: lead >= 0 ? 'right:50%;width:' + pct + '%;background:linear-gradient(270deg,var(--you),transparent)' : 'left:50%;width:' + pct + '%;background:linear-gradient(90deg,var(--opp),transparent)',
       winLeftText: win ? 'You win at +' + win : '', winRightText: win ? 'They win at +' + win : '',
       markers, noMarkers: markers.length === 0, rounds, roundCols: rounds.length,
+      needsColour: !!mr.usesColour, youRed: zone === 'red', youBlue: zone === 'blue',
+      redCls: 'sc-vs-zone-btn sc-vs-zone-btn--red' + (zone === 'red' ? ' sc-vs-zone-btn--on' : ''),
+      blueCls: 'sc-vs-zone-btn sc-vs-zone-btn--blue' + (zone === 'blue' ? ' sc-vs-zone-btn--on' : ''),
+      pickRed: () => this.savePlay({ youColour: zone === 'red' ? null : 'red' }), pickBlue: () => this.savePlay({ youColour: zone === 'blue' ? null : 'blue' }),
+      zoneHint: zone ? 'Markers of the other colour are worth more to you.' : 'Pick it so marker colours score right.',
       phases: [['Movement', '#4f8df9'], ['Assault', '#f9822f'], ['Combat', '#f04a4a'], ['Scoring', '#35c76b']].map(([name, color], i) => ({
         name, color, on: (st.play.phase || 0) === i, cls: 'sc-vs-phase' + ((st.play.phase || 0) === i ? ' sc-vs-phase--on' : ''),
         pick: () => this.savePlay({ phase: i }) })),
@@ -1079,7 +1115,7 @@ class Component extends DCLogic {
       newGameLabel: st.newArmed ? 'Tap again: reset both sides' : 'New game',
       newGameCls: 'sc-vs-ghost' + (st.newArmed ? ' sc-vs-ghost--warn' : ''),
       undoOn: !!st.undoSnap, undoText: 'New game started: score, casualties and used cards reset', undo: () => this.undoNewGame(),
-      openEndRound: () => this.setState({ sheet: 'end', adjYou: 0, adjFoe: 0 }),
+      openEndRound: () => this.setState({ sheet: 'end', adjYou: 0, adjFoe: 0, endIn: {} }),
       ...this.infoVals(you, opp),
       sheetEnd: st.sheet === 'end', closeSheet: () => this.setState({ sheet: null }),
       ...this.shareVals(),
@@ -1087,6 +1123,8 @@ class Component extends DCLogic {
       endHasMission: !!m, endNoMission: !m,
       endNote: sug ? 'Auto-filled from the markers and the supply each side lost this round (you lost ' + sug.ownLost + ', they lost ' + sug.enemyDestroyed + '). Adjust if the table says otherwise.' : '',
       endYou: sug ? sug.you : [], endFoe: sug ? sug.foe : [],
+      endMissionNote: sug ? [sug.note, mr.usesColour && !zone ? 'Zone colour not set: marker colours are treated as Neutral.' : ''].filter(Boolean).join(' ') : '',
+      endInYou: sug ? endIn('You') : [], endInFoe: sug ? endIn('Foe') : [],
       endYouTotal: sug ? '+' + Math.max(0, sug.youTotal + st.adjYou) : '', endFoeTotal: sug ? '+' + Math.max(0, sug.foeTotal + st.adjFoe) : '',
       adjYouUp: () => this.setState(s => ({ adjYou: s.adjYou + 1 })), adjYouDown: () => this.setState(s => ({ adjYou: s.adjYou - 1 })),
       adjFoeUp: () => this.setState(s => ({ adjFoe: s.adjFoe + 1 })), adjFoeDown: () => this.setState(s => ({ adjFoe: s.adjFoe - 1 })),

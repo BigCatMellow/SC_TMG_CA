@@ -15,14 +15,26 @@
       earlyWinLead: lead ? Number(lead[1]) : null,
       // Supply Drop: markers start inactive and switch on during the game.
       tracksActivation: ((mission && mission.parameters) || []).some(p => /all mission markers are deactivated/i.test(p)),
-      // Hold Position / Gather the Resources score by the colour a marker belongs to.
-      usesColour: ['hold-position', 'gather-the-resources'].includes(kindOf(mission && mission.id)),
+      // Hold Position, Gather the Resources and Fire in the Sky score by the colour a marker belongs to.
+      usesColour: ['hold-position', 'gather-the-resources', 'fire-in-the-sky'].includes(kindOf(mission && mission.id)),
+      // Fire in the Sky: each marker has a Sabotage Level (1 to 3) that sets its VP.
+      usesSabotage: kindOf(mission && mission.id) === 'fire-in-the-sky',
       usesQuarters: kindOf(mission && mission.id) === 'divide-and-conquer',
       usesGather: kindOf(mission && mission.id) === 'gather-the-resources'
     };
   }
 
-  // input: { mission, round, markers: [{ num, ctrl, prevCtrl, active, activatedRound, removed, colour }],
+  // Every official map prints markers 1 and 3 in Red, 2 and 4 in Blue and 5 as Neutral,
+  // so a marker's colour follows from its number once you know which zone colour you took.
+  function markerColour(num, youColour) {
+    const n = Number(num);
+    if (!youColour || n === 5 || !(n >= 1 && n <= 4)) return 'neutral';
+    const printed = n % 2 ? 'red' : 'blue';
+    return printed === youColour ? 'you' : 'them';
+  }
+  const level = m => Math.min(3, Math.max(1, Number(m.level) || 1));
+
+  // input: { mission, round, markers: [{ num, ctrl, prevCtrl, active, activatedRound, removed, colour, level }],
   //          enemyDestroyed, ownLost, quartersYou, quartersFoe, gathersYou, gathersFoe }
   // ctrl / prevCtrl / colour: 'you' | 'them' | 'neutral'
   function suggest(input) {
@@ -60,6 +72,10 @@
           case 'gather-the-resources':
             if (oppColour) add(sideOf(m.ctrl), tag + ' (opponent colour)', 2, true);
             break;
+          case 'fire-in-the-sky':
+            // Your own colour scores nothing; Neutral and opponent-colour markers pay their Sabotage Level.
+            if (m.colour !== m.ctrl) add(sideOf(m.ctrl), tag + ' (Sabotage ' + level(m) + ')', level(m), true);
+            break;
           case 'divide-and-conquer':
             if (String(m.num) === '5') add(sideOf(m.ctrl), 'M5 held', 2, true);
             break;
@@ -76,10 +92,15 @@
       add(foe, 'Gather actions', input.gathersFoe || 0, false);
     }
     const sum = list => list.reduce((s, x) => s + x.vp, 0);
-    return {
-      rules: r, you, foe, youTotal: sum(you), foeTotal: sum(foe), removed,
-      note: live ? '' : 'Markers score from round ' + r.startRound + ' in this mission.'
-    };
+    let note = live ? '' : 'Markers score from round ' + r.startRound + ' in this mission.';
+    if (r.kind === 'artefact-hunt') {
+      const last = input.round >= ((input.mission && input.mission.gameLength) || 5);
+      const big = /skirmish/i.test((input.mission && input.mission.type) || '') ? [3, 1] : [4, 2];
+      note = last
+        ? 'Final round: add the claim points by hand. ' + big[0] + ' VP per unit carrying a marker inside your Zone of Influence, ' + big[1] + ' VP per marker of your colour the enemy is not carrying.'
+        : 'Markers pay out at the end of round 5 only. Units can claim them from round 2.';
+    }
+    return { rules: r, you, foe, youTotal: sum(you), foeTotal: sum(foe), removed, note };
   }
 
   // Marker numbers for the picked map, or the usual layout for the battle size.
@@ -88,5 +109,5 @@
     return /skirmish/i.test(missionType || '') ? [1, 2, 5] : [1, 2, 3, 4, 5];
   }
 
-  window.SCTMG_SCORE = { rules, suggest, markerNums };
+  window.SCTMG_SCORE = { rules, suggest, markerNums, markerColour };
 })();

@@ -83,6 +83,27 @@ for (const F of ['Zerg', 'Terran', 'Protoss']) {
   assert.equal(view().scoreMarkers[0].badge, '', F + ' held marker is not "taken" again');
   console.log(F + ': End round score suggestion passed');
 }
+// Marker colours follow the number printed on every official map: 1 and 3 Red, 2 and 4 Blue, 5 Neutral.
+assert.equal([1, 2, 3, 4, 5].map(n => S.markerColour(n, 'red')).join(), 'you,them,you,them,neutral');
+assert.equal([1, 2, 3, 4, 5].map(n => S.markerColour(n, 'blue')).join(), 'them,you,them,you,neutral');
+assert.equal(S.markerColour(2, null), 'neutral', 'no zone picked: colour unknown');
+
+// Fire in the Sky: Neutral and opponent-colour markers pay their Sabotage Level; your own colour pays nothing.
+r = S.suggest({ mission: mission('fire-in-the-sky'), round: 1, markers: [mk(5, 'you', { level: 3 })], enemyDestroyed: 1, ownLost: 0 });
+assert.deepEqual(total(r), [1, 0], 'Fire in the Sky R1: markers score from round 2');
+r = S.suggest({ mission: mission('fire-in-the-sky'), round: 2, enemyDestroyed: 0, ownLost: 0, markers: [
+  mk(1, 'you', { colour: 'you', level: 3 }), mk(2, 'you', { colour: 'them', level: 2 }), mk(5, 'you', { level: 3 }),
+  mk(3, 'them', { colour: 'you' }), mk(4, 'them', { colour: 'them', level: 3 })] });
+assert.deepEqual(total(r), [2 + 3, 1], 'Fire in the Sky: level counts, own colour does not');
+assert.ok(S.rules(mission('fire-in-the-sky-skirmish')).usesSabotage && S.rules(mission('fire-in-the-sky')).usesColour);
+
+// Artefact Hunt: only destroyed supply is automatic; the round 5 claim points are explained, not guessed.
+r = S.suggest({ mission: mission('artefact-hunt'), round: 3, markers: [mk(1, 'you'), mk(2, 'them')], enemyDestroyed: 2, ownLost: 1 });
+assert.deepEqual(total(r), [2, 1]);
+assert.match(r.note, /end of round 5/);
+assert.match(S.suggest({ mission: mission('artefact-hunt'), round: 5, markers: [], enemyDestroyed: 0, ownLost: 0 }).note, /4 VP per unit.*2 VP per marker/);
+assert.match(S.suggest({ mission: mission('artefact-hunt-skirmish'), round: 5, markers: [], enemyDestroyed: 0, ownLost: 0 }).note, /3 VP per unit.*1 VP per marker/);
+
 // Mission and map data against the printed scenario cards.
 assert.equal(S.rules(mission('gather-the-resources-skirmish')).earlyWinLead, 8, 'Gather the Resources (Skirmish) ends on an 8+ lead');
 assert.equal(S.rules(mission('gather-the-resources')).earlyWinLead, 10);
