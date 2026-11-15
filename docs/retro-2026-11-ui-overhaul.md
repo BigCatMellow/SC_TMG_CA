@@ -1,8 +1,8 @@
-# Retro: the November 2026 UI overhaul (PRs #27–#129)
+# Retro: the November 2026 UI overhaul (PRs #27–#132)
 
 These notes cover how this work was done, not just what came out of it. They record what worked, what went wrong, and what we would do differently next time. Mistakes are fine. Making the same mistake twice is the thing to avoid.
 
-Work done by bt 7274 with Claude, 9–14 November 2026. Sections 1–4 cover PRs #27–#53. Section 5 covers the design pass that followed (#55–#65), section 6 the polish pass (#66–#73), and section 7 the afternoon of 12 November (#74–#88), ending with getting ready to share. Section 8 covers 12–14 November (#89–#129): Roster and VS taking over from the Battle tab, Quick build, sharing and lists, and two full audits against the official cards. Open threads are at the end.
+Work done by bt 7274 with Claude, 9–15 November 2026. Sections 1–4 cover PRs #27–#53. Section 5 covers the design pass that followed (#55–#65), section 6 the polish pass (#66–#73), and section 7 the afternoon of 12 November (#74–#88), ending with getting ready to share. Section 8 covers 12–15 November (#89–#132): Roster and VS taking over from the Battle tab, Quick build, sharing and lists, and two full audits against the official cards, and measurements drawn on the maps. Open threads are at the end.
 
 ---
 
@@ -342,7 +342,7 @@ Two things were different this time:
 
 ---
 
-## 8. Part 5: Roster, Quick build, sharing and the card audits (12–14 November, PRs #89–#129)
+## 8. Part 5: Roster, Quick build, sharing and the card audits (12–15 November, PRs #89–#132)
 
 ### What happened, in order
 
@@ -360,12 +360,15 @@ Two things were different this time:
 | First card audit | #124 | bt 7274 added the official PDFs to a claude.ai Project and asked for everything to be checked, newest source first. |
 | Upgrades on the VS card | #125–#126 | An outside reviewer said upgrade info was hard to find mid-game. bt 7274: "if an upgrade gives them more movement then that should be on the VS card so you can't miss it." Mocked, then done for every upgrade and card bonus. A helper agent checked it before merge. |
 | Second full review | #127–#129 | bt 7274 raised the model and effort and asked to "review EVERYTHING from the UI to the Keywords and Stats". Found 8 data errors, 2 missing missions, 4 missing maps, VS scoring gaps and narrow-phone layout bugs. |
+| Measurements on the maps | #131–#132 | bt 7274: draw the measurements on the map "so rather than reading text, you see it on the map where it's supposed to go", then "include the table measurements too". Worked out from the map data, so every map (and any new one) gets them. |
 
 ### Design principles that came out of it
 
 - **One screen per job.** Roster is for building and checking an army; VS is for playing it. Having both do both (Battle) meant two of everything and they drifted apart.
 - **Show the effect, not the rule.** An upgrade that adds Speed changes the Speed number on the VS card, in gold. A reminder you have to go and read gets missed mid-game.
 - **Every way in, the same sheet.** Tapping a unit in Quick build, Roster or VS opens the same kind of reference sheet.
+- **Draw it, don't describe it.** Map setup was paragraphs of "measure 12\" right, then 6\" down". The same numbers drawn on the map, where they apply, are read at a glance.
+- **Derive pictures from data.** The map measurements are computed from each map's zones and markers, not typed in, so they can't drift from the data and new maps get them free.
 - **Mock inside the closest screen, then move it if it's crowded.** Tactical cards were mocked in Library Quick build, which showed they needed their own place.
 
 ### Mistakes and lessons
@@ -391,6 +394,9 @@ Two things were different this time:
 **Stacked PRs and squash merges.** #128 was built on #127's branch. After #127 was squash-merged, #128 had to be rebased onto `main` and retargeted before it could merge.
 - Lesson: for stacked PRs, rebase with `git rebase --onto origin/main <old base>` after the first merge, then change the PR's base.
 
+**Labels fighting for the same spot.** The first drawn measurements put a zone's depth label on top of a marker's distance line (Acropolis), and the table height on top of a zone's length (Frontier, Green Valleys).
+- Lesson: place each label by checking it against the others (the code tries the middle, then other spots), and look at every map, not two.
+
 ### What worked
 
 - **The card is the source of truth, with a written order of precedence.** Having the PDFs in one Project, and a list of which source beats which, settled every disagreement quickly.
@@ -415,6 +421,8 @@ Two things were different this time:
 - Glial Reconstitution: the Roach card's text layer reads 1 CP, the Vile card 1 BM; the app uses 1 BM. Check the cost icon on the page image (issue #2).
 - Zagara's Broodmother upgrade has no published price; kept at 0m until there is one.
 - Artefact Hunt's round 5 claim points are entered by hand; the app doesn't track which unit carries a marker.
+- The printed battle sheet still shows the plain map; the War Room measurements could be added to it.
+- The written map setup steps are still shown under the drawn map; drop or fold them away if the drawing is enough.
 - ~~Army share codes~~: done as a QR code carrying a link, plus Send link and Copy code (#117–#118).
 - The VS battle log: left out of v1 on purpose. Revisit once VS mode has been used in real games.
 - Refactor the three faction army files into one parameterised page.

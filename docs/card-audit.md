@@ -67,6 +67,7 @@ So:
 - Markers: every official map prints **1 and 3 Red, 2 and 4 Blue, 5 Neutral**. The VS screen relies on this to work out marker colours from your zone colour.
 - Don't assume symmetry. Proving Grounds gives Red both short edges and Blue one strip.
 - `test-mission-scoring` checks every map's size, markers and zone bounds, and the numbers above for the newer missions.
+- The measurements drawn on each War Room map come from this data (`map-dims.js`). After changing a map, open it in the War Room and compare the drawing with the card: if the numbers match the card, the data is right.
 
 ## Known mistakes on the cards
 
