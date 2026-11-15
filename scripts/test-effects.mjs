@@ -27,6 +27,17 @@ assert.deepEqual([stat(roach, fx, 'SPD').v, stat(roach, fx, 'SPD').alt], ['5/8',
 fx = E.forUnit(roach, ['Glial Reconstitution'], [{ id: 'accelerating-creep', key: 'accelerating-creep' }], []);
 assert.deepEqual([stat(roach, fx, 'SPD').v, stat(roach, fx, 'SPD').alt], ['4/7', '5/8 on creep']);
 
+// The cost on the Use button comes from the card: Glial is 1 CP on the Roach and Corpser, 1 BM on the Vile.
+const glialCost = name => E.forUnit(unit(w.SCTMG_ZERG, name), ['Glial Reconstitution'], [], []).boosts.find(b => b.name === 'Glial Reconstitution').cost;
+assert.deepEqual(['Roach', 'Corpser (Roach)', 'Vile (Roach)'].map(glialCost), ['1 CP', '1 CP', '1 BM']);
+const glialDef = name => Object.values(unit(w.SCTMG_ZERG, name).upgrades).flat().find(x => x.name === 'Glial Reconstitution');
+assert.match(E.summary(glialDef('Roach')), /^Use \(1 CP\)/);
+assert.match(E.summary(glialDef('Vile (Roach)')), /^Use \(1 BM\)/);
+for (const D of F) for (const u of D.UNITS) for (const x of Object.values(u.upgrades || {}).flat()) if (/^(Active|Reaction) \(/.test(x.type || '')) {
+  const b = E.forUnit(u, [x.name], [], []).boosts.find(y => y.name === x.name);
+  if (b && b.cost) assert.match(b.cost, /^[\dX][\d-]* (CP|BM|PE)$/, u.name + ' ' + x.name + ' cost reads cleanly');
+}
+
 // Kinetic Foam +1 HP; Veteran of Tarsonis is a note, not applied.
 const mara = unit(w.SCTMG_TERRAN, 'Marauder');
 fx = E.forUnit(mara, ['Kinetic Foam', 'Veteran of Tarsonis'], [], []);
