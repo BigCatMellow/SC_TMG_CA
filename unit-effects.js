@@ -174,6 +174,19 @@
   // unit: data unit; upgs: bought upgrade names; cards: [{ id, key, name }] in play for that side;
   // active: bonus ids switched on this round. Returns stat changes, weapon changes (keyed by weapon
   // name or '*ranged' / '*melee' / '*all') and the bonus list.
+  // The resource cost on an upgrade's own data ("Active (1 Biomass)" -> "1 BM"). It wins over the cost
+  // written in this file, so the Use button can't drift from the unit's data.
+  const UNIT_ABBR = { 'command point': 'CP', 'command points': 'CP', cp: 'CP', biomass: 'BM', bm: 'BM', 'psionic energy': 'PE', pe: 'PE' };
+  function costOf(type) {
+    const m = /\(([\dX][\d-]*)\s+([A-Za-z ]+?)\)/.exec(type || '');
+    const unit = m && UNIT_ABBR[m[2].trim().toLowerCase()];
+    return unit ? m[1] + ' ' + unit : '';
+  }
+  function upgradeDef(unit, name) {
+    for (const list of Object.values((unit && unit.upgrades) || {})) for (const u of list || []) if (u.name === name) return u;
+    return null;
+  }
+
   function forUnit(unit, upgs, cards, active) {
     const on = new Set(active || []);
     const sources = [];
@@ -185,7 +198,8 @@
       const fx = s.fx;
       if (!fits(fx, unit)) continue;
       const live = !fx.boost || on.has(s.id);
-      if (fx.boost || fx.remind) boosts.push({ id: s.id, name: s.src, from: s.kind, card: s.card || null, cost: fx.cost || '',
+      const printed = s.kind === 'Upgrade' ? costOf((upgradeDef(unit, s.src) || {}).type) : '';
+      if (fx.boost || fx.remind) boosts.push({ id: s.id, name: s.src, from: s.kind, card: s.card || null, cost: printed || fx.cost || '',
         text: fx.text || autoText(fx), on: on.has(s.id), passive: !!fx.remind, changes: !!(fx.stat || fx.weapons) });
       if (fx.stat && live) (stats[STAT_KEY[fx.stat]] = stats[STAT_KEY[fx.stat]] || []).push({ fx, src: s.src });
       if (fx.weapons && live) {
@@ -278,7 +292,8 @@
     }
     const how = /^Reaction/.test(upg.type) ? 'Reaction' : /^Active/.test(upg.type) ? 'Use' : '';
     return (UPGRADES[upg.name] || []).map(fx => {
-      if (fx.text) return (how ? how + (fx.cost ? ' (' + fx.cost + ')' : '') + ': ' : '') + (how ? fx.text.replace(/^Reaction:\s*/, '').replace(/^./, c => c.toUpperCase()) : fx.text);
+      const cost = costOf(upg.type) || fx.cost;
+      if (fx.text) return (how ? how + (cost ? ' (' + cost + ')' : '') + ': ' : '') + (how ? fx.text.replace(/^Reaction:\s*/, '').replace(/^./, c => c.toUpperCase()) : fx.text);
       const when = fx.when ? ' ' + fx.when : '';
       if (fx.stat) return (fx.set !== undefined ? STAT_NAME[fx.stat] + ' ' + fx.set : '+' + (fx.add || fx.better) + ' ' + STAT_NAME[fx.stat]) + when;
       if (fx.weapons) {

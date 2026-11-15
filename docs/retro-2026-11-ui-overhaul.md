@@ -418,7 +418,7 @@ Two things were different this time:
 - ~~Tier and upgrade editing under Battle › Edit Army~~: done. Open a unit in Roster (#100), or use Quick build's Army tab.
 - Terran and Protoss still save under `_v1` while Zerg uses `_v5`; unify the keys (with a migration) when the faction pages are refactored into one.
 - ~~The card-by-card audit against official PDFs~~: done twice (#124, #127–#128). Process in [card-audit.md](card-audit.md).
-- Glial Reconstitution: the Roach card's text layer reads 1 CP, the Vile card 1 BM; the app uses 1 BM. Check the cost icon on the page image (issue #2).
+- ~~Glial Reconstitution CP vs BM~~: checked on the page images. Roach and Corpser print 1 CP, Vile 1 BM. No Zerg card produces CP, so 1 CP is treated as a misprint and the app keeps 1 BM until a FAQ says otherwise (issue #2).
 - Zagara's Broodmother upgrade has no published price; kept at 0m until there is one.
 - Artefact Hunt's round 5 claim points are entered by hand; the app doesn't track which unit carries a marker.
 - The printed battle sheet still shows the plain map; the War Room measurements could be added to it.
