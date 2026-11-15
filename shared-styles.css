@@ -1717,6 +1717,10 @@ input::placeholder { color: #5b6275; }
 .sc-vs-scrim { position: fixed; inset: 0; z-index: 300; background: rgba(4,5,8,0.7); }
 .sc-vs-sheet { position: fixed; z-index: 310; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(560px, calc(100% - 24px)); max-height: calc(100dvh - 24px); overflow-y: auto; box-sizing: border-box; padding: 18px; background: #141824; border: 1px solid #f2c14e; clip-path: var(--sc-corner-14); }
 .sc-vs-end-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin: 12px 0; }
+/* Each column's score lines take up the slack, so the Adjust rows (and any inputs above them)
+   sit level across both columns even when one side scored more lines. */
+.sc-vs-end-cols > div { display: flex; flex-direction: column; }
+.sc-vs-end-lines { flex: 1 0 auto; }
 .sc-vs-end-line { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid #232939; font-size: 13px; color: #c8cede; }
 .sc-vs-end-line b { font-family: 'Chakra Petch', sans-serif; color: #e9ecf2; }
 /* Label on its own line: label + stepper in one row was wider than half the sheet on a phone,
