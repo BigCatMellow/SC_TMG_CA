@@ -76,6 +76,7 @@ One screen for both armies and the score.
   - 7 missions, each in Standard and Skirmish: Supply Drop, Divide and Conquer, Frontlines, Gather the Resources, Hold Position, Artefact Hunt (Wave 2), Fire in the Sky (Wave 3).
   - 14 deployment maps: 7 for Skirmish (36×36) and 7 for Standard (54×36), Waves 1–3.
 - Read the briefing, scoring and marker placement.
+- **Measurements on the map**, like the printed cards: the table size, how far each deployment zone runs along its edge and how deep it is, and each marker's distance from the nearest edges. Markers are ringed in their printed colour. Set up by looking, not reading; the written steps are still below the map.
 - Use the round tracker, and print a battle sheet.
 
 ### Field Manual (rules)
@@ -135,7 +136,7 @@ One screen for both armies and the score.
 **Data**
 - Unit data (`terran-data.js`, `zerg-data.js`, `protoss-data.js`) is **generated** from `uploads/*.html` by `npm run build:units`. Edit the sources, not the generated files. CI fails if they drift.
 - Missions and maps (`missions-data.js`) are generated from `uploads/missions.html` by `npm run build:missions`.
-- Hand-maintained: `wave3-data.js` (Wave 2/3 units and cards, shared keyword glossary), `unit-effects.js` (what each upgrade and card bonus changes), `mission-scoring.js`, `plain-english.js`, `model-portraits.js`.
+- Hand-maintained: `wave3-data.js` (Wave 2/3 units and cards, shared keyword glossary), `unit-effects.js` (what each upgrade and card bonus changes), `mission-scoring.js`, `map-dims.js` (the measurements drawn on each map, worked out from its zones and markers), `plain-english.js`, `model-portraits.js`.
 - Army share codes live in [share-code.js](share-code.js).
 - See [docs/updating-data.md](docs/updating-data.md) for updating data.
 
