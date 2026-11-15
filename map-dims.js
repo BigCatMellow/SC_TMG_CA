@@ -3,6 +3,7 @@
 //   - outside the board: how far each deployment zone runs along the edge it touches
 //   - inside each zone: how deep it is
 //   - from each marker: the distance to the nearest side edge and to the nearest top/bottom edge
+//   - the table: its width along the bottom and its height down the left
 // A marker on a centre line gets no number for that axis: the dotted centre line shows it.
 (function () {
   const near = (a, b) => Math.abs(a - b) < 0.01;
@@ -85,6 +86,12 @@
         }
       });
     });
+    // The table itself: full width under the board, full height on the left, outside the zone lines.
+    out.push({ x1: 0, y1: H + 4.5, x2: W, y2: H + 4.5, label: W, colour: 'table', outside: true });
+    // Keep this label clear of the zone measurements on the same edge: middle if free, else the first free spot.
+    const leftLabels = out.filter(d => d.outside && d.x1 < 0 && d.colour !== 'table').map(d => (d.y1 + d.y2) / 2);
+    const at = [0.5, 0.88, 0.12, 0.3, 0.7].find(f => leftLabels.every(y => Math.abs(y - H * f) > 4)) ?? 0.5;
+    out.push({ x1: -4.5, y1: 0, x2: -4.5, y2: H, label: H, colour: 'table', outside: true, at });
     return out;
   }
 
