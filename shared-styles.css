@@ -1716,11 +1716,13 @@ input::placeholder { color: #5b6275; }
 /* end round sheet */
 .sc-vs-scrim { position: fixed; inset: 0; z-index: 300; background: rgba(4,5,8,0.7); }
 .sc-vs-sheet { position: fixed; z-index: 310; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(560px, calc(100% - 24px)); max-height: calc(100dvh - 24px); overflow-y: auto; box-sizing: border-box; padding: 18px; background: #141824; border: 1px solid #f2c14e; clip-path: var(--sc-corner-14); }
-.sc-vs-end-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 12px 0; }
+.sc-vs-end-cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; margin: 12px 0; }
 .sc-vs-end-line { display: flex; justify-content: space-between; gap: 8px; padding: 6px 0; border-bottom: 1px solid #232939; font-size: 13px; color: #c8cede; }
 .sc-vs-end-line b { font-family: 'Chakra Petch', sans-serif; color: #e9ecf2; }
-.sc-vs-end-adj { display: flex; align-items: center; gap: 8px; margin-top: 8px; }
-.sc-vs-end-adj > span { flex: 1; font-size: 12px; color: #8a91a5; }
+/* Label on its own line: label + stepper in one row was wider than half the sheet on a phone,
+   which pushed the Opponent column off the edge. */
+.sc-vs-end-adj { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-top: 8px; }
+.sc-vs-end-adj > span { flex: 1 0 100%; font-size: 12px; color: #8a91a5; }
 .sc-vs-end-adj b { min-width: 34px; text-align: center; font: 700 20px 'Chakra Petch', sans-serif; color: #f2c14e; }
 .sc-vs-effects { margin: 10px 0 14px; padding-left: 18px; color: #a7aec2; font-size: 13px; }
 
@@ -2297,3 +2299,14 @@ input::placeholder { color: #5b6275; }
 @media (max-width: 380px) {
   .sc-vs-unit-name--mid .sc-vs-nm { white-space: normal; font-size: 14.5px; line-height: 1.08; text-align: right; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
 }
+
+/* VS mission markers: which zone colour you took, the printed colour of each marker, extra end-round inputs. */
+.sc-vs-zone { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 8px; margin: 10px 0 2px; }
+.sc-vs-zone .sc-vs-muted { flex: 1 1 140px; font-size: 11.5px; }
+.sc-vs-zone-btn { min-width: 58px; min-height: 40px; padding: 0 12px; background: #161a27; border: 1px solid #323a4f; color: #a7aec2; font: 700 12px Rajdhani, sans-serif; letter-spacing: .14em; text-transform: uppercase; cursor: pointer; }
+.sc-vs-zone-btn--red.sc-vs-zone-btn--on { border-color: #e5484d; background: rgba(229,72,77,0.2); color: #ffd7d9; }
+.sc-vs-zone-btn--blue.sc-vs-zone-btn--on { border-color: #4c8dff; background: rgba(76,141,255,0.2); color: #d6e5ff; }
+.sc-vs-mk { position: relative; }
+.sc-vs-mk-dot { position: absolute; top: -3px; right: -3px; width: 14px; height: 14px; border-radius: 50%; border: 2px solid #10131c; }
+.sc-vs-end-in b { font-size: 16px; color: #e9ecf2; }
+.sc-vs-end-note { margin: 0 0 10px; padding: 8px 10px; border-left: 2px solid #f2c14e; background: rgba(242,193,78,0.07); font-size: 12.5px; line-height: 1.45; color: #d9c48a; }

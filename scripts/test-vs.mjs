@@ -151,4 +151,36 @@ assert.equal(JSON.parse(store.get('sctmg_opp_v1')).army.length, c.state.yours.ar
 c.receiveCode('not a code');
 assert.match(c.renderVals().share.error, /could not be read/, 'bad codes explain themselves');
 c.setState({ sheet: null });
+// Zone colour: once picked, marker colours follow their numbers and colour missions score right.
+c.state = { ...c.state, view: 'board', sheet: 'end', adjYou: 0, adjFoe: 0, endIn: {},
+  play: { round: 2, vpYou: 0, vpFoe: 0, missionId: 'hold-position', rounds: {}, markers: { 1: { ctrl: 'you' }, 2: { ctrl: 'you' }, 5: { ctrl: 'them' } } } };
+let hv = c.renderVals();
+assert.ok(hv.needsColour, 'Hold Position asks for your zone colour');
+assert.match(hv.endMissionNote, /Zone colour not set/);
+const markerVp = list => list.filter(l => /^M\d/.test(l.label)).reduce((t, l) => t + l.vp, 0);
+assert.equal(markerVp(hv.endYou), 2, 'no zone colour: both markers count as Neutral');
+hv.pickRed();
+hv = c.renderVals();
+assert.ok(hv.youRed && !hv.youBlue);
+assert.equal(markerVp(hv.endYou), 1 + 2, 'Red zone: M1 is yours (1 VP), M2 is Blue (2 VP)');
+assert.equal(markerVp(hv.endFoe), 1, 'M5 is Neutral');
+assert.equal(hv.markers.find(x => x.num === 2).dot, '#4c8dff'); assert.equal(hv.markers.find(x => x.num === 5).dot, '');
+// Fire in the Sky: Sabotage Level per marker, cycling 1 to 3.
+c.state = { ...c.state, play: { ...c.state.play, missionId: 'fire-in-the-sky', youColour: 'red', markers: { 2: { ctrl: 'you' }, 1: { ctrl: 'you' } } } };
+hv = c.renderVals();
+assert.ok(hv.markers[0].canSabotage); assert.equal(hv.markers.find(x => x.num === 2).sabotageLabel, 'Level 1');
+hv.markers.find(x => x.num === 2).sabotage(); c.renderVals().markers.find(x => x.num === 2).sabotage();
+hv = c.renderVals();
+assert.equal(hv.markers.find(x => x.num === 2).sabotageLabel, 'Level 3');
+assert.equal(markerVp(hv.endYou), 3, 'Blue marker at level 3 pays 3; your own Red marker pays nothing');
+// Divide and Conquer / Gather: the table-only numbers can be entered in the sheet.
+c.state = { ...c.state, endIn: {}, play: { ...c.state.play, missionId: 'gather-the-resources', markers: {} } };
+hv = c.renderVals();
+assert.equal(hv.endInYou.map(q => q.label).join(), 'Gather actions');
+hv.endInYou[0].up(); c.renderVals().endInYou[0].up(); c.renderVals().endInFoe[0].up();
+hv = c.renderVals();
+assert.equal(hv.endYou.find(l => l.label === 'Gather actions').vp, 2); assert.equal(hv.endFoe.find(l => l.label === 'Gather actions').vp, 1);
+c.state = { ...c.state, endIn: {}, play: { ...c.state.play, missionId: 'divide-and-conquer' } };
+assert.equal(c.renderVals().endInYou.map(q => q.label).join(), 'Quarters won');
+c.setState({ sheet: null, endIn: {} });
 console.log('VS mode checks passed.');
