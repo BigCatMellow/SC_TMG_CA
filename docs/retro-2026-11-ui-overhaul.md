@@ -1,8 +1,8 @@
-# Retro: the November 2026 UI overhaul (PRs #27–#88)
+# Retro: the November 2026 UI overhaul (PRs #27–#129)
 
 These notes cover how this work was done, not just what came out of it. They record what worked, what went wrong, and what we would do differently next time. Mistakes are fine. Making the same mistake twice is the thing to avoid.
 
-Work done by bt 7274 with Claude, 9–12 November 2026. Sections 1–4 cover PRs #27–#53. Section 5 covers the design pass that followed (#55–#65), section 6 the polish pass (#66–#73), and section 7 the afternoon of 12 November (#74–#88), ending with getting ready to share. Open threads are at the end.
+Work done by bt 7274 with Claude, 9–14 November 2026. Sections 1–4 cover PRs #27–#53. Section 5 covers the design pass that followed (#55–#65), section 6 the polish pass (#66–#73), and section 7 the afternoon of 12 November (#74–#88), ending with getting ready to share. Section 8 covers 12–14 November (#89–#129): Roster and VS taking over from the Battle tab, Quick build, sharing and lists, and two full audits against the official cards. Open threads are at the end.
 
 ---
 
@@ -155,6 +155,8 @@ Run one after any big batch of changes.
 11. **Check CI triggers and timeouts** when touching tests or workflows.
 12. **Lock decisions with tests:** design rules, not just functions.
 13. **Real models only.** Plain cards beat concept art.
+14. **The card is the source, not the app.** Check data against the card sheets (and their page images), not against what the app already shows. How: [card-audit.md](card-audit.md).
+15. **Test the uneven case.** Long names, one column fuller than the other, a 360px screen, an asymmetric map. The tidy case hides layout bugs.
 
 ---
 
@@ -340,6 +342,65 @@ Two things were different this time:
 
 ---
 
+## 8. Part 5: Roster, Quick build, sharing and the card audits (12–14 November, PRs #89–#129)
+
+### What happened, in order
+
+| Stage | PRs | What drove it |
+|---|---|---|
+| Getting ready to share | #89–#90 | README notice, CONTRIBUTING, issue forms. The rules check had been failing since #86 (data added to generated files, not their sources). |
+| Battle tab catch-up | #91–#97 | Battle cards: abilities in view, one tap to Use. Unit rows built like VS rows, sticky headings, one compact mission block. |
+| Battle splits into Roster + VS | #98–#101 | A VS mock (tap any unit or card for its full reference) showed VS could do everything Battle did in play. Battle became **Roster** (army management), VS is gameplay. Editing a unit is opening it: no Edit Army mode. |
+| Keywords against the Core Rules | #102 | BULKY, DODGE, SPECIALIST and INDIRECT FIRE said the wrong thing. |
+| Supply-drop warning | #103–#104 | Amber, then stripes, then accent colour; settled on the bright team colour for every model whose loss drops Supply. |
+| Command Center exports | #105 | One script to archive the official Command Center references. |
+| Quick build | #106–#116, #121 | Mocked in VS, then in the Library. Tiles per unit with a button per tier, role-colour outline, a small Army tab, an info sheet per model, a count and − per tier. A key bug (two adds in one millisecond shared a key) was found while testing. |
+| Sharing and lists | #117–#120 | QR code, link or code from VS, then every header. A list bar on Roster and a My lists sheet. README rewritten to cover every feature. |
+| Tactical cards in Quick build | #122–#123 | Mocked inside the Library, then moved: "the tactical cards should have their own quick build section, not combined in the library." |
+| First card audit | #124 | bt 7274 added the official PDFs to a claude.ai Project and asked for everything to be checked, newest source first. |
+| Upgrades on the VS card | #125–#126 | An outside reviewer said upgrade info was hard to find mid-game. bt 7274: "if an upgrade gives them more movement then that should be on the VS card so you can't miss it." Mocked, then done for every upgrade and card bonus. A helper agent checked it before merge. |
+| Second full review | #127–#129 | bt 7274 raised the model and effort and asked to "review EVERYTHING from the UI to the Keywords and Stats". Found 8 data errors, 2 missing missions, 4 missing maps, VS scoring gaps and narrow-phone layout bugs. |
+
+### Design principles that came out of it
+
+- **One screen per job.** Roster is for building and checking an army; VS is for playing it. Having both do both (Battle) meant two of everything and they drifted apart.
+- **Show the effect, not the rule.** An upgrade that adds Speed changes the Speed number on the VS card, in gold. A reminder you have to go and read gets missed mid-game.
+- **Every way in, the same sheet.** Tapping a unit in Quick build, Roster or VS opens the same kind of reference sheet.
+- **Mock inside the closest screen, then move it if it's crowded.** Tactical cards were mocked in Library Quick build, which showed they needed their own place.
+
+### Mistakes and lessons
+
+**Plain text extraction hid half the cards.** The card sheets print the back of each unit card upside down and the tactical cards sideways. The first audit read the PDF text and missed what it couldn't see: Malignant Creep's faction tag and the last sentence of Omega Network.
+- Lesson: extract at every rotation (`scripts/card-audit/extract_card_text.py`), and read numbers in boxes from the page image.
+
+**Tests locked in wrong data.** The Roach had a 4–6 model bracket that isn't on the card, and a test asserted it. Another test asserted the old FAQ version label.
+- Lesson: take a test's expected values from the source, never from the app's current output. When a test and the card disagree, the card wins.
+
+**Two scoring screens drifted apart.** The Roster's End round sheet could set marker colours; the VS one couldn't, so Hold Position and Gather the Resources scored wrong in VS.
+- Lesson: when two screens do the same job, give them the same inputs, or share the code. (Rule of thumb 8 again.)
+
+**Assuming a pattern from a few examples.** A new map test assumed both deployment zones are always the same size. Proving Grounds isn't.
+- Lesson: check the source before turning a pattern into a test.
+
+**Grid items wider than the phone.** A `display: grid` child defaults to `min-width: auto`, so one no-wrap row of tag chips made the whole page scroll sideways at 360px. Right-aligned names that were too long lost their first letters.
+- Lesson: `min-width: 0` on grid and flex children that hold no-wrap rows, and screenshot the longest names at 360px.
+
+**Columns that don't line up.** The VS End round sheet's two columns put Adjust at different heights when one side had more score lines (bt 7274 spotted it after merge, #129).
+- Lesson: screenshot the uneven case, not just the matched one.
+
+**Stacked PRs and squash merges.** #128 was built on #127's branch. After #127 was squash-merged, #128 had to be rebased onto `main` and retargeted before it could merge.
+- Lesson: for stacked PRs, rebase with `git rebase --onto origin/main <old base>` after the first merge, then change the PR's base.
+
+### What worked
+
+- **The card is the source of truth, with a written order of precedence.** Having the PDFs in one Project, and a list of which source beats which, settled every disagreement quickly.
+- **A script to print the app's data in card order** made reading a card against the app fast enough to do for every card.
+- **A helper agent before merge** on the large upgrade-effects change (#126).
+- **Mocks for the uncertain bits** (VS reference sheets, Quick build, tactical strip, upgrade effects), each with a yes or a redirect before building.
+- **Measuring overflow in code at 360 and 393px** found the sideways-scroll bugs on screens that looked fine at a glance.
+
+---
+
 ## Open threads
 
 - ~~Miniature photos missing~~: done. Every unit has a painted-model photo (#57–#58, issue #7 closed).
@@ -348,9 +409,12 @@ Two things were different this time:
 - The `uploads/*logo.png` traced logos are no longer used anywhere and can be deleted.
 - Repo protection (bt 7274, in GitHub settings): a ruleset on `main` requiring pull requests and passing checks; read-only workflow permissions; approval for outside contributors' workflows.
 - Consider asking Archon Studio for their blessing before sharing widely.
-- Tier and upgrade editing still live under Battle › Edit Army; move them to the Library too.
+- ~~Tier and upgrade editing under Battle › Edit Army~~: done. Open a unit in Roster (#100), or use Quick build's Army tab.
 - Terran and Protoss still save under `_v1` while Zerg uses `_v5`; unify the keys (with a migration) when the faction pages are refactored into one.
-- The card-by-card audit against official PDFs, and the Glial Reconstitution CP vs BM question (issue #2).
-- Army share codes: parked until a short, human-friendly format exists. A QR code carrying a link (the code never typed) is the likely route.
+- ~~The card-by-card audit against official PDFs~~: done twice (#124, #127–#128). Process in [card-audit.md](card-audit.md).
+- Glial Reconstitution: the Roach card's text layer reads 1 CP, the Vile card 1 BM; the app uses 1 BM. Check the cost icon on the page image (issue #2).
+- Zagara's Broodmother upgrade has no published price; kept at 0m until there is one.
+- Artefact Hunt's round 5 claim points are entered by hand; the app doesn't track which unit carries a marker.
+- ~~Army share codes~~: done as a QR code carrying a link, plus Send link and Copy code (#117–#118).
 - The VS battle log: left out of v1 on purpose. Revisit once VS mode has been used in real games.
 - Refactor the three faction army files into one parameterised page.

@@ -38,11 +38,13 @@ Every army page shares the same header and the same six tabs.
     - The **Army** tab (bottom right) opens your army: change tier, toggle upgrades (priced for that tier), or remove a unit.
     - Summoned units and other faction cards' units are listed too, with a note on why they can't be added.
   - **Unit cards**: the full card for every unit (stats, weapons, abilities, tags, upgrade hints), grouped by role with sticky headings. Tap **View** for the model fullscreen.
-- **Tactics**: tactical cards grouped by category. Each card shows its phases, what it does, and the slots or resources it gives.
+- **Tactics**: tactical cards, with the same switch as the Library.
+  - **Quick build**: a tile per card with + and a ×count/−, and a **Cards** tab that lists your picks. Tap a card name for its abilities. Cards tied to another faction card are dimmed with "Requires …"; only one Creep card can be taken.
+  - **Full cards**: every card grouped by category, with its phases, what it does, and the slots or resources it gives.
 - **Roster**: your army, ready to review.
   - **List bar**: the current list's name, *Saved / Unsaved changes*, and **Save**.
   - **Cards**: your faction card and tactical cards, with their abilities readable in place. Pills like *+1 Elite* show the slots each card gives.
-  - **Units**, grouped by role. Open one to change tier, set upgrades, remove it, or read its stats, weapons and abilities.
+  - **Units**, grouped by role. Each row lists the upgrades you bought. Open one to change tier, set upgrades (each says what it does in one line), remove it, or read its stats and weapons with upgrades applied.
 - **VS**: opens the game screen (below) with this army.
 - **Codex**: worked rules, keywords and tags with search and examples. Keywords anywhere in the app are tappable for their definition.
 
@@ -55,17 +57,24 @@ One screen for both armies and the score.
   - One HP or Models stepper per unit, with a split health bar (one segment per model).
   - The models whose loss would drop the unit's supply are shown in the bright team colour, so you can see a supply drop coming.
   - Damage carries over between models the way the rules say: one damage marker per unit, and models removed as their HP runs out.
-- **Tap a unit** (yours or theirs) for a sheet with its stats, weapons and abilities, upgrades included.
+- **Tap a unit** (yours or theirs) for a sheet with its stats, weapons and abilities.
+  - **Upgrades and card bonuses change the numbers.** A stat or weapon an upgrade changes is shown in gold, with where it came from. Conditional bonuses ("on creep") are a note.
+  - Active and Reaction upgrades have a **Use** button; passives with no number are listed as *Always on*.
+  - Tactical and faction card bonuses that can help this unit fold into a *Card bonuses* row. Turning one on exhausts the card; it clears at End round.
 - **Tap a card** to read its abilities and **Use** one. The card is exhausted and remembers which ability you used this round.
 - **Mission markers** and **End round**:
   - Markers can be held by you, them or nobody, and activated when the mission needs it.
-  - End round suggests scoring, readies cards, and raises the supply pool.
+  - Missions that score by marker colour ask for **your zone** (Red or Blue) once. Every official map prints markers 1 and 3 Red, 2 and 4 Blue, 5 Neutral, so each marker's colour follows. A dot on each marker shows it.
+  - **Fire in the Sky**: a Sabotage Level (1–3) on each marker.
+  - End round suggests scoring, readies cards, and raises the supply pool. Quarters won and Gather actions can be entered in the sheet; Artefact Hunt's round 5 claim points are explained and entered by hand.
   - **New game** comes with undo. A game-over banner appears when the mission ends.
 - **Scout the enemy**: enter the opponent's faction, faction card, tactical cards and units by tier. Or skip that and load their shared army.
 - **Share** on the top bar.
 
 ### War Room (missions and setup)
 - Pick the mission, map and game size.
+  - 7 missions, each in Standard and Skirmish: Supply Drop, Divide and Conquer, Frontlines, Gather the Resources, Hold Position, Artefact Hunt (Wave 2), Fire in the Sky (Wave 3).
+  - 14 deployment maps: 7 for Skirmish (36×36) and 7 for Standard (54×36), Waves 1–3.
 - Read the briefing, scoring and marker placement.
 - Use the round tracker, and print a battle sheet.
 
@@ -105,7 +114,9 @@ One screen for both armies and the score.
 ## Rules sources and accuracy
 
 - The official [Downloads page](https://starcraft-tmg.com/downloads) hosts the complete rulebook, FAQ, card sheets and balance updates. Full publisher PDFs and verbatim rulebook text are linked, not mirrored here.
+- When sources disagree, the newest wins: FAQ v1.3 (11 Nov 2026), then the October 2026 cost table and changelog, then the card sheets and Core Rules. Full order: [docs/card-audit.md](docs/card-audit.md).
 - Costs follow the **October 2026** cost table ([agent-rules/appendix-2026.json](agent-rules/appendix-2026.json)). The rulebook's own appendix is the older price list.
+- Every unit, card, cost, mission and map has been checked against the official card sheets, twice (14 Nov 2026). The process and log are in [docs/card-audit.md](docs/card-audit.md).
 - Keyword definitions are checked against the 2026 Core Rules glossary (Part 11) by `test-keywords`.
 - Later-wave catalogue coverage is tracked in [Issue #2](https://github.com/BigCatMellow/SC_TMG_CA/issues/2).
 - Spot an error? Use the **rules correction** issue template (see below).
@@ -123,11 +134,13 @@ One screen for both armies and the score.
 
 **Data**
 - Unit data (`terran-data.js`, `zerg-data.js`, `protoss-data.js`) is **generated** from `uploads/*.html` by `npm run build:units`. Edit the sources, not the generated files. CI fails if they drift.
-- Hand-maintained: `wave3-data.js`, `missions-data.js`, `mission-scoring.js`, `plain-english.js`, `model-portraits.js`.
+- Missions and maps (`missions-data.js`) are generated from `uploads/missions.html` by `npm run build:missions`.
+- Hand-maintained: `wave3-data.js` (Wave 2/3 units and cards, shared keyword glossary), `unit-effects.js` (what each upgrade and card bonus changes), `mission-scoring.js`, `plain-english.js`, `model-portraits.js`.
 - Army share codes live in [share-code.js](share-code.js).
 - See [docs/updating-data.md](docs/updating-data.md) for updating data.
 
 **Docs**
+- [Checking data against the official cards](docs/card-audit.md), with tools in [scripts/card-audit](scripts/card-audit/README.md)
 - [Agent retrieval guide](docs/agent-rules.md)
 - [Battle reference](docs/battle-reference.md)
 - [Playtesting process](docs/playtesting.md)
@@ -139,8 +152,9 @@ One screen for both armies and the score.
 - Every `scripts/test-*.mjs` runs on each pull request (the required **rules** check). Run them all locally with:
   `for s in scripts/test-*.mjs; do node "$s" || break; done`
 - Useful named ones:
-  - `npm run test:rules`, `test:appendix`, `test:keywords`, `test:share`, `test:vs`, `test:unified-army`
-  - `npm run build:units`, then `test:study`
+  - `npm run test:rules`, `test:appendix`, `test:keywords`, `test:share`, `test:vs`, `test:unified-army`, `test:scoring`, `test:wave3`
+  - `node scripts/test-effects.mjs`: every upgrade has an effect, every card bonus names a real ability
+  - `npm run build:units`, then `npm run build:study` and `test:study` (the NotebookLM sources are rebuilt from the data)
 
 **Deploy**
 - Every merge to `main` that changes the site runs the [Pages workflow](https://github.com/BigCatMellow/SC_TMG_CA/actions/workflows/deploy-pages.yml).

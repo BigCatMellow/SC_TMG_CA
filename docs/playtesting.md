@@ -112,6 +112,8 @@ Not covered yet: printing, roster import/export, Grand battle size, Firefox and 
 |---|---|---|---|---|
 | 1 | 11 Nov 2026 | 19 issues | #39–#41, #45 | Upgrades could not be bought; Round + skipped end-of-round steps; 360px clipping; keywords matched mid-word |
 | 2 | 12 Nov 2026 | 4 major, 7 minor (1 by design), 7 UX | #59 | VS ignored the supply pool; mission didn't set the R1 pool; Reset was one-tap and partial; the section tab covered + buttons |
+| 3 | 14 Nov 2026 | Review of the upgrade-effects change | #126 | A helper agent checked every upgrade and card bonus on the VS card and ran the tests; its fixes went in before merge |
+| 4 | 14 Nov 2026 | 8 data errors, 6 missing missions/maps, 4 layout bugs, VS scoring gaps | #127–#129 | Full review against the card sheets and every screen at 360/393px. Process: [card-audit.md](card-audit.md) |
 
 ## Lessons
 
@@ -123,3 +125,4 @@ Not covered yet: printing, roster import/export, Grand battle size, Firefox and 
 - **Verify the test data before trusting a "bug".** Illegal tiers make units look destroyed.
 - **Test every faction.** A storage-key mismatch broke VS and the home card for Terran and Protoss while everything worked for Zerg.
 - **Ask what device people use** before building device features (vibration, sound).
+- **Use the longest names and the fullest columns.** Kerrigan Swarm Raptor at 360px and an End round sheet with three lines on one side and one on the other showed bugs the usual test army didn't.

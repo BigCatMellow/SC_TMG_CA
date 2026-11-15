@@ -2,11 +2,16 @@
 
 ## Source precedence
 
-1. **2026 Core Rules Book** (`StarCraft-TMG_EN.pdf`, provided by the user): mechanics, game phases, army legality, glossary, printed-page citation. PDF viewer page = printed page + 2.
-2. **Publisher October 9, 2026 cost table**: [latest balance table](https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Cost-Table-10.2026_EN.pdf) supersedes the Core Rules Appendix for unit, upgrade, and Tactical Card costs. [Official changelog](https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Changelog-10.2026_EN.pdf).
-3. **Publisher official card sheets**: [Terran](https://starcraft-tmg.com/files/downloads/StarCraft-Terran-P2P-Card-Sheets-A4_EN.pdf), [Zerg](https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-Card-Sheets-A4_EN.pdf), [Protoss](https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-Card-Sheets-A4_EN.pdf) for card-specific abilities and stats, subject to newer errata.
-4. **[Publisher FAQ](https://starcraft-tmg.com/files/downloads/StarCraft-TMG-FAQ_EN.pdf)** when it clarifies or modifies the above.
-5. **Companion data** is a presentation of sources, not a separate rule authority. The old `rules-data.js` is an HTML-derived fallback only.
+Newest wins. When sources disagree, the higher one on this list applies:
+
+1. **[Publisher FAQ](https://starcraft-tmg.com/files/downloads/StarCraft-TMG-FAQ_EN.pdf)** v1.3 (11 Nov 2026).
+2. **[Cost table](https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Cost-Table-10.2026_EN.pdf)** (9 Oct 2026). It replaces the Core Rules appendix and any cost printed on a card.
+3. **[Changelog](https://starcraft-tmg.com/files/downloads/StarCraft-TMG-Changelog-10.2026_EN.pdf)** (Oct 2026).
+4. **Wave 3 card sheets**, then the **Quick Start rules**, then **Wave 2 card sheets**.
+5. **2026 Core Rules Book** (`StarCraft-TMG_EN.pdf`): mechanics, phases, army legality, glossary, printed-page citation. PDF viewer page = printed page + 2.
+6. **Wave 1 card sheets**: [Terran](https://starcraft-tmg.com/files/downloads/StarCraft-Terran-P2P-Card-Sheets-A4_EN.pdf), [Zerg](https://starcraft-tmg.com/files/downloads/StarCraft-Zerg-P2P-Card-Sheets-A4_EN.pdf), [Protoss](https://starcraft-tmg.com/files/downloads/StarCraft-Protoss-P2P-Card-Sheets-A4_EN.pdf).
+
+A card's own text beats the Core Rules for that card. **Companion data** is a presentation of these sources, not a rule authority; the old `rules-data.js` is an HTML-derived fallback only. How the data is checked: [card-audit.md](card-audit.md).
 
 Do not mistake the old Core Rules price appendix (printed pp. 96–107) for the October 2026 balance, and do not guess table cells from flattened PDF text.
 
@@ -41,6 +46,13 @@ The Zerg Queen, Roach, and Corpser had mismatched weapons/abilities; these profi
 The Army detail display applies selected full-unit weapon replacements (instead of showing replaced base weapons), retains base equipment alongside **SPECIALIST** weapons (which affect individual models), and excludes conflicting whole-unit replacements targeting the same base weapon. This is a reference representation; physical model-by-model Specialist assignments still need player attention.
 
 Two legacy tooltip corrections: **PINPOINT** permits shots at Engaged targets, not selection of individual models; **LOCKED IN** adds Rate of Attack dice against targets with Stationary Status. Source HTML and generated data are updated together.
+
+## Wave 2 and Wave 3 missions and maps
+
+- Missions: **Artefact Hunt** (Wave 2) and **Fire in the Sky** (Wave 3), Standard and Skirmish.
+- Maps: **Green Valleys** and **Power Lines** (36×36), **Meeting Engagement** and **One Bridge Too Close** (54×36).
+- Every official map prints markers 1 and 3 Red, 2 and 4 Blue, 5 Neutral. In VS, pick your zone colour once and each marker's colour follows from its number.
+- Fire in the Sky tracks a Sabotage Level (1–3) per marker. Artefact Hunt's round 5 claim points are entered by hand.
 
 ## Verification commands
 

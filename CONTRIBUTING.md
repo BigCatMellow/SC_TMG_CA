@@ -5,7 +5,7 @@ Thanks for helping. This is a small fan project run by bt 7274, so please keep c
 ## Reporting
 
 - **Bugs:** open an issue with the *Bug report* form: where it happened, what you expected, your device and browser, and a screenshot if you can.
-- **Rules or points:** use the *Rules or points correction* form and cite the official source (rulebook page, FAQ version, balance update). Don't paste whole pages of rules text.
+- **Rules or points:** use the *Rules or points correction* form and cite the official source (rulebook page, FAQ version, balance update). Don't paste whole pages of rules text. Which source wins when two disagree, and how data is checked: [docs/card-audit.md](docs/card-audit.md).
 
 ## Changing code
 
