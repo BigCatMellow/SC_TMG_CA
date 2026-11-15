@@ -66,7 +66,7 @@ Raptor (Zergling)
   Upgrade Adrenal Glands: 20/20 Minerals
   Upgrade Burrow Ambush: 20/30 Minerals
   Upgrade Shredding Claws: 10/10 Minerals
-Kerrigan's Raptor (Zergling)
+Kerrigan Swarm Raptor (Zergling)
   6 models: 230 Minerals, Supply 1
 Swarmling (Zergling)
   18 models: 210 Minerals, Supply 1

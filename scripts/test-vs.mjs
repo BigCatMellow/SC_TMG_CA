@@ -126,13 +126,13 @@ assert.equal(c.state.play.vpFoe, 12, 'undo restores the game'); assert.equal(c.s
 // Supply steps: the models whose loss drops Supply are always marked (faction accent colour).
 c.state = { ...c.state, view: 'board', sheet: null, yours: { ...c.state.yours, army: [
   { key: 's1', unitId: 'zergling', tierIdx: 0, modelsLost: 5, deployed: true },
-  { key: 's2', unitId: 'roach', tierIdx: 0, modelsLost: 1, dmg: 0, deployed: true }] } };
+  { key: 's2', unitId: 'roach', tierIdx: 1, modelsLost: 0, dmg: 0, deployed: true }] } };
 let sv = c.renderVals().you.units;
 const zl = sv.find(u => u.key === 's1'), ro = sv.find(u => u.key === 's2');
 assert.deepEqual(zl.pips.map((p, i) => /--drop/.test(p.cls) ? i : -1).filter(i => i >= 0), [6, 12], 'Zergling 18: the 13th and 7th models are marked');
 assert.match(zl.supCls, /--risk/, 'Zergling at 13: next loss drops Supply');
-assert.deepEqual(ro.hpSegs.map((s, i) => /--drop/.test(s.cls) ? i : -1).filter(i => i >= 0), [1, 3], 'Roach 6: the 4th and 2nd models are marked');
-assert.ok(!/--risk/.test(ro.supCls), 'Roach at 5 models: no Supply warning yet');
+assert.deepEqual(ro.hpSegs.map((s, i) => /--drop/.test(s.cls) ? i : -1).filter(i => i >= 0), [1], 'Roach 3: the 2nd model is marked');
+assert.ok(!/--risk/.test(ro.supCls), 'Roach at 3 models: no Supply warning yet');
 assert.match(c.renderVals().youAccent, /^#/, 'faction accent passed to the board');
 // Sharing: your army becomes a code; a code loads as the opponent or as your army.
 c.renderVals().openShare();

@@ -83,4 +83,26 @@ for (const F of ['Zerg', 'Terran', 'Protoss']) {
   assert.equal(view().scoreMarkers[0].badge, '', F + ' held marker is not "taken" again');
   console.log(F + ': End round score suggestion passed');
 }
+// Mission and map data against the printed scenario cards.
+assert.equal(S.rules(mission('gather-the-resources-skirmish')).earlyWinLead, 8, 'Gather the Resources (Skirmish) ends on an 8+ lead');
+assert.equal(S.rules(mission('gather-the-resources')).earlyWinLead, 10);
+for (const [id, supply, per, lead] of [['artefact-hunt', 6, 2, null], ['artefact-hunt-skirmish', 3, 1, null], ['fire-in-the-sky', 5, 3, 10], ['fire-in-the-sky-skirmish', 3, 2, 8]]) {
+  const m = mission(id);
+  assert.ok(m, id + ' is listed');
+  assert.deepEqual([m.supply, m.perRound, m.gameLength, S.rules(m).earlyWinLead], [supply, per, 5, lead], id + ' numbers');
+}
+const map = id => M.MAPS.find(x => x.id === id);
+const zones = z => z.map(r => [r.x, r.y, r.w, r.h].join(',')).join(' ');
+assert.equal(zones(map('dirt-side').redZones), '0,0,12,6 0,6,6,6', 'Dirt Side: Red is one L in the top-left corner');
+assert.equal(zones(map('dirt-side').blueZones), '24,30,12,6 30,24,6,6', 'Dirt Side: Blue is one L in the bottom-right corner');
+for (const id of ['green-valleys', 'power-lines', 'meeting-engagement', 'one-bridge-too-close']) assert.ok(map(id), id + ' map is listed');
+assert.equal(M.MAPS.length, 14);
+for (const mp of M.MAPS) {
+  const skirmish = mp.type === 'Skirmish';
+  assert.deepEqual([mp.width, mp.height], skirmish ? [36, 36] : [54, 36], mp.id + ' size');
+  assert.equal(mp.markers.map(k => k.num).sort().join(), skirmish ? '1,2,5' : '1,2,3,4,5', mp.id + ' markers');
+  assert.equal(mp.markerSetup.length, mp.markers.length, mp.id + ' has a setup line per marker');
+  for (const k of mp.markers) assert.ok(k.x > 0 && k.x < mp.width && k.y > 0 && k.y < mp.height, mp.id + ' marker ' + k.num + ' is on the table');
+  for (const r of [...mp.redZones, ...mp.blueZones]) assert.ok(r.x >= 0 && r.y >= 0 && r.x + r.w <= mp.width && r.y + r.h <= mp.height, mp.id + ' zone is on the table');
+}
 console.log('Mission scoring validated');

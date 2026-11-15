@@ -24,7 +24,7 @@ for (const s of r) {
 }
 const faq = r.filter(s => s.id.startsWith('faq-'));
 assert.equal(faq.length, 5);
-assert.ok(faq.every(s => s.sourceLabel.includes('FAQ v1.1') && s.groups.length >= 2));
+assert.ok(faq.every(s => s.sourceLabel.includes('FAQ v1.3') && s.groups.length >= 2));
 const faqText = faq.flatMap(s => s.groups.flatMap(g => g.items.map(i => i.t))).join(' ');
 for(const key of ['Artefact Hunt','Surge','2+','Tactical Card','PINPOINT','Coherency','PLACE'])
   assert.ok(faqText.includes(key),'FAQ coverage missing '+key);

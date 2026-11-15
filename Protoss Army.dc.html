@@ -554,7 +554,7 @@
       </div>
 
       <div style="font-size:13px;color:#8a91a5;margin:0 2px 12px">Your Nexus Card defines base unit slots and grants faction abilities. Exactly one is active.</div>
-      <div style="display:grid;gap:10px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr);gap:10px">
         <sc-for list="{{ factionCards }}" as="fc" hint-placeholder-count="2">
           <div style="background:{{ fc.bg }};border:1px solid {{ fc.bd }};clip-path:var(--sc-corner-12)">
             <div onClick="{{ fc.onSelect }}" role="button" style="display:flex;align-items:center;gap:10px;padding:14px 12px;cursor:pointer;min-height:44px">

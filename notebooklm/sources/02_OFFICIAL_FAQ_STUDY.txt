@@ -1,8 +1,8 @@
-PUBLISHER FAQ v1.1 — PARAPHRASED CLARIFICATIONS
+PUBLISHER FAQ v1.3 — PARAPHRASED CLARIFICATIONS
 Official FAQ: https://starcraft-tmg.com/files/downloads/StarCraft-TMG-FAQ_EN.pdf
 =================================================================
 FAQ: Shields, Damage & Survival
-Citation: Publisher FAQ v1.1 · 25 Sep 2026 · pp. 2–4
+Citation: Publisher FAQ v1.3 · 11 Nov 2026
 Official clarifications on Shielded, damage and destroyed Units
 
 SHIELDS AND DAMAGE
@@ -18,7 +18,7 @@ DEFENSE MECHANICS
 - Combat Shield may grant an Evade roll against NON-LETHAL DAMAGE and effects such as Psionic Storm or Plague, per its specific rules.
 =================================================================
 FAQ: Movement, Cover & Deployment
-Citation: Publisher FAQ v1.1 · 25 Sep 2026 · pp. 2–3
+Citation: Publisher FAQ v1.3 · 11 Nov 2026
 Exact geometry and reserve timing clarifications
 
 MOVEMENT AND COHERENCY
@@ -39,7 +39,7 @@ COVER
 - Direct Cover applies if LoS crosses the terrain piece and the model is Within 1 inch of any part of the same piece, even if another part interrupts the LoS.
 =================================================================
 FAQ: Shooting, Reactions & Keywords
-Citation: Publisher FAQ v1.1 · 25 Sep 2026 · pp. 3–5
+Citation: Publisher FAQ v1.3 · 11 Nov 2026
 FAQs on attack batches, modifiers and timing windows
 
 RANGED ATTACKS
@@ -63,7 +63,7 @@ KEYWORDS
 - Numerical bonuses from different named sources may stack; identical BUFF Speed effects do not stack, even if different sources grant them.
 =================================================================
 FAQ: Missions, Markers & Scoring
-Citation: Publisher FAQ v1.1 · 25 Sep 2026 · pp. 2, 5
+Citation: Publisher FAQ v1.3 · 11 Nov 2026
 Exceptions to normal control and scoring
 
 MISSION MARKERS
@@ -79,7 +79,7 @@ VICTORY POINTS AND MODEL LOSS
 - During close-combat casualty removal involving multiple Engaged enemy Units, preserve Engagement with all of them when an alternative legal casualty remains.
 =================================================================
 FAQ: Faction-Specific Interactions
-Citation: Publisher FAQ v1.1 · 25 Sep 2026 · pp. 3–5
+Citation: Publisher FAQ v1.3 · 11 Nov 2026
 Creep, Pylon, force-field, Terran and special-case rulings
 
 TERRAN AND PROTOSS

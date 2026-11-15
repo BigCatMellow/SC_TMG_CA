@@ -1,5 +1,5 @@
-// Compact battle rule paraphrases plus the publisher's verified FAQ v1.1.
-// Official rules/card text controls disputes; publisher FAQ dated 25 Sep 2026.
+// Compact battle rule paraphrases plus the publisher's verified FAQ v1.3.
+// Official rules/card text controls disputes; publisher FAQ dated 11 Nov 2026.
 window.SCTMG_BATTLE_RULES = {
   "source": "2026 Core Rules Book",
   "format": "paraphrased quick reference; validate diagram-heavy procedures against PDF",
@@ -783,7 +783,7 @@ window.SCTMG_BATTLE_RULES = {
       ],
       "scope": "core",
       "icon": "faq-survival",
-      "sourceLabel": "Publisher FAQ v1.1 · 25 Sep 2026 · pp. 2–4"
+      "sourceLabel": "Publisher FAQ v1.3 · 11 Nov 2026"
     },
     {
       "id": "faq-movement",
@@ -843,7 +843,7 @@ window.SCTMG_BATTLE_RULES = {
       ],
       "scope": "core",
       "icon": "faq-movement",
-      "sourceLabel": "Publisher FAQ v1.1 · 25 Sep 2026 · pp. 2–3"
+      "sourceLabel": "Publisher FAQ v1.3 · 11 Nov 2026"
     },
     {
       "id": "faq-combat",
@@ -912,7 +912,7 @@ window.SCTMG_BATTLE_RULES = {
       ],
       "scope": "core",
       "icon": "faq-combat",
-      "sourceLabel": "Publisher FAQ v1.1 · 25 Sep 2026 · pp. 3–5"
+      "sourceLabel": "Publisher FAQ v1.3 · 11 Nov 2026"
     },
     {
       "id": "faq-objectives",
@@ -958,7 +958,7 @@ window.SCTMG_BATTLE_RULES = {
       ],
       "scope": "core",
       "icon": "faq-objectives",
-      "sourceLabel": "Publisher FAQ v1.1 · 25 Sep 2026 · pp. 2, 5"
+      "sourceLabel": "Publisher FAQ v1.3 · 11 Nov 2026"
     },
     {
       "id": "faq-faction",
@@ -1004,7 +1004,7 @@ window.SCTMG_BATTLE_RULES = {
       ],
       "scope": "core",
       "icon": "faq-faction",
-      "sourceLabel": "Publisher FAQ v1.1 · 25 Sep 2026 · pp. 3–5"
+      "sourceLabel": "Publisher FAQ v1.3 · 11 Nov 2026"
     },
     {
       "scope": "terran",

@@ -31,7 +31,7 @@ function buildStudy(rules,units,appendix){
  out["00_START_HERE.txt"]=str([
  "STARCRAFT TMG — NOTEBOOKLM STUDY PACK",
  "Generated from the companion repo, not a replacement for publisher rules/cards.",
- "Authority: 2026 Core Rules for mechanics; FAQ v1.1 for clarified exceptions;",
+ "Authority: 2026 Core Rules for mechanics; FAQ v1.3 for clarified exceptions;",
  "October 2026 official table for point costs; published card sheets for exact abilities.",
  "Note: the rulebook's original price appendix contains superseded point values.",
  "Missing Wave 2/3 units are NOT covered by this companion until implemented.",
@@ -43,7 +43,7 @@ function buildStudy(rules,units,appendix){
  ...shared.filter(s=>!s.id.startsWith("faq-")).map(fmtSec)
  ]);
  out["02_OFFICIAL_FAQ_STUDY.txt"]=str([
- "PUBLISHER FAQ v1.1 — PARAPHRASED CLARIFICATIONS",
+ "PUBLISHER FAQ v1.3 — PARAPHRASED CLARIFICATIONS",
  `Official FAQ: ${sources.faq}`,
  ...shared.filter(s=>s.id.startsWith("faq-")).map(fmtSec)
  ]);
