@@ -50,7 +50,7 @@ So:
 - Combat tags, Unique, and any faction tag (KERRIGAN'S SWARM, ZAGARA'S SWARM…).
 - Every weapon row: range, target, RoA, hit, surge type, surge dice, damage, keywords. Upgrade weapons too.
 - Every ability and upgrade: name, phase, Active / Passive / Reaction, cost (CP, BM, PE), and every number and keyword in the text. The app's text is paraphrased on purpose; the numbers and keywords must match exactly.
-- Read costs off the page image: they're coloured icons, and the same upgrade can cost different resources on different cards. Glial Reconstitution is **1 CP** on the Roach and Corpser cards and **1 BM** on the Vile card. The VS Use button takes its cost from the upgrade's own data, so fix it there.
+- Read costs off the page image: they're coloured icons. Check the resource fits the faction: Terran pays CP, Zerg BM, Protoss PE, and each faction's cards only produce its own resource (Core Rules 10.5.1). A cost the army can't pay is a misprint. The VS Use button takes its cost from the upgrade's own data, so fix it there.
 
 **Faction and tactical cards**
 - Slots given, resource, gas cost, Unique.
@@ -83,8 +83,7 @@ The app uses the correct spelling; the card has a typo:
 - Adept: "RESONATING GLAVES"
 - Spec Ops Marauder: "AGG-12 RIFFLE"
 - Nerazim faction card: no colon after "MIGHT OF THE NERAZIM"
-
-Possibly a card mistake, followed as printed: Glial Reconstitution costs 1 CP on the Roach and Corpser but 1 BM on the Vile (checked on the page images, 15 Nov 2026). Nothing in FAQ v1.3 or the changelog says otherwise. If a later FAQ rules on it, follow that.
+- Roach and Corpser cards: Glial Reconstitution costs **"1 CP"** (the Vile card says 1 BM). No Zerg card produces CP, so a Zerg army could never pay it; the app uses **1 BM** on all three. Checked on the page images, 15 Nov 2026. FAQ v1.3 and the changelog don't mention it; if a later FAQ rules on it, follow that.
 
 Still open: Zagara's **Broodmother** upgrade has no published price. The app keeps it at 0m (decided 14 Nov 2026).
 
@@ -105,4 +104,4 @@ Two tests had locked in wrong data (the Roach's extra bracket, an old FAQ versio
 |---|---|---|
 | 14 Nov 2026 | #124 | Zergling stats and Surge; Vile upgrade phase; Wave 3 text from the cards; High Templar upgrades; missing Wave 2 Protoss (Zeratul, Nerazim Watchers, Nerazim card, Void Seeker); Rapid Ingress name; Air slots; two wrong BM costs; keyword glossary unified. |
 | 14 Nov 2026 | #127, #128 | Malignant Creep faction tag; Omega Network sentence; Gather the Resources (Skirmish) 8+; Dirt Side layout; Roach bracket; two card names; Structure text; FAQ label v1.1 → v1.3. Added Artefact Hunt, Fire in the Sky and four maps. VS scoring didn't know marker colours. |
-| 15 Nov 2026 | #134 | Glial Reconstitution: Roach and Corpser cost 1 CP (app had 1 BM). Added the "check both directions" step. |
+| 15 Nov 2026 | #134 | Glial Reconstitution: Roach and Corpser cards print 1 CP, unpayable for Zerg; treated as a misprint, app keeps 1 BM. Use button now reads cost from the data. Added the "check both directions" step. |

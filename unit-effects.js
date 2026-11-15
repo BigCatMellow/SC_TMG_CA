@@ -174,8 +174,8 @@
   // unit: data unit; upgs: bought upgrade names; cards: [{ id, key, name }] in play for that side;
   // active: bonus ids switched on this round. Returns stat changes, weapon changes (keyed by weapon
   // name or '*ranged' / '*melee' / '*all') and the bonus list.
-  // The resource cost printed on an upgrade ("Active (1 Biomass)" -> "1 BM"). The card wins over the
-  // cost written in this file: Glial Reconstitution is 1 CP on the Roach and Corpser cards, 1 BM on the Vile.
+  // The resource cost on an upgrade's own data ("Active (1 Biomass)" -> "1 BM"). It wins over the cost
+  // written in this file, so the Use button can't drift from the unit's data.
   const UNIT_ABBR = { 'command point': 'CP', 'command points': 'CP', cp: 'CP', biomass: 'BM', bm: 'BM', 'psionic energy': 'PE', pe: 'PE' };
   function costOf(type) {
     const m = /\(([\dX][\d-]*)\s+([A-Za-z ]+?)\)/.exec(type || '');

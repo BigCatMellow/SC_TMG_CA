@@ -362,7 +362,7 @@ const KEYWORDS = {
       {
         "name": "Glial Reconstitution",
         "cost": 10,
-        "type": "Active (1 Command Point)",
+        "type": "Active (1 Biomass)",
         "description": "This Unit gains BUFF Speed (1), or BUFF Speed (2) when ON CREEP."
       }
     ],
@@ -480,7 +480,7 @@ const KEYWORDS = {
       {
         "name": "Glial Reconstitution",
         "cost": 10,
-        "type": "Active (1 Command Point)",
+        "type": "Active (1 Biomass)",
         "description": "This Unit gains BUFF Speed (1), or BUFF Speed (2) when ON CREEP."
       }
     ],
