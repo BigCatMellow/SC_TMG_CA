@@ -117,7 +117,7 @@ Stats: SPD -; EVADE 6+; ARMOUR 6+; HP 3; SIZE null; SHIELD —
 Summoned/reference-only or otherwise not directly purchasable.
 Ability Point Defense Laser (Passive, Any Phase): When another Friendly Unit Within 4" is targeted by a Ranged Attack without the INSTANT keyword, remove up to 2 dice from the Attack Pool. Then remove this Unit from the battlefield.
 Ability Gliding (Passive, Any Phase): This model has DISPLACEMENT.
-Ability Structure (Passive, Any Phase): This Unit cannot be Activated in any Phase and cannot perform actions. Its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers. This Unit cannot be a target of an ability, unless stated otherwise.
+Ability Structure (Passive, Any Phase): This Unit cannot be Activated in any Phase and cannot perform actions. Its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers, ignoring the standard Zero Supply Exception. This Unit cannot be a target of an ability, unless stated otherwise.
 
 =================================================================
 TACTICAL CARDS

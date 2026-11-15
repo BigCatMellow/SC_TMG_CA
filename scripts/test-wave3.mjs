@@ -124,6 +124,13 @@ const brood=Object.values(zagara.upgrades||{}).flat().find(u=>u.name==='Broodmot
 assert.ok(brood,'Zagara Broodmother upgrade listed');
 assert.equal(brood.cost,0,'Broodmother costs 0m until a price is published');
 assert.match(brood.description,/no price has been published/i,'Broodmother explains its 0m cost');
+// Card details checked against the printed sheets.
+const Z=w.SCTMG_ZERG;
+assert.equal(Z.TACTICAL_CARDS.find(c=>c.id==='malignant-creep').factionTag,"Kerrigan's Swarm",'Malignant Creep carries the Kerrigan\'s Swarm tag');
+assert.match(Z.FACTION_CARDS.find(c=>c.id==='kerrigans-swarm').abilities.find(a=>a.name==='Omega Network').description,/not eligible to use its Special Abilities/,'Omega Network: the worm loses its abilities that round');
+assert.equal(Z.UNITS.find(u=>u.id==='roach').tiers.map(t=>t.models+':'+t.supply).join(' '),'-:0 2-3:1 1:0','Roach has two Supply brackets only');
+assert.equal(Z.UNITS.find(u=>u.id==='kerrigan-raptor').name,'Kerrigan Swarm Raptor (Zergling)');
+assert.equal(w.SCTMG_PROTOSS.UNITS.find(u=>u.id==='twilight-templar').name,'Twilight Templar (High Templar)');
 const rules=load('Rules.dc.html');
 assert.ok(rules.includes('wave3-data.js'),'rules must load current cards');
 assert.ok(purchasable>=11 && cards===4,'expected new Wave 3 catalogue');

@@ -142,7 +142,7 @@ const MISSIONS = [
       'Score VPs equal to Enemy Supply destroyed this Round.',
       'From the Start of the Second Round: Gain 2 VPs for each Controlled Mission Marker associated with the Opponent colour.'
     ],
-    special: 'The game ends immediately if a Player leads by 10+ VPs.',
+    special: 'The game ends immediately if a Player leads by 8+ VPs.',
     additionalRules: [
       {
         phase: 'Assault Phase',
@@ -180,6 +180,108 @@ const MISSIONS = [
       'Gain 2 VPs for each Controlled Mission Marker associated with the Opponent colour.'
     ],
     special: 'The game ends immediately if a Player leads by 8+ VPs.'
+  },
+  {
+    id: 'artefact-hunt',
+    name: 'Artefact Hunt',
+    type: 'Standard',
+    supply: 6,
+    perRound: 2,
+    gameLength: 5,
+    parameters: ['All Mission Markers are Activated.'],
+    scoring: [
+      'Score VPs equal to Enemy Supply destroyed this Round.',
+      'End of Round 5: Gain 4 VPs for each Friendly Unit that has CLAIMED a Mission Marker and is Wholly Within the Friendly Zone of Influence.',
+      'End of Round 5: Gain 2 VPs for each Mission Marker associated with your colour that is not currently CLAIMED by an Enemy Unit.'
+    ],
+    special: 'None. Play all 5 Rounds.',
+    additionalRules: [
+      {
+        phase: 'Scoring Phase',
+        name: 'Claim',
+        description: 'From the Start of the Second Round, a Unit Within 3" of a Controlled Mission Marker that is Neutral or associated with the Opponent colour may CLAIM it: place the Mission Marker on its Unit Card. A Unit may CLAIM only one Mission Marker at a time. Flying and BURROWED Units may CLAIM, and a carried Mission Marker cannot be moved with teleport abilities such as Psionic Transfer or Deep Tunnel (FAQ v1.3).'
+      },
+      {
+        phase: 'Any Phase',
+        name: 'Drop',
+        description: 'A Unit carrying a Mission Marker must DROP it if its Current Supply Value is reduced, before it resolves a PLACE effect, if it is Engaged with Enemies that have a greater combined Current Supply Value, or if it is Destroyed, removed from the battlefield or returned to Reserves. The Opponent places the dropped Mission Marker Within 2" of the Unit or of its last model removed.'
+      }
+    ]
+  },
+  {
+    id: 'artefact-hunt-skirmish',
+    name: 'Artefact Hunt (Skirmish)',
+    type: 'Skirmish',
+    supply: 3,
+    perRound: 1,
+    gameLength: 5,
+    parameters: ['All Mission Markers are Activated.'],
+    scoring: [
+      'Score VPs equal to Enemy Supply destroyed this Round.',
+      'End of Round 5: Gain 3 VPs for each Friendly Unit that has CLAIMED a Mission Marker and is Wholly Within the Friendly Zone of Influence.',
+      'End of Round 5: Gain 1 VP for each Mission Marker associated with your colour that is not currently CLAIMED by an Enemy Unit.'
+    ],
+    special: 'None. Play all 5 Rounds.',
+    additionalRules: [
+      {
+        phase: 'Scoring Phase',
+        name: 'Claim',
+        description: 'From the Start of the Second Round, a Unit Within 3" of a Controlled Mission Marker that is Neutral or associated with the Opponent colour may CLAIM it: place the Mission Marker on its Unit Card. A Unit may CLAIM only one Mission Marker at a time. Flying and BURROWED Units may CLAIM, and a carried Mission Marker cannot be moved with teleport abilities such as Psionic Transfer or Deep Tunnel (FAQ v1.3).'
+      },
+      {
+        phase: 'Any Phase',
+        name: 'Drop',
+        description: 'A Unit carrying a Mission Marker must DROP it if its Current Supply Value is reduced, before it resolves a PLACE effect, if it is Engaged with Enemies that have a greater combined Current Supply Value, or if it is Destroyed, removed from the battlefield or returned to Reserves. The Opponent places the dropped Mission Marker Within 2" of the Unit or of its last model removed.'
+      }
+    ]
+  },
+  {
+    id: 'fire-in-the-sky',
+    name: 'Fire in the Sky',
+    type: 'Standard',
+    supply: 5,
+    perRound: 3,
+    gameLength: 5,
+    parameters: [
+      'All Mission Markers are Activated.',
+      'During battlefield setup, place a D6 next to each Mission Marker to track its Sabotage Level. Each Mission Marker starts at Sabotage Level 1.'
+    ],
+    scoring: [
+      'Score VPs equal to Enemy Supply destroyed this Round.',
+      'From the Start of the Second Round: Gain VPs equal to the Sabotage Level (1 to 3) of each Controlled Mission Marker that is Neutral or associated with the Opponent colour.'
+    ],
+    special: 'The game ends immediately if a Player leads by 10+ VPs.',
+    additionalRules: [
+      {
+        phase: 'Assault Phase',
+        name: 'Sabotage Action',
+        description: 'If an Unengaged Unit is Within 3" of a Controlled Mission Marker, this unit may perform the Sabotage Action instead of a standard action: decrease or increase that Mission Marker\'s Sabotage Level by 1 (minimum 1, maximum 3).'
+      }
+    ]
+  },
+  {
+    id: 'fire-in-the-sky-skirmish',
+    name: 'Fire in the Sky (Skirmish)',
+    type: 'Skirmish',
+    supply: 3,
+    perRound: 2,
+    gameLength: 5,
+    parameters: [
+      'All Mission Markers are Activated.',
+      'During battlefield setup, place a D6 next to each Mission Marker to track its Sabotage Level. Each Mission Marker starts at Sabotage Level 1.'
+    ],
+    scoring: [
+      'Score VPs equal to Enemy Supply destroyed this Round.',
+      'From the Start of the Second Round: Gain VPs equal to the Sabotage Level (1 to 3) of each Controlled Mission Marker that is Neutral or associated with the Opponent colour.'
+    ],
+    special: 'The game ends immediately if a Player leads by 8+ VPs.',
+    additionalRules: [
+      {
+        phase: 'Assault Phase',
+        name: 'Sabotage Action',
+        description: 'If an Unengaged Unit is Within 3" of a Controlled Mission Marker, this unit may perform the Sabotage Action instead of a standard action: decrease or increase that Mission Marker\'s Sabotage Level by 1 (minimum 1, maximum 3).'
+      }
+    ]
   }
 ];
     const MAPS = [
@@ -306,33 +408,27 @@ const MISSIONS = [
     type: 'Skirmish',
     width: 36,
     height: 36,
-    redZones: [
-      { x: 0, y: 0, w: 12, h: 6 }, { x: 0, y: 6, w: 6, h: 6 },
-      { x: 24, y: 30, w: 12, h: 6 }, { x: 30, y: 24, w: 6, h: 6 }
-    ],
-    blueZones: [
-      { x: 24, y: 0, w: 12, h: 6 }, { x: 30, y: 6, w: 6, h: 6 },
-      { x: 0, y: 30, w: 12, h: 6 }, { x: 0, y: 24, w: 6, h: 6 }
-    ],
+    redZones: [{ x: 0, y: 0, w: 12, h: 6 }, { x: 0, y: 6, w: 6, h: 6 }],
+    blueZones: [{ x: 24, y: 30, w: 12, h: 6 }, { x: 30, y: 24, w: 6, h: 6 }],
     markers: [
       { num: 1, x: 6, y: 18 },
       { num: 5, x: 18, y: 18 },
       { num: 2, x: 30, y: 18 }
     ],
     blueSetup: {
-      title: 'Top-Right & Bottom-Left L-Shapes',
+      title: 'Bottom-Right L-Shape',
       instructions: [
-        'Top-Right L: Top strip — start at the top-right corner, measure 12" left, then 6" down. Right strip — from the right edge, measure 24" to 30" up from the bottom, then 6" inward.',
-        'Bottom-Left L: Bottom strip — start at the bottom-left corner, measure 12" right, then 6" up. Left strip — from the left edge, measure 6" to 12" up from the bottom, then 6" inward.',
-        'Deploy anywhere inside either L-shaped zone.'
+        'Bottom strip: start at the bottom-right corner, measure 12" left, then 6" up.',
+        'Right strip: from the bottom-right corner, measure 12" up the right edge, then 6" inward.',
+        'Deploy anywhere inside the L-shaped zone.'
       ]
     },
     redSetup: {
-      title: 'Top-Left & Bottom-Right L-Shapes',
+      title: 'Top-Left L-Shape',
       instructions: [
-        'Top-Left L: Top strip — start at the top-left corner, measure 12" right, then 6" down. Left strip — from the left edge, measure 24" to 30" up from the bottom, then 6" inward.',
-        'Bottom-Right L: Bottom strip — start at the bottom-right corner, measure 12" left, then 6" up. Right strip — from the right edge, measure 6" to 12" up from the bottom, then 6" inward.',
-        'Deploy anywhere inside either L-shaped zone.'
+        'Top strip: start at the top-left corner, measure 12" right, then 6" down.',
+        'Left strip: from the top-left corner, measure 12" down the left edge, then 6" inward.',
+        'Deploy anywhere inside the L-shaped zone.'
       ]
     },
     markerSetup: [
@@ -340,7 +436,7 @@ const MISSIONS = [
       { num: 5, desc: '18" from left edge, 18" from bottom edge' },
       { num: 2, desc: '30" from left edge, 18" from bottom edge' }
     ],
-    notes: 'Four-corner split deployment. Each player gets two opposite corners. The markers run straight across the center line.'
+    notes: 'Opposite-corner L-shaped deployment: Red top-left, Blue bottom-right. The markers run straight across the center line.'
   },
   {
     id: 'frontier',
@@ -378,6 +474,80 @@ const MISSIONS = [
       { num: 2, desc: '30" from left edge, 30" from bottom edge' }
     ],
     notes: 'Cross-pattern deployment. Red controls top and bottom center. Blue controls left and right center. The markers run diagonally.'
+  },
+  {
+    id: 'green-valleys',
+    name: 'Green Valleys',
+    size: '36" × 36"',
+    type: 'Skirmish',
+    width: 36,
+    height: 36,
+    redZones: [{ x: 0, y: 0, w: 6, h: 6 }, { x: 30, y: 12, w: 6, h: 12 }],
+    blueZones: [{ x: 0, y: 12, w: 6, h: 12 }, { x: 30, y: 30, w: 6, h: 6 }],
+    markers: [
+      { num: 2, x: 24, y: 6 },
+      { num: 5, x: 18, y: 18 },
+      { num: 1, x: 12, y: 30 }
+    ],
+    blueSetup: {
+      title: 'Left-Middle Box & Bottom-Right Corner',
+      instructions: [
+        'Left box: on the left edge, mark the middle 12" (12" to 24" from the bottom), then measure 6" inward.',
+        'Corner box: a 6" × 6" square in the bottom-right corner.',
+        'Deploy anywhere inside either zone.'
+      ]
+    },
+    redSetup: {
+      title: 'Right-Middle Box & Top-Left Corner',
+      instructions: [
+        'Right box: on the right edge, mark the middle 12" (12" to 24" from the bottom), then measure 6" inward.',
+        'Corner box: a 6" × 6" square in the top-left corner.',
+        'Deploy anywhere inside either zone.'
+      ]
+    },
+    markerSetup: [
+      { num: 1, desc: '12" from left edge, 6" from bottom edge' },
+      { num: 2, desc: '12" from right edge, 6" from top edge' },
+      { num: 5, desc: '18" from left edge, 18" from bottom edge' }
+    ],
+    notes: 'Wave 2 map. Each player gets a side box and a small far corner, so both armies start split across the board.'
+  },
+  {
+    id: 'power-lines',
+    name: 'Power Lines',
+    size: '36" × 36"',
+    type: 'Skirmish',
+    width: 36,
+    height: 36,
+    blueZones: [{ x: 0, y: 0, w: 18, h: 6 }, { x: 0, y: 6, w: 6, h: 30 }],
+    redZones: [{ x: 18, y: 0, w: 18, h: 6 }, { x: 30, y: 6, w: 6, h: 30 }],
+    markers: [
+      { num: 2, x: 12, y: 15 },
+      { num: 1, x: 24, y: 15 },
+      { num: 5, x: 18, y: 30 }
+    ],
+    blueSetup: {
+      title: 'Left Edge & Top-Left Strip',
+      instructions: [
+        'Left strip: the full left edge, 6" deep.',
+        'Top strip: from the top-left corner, measure 18" right along the top edge, then 6" down.',
+        'Deploy anywhere inside the combined zone.'
+      ]
+    },
+    redSetup: {
+      title: 'Right Edge & Top-Right Strip',
+      instructions: [
+        'Right strip: the full right edge, 6" deep.',
+        'Top strip: from the top-right corner, measure 18" left along the top edge, then 6" down.',
+        'Deploy anywhere inside the combined zone.'
+      ]
+    },
+    markerSetup: [
+      { num: 1, desc: '12" from right edge, 15" from top edge' },
+      { num: 2, desc: '12" from left edge, 15" from top edge' },
+      { num: 5, desc: '18" from left edge, 6" from bottom edge' }
+    ],
+    notes: 'Wave 3 map. The zones wrap the top and sides and meet at the top center. The center marker sits near the bottom edge.'
   },
   // 54x36 Standard Maps
   {
@@ -588,9 +758,89 @@ const MISSIONS = [
       { num: 5, desc: '27" from left edge, 18" from bottom edge' }
     ],
     notes: 'Pure left-edge versus right-edge deployment. Both players start in long vertical side strips with markers forming a box around the center.'
+  },
+  {
+    id: 'meeting-engagement',
+    name: 'Meeting Engagement',
+    size: '54" × 36"',
+    type: 'Standard',
+    width: 54,
+    height: 36,
+    blueZones: [{ x: 18, y: 0, w: 18, h: 6 }, { x: 0, y: 12, w: 6, h: 12 }],
+    redZones: [{ x: 18, y: 30, w: 18, h: 6 }, { x: 48, y: 12, w: 6, h: 12 }],
+    markers: [
+      { num: 1, x: 12, y: 12 },
+      { num: 3, x: 42, y: 12 },
+      { num: 5, x: 27, y: 18 },
+      { num: 4, x: 12, y: 24 },
+      { num: 2, x: 42, y: 24 }
+    ],
+    blueSetup: {
+      title: 'Top-Center Strip & Left-Middle Box',
+      instructions: [
+        'Top strip: the middle 18" of the top edge (18" in from each corner), 6" deep.',
+        'Left box: the middle 12" of the left edge (12" in from each corner), 6" deep.',
+        'Deploy anywhere inside either zone.'
+      ]
+    },
+    redSetup: {
+      title: 'Bottom-Center Strip & Right-Middle Box',
+      instructions: [
+        'Bottom strip: the middle 18" of the bottom edge (18" in from each corner), 6" deep.',
+        'Right box: the middle 12" of the right edge (12" in from each corner), 6" deep.',
+        'Deploy anywhere inside either zone.'
+      ]
+    },
+    markerSetup: [
+      { num: 1, desc: '12" from left edge, 12" from top edge' },
+      { num: 2, desc: '12" from right edge, 12" from bottom edge' },
+      { num: 3, desc: '12" from right edge, 12" from top edge' },
+      { num: 4, desc: '12" from left edge, 12" from bottom edge' },
+      { num: 5, desc: '27" from left edge, 18" from bottom edge' }
+    ],
+    notes: 'Wave 2 map. Each player holds one long edge strip and one short edge box, so the armies meet at an angle around the center.'
+  },
+  {
+    id: 'one-bridge-too-close',
+    name: 'One Bridge Too Close',
+    size: '54" × 36"',
+    type: 'Standard',
+    width: 54,
+    height: 36,
+    blueZones: [{ x: 0, y: 0, w: 27, h: 6 }, { x: 0, y: 6, w: 6, h: 30 }],
+    redZones: [{ x: 27, y: 0, w: 27, h: 6 }, { x: 48, y: 6, w: 6, h: 30 }],
+    markers: [
+      { num: 2, x: 18, y: 15 },
+      { num: 1, x: 36, y: 15 },
+      { num: 4, x: 12, y: 30 },
+      { num: 5, x: 27, y: 30 },
+      { num: 3, x: 42, y: 30 }
+    ],
+    blueSetup: {
+      title: 'Left Edge & Top-Left Strip',
+      instructions: [
+        'Left strip: the full left edge, 6" deep.',
+        'Top strip: from the top-left corner, measure 27" right along the top edge, then 6" down.',
+        'Deploy anywhere inside the combined zone.'
+      ]
+    },
+    redSetup: {
+      title: 'Right Edge & Top-Right Strip',
+      instructions: [
+        'Right strip: the full right edge, 6" deep.',
+        'Top strip: from the top-right corner, measure 27" left along the top edge, then 6" down.',
+        'Deploy anywhere inside the combined zone.'
+      ]
+    },
+    markerSetup: [
+      { num: 1, desc: '18" from right edge, 15" from top edge' },
+      { num: 2, desc: '18" from left edge, 15" from top edge' },
+      { num: 3, desc: '12" from right edge, 6" from bottom edge' },
+      { num: 4, desc: '12" from left edge, 6" from bottom edge' },
+      { num: 5, desc: '27" from left edge, 6" from bottom edge' }
+    ],
+    notes: 'Wave 3 map. The zones wrap the top and sides and meet at the top center, with three markers in a row along the bottom edge.'
   }
 ];
-  // The battle size is already shown next to each mission; keep names short.
-  MISSIONS.forEach(m => { m.name = m.name.replace(/\s*\((Skirmish|Standard|Large|Grand)\)\s*$/i, ''); });
   return { MISSIONS, MAPS };
 })();

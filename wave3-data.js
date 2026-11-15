@@ -842,7 +842,7 @@ const extra = {
       },
       {
         "id": "twilight-templar",
-        "name": "Twilight Templar",
+        "name": "Twilight Templar (High Templar)",
         "role": "Support",
         "stats": {
           "shield": 3,

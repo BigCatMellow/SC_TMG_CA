@@ -1256,11 +1256,11 @@
   'IMPACT': { type: 'Combat', description: 'After a successful Charge, each eligible model generates X extra dice. Rolls of Y or higher become automatic hits placed in the Armour Pool.' },
   'INDIRECT FIRE': { type: 'Weapon', description: "Ranged Attacks with this weapon may ignore Line of Sight when choosing a target and resolving Damage; the target must still be in Range. If the target is not in Line of Sight, it may make an Evade Roll against this attack." },
   'INSTANT': { type: 'Weapon', description: "Enemy Units cannot declare or resolve Reaction abilities in response to attacks made with this weapon." },
-  'LOCKED IN': { type: 'Weapon', description: "When making a Ranged Attack with this weapon, add X to the weapon's Rate of Attack if the TARGET Unit has Stationary Status. See Core Rules p. 86 and FAQ v1.1 p. 5." },
+  'LOCKED IN': { type: 'Weapon', description: "When making a Ranged Attack with this weapon, add X to the weapon's Rate of Attack if the TARGET Unit has Stationary Status. See Core Rules p. 86 and FAQ v1.3." },
   'LONG RANGE': { type: 'Weapon', description: 'The weapon\'s maximum range extends to X inches, but shots beyond the normal listed range suffer a -1 Hit penalty.' },
   'NON-LETHAL DAMAGE': { type: 'Effect', description: "Add X points of Damage to the Unit without removing models, even if Total Damage exceeds a model's HP. Subsequent standard Damage triggers casualty removal using combined Total Damage." },
   'PIERCE': { type: 'Combat', description: "When attacking a Unit with the specified Combat Tag, treat this weapon's Damage characteristic as X." },
-  'PINPOINT': { type: 'Weapon', description: "Ranged Attacks with this weapon may target Engaged Enemy Units, ignoring the normal restriction on targeting an Engaged enemy. It does not allow an Engaged attacker to shoot outside its Engagement. See Core Rules p. 88 and official FAQ v1.1 p. 4." },
+  'PINPOINT': { type: 'Weapon', description: "Ranged Attacks with this weapon may target Engaged Enemy Units, ignoring the normal restriction on targeting an Engaged enemy. It does not allow an Engaged attacker to shoot outside its Engagement. See Core Rules p. 88 and official FAQ v1.3." },
   'PLACE': { type: 'Movement', description: "Remove and set a Leading Model Wholly Within X inches, then rebuild the Unit in Coherency. PLACE ignores movement path, Gap Clearance and elevation requirements; the placement must otherwise be legal. Normally do not end within enemy Engagement Range; during Assault a PLACE effect may set models in Engagement. See PDF p. 88." },
   'PRECISION': { type: 'Combat', description: "After rolling to Hit, move up to X failed dice into the Armour Pool. They count as successful hits for everything, including Surge, and still have to get past Armour." },
   'SIDEARM': { type: 'Weapon', description: "May be used in addition to the model's normal weapon during a Ranged Attack or Close Combat Attack. Multiple SIDEARMs may all be used, each as a separate Batch; each may select a different eligible target. See PDF p. 89." },
@@ -2030,7 +2030,7 @@
     abilities: [
       { phase: 'Any Phase', name: 'Point Defense Laser', type: 'Passive', description: 'When another Friendly Unit Within 4" is targeted by a Ranged Attack without the INSTANT keyword, remove up to 2 dice from the Attack Pool. Then remove this Unit from the battlefield.' },
       { phase: 'Any Phase', name: 'Gliding', type: 'Passive', description: 'This model has DISPLACEMENT.' },
-      { phase: 'Any Phase', name: 'Structure', type: 'Passive', description: 'This Unit cannot be Activated in any Phase and cannot perform actions. Its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers. This Unit cannot be a target of an ability, unless stated otherwise.' }
+      { phase: 'Any Phase', name: 'Structure', type: 'Passive', description: 'This Unit cannot be Activated in any Phase and cannot perform actions. Its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers, ignoring the standard Zero Supply Exception. This Unit cannot be a target of an ability, unless stated otherwise.' }
     ],
     phaseAbilities: {},
     upgrades: {}

@@ -186,7 +186,7 @@
               <div class="sc-vs-unit-art" onClick="{{ u.info }}"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" alt="" aria-hidden="true" loading="lazy"></sc-if></div>
               <div class="sc-vs-unit-main">
                 <div class="sc-vs-unit-line">
-                  <button onClick="{{ u.info }}" class="sc-vs-unit-name" title="{{ u.name }}" aria-label="{{ u.infoAria }}"><b><span class="sc-vs-i" aria-hidden="true">i</span>{{ u.shortName }}</b></button>
+                  <button onClick="{{ u.info }}" class="{{ u.nameCls }}" title="{{ u.name }}" aria-label="{{ u.infoAria }}"><b><span class="sc-vs-i" aria-hidden="true">i</span><span class="sc-vs-nm">{{ u.shortName }}</span></b></button>
                   <div class="{{ u.supCls }}" title="{{ u.supTitle }}"><b>{{ u.supply }}</b><small>sup</small></div>
                   <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.deployOff }}" class="{{ u.statusCls }}" title="{{ u.statusTitle }}">{{ u.status }}</button>
                 </div>
@@ -257,7 +257,7 @@
               <div class="sc-vs-unit-art" onClick="{{ u.info }}"><sc-if value="{{ u.img }}" hint-placeholder-val="{{ false }}"><img src="{{ u.img }}" alt="" aria-hidden="true" loading="lazy"></sc-if></div>
               <div class="sc-vs-unit-main">
                 <div class="sc-vs-unit-line">
-                  <button onClick="{{ u.info }}" class="sc-vs-unit-name" title="{{ u.name }}" aria-label="{{ u.infoAria }}"><b><span class="sc-vs-i" aria-hidden="true">i</span>{{ u.shortName }}</b></button>
+                  <button onClick="{{ u.info }}" class="{{ u.nameCls }}" title="{{ u.name }}" aria-label="{{ u.infoAria }}"><b><span class="sc-vs-i" aria-hidden="true">i</span><span class="sc-vs-nm">{{ u.shortName }}</span></b></button>
                   <div class="{{ u.supCls }}" title="{{ u.supTitle }}"><b>{{ u.supply }}</b><small>sup</small></div>
                   <button onClick="{{ u.toggleDeploy }}" disabled="{{ u.deployOff }}" class="{{ u.statusCls }}" title="{{ u.statusTitle }}">{{ u.status }}</button>
                 </div>
@@ -646,7 +646,7 @@ class Component extends DCLogic {
     const D = this.D(f);
     const u = D.UNITS.find(x => x.id === e.unitId);
     if (!u) return null;
-    // "Kerrigan's Raptor (Zergling)" reads as "Kerrigan's Raptor" on the board; the full name stays in the tooltip.
+    // "Kerrigan Swarm Raptor (Zergling)" reads as "Kerrigan Swarm Raptor" on the board; the full name stays in the tooltip.
     const paren = u.name.match(/^(.*\S)\s+\(([^)]+)\)$/);
     const shortName = paren && D.UNITS.some(x => x.name === paren[2]) ? paren[1] : u.name;
     const start = this.models(u, e.tierIdx);
@@ -699,7 +699,7 @@ class Component extends DCLogic {
     return {
       statLine: [['SPD', sx.speed], ['EVD', sx.evade], ['ARM', sx.armour], ['SHD', sx.shield]].filter(([, v]) => v && v !== '-').map(([k, v]) => k + ' ' + v).join(' · '),
       info: () => this.setState({ sheet: { type: 'unit', side, key: e.key } }), infoAria: u.name + ': stats, weapons and abilities',
-      key: e.key, name: u.name, shortName, role: u.role, roleColor: ROLE_COLOR[u.role] || '#8a91a5', roleRank: ROLE_ORDER.indexOf(u.role),
+      key: e.key, name: u.name, shortName, nameCls: 'sc-vs-unit-name' + (shortName.length > 12 ? ' sc-vs-unit-name--long' : shortName.length > 9 ? ' sc-vs-unit-name--mid' : ''), role: u.role, roleColor: ROLE_COLOR[u.role] || '#8a91a5', roleRank: ROLE_ORDER.indexOf(u.role),
       tier: (u.tiers[e.tierIdx] || {}).tier || '', img: art.cutout || art.portrait || '',
       cls: 'sc-vs-unit sc-vs-unit--' + side + (dead ? ' sc-vs-unit--dead' : ''),
       status, dead, full: lost === 0, deployed: !!e.deployed && !dead, deployOff: dead || blocked,

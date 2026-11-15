@@ -53,7 +53,7 @@ Upgrade Shredding Claws (10/10 Minerals): Replaces Claws. Surge: Light, Armoured
 Upgrade Adrenal Glands (20/20 Minerals): This Unit's Claws and Shredding Claws weapons gain PRECISION (2).
 
 =================================================================
-Kerrigan's Raptor (Zergling) | Elite | Biological, Light, Ground
+Kerrigan Swarm Raptor (Zergling) | Elite | Biological, Light, Ground
 Stats: SPD 5/9; EVADE 4+; ARMOUR 5+; HP 2; SIZE 1; SHIELD —
 Buy 6 models: 230 Minerals / Supply 1
 Weapon Claws (Combat): Range E, RoA 2, Hit 3+, Target Ground, Surge Light, Armoured, SDie D6, DMG 1; INSTANT
@@ -168,7 +168,7 @@ Stats: SPD -; EVADE -; ARMOUR 5+; HP 10; SIZE 3; SHIELD —
 Summoned/reference-only or otherwise not directly purchasable.
 Ability Detection (Passive, Any Phase): While Enemy Units are Within 6" of this Unit, they lose HIDDEN Status.
 Ability Source of Creep (Passive, Any Phase): A Friendly or Enemy Ground Zerg Unit Within 6" of this Unit, counts as being ON CREEP.
-Ability Structure (Passive, Any Phase): This Unit cannot be Activated in any Phase and cannot perform actions. Its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers. This Unit cannot be a target of an ability, unless stated otherwise.
+Ability Structure (Passive, Any Phase): This Unit cannot be Activated in any Phase and cannot perform actions. Its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers, ignoring the standard Zero Supply Exception. This Unit cannot be a target of an ability, unless stated otherwise.
 Ability Omega Network (Passive, Any Phase): The base of the Omega Worm counts as an Entry Edge. Each Round, Friendly Units with a combined Supply cost of 2 or less may be Deployed via this Entry Edge. If a Friendly Leading model finishes a Move, Disengage, or Run action in base-to-base contact with the Omega Worm, the controlling player may remove that Unit from the battlefield and return it to Reserves.
 
 =================================================================

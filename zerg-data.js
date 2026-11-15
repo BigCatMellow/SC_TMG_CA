@@ -15,7 +15,7 @@ const KEYWORDS = {
       'LONG RANGE': { type: 'Weapon', description: "The weapon's maximum range extends to X inches, but shots beyond the normal listed range suffer a -1 Hit penalty." },
       'ON CREEP': { type: 'Zerg', description: 'A Ground Zerg Unit is ON CREEP while Within 6" of any Creep Tumor Token or Source of Creep (like Omega Worm).' },
       'PIERCE': { type: 'Combat', description: "When attacking a Unit with the specified Combat Tag, treat this weapon's Damage characteristic as X." },
-      'PINPOINT': { type: 'Weapon', description: "Ranged Attacks with this weapon may target Engaged Enemy Units, ignoring the normal restriction on targeting an Engaged enemy. It does not allow an Engaged attacker to shoot outside its Engagement. See Core Rules p. 88 and official FAQ v1.1 p. 4." },
+      'PINPOINT': { type: 'Weapon', description: "Ranged Attacks with this weapon may target Engaged Enemy Units, ignoring the normal restriction on targeting an Engaged enemy. It does not allow an Engaged attacker to shoot outside its Engagement. See Core Rules p. 88 and official FAQ v1.3." },
       'PLACE': { type: 'Movement', description: "Remove and set a Leading Model Wholly Within X inches, then rebuild the Unit in Coherency. PLACE ignores movement path, Gap Clearance and elevation requirements; the placement must otherwise be legal. Normally do not end within enemy Engagement Range; during Assault a PLACE effect may set models in Engagement. See PDF p. 88." },
       'PRECISION': { type: 'Combat', description: "After rolling to Hit, move up to X failed dice into the Armour Pool. They count as successful hits for everything, including Surge, and still have to get past Armour." },
       'RESPAWN': { type: 'Effect', description: "Return up to X Destroyed models without increasing the Unit's Current Supply. Place them Base-to-Base with existing models and outside enemy Engagement Range; models that cannot be placed legally do not return. See PDF p. 89." },
@@ -57,7 +57,7 @@ const KEYWORDS = {
         abilities: [
           { phase: 'Any Phase', name: 'Wild Mutation', type: 'Active', description: 'If the active unit is ON CREEP, the Unit gains BUFF Speed (1) and its first Weapon used gains PRECISION (1).' },
           { phase: 'Any Phase', name: 'Zerg Creep', type: 'Passive', description: 'During Army Building, select exactly one Creep Card and add it to their Army List, paying its listed cost (if any).' },
-          { phase: 'Movement Phase', name: 'Omega Network', type: 'Active', description: 'If there is no Friendly Omega Worm on the battlefield, place a Friendly Omega Worm Unit anywhere on GROUND LEVEL of the battlefield, more than 10" away from any Enemy model.' }
+          { phase: 'Movement Phase', name: 'Omega Network', type: 'Active', description: 'If there is no Friendly Omega Worm on the battlefield, place a Friendly Omega Worm Unit anywhere on GROUND LEVEL of the battlefield, more than 10" away from any Enemy model. This Round, the Omega Worm is not eligible to use its Special Abilities (excluding Structure).' }
         ]
       },
       { id: 'zerg-swarm', name: 'Zerg Swarm', unique: true, resource: '+1 BM', slots: { elite: 1, core: 3, support: 1, air: 1 },
@@ -240,7 +240,7 @@ const KEYWORDS = {
     ]
   }
 },
-      { id: 'kerrigan-raptor', name: "Kerrigan's Raptor (Zergling)", role: 'Elite', unique: true, factionTag: "Kerrigan's Swarm", tags: ['Biological', 'Light', 'Ground'],
+      { id: 'kerrigan-raptor', name: "Kerrigan Swarm Raptor (Zergling)", role: 'Elite', unique: true, factionTag: "Kerrigan's Swarm", tags: ['Biological', 'Light', 'Ground'],
         stats: { shield: null, speed: '5/9', evade: '4+', armour: '5+', hp: 2, size: 1 },
         tiers: [{ tier: 'T3', cost: null, models: '-', supply: 0 }, { tier: 'T2', cost: 230, models: '4-6', supply: 1 }, { tier: 'T1', cost: null, models: '1-3', supply: 0 }],
         weapons: [{ name: 'Claws', phase: 'Combat', range: 'E', target: 'Ground', roa: 2, hit: '3+', surge: 'Light, Armoured', sDie: 'D6', damage: 1, keywords: ['INSTANT'] }],
@@ -405,8 +405,8 @@ const KEYWORDS = {
     {
       "tier": "T3",
       "cost": null,
-      "models": "4-6",
-      "supply": 2
+      "models": "-",
+      "supply": 0
     },
     {
       "tier": "T2",
@@ -1092,7 +1092,7 @@ const KEYWORDS = {
         abilities: [
           { phase: 'Any Phase', name: 'Detection', type: 'Passive', description: 'While Enemy Units are Within 6" of this Unit, they lose HIDDEN Status.' },
           { phase: 'Any Phase', name: 'Source of Creep', type: 'Passive', description: 'A Friendly or Enemy Ground Zerg Unit Within 6" of this Unit, counts as being ON CREEP.' },
-          { phase: 'Any Phase', name: 'Structure', type: 'Passive', description: 'This Unit cannot be Activated in any Phase and cannot perform actions. Its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers. This Unit cannot be a target of an ability, unless stated otherwise.' },
+          { phase: 'Any Phase', name: 'Structure', type: 'Passive', description: 'This Unit cannot be Activated in any Phase and cannot perform actions. Its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers, ignoring the standard Zero Supply Exception. This Unit cannot be a target of an ability, unless stated otherwise.' },
           { phase: 'Any Phase', name: 'Omega Network', type: 'Passive', description: "The base of the Omega Worm counts as an Entry Edge. Each Round, Friendly Units with a combined Supply cost of 2 or less may be Deployed via this Entry Edge. If a Friendly Leading model finishes a Move, Disengage, or Run action in base-to-base contact with the Omega Worm, the controlling player may remove that Unit from the battlefield and return it to Reserves." }
         ],
         phaseAbilities: {},
@@ -1145,7 +1145,7 @@ const KEYWORDS = {
           { phase: 'Movement Phase', name: 'Creep Spread', type: 'Active', description: 'Place a Creep Tumor token on the battlefield Within 6" (Line of Sight is not required) of either a Friendly Entry Edge or an existing Friendly Creep Tumor token.' }
         ]
       },
-      { id: 'malignant-creep', name: 'Malignant Creep', unique: true, cost: 10, resource: null, slots: {}, category: 'creep',
+      { id: 'malignant-creep', name: 'Malignant Creep', unique: true, factionTag: "Kerrigan's Swarm", cost: 10, resource: null, slots: {}, category: 'creep',
         summary: 'Creep persists, +1 Impact on charge from creep',
         abilities: [
           { phase: 'Any Phase', name: 'Living Glob of Tissue', type: 'Passive', description: 'Creep Tumor tokens have STAY IN PLAY and DISPLACEMENT.' },

@@ -12,7 +12,7 @@ Do not mistake the old Core Rules price appendix (printed pp. 96–107) for the 
 
 ## FAQ rulings and source priority
 
-The official [publisher FAQ v1.1](https://starcraft-tmg.com/files/downloads/StarCraft-TMG-FAQ_EN.pdf) (September 25, 2026) is now searchable in the Rules screen as five additional source-cited sections. These cover Shields, Evade/Surge, Reaction timing, shooting batches, movement/deployment geometry, and mission-specific exceptions. In *Artefact Hunt*, Flying/Burrowed Units can **claim** Artefacts even when ordinary marker control restrictions apply; consult the mission for how a carrier can score.
+The official [publisher FAQ v1.3](https://starcraft-tmg.com/files/downloads/StarCraft-TMG-FAQ_EN.pdf) (November 11, 2026) is now searchable in the Rules screen as five additional source-cited sections. These cover Shields, Evade/Surge, Reaction timing, shooting batches, movement/deployment geometry, and mission-specific exceptions. In *Artefact Hunt*, Flying/Burrowed Units can **claim** Artefacts even when ordinary marker control restrictions apply; consult the mission for how a carrier can score.
 
 ## At-table interface
 
