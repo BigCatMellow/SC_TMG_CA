@@ -4,7 +4,7 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 const read = f => readFileSync(new URL('../' + f, import.meta.url), 'utf8');
 const world = { alert() {}, scrollY: 0, scrollTo() {}, addEventListener() {}, removeEventListener() {} };
-for (const f of ['terran-data.js', 'zerg-data.js', 'protoss-data.js', 'wave3-data.js', 'model-portraits.js', 'codex-examples.js', 'missions-data.js', 'mission-scoring.js'])
+for (const f of ['terran-data.js', 'zerg-data.js', 'protoss-data.js', 'wave3-data.js', 'model-portraits.js', 'codex-examples.js', 'missions-data.js', 'mission-scoring.js', 'map-dims.js'])
   vm.runInNewContext(read(f), { window: world }, { filename: f });
 const S = world.SCTMG_SCORE, M = world.SCTMG_MISSIONS;
 const mission = id => M.MISSIONS.find(m => m.id === id);
@@ -126,4 +126,13 @@ for (const mp of M.MAPS) {
   for (const k of mp.markers) assert.ok(k.x > 0 && k.x < mp.width && k.y > 0 && k.y < mp.height, mp.id + ' marker ' + k.num + ' is on the table');
   for (const r of [...mp.redZones, ...mp.blueZones]) assert.ok(r.x >= 0 && r.y >= 0 && r.x + r.w <= mp.width && r.y + r.h <= mp.height, mp.id + ' zone is on the table');
 }
+// Measurements drawn on the War Room maps match the printed cards.
+const dimsOf = id => world.SCTMG_MAP_DIMS.dims(map(id)).map(d => (d.outside ? 'out ' : '') + d.colour + ' ' + d.label).sort().join(' | ');
+assert.equal(dimsOf('dirt-side'), 'blue 6 | blue 6 | marker 6 | marker 6 | out blue 12 | out blue 12 | out red 12 | out red 12 | red 6 | red 6',
+  'Dirt Side: each L is 12" along both edges and 6" deep; markers 1 and 2 are 6" from the sides');
+assert.equal(dimsOf('meeting-engagement').match(/out (red|blue) 18/g).length, 2, 'Meeting Engagement: 18" strips');
+assert.equal(dimsOf('meeting-engagement').match(/marker 12/g).length, 8, 'Meeting Engagement: markers 1-4 are 12" from two edges');
+assert.ok(!/out \w+ 6\b/.test(dimsOf('abandoned-camp')), 'a full-width strip is not measured along the side edges');
+for (const mp of M.MAPS) for (const d of world.SCTMG_MAP_DIMS.dims(mp)) assert.ok(d.label > 0 && Number.isFinite(d.label), mp.id + ' has a real measurement');
+assert.ok(read('Missions.dc.html').includes('<script src="map-dims.js"></script>'), 'War Room loads the map measurements');
 console.log('Mission scoring validated');

@@ -17,6 +17,7 @@
     ::selection { background: rgba(53,199,107,0.35); }
   </style>
   <script src="missions-data.js"></script>
+  <script src="map-dims.js"></script>
 </helmet>
 
 <sc-if value="{{ ready }}" hint-placeholder-val="{{ true }}">
@@ -448,19 +449,43 @@ class Component extends DCLogic {
 
   mapSvg(map) {
     const R = React.createElement;
-    const scale = 6, w = map.width * scale, h = map.height * scale;
-    const kids = [R('rect', { key: 'bg', x: 0, y: 0, width: w, height: h, fill: '#0d1017' })];
-    for (let i = 0; i <= Math.floor(map.width / 6); i++) kids.push(R('line', { key: 'v' + i, x1: i * 36, y1: 0, x2: i * 36, y2: h, stroke: '#1c2130', strokeWidth: 1, strokeDasharray: '2,3' }));
-    for (let i = 0; i <= Math.floor(map.height / 6); i++) kids.push(R('line', { key: 'h' + i, x1: 0, y1: i * 36, x2: w, y2: i * 36, stroke: '#1c2130', strokeWidth: 1, strokeDasharray: '2,3' }));
-    (map.redZones || []).forEach((z, i) => kids.push(R('rect', { key: 'r' + i, x: z.x * scale, y: z.y * scale, width: z.w * scale, height: z.h * scale, fill: 'rgba(240,90,90,0.22)', stroke: '#f05a5a', strokeWidth: 1.5 })));
-    (map.blueZones || []).forEach((z, i) => kids.push(R('rect', { key: 'b' + i, x: z.x * scale, y: z.y * scale, width: z.w * scale, height: z.h * scale, fill: 'rgba(79,141,249,0.22)', stroke: '#4f8df9', strokeWidth: 1.5 })));
+    // 6 units per inch; a 5" margin holds the measurements that sit outside the board, as on the cards.
+    const S = 6, M = 5, W = map.width, H = map.height;
+    const X = v => (v + M) * S, Y = v => (v + M) * S;
+    const kids = [];
+    const id = 'mp-' + map.id;
+    kids.push(R('defs', { key: 'defs' }, ['red', 'blue', 'marker'].map(c => R('marker', { key: c, id: id + '-' + c, viewBox: '0 0 8 8', refX: 7, refY: 4, markerWidth: 5, markerHeight: 5, orient: 'auto-start-reverse' },
+      R('path', { d: 'M0 0L8 4L0 8z', fill: { red: '#f05a5a', blue: '#4f8df9', marker: '#8a91a5' }[c] })))));
+    kids.push(R('rect', { key: 'bg', x: X(0), y: Y(0), width: W * S, height: H * S, fill: '#0d1017' }));
+    for (let i = 0; i <= Math.floor(W / 6); i++) kids.push(R('line', { key: 'v' + i, x1: X(i * 6), y1: Y(0), x2: X(i * 6), y2: Y(H), stroke: '#1c2130', strokeWidth: 1, strokeDasharray: '2,3' }));
+    for (let i = 0; i <= Math.floor(H / 6); i++) kids.push(R('line', { key: 'h' + i, x1: X(0), y1: Y(i * 6), x2: X(W), y2: Y(i * 6), stroke: '#1c2130', strokeWidth: 1, strokeDasharray: '2,3' }));
+    (map.redZones || []).forEach((z, i) => kids.push(R('rect', { key: 'r' + i, x: X(z.x), y: Y(z.y), width: z.w * S, height: z.h * S, fill: 'rgba(240,90,90,0.22)', stroke: '#f05a5a', strokeWidth: 1.5 })));
+    (map.blueZones || []).forEach((z, i) => kids.push(R('rect', { key: 'b' + i, x: X(z.x), y: Y(z.y), width: z.w * S, height: z.h * S, fill: 'rgba(79,141,249,0.22)', stroke: '#4f8df9', strokeWidth: 1.5 })));
+    // Centre lines: a marker sitting on one is measured by it.
+    kids.push(R('line', { key: 'cx', x1: X(W / 2), y1: Y(0), x2: X(W / 2), y2: Y(H), stroke: '#4a5266', strokeWidth: 1, strokeDasharray: '1,3' }));
+    kids.push(R('line', { key: 'cy', x1: X(0), y1: Y(H / 2), x2: X(W), y2: Y(H / 2), stroke: '#4a5266', strokeWidth: 1, strokeDasharray: '1,3' }));
+    kids.push(R('rect', { key: 'frame', x: X(0), y: Y(0), width: W * S, height: H * S, fill: 'none', stroke: '#3a4154', strokeWidth: 2 }));
+    // Measurements
+    const tint = { red: '#ff8a8a', blue: '#8fb6ff', marker: '#c8cede' };
+    // Wide maps are drawn smaller on a phone, so their numbers are set larger to read the same.
+    const fs = W > 40 ? 14 : 11;
+    const labels = [];
+    (window.SCTMG_MAP_DIMS ? window.SCTMG_MAP_DIMS.dims(map) : []).forEach((d, i) => {
+      kids.push(R('line', { key: 'd' + i, x1: X(d.x1), y1: Y(d.y1), x2: X(d.x2), y2: Y(d.y2), stroke: d.colour === 'marker' ? '#8a91a5' : tint[d.colour], strokeWidth: 1,
+        strokeDasharray: d.colour === 'marker' ? '3,2' : null, markerStart: 'url(#' + id + '-' + d.colour + ')', markerEnd: 'url(#' + id + '-' + d.colour + ')' }));
+      const t = d.label + '″', mx = X((d.x1 + d.x2) / 2), my = Y((d.y1 + d.y2) / 2), bw = t.length * fs * 0.56 + 4;
+      labels.push(R('rect', { key: 'lb' + i, x: mx - bw / 2, y: my - fs * 0.64, width: bw, height: fs * 1.28, rx: 2, fill: d.outside ? '#141824' : '#0d1017', opacity: 0.92 }));
+      labels.push(R('text', { key: 'lt' + i, x: mx, y: my + 0.5, textAnchor: 'middle', dominantBaseline: 'middle', fill: tint[d.colour], fontSize: fs, fontWeight: 700, fontFamily: 'Rajdhani,sans-serif' }, t));
+    });
+    kids.push(...labels);
+    const ring = { red: '#f05a5a', blue: '#4f8df9', neutral: '#f2c14e' };
     (map.markers || []).forEach((m, i) => {
-      const cx = m.x * scale, cy = m.y * scale, center = m.num === 5;
-      kids.push(R('circle', { key: 'mc' + i, cx, cy, r: 12, fill: center ? '#f2c14e' : '#1a1f2e', stroke: center ? '#f2c14e' : '#c8cede', strokeWidth: 1.5 }));
+      const cx = X(m.x), cy = Y(m.y), center = m.num === 5;
+      const c = ring[window.SCTMG_MAP_DIMS ? window.SCTMG_MAP_DIMS.markerColour(m.num) : 'neutral'];
+      kids.push(R('circle', { key: 'mc' + i, cx, cy, r: 12, fill: center ? '#f2c14e' : '#1a1f2e', stroke: c, strokeWidth: 2.5 }));
       kids.push(R('text', { key: 'mt' + i, x: cx, y: cy + 1, textAnchor: 'middle', dominantBaseline: 'middle', fill: center ? '#0a0c11' : '#e9ecf2', fontSize: 13, fontWeight: 700, fontFamily: 'Rajdhani,sans-serif' }, String(m.num)));
     });
-    kids.push(R('rect', { key: 'frame', x: 0, y: 0, width: w, height: h, fill: 'none', stroke: '#3a4154', strokeWidth: 2 }));
-    return R('svg', { viewBox: '0 0 ' + w + ' ' + h, style: { width: '100%', height: 'auto', display: 'block', border: '1px solid #232939' } }, kids);
+    return R('svg', { viewBox: '0 0 ' + (W + 2 * M) * S + ' ' + (H + 2 * M) * S, style: { width: '100%', height: 'auto', display: 'block', background: '#141824', border: '1px solid #232939' } }, kids);
   }
 
   exportText() {
