@@ -18,6 +18,19 @@ whatever the generated `*-data.js` files currently contain.
    `npm run build:rules`)
 3. Reload the app. The corresponding `*-data.js` file(s) have been rewritten in place.
 
+## Data that isn't generated
+
+- `wave3-data.js`: Wave 2/3 units and cards, layered on top of the generated faction data, plus the shared keyword glossary. Edit it directly.
+- `unit-effects.js`: what each upgrade and card bonus changes on the VS unit card. A new upgrade needs an entry here; `scripts/test-effects.mjs` fails until it has one.
+- `mission-scoring.js`: the End round suggestions. A new mission falls back to "destroyed supply only" until it gets a case here.
+
+## After any data change
+
+1. `npm run build:units` and/or `npm run build:missions`.
+2. `npm run build:study` to refresh the NotebookLM sources (`test:study` fails otherwise).
+3. Run every `scripts/test-*.mjs`. CI also fails if the generated `*-data.js` files don't match their `uploads/` sources.
+4. To check the data against the official cards, follow [card-audit.md](card-audit.md).
+
 ## What the build actually does
 
 - **Faction & mission files** (`build-units.mjs`, `build-missions.mjs`): `uploads/*.html` are
