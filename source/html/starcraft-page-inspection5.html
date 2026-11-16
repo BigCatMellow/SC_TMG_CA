@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarCraft TMG - Command Center</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    
+    <link rel="icon" type="image/png" href="64sc.png">
+    <link rel="apple-touch-icon" href="192sc.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <style data-fullcalendar=""></style><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&amp;display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        tailwind.config = { prefix: 'tw-', corePlugins: { preflight: false } }
+    </script>
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .auth-link { color: var(--accent2); cursor: pointer; text-decoration: none; font-weight: bold; transition: color 0.2s; }
+        .auth-link:hover { color: white; text-decoration: underline; }
+        .auth-divider { height: 1px; background: #334155; margin: 20px 0; position: relative; }
+        .auth-divider::after { content: 'OR'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111827; padding: 0 10px; color: #64748b; font-size: 10px; font-weight: bold; }
+        
+        body:not(.role-admin):not(.role-aggregator) .req-aggregator { display: none !important; }
+        body:not(.role-admin) .req-admin { display: none !important; }
+    </style>
+<style>*, ::before, ::after {
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    --tw-pan-x:  ;
+    --tw-pan-y:  ;
+    --tw-pinch-zoom:  ;
+    --tw-scroll-snap-strictness: proximity;
+    --tw-gradient-from-position:  ;
+    --tw-gradient-via-position:  ;
+    --tw-gradient-to-position:  ;
+    --tw-ordinal:  ;
+    --tw-slashed-zero:  ;
+    --tw-numeric-figure:  ;
+    --tw-numeric-spacing:  ;
+    --tw-numeric-fraction:  ;
+    --tw-ring-inset:  ;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgb(59 130 246 / 0.5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    --tw-blur:  ;
+    --tw-brightness:  ;
+    --tw-contrast:  ;
+    --tw-grayscale:  ;
+    --tw-hue-rotate:  ;
+    --tw-invert:  ;
+    --tw-saturate:  ;
+    --tw-sepia:  ;
+    --tw-drop-shadow:  ;
+    --tw-backdrop-blur:  ;
+    --tw-backdrop-brightness:  ;
+    --tw-backdrop-contrast:  ;
+    --tw-backdrop-grayscale:  ;
+    --tw-backdrop-hue-rotate:  ;
+    --tw-backdrop-invert:  ;
+    --tw-backdrop-opacity:  ;
+    --tw-backdrop-saturate:  ;
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
+}
+::backdrop {
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    --tw-pan-x:  ;
+    --tw-pan-y:  ;
+    --tw-pinch-zoom:  ;
+    --tw-scroll-snap-strictness: proximity;
+    --tw-gradient-from-position:  ;
+    --tw-gradient-via-position:  ;
+    --tw-gradient-to-position:  ;
+    --tw-ordinal:  ;
+    --tw-slashed-zero:  ;
+    --tw-numeric-figure:  ;
+    --tw-numeric-spacing:  ;
+    --tw-numeric-fraction:  ;
+    --tw-ring-inset:  ;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgb(59 130 246 / 0.5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    --tw-blur:  ;
+    --tw-brightness:  ;
+    --tw-contrast:  ;
+    --tw-grayscale:  ;
+    --tw-hue-rotate:  ;
+    --tw-invert:  ;
+    --tw-saturate:  ;
+    --tw-sepia:  ;
+    --tw-drop-shadow:  ;
+    --tw-backdrop-blur:  ;
+    --tw-backdrop-brightness:  ;
+    --tw-backdrop-contrast:  ;
+    --tw-backdrop-grayscale:  ;
+    --tw-backdrop-hue-rotate:  ;
+    --tw-backdrop-invert:  ;
+    --tw-backdrop-opacity:  ;
+    --tw-backdrop-saturate:  ;
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
+}</style></head>
+<body class="role-guest">
+
+    <div id="login-overlay" style="display: none;">
+        <div class="login-wrapper">
+            <img src="logo.png" alt="Logo" class="login-logo" onerror="this.style.display='none'">
+            <h3 class="login-subtitle">BETA SYSTEM - ARCHON STUDIO</h3>
+            
+            <div class="panel login-panel" style="min-height: 400px; display:flex; flex-direction:column; justify-content:center;">
+                
+                <!-- WIDOK LOGOWANIA -->
+                <div id="view-login" style="display:block; width:100%;">
+                    <form id="login-form">
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Email Address</label>
+                        <input type="email" id="login-email" placeholder="operator@terran.com" required="" style="margin-bottom:15px; width:100%;" autocomplete="username">
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                            <label style="margin-bottom:6px; color:#cbd5e1; font-size:12px;">Password</label>
+                            <span class="auth-link" style="font-size:10px; font-weight:normal;" onclick="window.authShowView('forgot')">Forgot Password?</span>
+                        </div>
+                        <input type="password" id="login-password" placeholder="••••••" required="" style="margin-bottom:15px; width:100%;" autocomplete="current-password">
+                        
+                        <div id="login-error" style="display:none; color:var(--danger); font-size:11px; margin-bottom:15px; text-align:center;"></div>
+                        
+                        <button type="submit" id="btn-do-login" class="btn primary" style="width:100%; justify-content:center; padding:12px; font-weight:bold; letter-spacing:0.5px;">LOGIN TO SYSTEM</button>
+                    </form>
+
+                    <div class="auth-divider"></div>
+
+                    <button type="button" class="btn ghost" onclick="window.authGuestLogin()" style="width:100%; justify-content:center; padding:12px; border:1px dashed #475569; margin-bottom:15px;">
+                        <i class="fa-solid fa-user-secret" style="margin-right:8px;"></i> ENTER AS GUEST
+                    </button>
+
+                    <div style="font-size:11px; color:#94a3b8; text-align:center;">
+                        New recruit? <span class="auth-link" onclick="window.authShowView('register')">Create an Account</span>
+                    </div>
+                </div>
+
+                <!-- WIDOK REJESTRACJI -->
+                <div id="view-register" style="display:none; width:100%;">
+                    <form id="register-form">
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Operator Nickname</label>
+                        <input type="text" id="reg-nick" placeholder="e.g. Raynor" required="" style="margin-bottom:15px; width:100%;" autocomplete="username">
+
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Email Address</label>
+                        <input type="email" id="reg-email" placeholder="your@email.com" required="" style="margin-bottom:15px; width:100%;" autocomplete="email">
+                        
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Password (Min 6 characters)</label>
+                        <input type="password" id="reg-password" placeholder="••••••" required="" style="margin-bottom:15px; width:100%;" minlength="6" autocomplete="new-password">
+
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Confirm Password</label>
+                        <input type="password" id="reg-password-confirm" placeholder="••••••" required="" style="margin-bottom:15px; width:100%;" minlength="6" autocomplete="new-password">
+                        
+                        <div id="reg-error" style="display:none; color:var(--danger); font-size:11px; margin-bottom:15px; text-align:center;"></div>
+                        
+                        <button type="submit" id="btn-do-register" class="btn primary" style="width:100%; justify-content:center; padding:12px; font-weight:bold; letter-spacing:0.5px;">CREATE ACCOUNT</button>
+                    </form>
+
+                    <div style="font-size:11px; color:#94a3b8; text-align:center; margin-top:20px;">
+                        Already have an account? <span class="auth-link" onclick="window.authShowView('login')">Login here</span>
+                    </div>
+                </div>
+
+                <!-- WIDOK WERYFIKACJI E-MAIL -->
+                <div id="view-verify" style="display:none; width:100%; text-align:center;">
+                    <i class="fa-regular fa-envelope-open" style="font-size:48px; color:var(--accent2); margin-bottom:20px;"></i>
+                    <h3 style="color:white; margin:0 0 10px 0;">VERIFY YOUR COMM-LINK</h3>
+                    <p style="font-size:12px; color:#94a3b8; line-height:1.6; margin-bottom:15px;">
+                        Your email address <strong id="verify-email" style="color:white; word-break:break-all;"></strong> is not verified yet.<br>
+                        Open the verification email and click the link inside it, then press I HAVE VERIFIED.<br><br>
+                        <span style="color:#eab308;">Can't find it? Check your spam or junk folder. It comes from noreply@starcrafttmgbeta.firebaseapp.com.</span>
+                    </p>
+
+                    <div id="verify-msg" style="display:none; font-size:11px; margin-bottom:15px; text-align:center; font-weight:bold;"></div>
+
+                    <button type="button" id="btn-verify-check" class="btn primary" onclick="window.authCheckVerified()" style="width:100%; justify-content:center; padding:12px; font-weight:bold; letter-spacing:0.5px; margin-bottom:10px;">
+                        I HAVE VERIFIED
+                    </button>
+                    <button type="button" id="btn-verify-resend" class="btn ghost" onclick="window.authResendVerification()" style="width:100%; justify-content:center; margin-bottom:10px;">
+                        <i class="fa-solid fa-paper-plane" style="margin-right:8px;"></i> RESEND EMAIL
+                    </button>
+                    <button type="button" class="btn ghost" onclick="window.authBackToLogin()" style="width:100%; justify-content:center;">
+                        RETURN TO LOGIN
+                    </button>
+                </div>
+
+                <!-- WIDOK ZAPOMNIANEGO HASŁA -->
+                <div id="view-forgot" style="display:none; width:100%;">
+                    <h3 style="color:white; margin:0 0 5px 0; text-align:center;">RESET PASSWORD</h3>
+                    <p style="font-size:11px; color:#94a3b8; text-align:center; margin-bottom:20px;">
+                        Enter your registered email address. We will send you a secure link to create a new password.
+                    </p>
+                    
+                    <form id="forgot-form">
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Email Address</label>
+                        <input type="email" id="forgot-email" placeholder="your@email.com" required="" style="margin-bottom:15px; width:100%;">
+                        
+                        <div id="forgot-msg" style="display:none; font-size:11px; margin-bottom:15px; text-align:center; font-weight:bold;"></div>
+                        
+                        <button type="submit" id="btn-do-forgot" class="btn primary" style="width:100%; justify-content:center; padding:12px; font-weight:bold; letter-spacing:0.5px;">SEND RESET LINK</button>
+                    </form>
+
+                    <div style="font-size:11px; color:#94a3b8; text-align:center; margin-top:20px;">
+                        Remembered it? <span class="auth-link" onclick="window.authShowView('login')">Back to Login</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <button id="mobile-menu-btn" class="btn ghost" style="padding: 8px 12px; font-size: 18px; margin-right:5px;">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            
+            <img src="logo.png" alt="Logo" style="height: 36px; width: auto; display: block;" onerror="this.style.display='none'">
+            <h1 style="color: var(--accent2); font-weight:700; letter-spacing: 1px; font-size: 18px; margin:0;">
+                BETA v1.4 <span style="color:var(--text); font-weight:400;"></span>
+            </h1>
+        </div>
+        <div style="margin-left:auto; display:flex; gap:14px; align-items:center;">
+            <div class="user-info" style="text-align:right;">
+                <div class="user-name" style="font-size:12px; font-weight:600; color:var(--text);">Guest Operator</div>
+                <div class="user-role" style="font-size: 10px; color: rgb(148, 163, 184);">GUEST ACCESS</div>
+            </div>
+            <button onclick="window.appLogout()" class="btn ghost danger" style="padding:8px;" title="Logout">
+                <i class="fa-solid fa-power-off"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <aside class="panel">
+                <h2 class="sidebar-header">THE GAME</h2>
+                
+                <button class="btn nav-btn req-aggregator" onclick="app.nav('dashboard')"><i class="fa-solid fa-chart-line" style="width:20px;"></i> Dashboard</button>
+                <button class="btn nav-btn active" onclick="app.nav('rules')"><i class="fa-solid fa-book-open" style="width:20px;"></i> Game Rules</button>
+                <button class="btn nav-btn" onclick="app.nav('factions')"><i class="fa-solid fa-users" style="width:20px;"></i> Factions &amp; Cards</button>
+                <button class="btn nav-btn" onclick="app.nav('army-builder')"><i class="fa-solid fa-chess-rook" style="width:20px;"></i> Army Builder</button>
+                
+                <button class="btn nav-btn req-admin" onclick="app.nav('dice')"><i class="fa-solid fa-dice-d20" style="width:20px;"></i> Dice Simulator</button>
+                <button class="btn nav-btn req-admin" onclick="app.nav('rules-checker')"><i class="fa-solid fa-microchip" style="width:20px;"></i> Checker</button>
+
+                <h2 class="sidebar-header" style="margin-top:20px;">TOOLS OF WAR</h2>
+                <button class="btn nav-btn" onclick="app.nav('mission-cards')"><i class="fa-solid fa-scroll" style="width:20px;"></i> Mission Cards</button>
+                <!-- NEW MODULE -->
+                <button class="btn nav-btn" onclick="app.nav('deployment-maps')"><i class="fa-solid fa-map-pin" style="width:20px;"></i> Deployment Maps</button>
+                <button class="btn nav-btn" onclick="app.nav('maps')"><i class="fa-solid fa-map" style="width:20px;"></i> Browse Maps</button>
+                <div style="height:1px; background:#334155; margin: 10px 0;"></div>
+                <button class="btn nav-btn" onclick="app.nav('mission-creator')"><i class="fa-solid fa-pen-to-square" style="width:20px;"></i> Mission Creator</button>
+                <!-- UNLOCKED: Removed req-aggregator -->
+                <button class="btn nav-btn" onclick="app.nav('deployment-creator')"><i class="fa-solid fa-chess-board" style="width:20px;"></i> Deployment Creator</button>
+                <button class="btn nav-btn" onclick="app.nav('map-editor')"><i class="fa-solid fa-mountain-city" style="width:20px;"></i> Map Editor</button>
+                
+                <h2 class="sidebar-header" style="margin-top:20px;">COMMUNITY</h2>
+                <button class="btn nav-btn" onclick="app.nav('events')"><i class="fa-solid fa-calendar-days" style="width:20px;"></i> Event Calendar</button>
+
+                <button class="btn nav-btn" onclick="app.nav('changelog')" style="position:relative; margin-top:10px;">
+                    <i class="fa-solid fa-clock-rotate-left" style="width:20px;"></i> News Network
+                    <span id="changelog-badge" style="
+                        position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+                        background: var(--accent); color: #000; font-size: 9px; font-weight: bold;
+                        padding: 2px 6px; border-radius: 10px; display: none;
+                    ">0</span>
+                </button>
+
+                <h2 class="sidebar-header" style="margin-top:20px;">FEEDBACK LOOP</h2>
+                <button class="btn nav-btn" onclick="app.nav('battle-report')"><i class="fa-solid fa-crosshairs" style="width:20px;"></i> Battle Report</button>
+                <button class="btn nav-btn" onclick="app.nav('suggestions')"><i class="fa-solid fa-comment-dots" style="width:20px;"></i> Report Bug / Idea</button>
+
+                <div style="margin-top:auto; padding-top:15px; border-top:1px solid #1f2937;">
+                    <button class="btn nav-btn danger req-admin" onclick="app.nav('admin')" style="margin-bottom:5px;">
+                        <i class="fa-solid fa-user-shield" style="width:20px;"></i> Admin Panel
+                    </button>
+                    <button class="btn nav-btn ghost" onclick="app.nav('updates')" style="font-size:10px; color:#64748b; justify-content:center;">
+                        <i class="fa-solid fa-code-branch" style="margin-right:6px;"></i> v1.3 (Beta)
+                    </button>
+                </div>
+            </aside>
+
+            <section id="main-content" style="position:relative; overflow:hidden; display:flex; flex-direction:column; height:100%;">
+    <style>
+        /* Factions-style Accordions for Rules */
+        .rule-cat-wrapper { margin-bottom: 20px; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.5); border: 1px solid #334155; }
+        .rule-cat-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: #1e293b; color: white; padding: 15px 20px; border: none; cursor: pointer; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; transition: background 0.2s; border-left: 4px solid var(--accent2); }
+        .rule-cat-btn:hover { background: #334155; }
+        .rule-cat-body { background: #0b1220; padding: 15px; display: flex; flex-direction: column; gap: 10px; }
+
+        .rule-sub-wrapper { border: 1px solid #334155; border-radius: 6px; overflow: hidden; background: #111827; }
+        .rule-sub-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03); color: #e2e8f0; padding: 12px 15px; border: none; cursor: pointer; font-size: 14px; font-weight: 700; transition: background 0.2s; text-align: left; }
+        .rule-sub-btn:hover { background: rgba(255,255,255,0.08); color: white; }
+        .rule-sub-body { padding: 15px; border-top: 1px solid #1f2937; background: #020617; }
+
+        .rule-subsub-wrapper { margin-top: 10px; border: 1px solid #475569; border-radius: 4px; overflow: hidden; }
+        .rule-subsub-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; background: #1e293b; color: #94a3b8; padding: 8px 12px; border: none; cursor: pointer; font-size: 12px; font-weight: 700; text-transform: uppercase; transition: background 0.2s; }
+        .rule-subsub-btn:hover { background: #334155; color: white; }
+        .rule-subsub-body { padding: 12px; background: #0b1220; border-top: 1px solid #475569; color: #cbd5e1; font-size: 13px; line-height: 1.5; }
+
+        .rc-chevron { transition: transform 0.3s ease; }
+        .rc-chevron.open { transform: rotate(180deg); }
+
+        /* Intro specific styles */
+        .rule-intro-block { padding: 0 0 20px 0; margin-bottom: 20px; border-bottom: 1px solid #334155; }
+        
+        .rc-content-block { margin-bottom: 15px; color: #e2e8f0; font-size: 14px; line-height: 1.6; }
+        .rc-admin-toolbar { display: flex; flex-wrap: wrap; gap: 5px; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 6px; margin-bottom: 10px; align-items:center; }
+        
+        /* Dropdown top menu styles */
+        .rules-top-nav { display: flex; align-items: center; gap: 10px; width: 100%; margin-top: 10px; }
+        .rules-select { flex: 1; background: #020617; border: 1px solid #334155; color: white; padding: 10px; border-radius: 6px; font-size: 14px; font-weight: bold; outline: none; cursor: pointer; transition: border-color 0.2s; }
+        .rules-select:focus { border-color: var(--accent2); }
+
+        .editor-wrapper { border: 1px solid #334155; border-radius: 8px; background: #0b1220; overflow: hidden; display: flex; flex-direction: column; flex: 1; }
+        .editor-toolbar { display: flex; flex-wrap: wrap; gap: 4px; padding: 6px; background: #111827; border-bottom: 1px solid #334155; align-items: center; }
+        .format-btn { width: 28px; height: 28px; background: transparent; border: 1px solid transparent; color: #94a3b8; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .format-btn:hover { background: rgba(255,255,255,0.05); color: white; }
+        
+        .format-select { background: #020617; border: 1px solid #334155; color: #cbd5e1; border-radius: 4px; padding: 2px; font-size: 11px; cursor: pointer; outline: none; }
+        .format-select:hover { border-color: var(--accent2); color: white; }
+        .format-select option { background: #0f172a; color: white; }
+
+        .rich-editor { flex: 1; padding: 15px; color: #e5e7eb; font-family: 'Courier New', Courier, monospace; font-size: 13px; line-height: 1.6; outline: none; overflow-y: auto; min-height: 100px; }
+        
+        .rich-editor table { width: 100%; border-collapse: collapse; margin-top: 10px; margin-bottom: 10px; color: #e5e7eb; }
+        .rich-editor tr { border-bottom: 1px dashed #475569; }
+        .rich-editor tr:last-child { border-bottom: none; }
+        .rich-editor td, .rich-editor th { border: none; padding: 8px 12px; text-align: left; vertical-align: top; }
+        .rich-editor img { max-width: 100%; height: auto; border-radius: 6px; margin: 10px 0; }
+
+        .section-controls { display: flex; gap: 4px; margin-left: 10px; padding-left: 10px; border-left: 1px solid #334155; align-items: center; }
+        .ctrl-btn { background: transparent; border: 1px solid #334155; color: #64748b; width: 24px; height: 24px; border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; }
+
+        .rules-search-wrapper { position: relative; max-width: 300px; flex: 1; }
+        .rules-search-input { width: 100%; background: #020617; border: 1px solid #334155; color: white; padding: 8px 12px 8px 30px; border-radius: 20px; font-size: 12px; }
+        .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 12px; }
+        .search-results-dropdown { position: absolute; top: 110%; left: 0; right: 0; background: #1e293b; border: 1px solid #334155; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); z-index: 100; max-height: 300px; overflow-y: auto; display: none; }
+        .search-result-item { padding: 10px; border-bottom: 1px solid #334155; cursor: pointer; transition: background 0.1s; }
+        .search-result-item:hover { background: rgba(255,255,255,0.05); }
+        .sr-path { font-size: 9px; color: var(--accent2); text-transform: uppercase; font-weight: bold; margin-bottom: 2px; }
+        .sr-text { font-size: 11px; color: #cbd5e1; line-height: 1.3; }
+        .sr-highlight { color: #facc15; font-weight: bold; background: rgba(250, 204, 21, 0.1); }
+        
+        #rules-toast { position: fixed; bottom: 20px; right: 20px; background: #1e293b; border: 1px solid #334155; color: white; padding: 10px 20px; border-radius: 6px; font-size: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 10000; transform: translateY(100px); transition: transform 0.3s; display: flex; align-items: center; gap: 10px; }
+        #rules-toast.show { transform: translateY(0); }
+        #rules-toast.success { border-color: var(--accent); }
+        #rules-toast.silent { border-color: var(--warning); }
+
+        /* --- SŁOWNIK / REFERENCE LINKS STYLES --- */
+        .kw-link { 
+            color: var(--accent2); cursor: pointer; border-bottom: 1px dashed var(--accent2); 
+            font-weight: bold; transition: color 0.2s, border-color 0.2s; 
+        }
+        .kw-link:hover { color: white; border-bottom-color: white; }
+
+        .ref-link { 
+            color: #eab308; cursor: pointer; border-bottom: 1px dashed #eab308; 
+            font-weight: bold; transition: color 0.2s, border-color 0.2s; 
+        }
+        .ref-link:hover { color: white; border-bottom-color: white; }
+
+        #rules-modal-overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.8); z-index: 100000; align-items: center; justify-content: center; 
+            backdrop-filter: blur(3px); transition: opacity 0.2s ease-in-out;
+        }
+        #rules-modal-box { 
+            background: #0f172a; border: 1px solid var(--accent2); border-radius: 8px; 
+            width: 90%; max-width: 600px; max-height: 80vh; display: flex; flex-direction: column; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.9); 
+        }
+        #rules-modal-header { 
+            padding: 15px; border-bottom: 1px solid #1f2937; display: flex; justify-content: space-between; align-items: center; 
+            background: #1e293b; border-top-left-radius: 8px; border-top-right-radius: 8px; 
+        }
+        #rules-modal-body-content { 
+            padding: 20px; overflow-y: auto; color: #cbd5e1; font-size: 14px; line-height: 1.6; 
+        }
+        #rules-modal-body-content b, #rules-modal-body-content strong { color: white; }
+
+        @media (max-width: 768px) {
+            .rules-top-nav { flex-direction: column; align-items: stretch; }
+            .rules-search-wrapper { max-width: 100%; margin-top: 10px; }
+        }
+    </style>
+
+    <div class="panel" style="height:100%; display:flex; flex-direction:column; padding:0; overflow:hidden;">
+        <input type="file" id="rule-img-uploader" style="display:none;" accept="image/*" onchange="window.processImageUpload(this)">
+
+        <div style="padding:14px; border-bottom:1px solid #1f2937; background:#1e293b; flex-shrink:0;">
+            <div style="max-width: 1400px; margin: 0 auto; width: 100%;">
+                
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                    <div style="display:flex; align-items:center; gap:15px;">
+                        <h2 style="margin:0; color:var(--text);">GAME RULES</h2>
+                        
+                    </div>
+                    <div class="rules-search-wrapper">
+                        <i class="fa-solid fa-search search-icon"></i>
+                        <input type="text" class="rules-search-input" placeholder="Search rules..." onkeyup="window.searchRules(this.value)">
+                        <div id="rules-search-results" class="search-results-dropdown" style="display: none;"></div>
+                    </div>
+                </div>
+
+                <div class="rules-top-nav">
+                    <select id="rules-section-select" class="rules-select" onchange="window.switchRuleTab(parseInt(this.value))"><option value="0">STARCRAFT: THE MINIATURES GAME</option><option value="1">THE NATURE OF THE GAME</option><option value="2">PART 1: LEARN TO PLAY</option><option value="3">WORKED EXAMPLE: STARTING ROUNDS</option><option value="4" selected="">PART 2: CORE CONCEPTS</option><option value="5">PART 3: DICE AND ROLLING</option><option value="6">PART 4: MEASURING AND MOVEMENT</option><option value="7">PART 5: CARDS AND CHARACTERISTICS</option><option value="8">PART 6: THE SUPPLY SYSTEM</option><option value="9">PART 7: THE BATTLEFIELD</option><option value="10">PART 8: THE GAME SEQUENCE</option><option value="11">PART 9: PREPARING FOR BATTLE</option><option value="12">PART 10: ADVANCED RULES</option><option value="13">PART 11: KEYWORD GLOSSARY AND DEFINITIONS</option><option value="14">PART 12: QUICK REFERENCE</option></select>
+                    
+                </div>
+
+            </div>
+        </div>
+
+        <div style="flex:1; overflow-y:auto; padding:20px; background:#0f172a;">
+            <div id="rules-container" style="max-width: 1400px; margin: 0 auto; width: 100%;">
+            <div class="rule-cat-wrapper" id="rule-0">
+                <button class="rule-cat-btn" onclick="window.toggleRule(0)">
+                    <span>Ogólne</span> <i class="fa-solid fa-chevron-down rc-chevron "></i>
+                </button>
+                
+            </div>
+            <div class="rule-cat-wrapper" id="rule-1">
+                <button class="rule-cat-btn" onclick="window.toggleRule(1)">
+                    <span>2.1 Models</span> <i class="fa-solid fa-chevron-down rc-chevron "></i>
+                </button>
+                
+            </div>
+            <div class="rule-cat-wrapper" id="rule-2">
+                <button class="rule-cat-btn" onclick="window.toggleRule(2)">
+                    <span>2.2 Units</span> <i class="fa-solid fa-chevron-down rc-chevron "></i>
+                </button>
+                
+            </div>
+            <div class="rule-cat-wrapper" id="rule-3">
+                <button class="rule-cat-btn" onclick="window.toggleRule(3)">
+                    <span>2.3 Bases</span> <i class="fa-solid fa-chevron-down rc-chevron "></i>
+                </button>
+                
+            </div>
+            <div class="rule-cat-wrapper" id="rule-4">
+                <button class="rule-cat-btn" onclick="window.toggleRule(4)">
+                    <span>2.4 Tags</span> <i class="fa-solid fa-chevron-down rc-chevron "></i>
+                </button>
+                
+            </div>
+            <div class="rule-cat-wrapper" id="rule-5">
+                <button class="rule-cat-btn" onclick="window.toggleRule(5)">
+                    <span>2.5 Player Roles</span> <i class="fa-solid fa-chevron-down rc-chevron "></i>
+                </button>
+                
+            </div>
+            <div class="rule-cat-wrapper" id="rule-6">
+                <button class="rule-cat-btn" onclick="window.toggleRule(6)">
+                    <span>2.6 Keywords and Rule Priority</span> <i class="fa-solid fa-chevron-down rc-chevron "></i>
+                </button>
+                
+            </div>
+            <div class="rule-cat-wrapper" id="rule-7">
+                <button class="rule-cat-btn" onclick="window.toggleRule(7)">
+                    <span>2.7 Ability Types</span> <i class="fa-solid fa-chevron-down rc-chevron "></i>
+                </button>
+                
+            </div><div style="text-align:right; margin-top:20px;">
+        <button class="btn ghost" onclick="window.downloadRulesPDF()" style="font-size:10px;"><i class="fa-solid fa-file-pdf" style="color:#ef4444;"></i> EXPORT PDF</button>
+    </div></div>
+        </div>
+
+        <div id="rules-toast"><i id="rules-toast-icon" class="fa-solid fa-check"></i><span id="rules-toast-msg">Notification</span></div>
+    </div>
+
+    <!-- Modal HTML for References & Keywords -->
+    <div id="rules-modal-overlay" onclick="window.closeRuleModal(event)">
+        <div id="rules-modal-box" onclick="event.stopPropagation()">
+            <div id="rules-modal-header">
+                <h3 id="rules-modal-title" style="margin:0; color:var(--accent2); font-size:16px; text-transform:uppercase; letter-spacing:1px;">Reference</h3>
+                <button class="btn ghost danger tiny" onclick="window.closeRuleModal()"><i class="fa-solid fa-times"></i></button>
+            </div>
+            <div id="rules-modal-body-content"></div>
+        </div>
+    </div>
+    </section>
+        </div>
+    </main>
+
+    <footer>
+        <div style="display:flex; justify-content:space-between; max-width:100%;">
+            <span>© 2025 Archon Studio. All rights reserved.</span>
+            <span>System Status: <span style="color:var(--accent);">NOMINAL</span></span>
+        </div>
+    </footer>
+
+    <div id="mobile-nav-backdrop" style="display:none;"></div>
+
+    <script type="module">
+        console.log("Starting module loader...");
+
+        window.addEventListener('error', function(e) {
+            console.error("Global Error:", e.message);
+            if (e.message.includes('disconnected port') || e.message.includes('Extension')) return;
+            
+            const content = document.getElementById('main-content');
+            if(content && !content.innerHTML.includes("CRITICAL ERROR")) {
+                content.innerHTML = `
+                    <div style="padding:40px; text-align:center; color:#ef4444;">
+                        <h2 style="font-size:24px; margin-bottom:10px;"><i class="fa-solid fa-bug"></i> CRITICAL ERROR</h2>
+                        <p>${e.message}</p>
+                        <p style="font-size:12px; color:#94a3b8; margin-top:20px;">Check console (F12) for details.</p>
+                    </div>
+                `;
+            }
+        });
+
+        import { initAuth } from './modules/auth.js?v=1.6';
+        import './script.js'; 
+        
+        import { renderFactionsModule, initFactionsListener } from './modules/factions.js';
+        
+        window.renderFactionsModule = renderFactionsModule;
+        window.initFactionsListener = initFactionsListener;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM Loaded. Init Auth...");
+            initAuth();
+            
+            setTimeout(() => {
+                if(window.app && window.app.init) {
+                    window.app.init();
+                } else {
+                    console.error("window.app not found! Check script.js");
+                }
+            }, 500);
+        });
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js?v=1.6')
+                .then(() => console.log('Service Worker: Ready'))
+                .catch(err => console.log('Service Worker Error:', err));
+        }
+    </script>
+
+</body></html>
