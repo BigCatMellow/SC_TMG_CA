@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StarCraft TMG - Command Center</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    
+    <link rel="icon" type="image/png" href="64sc.png">
+    <link rel="apple-touch-icon" href="192sc.png">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <style data-fullcalendar=""></style><link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&amp;display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <script>
+        tailwind.config = { prefix: 'tw-', corePlugins: { preflight: false } }
+    </script>
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        .auth-link { color: var(--accent2); cursor: pointer; text-decoration: none; font-weight: bold; transition: color 0.2s; }
+        .auth-link:hover { color: white; text-decoration: underline; }
+        .auth-divider { height: 1px; background: #334155; margin: 20px 0; position: relative; }
+        .auth-divider::after { content: 'OR'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111827; padding: 0 10px; color: #64748b; font-size: 10px; font-weight: bold; }
+        
+        body:not(.role-admin):not(.role-aggregator) .req-aggregator { display: none !important; }
+        body:not(.role-admin) .req-admin { display: none !important; }
+    </style>
+<style>*, ::before, ::after {
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    --tw-pan-x:  ;
+    --tw-pan-y:  ;
+    --tw-pinch-zoom:  ;
+    --tw-scroll-snap-strictness: proximity;
+    --tw-gradient-from-position:  ;
+    --tw-gradient-via-position:  ;
+    --tw-gradient-to-position:  ;
+    --tw-ordinal:  ;
+    --tw-slashed-zero:  ;
+    --tw-numeric-figure:  ;
+    --tw-numeric-spacing:  ;
+    --tw-numeric-fraction:  ;
+    --tw-ring-inset:  ;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgb(59 130 246 / 0.5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    --tw-blur:  ;
+    --tw-brightness:  ;
+    --tw-contrast:  ;
+    --tw-grayscale:  ;
+    --tw-hue-rotate:  ;
+    --tw-invert:  ;
+    --tw-saturate:  ;
+    --tw-sepia:  ;
+    --tw-drop-shadow:  ;
+    --tw-backdrop-blur:  ;
+    --tw-backdrop-brightness:  ;
+    --tw-backdrop-contrast:  ;
+    --tw-backdrop-grayscale:  ;
+    --tw-backdrop-hue-rotate:  ;
+    --tw-backdrop-invert:  ;
+    --tw-backdrop-opacity:  ;
+    --tw-backdrop-saturate:  ;
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
+}
+::backdrop {
+    --tw-border-spacing-x: 0;
+    --tw-border-spacing-y: 0;
+    --tw-translate-x: 0;
+    --tw-translate-y: 0;
+    --tw-rotate: 0;
+    --tw-skew-x: 0;
+    --tw-skew-y: 0;
+    --tw-scale-x: 1;
+    --tw-scale-y: 1;
+    --tw-pan-x:  ;
+    --tw-pan-y:  ;
+    --tw-pinch-zoom:  ;
+    --tw-scroll-snap-strictness: proximity;
+    --tw-gradient-from-position:  ;
+    --tw-gradient-via-position:  ;
+    --tw-gradient-to-position:  ;
+    --tw-ordinal:  ;
+    --tw-slashed-zero:  ;
+    --tw-numeric-figure:  ;
+    --tw-numeric-spacing:  ;
+    --tw-numeric-fraction:  ;
+    --tw-ring-inset:  ;
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: rgb(59 130 246 / 0.5);
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 0 #0000;
+    --tw-blur:  ;
+    --tw-brightness:  ;
+    --tw-contrast:  ;
+    --tw-grayscale:  ;
+    --tw-hue-rotate:  ;
+    --tw-invert:  ;
+    --tw-saturate:  ;
+    --tw-sepia:  ;
+    --tw-drop-shadow:  ;
+    --tw-backdrop-blur:  ;
+    --tw-backdrop-brightness:  ;
+    --tw-backdrop-contrast:  ;
+    --tw-backdrop-grayscale:  ;
+    --tw-backdrop-hue-rotate:  ;
+    --tw-backdrop-invert:  ;
+    --tw-backdrop-opacity:  ;
+    --tw-backdrop-saturate:  ;
+    --tw-backdrop-sepia:  ;
+    --tw-contain-size:  ;
+    --tw-contain-layout:  ;
+    --tw-contain-paint:  ;
+    --tw-contain-style:  
+}</style><script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script></head>
+<body class="role-guest">
+
+    <div id="login-overlay" style="display: none;">
+        <div class="login-wrapper">
+            <img src="logo.png" alt="Logo" class="login-logo" onerror="this.style.display='none'">
+            <h3 class="login-subtitle">BETA SYSTEM - ARCHON STUDIO</h3>
+            
+            <div class="panel login-panel" style="min-height: 400px; display:flex; flex-direction:column; justify-content:center;">
+                
+                <!-- WIDOK LOGOWANIA -->
+                <div id="view-login" style="display:block; width:100%;">
+                    <form id="login-form">
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Email Address</label>
+                        <input type="email" id="login-email" placeholder="operator@terran.com" required="" style="margin-bottom:15px; width:100%;" autocomplete="username">
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+                            <label style="margin-bottom:6px; color:#cbd5e1; font-size:12px;">Password</label>
+                            <span class="auth-link" style="font-size:10px; font-weight:normal;" onclick="window.authShowView('forgot')">Forgot Password?</span>
+                        </div>
+                        <input type="password" id="login-password" placeholder="••••••" required="" style="margin-bottom:15px; width:100%;" autocomplete="current-password">
+                        
+                        <div id="login-error" style="display:none; color:var(--danger); font-size:11px; margin-bottom:15px; text-align:center;"></div>
+                        
+                        <button type="submit" id="btn-do-login" class="btn primary" style="width:100%; justify-content:center; padding:12px; font-weight:bold; letter-spacing:0.5px;">LOGIN TO SYSTEM</button>
+                    </form>
+
+                    <div class="auth-divider"></div>
+
+                    <button type="button" class="btn ghost" onclick="window.authGuestLogin()" style="width:100%; justify-content:center; padding:12px; border:1px dashed #475569; margin-bottom:15px;">
+                        <i class="fa-solid fa-user-secret" style="margin-right:8px;"></i> ENTER AS GUEST
+                    </button>
+
+                    <div style="font-size:11px; color:#94a3b8; text-align:center;">
+                        New recruit? <span class="auth-link" onclick="window.authShowView('register')">Create an Account</span>
+                    </div>
+                </div>
+
+                <!-- WIDOK REJESTRACJI -->
+                <div id="view-register" style="display:none; width:100%;">
+                    <form id="register-form">
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Operator Nickname</label>
+                        <input type="text" id="reg-nick" placeholder="e.g. Raynor" required="" style="margin-bottom:15px; width:100%;" autocomplete="username">
+
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Email Address</label>
+                        <input type="email" id="reg-email" placeholder="your@email.com" required="" style="margin-bottom:15px; width:100%;" autocomplete="email">
+                        
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Password (Min 6 characters)</label>
+                        <input type="password" id="reg-password" placeholder="••••••" required="" style="margin-bottom:15px; width:100%;" minlength="6" autocomplete="new-password">
+
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Confirm Password</label>
+                        <input type="password" id="reg-password-confirm" placeholder="••••••" required="" style="margin-bottom:15px; width:100%;" minlength="6" autocomplete="new-password">
+                        
+                        <div id="reg-error" style="display:none; color:var(--danger); font-size:11px; margin-bottom:15px; text-align:center;"></div>
+                        
+                        <button type="submit" id="btn-do-register" class="btn primary" style="width:100%; justify-content:center; padding:12px; font-weight:bold; letter-spacing:0.5px;">CREATE ACCOUNT</button>
+                    </form>
+
+                    <div style="font-size:11px; color:#94a3b8; text-align:center; margin-top:20px;">
+                        Already have an account? <span class="auth-link" onclick="window.authShowView('login')">Login here</span>
+                    </div>
+                </div>
+
+                <!-- WIDOK WERYFIKACJI E-MAIL -->
+                <div id="view-verify" style="display:none; width:100%; text-align:center;">
+                    <i class="fa-regular fa-envelope-open" style="font-size:48px; color:var(--accent2); margin-bottom:20px;"></i>
+                    <h3 style="color:white; margin:0 0 10px 0;">VERIFY YOUR COMM-LINK</h3>
+                    <p style="font-size:12px; color:#94a3b8; line-height:1.6; margin-bottom:15px;">
+                        Your email address <strong id="verify-email" style="color:white; word-break:break-all;"></strong> is not verified yet.<br>
+                        Open the verification email and click the link inside it, then press I HAVE VERIFIED.<br><br>
+                        <span style="color:#eab308;">Can't find it? Check your spam or junk folder. It comes from noreply@starcrafttmgbeta.firebaseapp.com.</span>
+                    </p>
+
+                    <div id="verify-msg" style="display:none; font-size:11px; margin-bottom:15px; text-align:center; font-weight:bold;"></div>
+
+                    <button type="button" id="btn-verify-check" class="btn primary" onclick="window.authCheckVerified()" style="width:100%; justify-content:center; padding:12px; font-weight:bold; letter-spacing:0.5px; margin-bottom:10px;">
+                        I HAVE VERIFIED
+                    </button>
+                    <button type="button" id="btn-verify-resend" class="btn ghost" onclick="window.authResendVerification()" style="width:100%; justify-content:center; margin-bottom:10px;">
+                        <i class="fa-solid fa-paper-plane" style="margin-right:8px;"></i> RESEND EMAIL
+                    </button>
+                    <button type="button" class="btn ghost" onclick="window.authBackToLogin()" style="width:100%; justify-content:center;">
+                        RETURN TO LOGIN
+                    </button>
+                </div>
+
+                <!-- WIDOK ZAPOMNIANEGO HASŁA -->
+                <div id="view-forgot" style="display:none; width:100%;">
+                    <h3 style="color:white; margin:0 0 5px 0; text-align:center;">RESET PASSWORD</h3>
+                    <p style="font-size:11px; color:#94a3b8; text-align:center; margin-bottom:20px;">
+                        Enter your registered email address. We will send you a secure link to create a new password.
+                    </p>
+                    
+                    <form id="forgot-form">
+                        <label style="display:block; margin-bottom:6px; color:#cbd5e1; font-size:12px; text-align:left;">Email Address</label>
+                        <input type="email" id="forgot-email" placeholder="your@email.com" required="" style="margin-bottom:15px; width:100%;">
+                        
+                        <div id="forgot-msg" style="display:none; font-size:11px; margin-bottom:15px; text-align:center; font-weight:bold;"></div>
+                        
+                        <button type="submit" id="btn-do-forgot" class="btn primary" style="width:100%; justify-content:center; padding:12px; font-weight:bold; letter-spacing:0.5px;">SEND RESET LINK</button>
+                    </form>
+
+                    <div style="font-size:11px; color:#94a3b8; text-align:center; margin-top:20px;">
+                        Remembered it? <span class="auth-link" onclick="window.authShowView('login')">Back to Login</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <button id="mobile-menu-btn" class="btn ghost" style="padding: 8px 12px; font-size: 18px; margin-right:5px;">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+            
+            <img src="logo.png" alt="Logo" style="height: 36px; width: auto; display: block;" onerror="this.style.display='none'">
+            <h1 style="color: var(--accent2); font-weight:700; letter-spacing: 1px; font-size: 18px; margin:0;">
+                BETA v1.4 <span style="color:var(--text); font-weight:400;"></span>
+            </h1>
+        </div>
+        <div style="margin-left:auto; display:flex; gap:14px; align-items:center;">
+            <div class="user-info" style="text-align:right;">
+                <div class="user-name" style="font-size:12px; font-weight:600; color:var(--text);">Guest Operator</div>
+                <div class="user-role" style="font-size: 10px; color: rgb(148, 163, 184);">GUEST ACCESS</div>
+            </div>
+            <button onclick="window.appLogout()" class="btn ghost danger" style="padding:8px;" title="Logout">
+                <i class="fa-solid fa-power-off"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <aside class="panel">
+                <h2 class="sidebar-header">THE GAME</h2>
+                
+                <button class="btn nav-btn req-aggregator" onclick="app.nav('dashboard')"><i class="fa-solid fa-chart-line" style="width:20px;"></i> Dashboard</button>
+                <button class="btn nav-btn" onclick="app.nav('rules')"><i class="fa-solid fa-book-open" style="width:20px;"></i> Game Rules</button>
+                <button class="btn nav-btn" onclick="app.nav('factions')"><i class="fa-solid fa-users" style="width:20px;"></i> Factions &amp; Cards</button>
+                <button class="btn nav-btn" onclick="app.nav('army-builder')"><i class="fa-solid fa-chess-rook" style="width:20px;"></i> Army Builder</button>
+                
+                <button class="btn nav-btn req-admin" onclick="app.nav('dice')"><i class="fa-solid fa-dice-d20" style="width:20px;"></i> Dice Simulator</button>
+                <button class="btn nav-btn req-admin" onclick="app.nav('rules-checker')"><i class="fa-solid fa-microchip" style="width:20px;"></i> Checker</button>
+
+                <h2 class="sidebar-header" style="margin-top:20px;">TOOLS OF WAR</h2>
+                <button class="btn nav-btn" onclick="app.nav('mission-cards')"><i class="fa-solid fa-scroll" style="width:20px;"></i> Mission Cards</button>
+                <!-- NEW MODULE -->
+                <button class="btn nav-btn active" onclick="app.nav('deployment-maps')"><i class="fa-solid fa-map-pin" style="width:20px;"></i> Deployment Maps</button>
+                <button class="btn nav-btn" onclick="app.nav('maps')"><i class="fa-solid fa-map" style="width:20px;"></i> Browse Maps</button>
+                <div style="height:1px; background:#334155; margin: 10px 0;"></div>
+                <button class="btn nav-btn" onclick="app.nav('mission-creator')"><i class="fa-solid fa-pen-to-square" style="width:20px;"></i> Mission Creator</button>
+                <!-- UNLOCKED: Removed req-aggregator -->
+                <button class="btn nav-btn" onclick="app.nav('deployment-creator')"><i class="fa-solid fa-chess-board" style="width:20px;"></i> Deployment Creator</button>
+                <button class="btn nav-btn" onclick="app.nav('map-editor')"><i class="fa-solid fa-mountain-city" style="width:20px;"></i> Map Editor</button>
+                
+                <h2 class="sidebar-header" style="margin-top:20px;">COMMUNITY</h2>
+                <button class="btn nav-btn" onclick="app.nav('events')"><i class="fa-solid fa-calendar-days" style="width:20px;"></i> Event Calendar</button>
+
+                <button class="btn nav-btn" onclick="app.nav('changelog')" style="position:relative; margin-top:10px;">
+                    <i class="fa-solid fa-clock-rotate-left" style="width:20px;"></i> News Network
+                    <span id="changelog-badge" style="
+                        position: absolute; right: 10px; top: 50%; transform: translateY(-50%);
+                        background: var(--accent); color: #000; font-size: 9px; font-weight: bold;
+                        padding: 2px 6px; border-radius: 10px; display: none;
+                    ">0</span>
+                </button>
+
+                <h2 class="sidebar-header" style="margin-top:20px;">FEEDBACK LOOP</h2>
+                <button class="btn nav-btn" onclick="app.nav('battle-report')"><i class="fa-solid fa-crosshairs" style="width:20px;"></i> Battle Report</button>
+                <button class="btn nav-btn" onclick="app.nav('suggestions')"><i class="fa-solid fa-comment-dots" style="width:20px;"></i> Report Bug / Idea</button>
+
+                <div style="margin-top:auto; padding-top:15px; border-top:1px solid #1f2937;">
+                    <button class="btn nav-btn danger req-admin" onclick="app.nav('admin')" style="margin-bottom:5px;">
+                        <i class="fa-solid fa-user-shield" style="width:20px;"></i> Admin Panel
+                    </button>
+                    <button class="btn nav-btn ghost" onclick="app.nav('updates')" style="font-size:10px; color:#64748b; justify-content:center;">
+                        <i class="fa-solid fa-code-branch" style="margin-right:6px;"></i> v1.3 (Beta)
+                    </button>
+                </div>
+            </aside>
+
+            <section id="main-content" style="position:relative; overflow:hidden; display:flex; flex-direction:column; height:100%;">
+    <style>
+        .dm-container { display: flex; flex-direction: column; height: 100%; overflow: hidden; background: #0f172a; }
+        .dm-header { padding: 14px; border-bottom: 1px solid #1f2937; background: #1e293b; flex-shrink: 0; }
+        
+        .dm-tabs { display: flex; gap: 8px; padding: 10px 0 0 0; margin-bottom: 0; width: 100%; max-width: 600px; margin: 0 auto; }
+        .dm-tab-btn { 
+            flex: 1; background: #1e293b; border: 1px solid #334155; color: #94a3b8; 
+            padding: 12px 0; border-radius: 6px; cursor: pointer; font-size: 13px; 
+            font-weight: 800; transition: all .2s; text-transform: uppercase; 
+            text-align: center; letter-spacing: 1px;
+        }
+        .dm-tab-btn:hover { background: #334155; color: white; }
+        .dm-tab-btn.active { background: rgba(56, 189, 248, 0.1); border-color: #38bdf8; color: white; }
+
+        .dm-filters { display: flex; gap: 10px; margin-top: 15px; flex-wrap: wrap; max-width: 1400px; margin-left: auto; margin-right: auto; }
+        .dm-search-wrapper { position: relative; flex: 1; min-width: 200px; }
+        .dm-search-input { width: 100%; background: #020617; border: 1px solid #334155; color: white; padding: 10px 10px 10px 32px; border-radius: 6px; font-size: 12px; outline: none; transition: border-color 0.2s; }
+        .dm-search-input:focus { border-color: var(--accent2); }
+        .dm-search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #64748b; font-size: 12px; }
+        .dm-format-select { background: #020617; border: 1px solid #334155; color: white; padding: 10px; border-radius: 6px; font-size: 12px; outline: none; cursor: pointer; }
+
+        .dm-content { flex: 1; overflow-y: auto; padding: 20px; }
+        
+        .dm-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); 
+            gap: 20px; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+        }
+
+        .dm-card-entry {
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background: #0b1220;
+            transition: transform 0.2s, box-shadow 0.2s;
+            position: relative;
+        }
+        .dm-card-entry:hover { transform: translateY(-3px); }
+
+        .dm-card-preview-wrapper {
+            padding: 15px; display: flex; justify-content: center; background: #111827;
+            border-bottom: 1px solid #334155; position: relative; overflow: hidden; height: 260px;
+        }
+        
+        .dm-img-scale { width: 100%; height: 100%; object-fit: contain; transition: filter 0.3s; }
+        
+        .is-pending .dm-img-scale { filter: blur(8px) grayscale(50%); opacity: 0.4; }
+        .pending-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; z-index: 10; pointer-events: none; }
+        .pending-badge { background: #ef4444; color: white; font-weight: 900; padding: 10px 20px; border-radius: 6px; font-size: 18px; text-transform: uppercase; letter-spacing: 2px; transform: rotate(-15deg); border: 2px solid #000; box-shadow: 0 5px 15px rgba(0,0,0,0.8); }
+
+        .dm-card-actions { padding: 15px; display: flex; justify-content: space-between; align-items: center; background: #1e293b; flex-wrap: wrap; gap: 10px; }
+
+        .upvote-btn {
+            background: transparent; border: 1px solid #475569; color: #94a3b8; padding: 6px 12px;
+            border-radius: 20px; cursor: pointer; font-weight: bold; font-size: 12px; display: flex; align-items: center; gap: 6px; transition: all 0.2s;
+        }
+        .upvote-btn:hover { background: rgba(255, 255, 255, 0.05); color: white; border-color: #64748b; }
+        .upvote-btn.voted { background: rgba(239, 68, 68, 0.1); color: #ef4444; border-color: #ef4444; }
+        .upvote-btn.voted i { color: #ef4444; }
+        
+        .special-badge-overlay { position: absolute; top: 10px; left: 10px; z-index: 20; display: flex; flex-direction: column; gap: 5px; }
+        .special-badge { font-size: 10px; font-weight: 900; padding: 4px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .badge-archon { background: #facc15; color: #000; border: 1px solid #ca8a04; }
+        .badge-week { background: #a855f7; color: #fff; border: 1px solid #7e22ce; }
+
+        /* MODAL */
+        #dm-modal-overlay { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.9); z-index: 10000; flex-direction: column; 
+            backdrop-filter: blur(5px); justify-content: center; align-items: center;
+        }
+        .dm-modal-topbar {
+            width: 100%; padding: 15px; display: flex; justify-content: flex-end;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%);
+            position: absolute; top: 0; left: 0; z-index: 1001; pointer-events: none;
+        }
+        .dm-modal-topbar button { pointer-events: all; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        
+        #dm-modal-content {
+            max-width: 95vw; max-height: 85vh; display: flex; justify-content: center; align-items: center;
+        }
+        #dm-modal-content img {
+            max-width: 100%; max-height: 85vh; border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8); object-fit: contain;
+        }
+
+        @media (max-width: 768px) {
+            .dm-grid { grid-template-columns: 1fr; }
+            .dm-card-preview-wrapper { height: 200px; }
+        }
+    </style>
+
+    <div class="dm-container">
+        <div class="dm-header">
+            <div style="max-width: 1400px; margin: 0 auto; width: 100%;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                    <h2 style="margin:0; color:#38bdf8;"><i class="fa-solid fa-map-pin"></i> DEPLOYMENT MAPS</h2>
+                </div>
+                
+                <div class="dm-tabs">
+                    <button class="dm-tab-btn active" id="dmtab-official" onclick="window.dmSwitchTab('official')">OFFICIAL DEPLOYMENTS</button>
+                    <button class="dm-tab-btn" id="dmtab-community" onclick="window.dmSwitchTab('community')">COMMUNITY DEPLOYMENTS</button>
+                </div>
+
+                <div class="dm-filters">
+                    <div class="dm-search-wrapper">
+                        <i class="fa-solid fa-search dm-search-icon"></i>
+                        <input type="text" class="dm-search-input" placeholder="Search by name..." onkeyup="window.dmHandleSearch(this.value)">
+                    </div>
+                    <select class="dm-format-select" onchange="window.dmHandleFilter(this.value)">
+                        <option value="All">All Formats</option>
+                        <option value="Skirmish">Skirmish</option>
+                        <option value="Standard">Standard</option>
+                        <option value="Grand">Grand Offensive</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="dm-content">
+            <div id="dm-grid-container" class="dm-grid">
+        <div class="dm-card-entry" style="border: 2px solid #eab308; box-shadow: 0 0 15px #eab30840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1770386182779_Abandoned_Camp.jpg?alt=media&amp;token=6fbaf372-2f1b-47ba-afeb-c1fc0c596f48" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">ABANDONED CAMP</div>
+                    <div style="font-size:10px; color:#eab308; text-transform:uppercase; font-weight:bold;">Skirmish FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('xxcLAuwGbNzHzggnAGLW')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('xxcLAuwGbNzHzggnAGLW')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('xxcLAuwGbNzHzggnAGLW')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #38bdf8; box-shadow: 0 0 15px #38bdf840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1770385822136_Acropolis.jpg?alt=media&amp;token=a0d664b9-2000-4ab3-ab0e-c2dca4c83691" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">ACROPOLIS</div>
+                    <div style="font-size:10px; color:#38bdf8; text-transform:uppercase; font-weight:bold;">Standard FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('cW3aQQikqXLZlFEPLa4j')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('cW3aQQikqXLZlFEPLa4j')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('cW3aQQikqXLZlFEPLa4j')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #eab308; box-shadow: 0 0 15px #eab30840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1770386234296_Agria_Valley.jpg?alt=media&amp;token=30aab804-1a9b-44d7-a86c-517b5290aa4a" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">AGRIA VALLEY</div>
+                    <div style="font-size:10px; color:#eab308; text-transform:uppercase; font-weight:bold;">Skirmish FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('Kqz626cBnNVxqdBJePDC')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('Kqz626cBnNVxqdBJePDC')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('Kqz626cBnNVxqdBJePDC')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #38bdf8; box-shadow: 0 0 15px #38bdf840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1770386049364_Breach.jpg?alt=media&amp;token=ff022be1-0b0c-482b-9c46-4b6307b61727" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">BREACH</div>
+                    <div style="font-size:10px; color:#38bdf8; text-transform:uppercase; font-weight:bold;">Standard FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('E2Sv30MQfeLbO6Yqgx0l')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('E2Sv30MQfeLbO6Yqgx0l')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('E2Sv30MQfeLbO6Yqgx0l')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #eab308; box-shadow: 0 0 15px #eab30840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1770733782980_Char_Plains.jpg?alt=media&amp;token=90da64af-7a60-43dd-8bec-b328284bf3fc" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">CHAR PLAINS</div>
+                    <div style="font-size:10px; color:#eab308; text-transform:uppercase; font-weight:bold;">Skirmish FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('a7Ax3InF4uueg3gZ308P')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('a7Ax3InF4uueg3gZ308P')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('a7Ax3InF4uueg3gZ308P')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #eab308; box-shadow: 0 0 15px #eab30840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1770386312441_Dirt_Side.jpg?alt=media&amp;token=9b4cd999-4122-466d-97cd-642063cc3701" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">DIRT SIDE</div>
+                    <div style="font-size:10px; color:#eab308; text-transform:uppercase; font-weight:bold;">Skirmish FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('yQ2mHJMUvEaupcdRVwjm')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('yQ2mHJMUvEaupcdRVwjm')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('yQ2mHJMUvEaupcdRVwjm')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #eab308; box-shadow: 0 0 15px #eab30840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1770386351581_Frontier.jpg?alt=media&amp;token=f292c757-20a8-4fa7-bd0e-b33f1c2a7836" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">FRONTIER</div>
+                    <div style="font-size:10px; color:#eab308; text-transform:uppercase; font-weight:bold;">Skirmish FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('BM1fW5aRzwYA8aKrXd6L')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('BM1fW5aRzwYA8aKrXd6L')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('BM1fW5aRzwYA8aKrXd6L')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #38bdf8; box-shadow: 0 0 15px #38bdf840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1770385629894_Gauntlet.jpg?alt=media&amp;token=3e90d077-784b-4e50-9803-5257b522b819" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">GAUNTLET</div>
+                    <div style="font-size:10px; color:#38bdf8; text-transform:uppercase; font-weight:bold;">Standard FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('2NdngLtIeZAprsWr25hM')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('2NdngLtIeZAprsWr25hM')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('2NdngLtIeZAprsWr25hM')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #38bdf8; box-shadow: 0 0 15px #38bdf840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1793302593371_Meeting_Engagment.jpg?alt=media&amp;token=3f6e93e2-4347-4ead-a091-a92c5808722f" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">MEETING ENGAGMENT</div>
+                    <div style="font-size:10px; color:#38bdf8; text-transform:uppercase; font-weight:bold;">Standard FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('f1fL4RiJ2zPOF4BeDlgl')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('f1fL4RiJ2zPOF4BeDlgl')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('f1fL4RiJ2zPOF4BeDlgl')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #38bdf8; box-shadow: 0 0 15px #38bdf840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1791551420892_One_bridge_too_close.jpg?alt=media&amp;token=5117df3e-1927-4737-844e-465dc9da85c1" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">ONE BRIDGE TOO CLOSE</div>
+                    <div style="font-size:10px; color:#38bdf8; text-transform:uppercase; font-weight:bold;">Standard FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('gWudxJ1dMPAF8vP6UghB')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('gWudxJ1dMPAF8vP6UghB')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('gWudxJ1dMPAF8vP6UghB')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #eab308; box-shadow: 0 0 15px #eab30840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1791551540971_Power_lines.jpg?alt=media&amp;token=098c8634-d5e5-47b6-bcd1-0b52bb691b0d" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">POWER LINES</div>
+                    <div style="font-size:10px; color:#eab308; text-transform:uppercase; font-weight:bold;">Skirmish FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('EyCV5SmTPXTrpqS6iy3e')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('EyCV5SmTPXTrpqS6iy3e')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('EyCV5SmTPXTrpqS6iy3e')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #38bdf8; box-shadow: 0 0 15px #38bdf840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1770385908421_Proving_Grounds.jpg?alt=media&amp;token=2236b59b-b966-4142-b98d-c1b5bbcfb231" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">PROVING GROUNDS</div>
+                    <div style="font-size:10px; color:#38bdf8; text-transform:uppercase; font-weight:bold;">Standard FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('BRp1aN4Ebvu3Wuc8afJj')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('BRp1aN4Ebvu3Wuc8afJj')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('BRp1aN4Ebvu3Wuc8afJj')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div>
+        <div class="dm-card-entry" style="border: 2px solid #38bdf8; box-shadow: 0 0 15px #38bdf840;">
+            
+            <div class="dm-card-preview-wrapper ">
+                <img src="https://firebasestorage.googleapis.com/v0/b/starcrafttmgbeta.firebasestorage.app/o/deployments%2F1770385751232_Typhoon.jpg?alt=media&amp;token=bc6f2572-b0bf-4713-8350-2c4afb8b66c4" class="dm-img-scale" onerror="this.style.display='none'">
+                
+            </div>
+            <div class="dm-card-actions">
+                <div style="width:100%;">
+                    <div style="font-size:14px; font-weight:bold; color:white; margin-bottom:2px;">TYPHOON</div>
+                    <div style="font-size:10px; color:#38bdf8; text-transform:uppercase; font-weight:bold;">Standard FORMAT</div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center; width:100%; justify-content:space-between;">
+                    <button class="upvote-btn " onclick="window.dmToggleUpvote('Nwd5bN4pLjjol85hdyBU')">
+                        <i class="fa-regular fa-heart"></i> 0
+                    </button>
+                    <div style="display:flex; gap:5px;">
+                        <button class="btn ghost" onclick="window.dmDownloadCard('Nwd5bN4pLjjol85hdyBU')" title="Download JPG"><i class="fa-solid fa-download"></i></button>
+                        <button class="btn primary" onclick="window.dmOpenModal('Nwd5bN4pLjjol85hdyBU')">VIEW</button>
+                    </div>
+                </div>
+            
+                
+            </div>
+        </div></div>
+        </div>
+    </div>
+
+    <!-- MODAL -->
+    <div id="dm-modal-overlay" onclick="window.dmCloseModal()">
+        <div class="dm-modal-topbar">
+            <button class="btn danger" onclick="window.dmCloseModal()">
+                <i class="fa-solid fa-times"></i> CLOSE
+            </button>
+        </div>
+        <div id="dm-modal-content" onclick="event.stopPropagation()"></div>
+    </div>
+    </section>
+        </div>
+    </main>
+
+    <footer>
+        <div style="display:flex; justify-content:space-between; max-width:100%;">
+            <span>© 2025 Archon Studio. All rights reserved.</span>
+            <span>System Status: <span style="color:var(--accent);">NOMINAL</span></span>
+        </div>
+    </footer>
+
+    <div id="mobile-nav-backdrop" style="display:none;"></div>
+
+    <script type="module">
+        console.log("Starting module loader...");
+
+        window.addEventListener('error', function(e) {
+            console.error("Global Error:", e.message);
+            if (e.message.includes('disconnected port') || e.message.includes('Extension')) return;
+            
+            const content = document.getElementById('main-content');
+            if(content && !content.innerHTML.includes("CRITICAL ERROR")) {
+                content.innerHTML = `
+                    <div style="padding:40px; text-align:center; color:#ef4444;">
+                        <h2 style="font-size:24px; margin-bottom:10px;"><i class="fa-solid fa-bug"></i> CRITICAL ERROR</h2>
+                        <p>${e.message}</p>
+                        <p style="font-size:12px; color:#94a3b8; margin-top:20px;">Check console (F12) for details.</p>
+                    </div>
+                `;
+            }
+        });
+
+        import { initAuth } from './modules/auth.js?v=1.6';
+        import './script.js'; 
+        
+        import { renderFactionsModule, initFactionsListener } from './modules/factions.js';
+        
+        window.renderFactionsModule = renderFactionsModule;
+        window.initFactionsListener = initFactionsListener;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("DOM Loaded. Init Auth...");
+            initAuth();
+            
+            setTimeout(() => {
+                if(window.app && window.app.init) {
+                    window.app.init();
+                } else {
+                    console.error("window.app not found! Check script.js");
+                }
+            }, 500);
+        });
+
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('sw.js?v=1.6')
+                .then(() => console.log('Service Worker: Ready'))
+                .catch(err => console.log('Service Worker Error:', err));
+        }
+    </script>
+
+</body></html>

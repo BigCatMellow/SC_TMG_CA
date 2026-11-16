@@ -1,0 +1,3863 @@
+
+======================================================================
+FACTION: ZERG
+======================================================================
+
+
+### FACTION CARDS (3)
+
+
+------------------------------------------------------------
+CARD: Kerrigan's Swarm UNIQUE
+Faction Card
+ID: kerrigan_s_swarm
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+HERO SLOT
+1
+ELITE SLOT
+2
+CORE SLOT
+3
+CARD ABILITIES
+ ANY PHASE
+Wild Mutation
+ACTIVE
+If the active unit is ON CREEP, the Unit gains BUFF Speed (1) and its first Weapon used gains PRECISION (1).
+Zerg Creep
+PASSIVE
+During Army Building, select exactly one Creep Card and add it to their Army List, paying its listed cost (if any).
+ MOVEMENT PHASE
+Omega Network
+ACTIVE
+If there is no Friendly Omega Worm on the battlefield, set a Friendly Omega Worm Unit anywhere on GROUND LEVEL of the battlefield, more than 10" away from any Enemy model. This Round, the Omega Worm is not eligible to use its Special Abilities (excluding Structure).
+
+
+------------------------------------------------------------
+CARD: Zagara's Swarm UNIQUE
+Faction Card
+ID: zagara_s_swarm
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+HERO SLOT
+1
+CORE SLOT
+4
+SUPPORT SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Instinctive Reaction
+REACTION
+Use when an Enemy Unit declares a Close Combat Attack against a Friendly Unit. That Friendly Unit becomes eligible to make an Evade Roll against that attack.
+Zerg Creep
+PASSIVE
+During Army Building, select exactly one Creep Card and add it to their Army List, paying its listed cost (if any).
+ COMBAT PHASE
+Scourge Queen
+ACTIVE
+If the active Unit contains more models than the combined number of models in all Engaged Enemy Units, its Close Combat Weapons gain INSTANT and PRECISION (4).
+
+
+------------------------------------------------------------
+CARD: Zerg Swarm UNIQUE
+Faction Card
+ID: zerg_swarm
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+ELITE SLOT
+1
+CORE SLOT
+3
+SUPPORT SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Brood Instinct
+REACTION
+Use before a Friendly Unit makes an Evade Roll. Apply a +1 Modifier to that roll.
+Zerg Creep
+PASSIVE
+During Army Building, select exactly one Creep Card and add it to their Army List, paying its listed cost (if any).
+ MOVEMENT PHASE
+Rapid Burrowing
+ACTIVE
+Select one Friendly, Unengaged Ground Zerg Unit on the battlefield. That Unit gains the Burrowed Status, even if it has already been Activated this Round.
+
+
+
+### UNIT CARDS (17)
+
+
+------------------------------------------------------------
+CARD: Bile Launcher UNIQUE
+Support
+ID: bile_launcher
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+-
+SPD
+-
+EVA
+4+
+ARM
+10
+HP
+3
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 150/0
+TAGS: Armoured, Biological, Ground, Unique
+ABILITIES
+ ANY PHASE
+Biological Structure
+PASSIVE
+This Unit cannot gain the BURROWED Status, cannot be returned to Reserves, and is immune to the IMPACT keyword.
+Source of Creep
+PASSIVE
+A Friendly or Enemy Ground Zerg Unit Within 6" of this Unit, counts as being ON CREEP.
+Detection
+PASSIVE
+While Enemy Units are Within 6" of this Unit, they lose the HIDDEN Status.
+ MOVEMENT PHASE
+Burrow Ambush
+PASSIVE
+When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+Bombard
+ACTIVE (1 BIOMASS)
+Set a Bile Bomb token on the battlefield Within 24" of this Unit. When this Unit resolves a Ranged Attack using the Bile Bomb weapon profile this Round, it may choose to ignore the weapon's standard Range characteristic. If it does, it may target an Enemy Unit that is Within 3" of that token (Line of Sight is not required), ignoring the HIDDEN Status. After the attack is fully resolved, remove the Bile Bomb token from the battlefield. When the Bile Bomb token is about to be removed, set a Creep Tumor token in base-to-base contact with it. The Bile Bomb token has DISPLACEMENT.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Bile Bomb
+FOR -	12	Ground	6	3+	Light, Armoured	D3	1	PIERCE Armoured (2), PINPOINT
+Indomitable
+While Engaged, this Unit may target and be targeted by Unengaged Enemy Units. In both cases, the defending Unit gains an Evade Roll against those attacks.
+
+
+------------------------------------------------------------
+CARD: Corpser (Roach)
+Core
+ID: corpser__roach_
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/7
+SPD
+5+
+EVA
+3+
+ARM
+4
+HP
+2
+SIZ
+SQUAD:
+1 - 1
+MODELS
+0
+SUPPLY
+2 - 3
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 220/0
+TAGS: Armoured, Biological, Ground
+ABILITIES
+ ANY PHASE
+Burrow
+ACTIVE (2 BIOMASS)
+If this Unit is Unengaged, it gains or loses the Burrowed Status.
+ MOVEMENT PHASE
+Roachling Infestation
+ACTIVE (2 BIOMASS)
+Once per Game. Resolve the SUMMON (Roachling) effect.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Acid Saliva
+FOR -	8	Ground	2	3+	-	-	1	
+Regeneration
+PASSIVE
+When this Unit becomes Activated, if it has the Burrowed Status, resolve the HEAL (2) effect.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (3) 4+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Claws
+FOR -	E	Ground	3	4+	Light	D3+1	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Tunneling Claws PTS: 10
+PASSIVE
+While this Unit has the Burrowed Status, it may perform the Move and Run actions without losing that Status. It may also move through other Units’ bases.
+ MOVEMENT PHASE - UPGRADES
+Burrow Ambush PTS: 20
+PASSIVE
+When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+Glial Reconstitution PTS: 10
+ACTIVE (1 BIOMASS)
+This Unit gains BUFF SPEED (1), or BUFF SPEED (2) if the Unit is ON CREEP.
+ ASSAULT PHASE - UPGRADES
+Hydriodic Bile PTS: 10
+PASSIVE
+This Unit's Acid Saliva weapon gains Surge Type: Light, and S Dice: D3+1.
+
+
+------------------------------------------------------------
+CARD: Defiler
+Support
+ID: defiler
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+7
+SPD
+5+
+EVA
+5+
+ARM
+8
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 130/0
+TAGS: Biological, Light, Psionic, Ground
+ABILITIES
+ ANY PHASE
+Consume
+PASSIVE
+When this Unit resolves a Special Ability that costs BM, it can remove one model from a Friendly Unit Within 4" to generate 1 BM to spend towards that ability’s cost.
+ MOVEMENT PHASE
+Gestate Dark Swarm
+ACTIVE (0 BIOMASS)
+Set a Dark Swarm token in an unoccupied space Within 4" and Line of Sight of this Unit. The Dark Swarm token has DISPLACEMENT.
+ ASSAULT PHASE
+Dark Swarm
+REACTION (1 BIOMASS)
+REPEATABLE. Use when a Friendly Unit Within 4" of a Friendly Dark Swarm token is selected as the target of an attack. If this Unit is Within 4'' of the same token, the Targeted Friendly Unit is eligible to make an Evade Roll against that attack. If the targeted Unit is a Size 1, it gains a +1 Modifier to this Evade Roll.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 4+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Claws
+FOR -	E	Ground	4	3+	-	-	1	
+UPGRADES
+ MOVEMENT PHASE - UPGRADES
+Burrow Ambush PTS: 20
+PASSIVE
+When this Unit is nominated to deploy from Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be placed Within 10" of any Enemy model. This Unit's Activation ends.
+ ASSAULT PHASE - UPGRADES
+Plague PTS: 20
+ACTIVE (X BIOMASS)
+You may spend 1 to 3 BM to activate this ability. Set a Plague Blast Template Wholly Within 10" and Line of Sight of this Unit. For each Unit that has at least one model whose base is partially covered by the template, roll 2 dice, plus 1 additional die for each model in that Unit whose base is partially covered. That Unit loses its HIDDEN Status, and, depending on the BM spent, it suffers NON-LETHAL DAMAGE (1) for: 1 BM: each result of 5+. 2 BM: each result of 4+. 3 BM: each result of 3+.
+ COMBAT PHASE - UPGRADES
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD	PTS
+Cancerous Bite
+FOR -	E	Ground	2	3+	-	-	2	CRITICAL HIT (1), SIDEARM	20
+
+
+------------------------------------------------------------
+CARD: Hydralisk
+Elite
+ID: hydralisk
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/8
+SPD
+5+
+EVA
+5+
+ARM
+4
+HP
+2
+SIZ
+SQUAD:
+1 - 1
+MODELS
+1
+SUPPLY
+2 - 2
+MODELS
+2
+SUPPLY
+3 - 4
+MODELS
+3
+SUPPLY
+PTS: 140/260
+TAGS: Biological, Light, Ground
+ABILITIES
+ ANY PHASE
+Squadron
+PASSIVE
+This Unit’s Horizontal Coherency is 4".
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Needle Spines
+FOR -	12	All	3	3+	Light, Armoured	D3+1	2	
+Lunge
+REACTION (1 BIOMASS)
+When another Friendly Unit Within 10" is the target of a Ranged Attack, after the attack is fully resolved, this Unit, if Unengaged, may perform a Move action Directly Towards the attacking Unit.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Scythe
+FOR -	E	Ground	2	4+	-	-	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Ancillary Carapace PTS: 20/30
+PASSIVE
+This Unit gains TOUGH (1) on the first Armour Roll of each Activation.
+Lurking PTS: 10
+PASSIVE
+If this Unit has Stationary Status, it is eligible to make an Evade Roll against the first Ranged Attack targeting it this Round. If this Unit is ON CREEP, it gains +1 Modifier to this Evade Roll.
+ MOVEMENT PHASE - UPGRADES
+Burrow Ambush PTS: 20/40
+PASSIVE
+When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+ ASSAULT PHASE - UPGRADES
+Grooved Spines PTS: 20/30
+PASSIVE
+This Unit's Needle Spines ranged weapon gains LONG RANGE (16").
+
+
+------------------------------------------------------------
+CARD: Kerrigan UNIQUE
+Hero
+ID: kerrigan
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+7
+SPD
+6+
+EVA
+5+
+ARM
+9
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 250/0
+TAGS: Biological, Psionic, Ground, Unique
+ABILITIES
+ ANY PHASE
+Commander
+PASSIVE
+Treat this Unit’s Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks.
+ MOVEMENT PHASE
+Crushing Grip
+ACTIVE (1 BIOMASS)
+Select one Enemy Unit Within 12". That Unit counts as Activated in this Phase (set an Activation Marker next to it).
+Mutating Carapace
+ACTIVE (1 BIOMASS)
+Select one Enemy Unit Within 18". This Unit is eligible to make an Evade Roll against all attacks made by the selected Enemy Unit, with a +2 Modifier applied to those Evade Rolls.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Energy Blast
+FOR -	8	All	5	3+	Light, Armoured	D3	1	
+Leaping Strike
+ACTIVE (1 BIOMASS)
+If Unengaged, resolve the PLACE (6) effect.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 4+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Blades
+FOR -	E	Ground	6	4+	-	-	2	CRITICAL HIT (2)
+
+
+------------------------------------------------------------
+CARD: Kerrigan Swarm Raptor (Zergling) UNIQUE
+Elite
+ID: kerrigan_swarm_raptor__zergling_
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+5/9
+SPD
+4+
+EVA
+5+
+ARM
+2
+HP
+1
+SIZ
+SQUAD:
+1 - 3
+MODELS
+0
+SUPPLY
+4 - 6
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 230/0
+TAGS: Kerrigan's Swarm, Biological, Light, Ground, Unique
+ABILITIES
+ ANY PHASE
+Squadron
+PASSIVE
+This Unit’s Horizontal Coherency is 4".
+Raptor Strain
+PASSIVE
+This Unit can move through IMPASSABLE TERRAIN of Size 4 or less and change elevation without using ACCESS POINTS.
+ ASSAULT PHASE
+Leap
+ACTIVE (1 BIOMASS)
+When determining Charge Distance for this Unit, add 2 to the Charge Distance.
+Adrenal Overload
+ACTIVE (1 BIOMASS)
+This Unit gains a +1 Modifier to all IMPACT Hit Rolls.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (2) 5+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Claws
+FOR -	E	Ground	2	3+	Light, Armoured	D6	1	INSTANT
+
+
+------------------------------------------------------------
+CARD: Omega Worm
+Other
+ID: omega_worm
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+-
+SPD
+-
+EVA
+5+
+ARM
+10
+HP
+3
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+0
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 0
+TAGS: Kerrigan's Swarm, Armoured, Biological, Ground
+ABILITIES
+ ANY PHASE
+Detection
+PASSIVE
+While Enemy Units are Within 6" of this Unit, they lose HIDDEN Status.
+Source of Creep
+PASSIVE
+A Friendly or Enemy Ground Zerg Unit Within 6" of this Unit, counts as being ON CREEP.
+Structure
+PASSIVE
+This Unit cannot be Activated in any Phase and cannot perform actions. Additionally, its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers, ignoring the standard Zero Supply Exception. This Unit cannot be a target of an ability, unless stated otherwise.
+Omega Network
+PASSIVE
+The base of the Omega Worm counts as an Entry Edge. Each Round, Friendly Units with a combined Supply cost of 2 or less may be Deployed via this Entry Edge. If a Friendly Leading model finishes a Move, Disengage, or Run action in base-to-base contact with the Omega Worm, the controlling player may remove that Unit from the battlefield and return it to Reserves.
+
+
+------------------------------------------------------------
+CARD: Queen
+Support
+ID: queen
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4
+SPD
+-
+EVA
+4+
+ARM
+9
+HP
+3
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 140/0
+TAGS: Armoured, Biological, Psionic, Ground
+ABILITIES
+ ANY PHASE
+Spawn Creep Tumor
+ACTIVE (1 BIOMASS)
+Set a Creep Tumor token in base-to-base contact with this Unit.
+Transfusion
+REACTION (1 BIOMASS)
+Use when another Friendly Biological Unit (including a Structure) suffers Damage Within 4". Reduce the Total Damage before allocation by 2.
+Restoration
+REACTION (1 BIOMASS)
+Use when a Friendly Unit Within 4" receives a DEBUFF. Remove all DEBUFFS from it.
+Psionic Link
+PASSIVE
+Once per Round, if there are at least 7 Friendly models Within 6" of this Unit, it may resolve its Special Ability with the BM cost reduced by 1.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Talons
+FOR -	6	Ground	4	4+	Light	D3	2	
+Acid spines
+FOR -	12	Flying	4	4+	Light, Armoured	D3	2	
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 3+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Talons
+FOR -	E	Ground	3	4+	-	-	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Creep Speed PTS: 10
+PASSIVE
+While this Unit is ON CREEP, increase this Unit's Speed characteristic by 2.
+ MOVEMENT PHASE - UPGRADES
+Domineering Presence PTS: 10
+ACTIVE (1 BIOMASS)
+Select another Friendly Unit Within 6" (Line of Sight is not required). That Unit’s Supply characteristic is increased by 1 for Controlling and Contesting Mission Markers and completing objectives.
+
+
+------------------------------------------------------------
+CARD: Raptor (Zergling)
+Elite
+ID: raptor__zergling_
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+5/9
+SPD
+4+
+EVA
+6+
+ARM
+1
+HP
+1
+SIZ
+SQUAD:
+1 - 6
+MODELS
+0
+SUPPLY
+7 - 12
+MODELS
+1
+SUPPLY
+13 - 18
+MODELS
+2
+SUPPLY
+PTS: 210/260
+TAGS: Biological, Light, Ground
+ABILITIES
+ ANY PHASE
+Squadron
+PASSIVE
+This Unit’s Horizontal Coherency is 4".
+Raptor Strain
+PASSIVE
+This Unit can move through IMPASSABLE TERRAIN of Size 4 or less and change elevation without using ACCESS POINTS.
+ ASSAULT PHASE
+Adrenal Overload
+ACTIVE (1 BIOMASS)
+This Unit gains a +1 Modifier to all IMPACT Hit Rolls.
+Metabolic Boost
+ACTIVE (1 BIOMASS)
+When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit’s Speed characteristic.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 5+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Claws
+FOR -	E	Ground	2	4+	Light	D3	1	
+UPGRADES
+ MOVEMENT PHASE - UPGRADES
+Burrow Ambush PTS: 20/30
+PASSIVE
+When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+ COMBAT PHASE - UPGRADES
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD	PTS
+Shredding Claws
+FOR Claws	E	Ground	2	4+	Light, Armoured	D3	1		10
+Adrenal Glands PTS: 20
+PASSIVE
+This Unit’s Claws and Shredding Claws weapons gain PRECISION (2).
+
+
+------------------------------------------------------------
+CARD: Ravager
+Core
+ID: ravager
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/8
+SPD
+5+
+EVA
+5+
+ARM
+9
+HP
+3
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+2 - 2
+MODELS
+2
+SUPPLY
+PTS: 160/270
+TAGS: Armoured, Biological, Ground
+ABILITIES
+ ANY PHASE
+Squadron
+PASSIVE
+This Unit’s Horizontal Coherency is 4".
+ MOVEMENT PHASE
+Corrosive Bile
+ACTIVE (1 BIOMASS)
+For each model in this Unit, set one Corrosive Bile token on the battlefield Within 14" of that model. These tokens are not removed if this Unit is Destroyed. At the End of the Assault Phase, each Unit suffers HITS 5 (1) effect for each of this Unit's Corrosive Bile tokens it is Within 1" of. Then, remove all of this Unit's Corrosive Bile tokens from the battlefield. If multiple effects trigger at the End of the Assault Phase, resolve them in the order specified in Part 8.9.4.
+Deep Tunnel
+ACTIVE (1 BIOMASS)
+Set a Ravager Burrow token Wholly Within 12" of any model in this Unit. At the End of the Round, the controlling player may set all models of this Unit in Coherency, treating the Ravager Burrow token as the Leading Model. The Ravager Burrow token has DISPLACEMENT.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Plasma Discharge
+FOR -	12	Ground	4	3+	Light	D3+1	1	
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (2) 4+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Claws
+FOR -	E	Ground	2	4+	-	-	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Bloated Bile Ducts PTS: 20/40
+PASSIVE
+Increase the area of effect of this Unit's Corrosive Bile ability to 2".
+ MOVEMENT PHASE - UPGRADES
+Burrow Ambush PTS: 20/40
+PASSIVE
+When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+ ASSAULT PHASE - UPGRADES
+Potent Bile PTS: 20/40
+PASSIVE
+Before an Enemy Unit resolves an Armour Roll against the HITS effect generated by this Unit's Corrosive Bile ability, that Unit suffers DEBUFF Armour (1).
+
+
+------------------------------------------------------------
+CARD: Roach
+Core
+ID: roach
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/7
+SPD
+5+
+EVA
+3+
+ARM
+4
+HP
+2
+SIZ
+SQUAD:
+1 - 1
+MODELS
+0
+SUPPLY
+2 - 3
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 170/0
+TAGS: Armoured, Biological, Ground
+ABILITIES
+ ANY PHASE
+Burrow
+ACTIVE (2 BIOMASS)
+If this Unit is Unengaged, it gains or loses the Burrowed Status.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Acid Saliva
+FOR -	8	Ground	3	3+	-	-	1	
+Regeneration
+PASSIVE
+When this Unit becomes Activated, if it has the Burrowed Status, resolve the HEAL (2) effect.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (2) 4+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Claws
+FOR -	E	Ground	2	4+	-	-	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Tunneling Claws PTS: 10
+PASSIVE
+While this Unit has the Burrowed Status, it may perform the Move and Run actions without losing that Status. It may also move through other Units’ bases.
+ MOVEMENT PHASE - UPGRADES
+Burrow Ambush PTS: 20
+PASSIVE
+When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+Glial Reconstitution PTS: 10
+ACTIVE (1 BIOMASS)
+This Unit gains BUFF SPEED (1), or BUFF SPEED (2) if the Unit is ON CREEP.
+ ASSAULT PHASE - UPGRADES
+Hydriodic Bile PTS: 10
+PASSIVE
+This Unit's Acid Saliva weapon gains Surge Type: Light, and S Dice: D3+1.
+
+
+------------------------------------------------------------
+CARD: Roachling
+Other
+ID: roachling
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/7
+SPD
+6+
+EVA
+6+
+ARM
+1
+HP
+1
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 3
+MODELS
+0
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 0
+TAGS: Biological, Light, Ground
+ABILITIES
+ ANY PHASE
+Underdeveloped Claws
+PASSIVE
+This Unit cannot gain Burrowed Status.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Claws
+FOR -	E	Ground	2	4+	-	-	1
+
+
+------------------------------------------------------------
+CARD: Swarmling (Zergling)
+Core
+ID: swarmling__zergling_
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/8
+SPD
+5+
+EVA
+6+
+ARM
+1
+HP
+1
+SIZ
+SQUAD:
+1 - 6
+MODELS
+0
+SUPPLY
+7 - 18
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 210/0
+TAGS: Biological, Light, Ground
+ABILITIES
+ ANY PHASE
+Squadron
+PASSIVE
+This Unit’s Horizontal Coherency is 4".
+ MOVEMENT PHASE
+Zergling Reconstitution
+ACTIVE (1 BIOMASS)
+Resolve the RESPAWN (2) effect, or RESPAWN (3) if the Unit is ON CREEP.
+ ASSAULT PHASE
+Metabolic Boost
+ACTIVE (1 BIOMASS)
+When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit’s Speed characteristic.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 5+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Claws
+FOR -	E	Ground	2	5+	-	-	1	
+UPGRADES
+ MOVEMENT PHASE - UPGRADES
+Burrow Ambush PTS: 20
+PASSIVE
+When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+
+
+------------------------------------------------------------
+CARD: Vile (Roach)
+Core
+ID: vile__roach_
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/7
+SPD
+5+
+EVA
+3+
+ARM
+4
+HP
+2
+SIZ
+SQUAD:
+1 - 1
+MODELS
+0
+SUPPLY
+2 - 3
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 190/0
+TAGS: Armoured, Biological, Ground
+ABILITIES
+ ANY PHASE
+Debilitating Saliva
+REACTION (1 BIOMASS)
+Use when an Enemy Unit Within 8" of this Unit declares a Ranged Attack. Apply DEBUFF Hit (1) to each of that Unit's Ranged Weapons.
+Burrow
+ACTIVE (2 BIOMASS)
+If this Unit is Unengaged, it gains or loses the Burrowed Status.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Acid Saliva
+FOR -	8	Ground	4	3+	-	-	1	
+Regeneration
+PASSIVE
+When this Unit becomes Activated, if it has the Burrowed Status, resolve the HEAL (2) effect.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 4+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Vile Claws
+FOR -	E	Ground	2	4+	-	-	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Tunneling Claws PTS: 10
+PASSIVE
+While this Unit has the Burrowed Status, it may perform the Move and Run actions without losing that Status. It may also move through other Units’ bases.
+ MOVEMENT PHASE - UPGRADES
+Burrow Ambush PTS: 20
+PASSIVE
+When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+Glial Reconstitution PTS: 10
+ACTIVE (1 BIOMASS)
+This Unit gains BUFF SPEED (1), or BUFF SPEED (2) if the Unit is ON CREEP.
+ ASSAULT PHASE - UPGRADES
+Hydriodic Bile PTS: 10
+PASSIVE
+This Unit's Acid Saliva weapon gains Surge Type: Light, and S Dice: D3+1.
+
+
+------------------------------------------------------------
+CARD: Vileling (Zergling)
+Core
+ID: vileling__zergling_
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/8
+SPD
+5+
+EVA
+6+
+ARM
+1
+HP
+1
+SIZ
+SQUAD:
+1 - 6
+MODELS
+1
+SUPPLY
+7 - 18
+MODELS
+2
+SUPPLY
+PTS: 180/0
+TAGS: Zerg, Zagara's Swarm, Biological, Light, Ground
+ABILITIES
+ ANY PHASE
+Squadron
+PASSIVE
+This Unit’s Horizontal Coherency is 4".
+ MOVEMENT PHASE
+Burrow Ambush
+PASSIVE
+When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+Zergling Reconstitution
+ACTIVE (1 BIOMASS)
+Resolve the RESPAWN (2) effect, or RESPAWN (3) if the Unit is ON CREEP.
+ ASSAULT PHASE
+Metabolic Boost
+ACTIVE (1 BIOMASS)
+When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit’s Speed characteristic.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 5+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Claws
+FOR -	E	Ground	2	5+	-	-	1	
+Debilitating Claws
+PASSIVE
+After an Enemy Unit suffers Damage from this Unit, apply DEBUFF Hit (1) to each of that Unit's Weapons.
+
+
+------------------------------------------------------------
+CARD: Zagara UNIQUE
+Hero
+ID: zagara
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+7
+SPD
+6+
+EVA
+4+
+ARM
+10
+HP
+3
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 250/0
+TAGS: Biological, Psionic, Ground, Unique
+ABILITIES
+ ANY PHASE
+Commander
+PASSIVE
+Treat this Unit’s Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks.
+Transfusion
+REACTION (1 BIOMASS)
+Use when another Friendly Biological Unit (including a Structure) suffers Damage Within 4". Reduce the Total Damage before allocation by 2.
+Psionic Link
+PASSIVE
+Once per Round, if there are at least 7 Friendly models Within 6" of this Unit, it may resolve its Special Ability with the BM cost reduced by 1.
+ MOVEMENT PHASE
+Broodmother
+ACTIVE (1 BIOMASS)
+Apply one of the following effects to all Friendly units (Line of Sight is not required). You cannot apply the effect chosen in the previous Game Round: Units of Size 1 gain a +1 Modifier to all IMPACT Rolls. All weapons of Size 2 Units gain CRITICAL HIT (1). Units of Size 3 or more gain TOUGH (1).
+Infested Drop
+PASSIVE
+The base of the Zagara counts as an Entry Edge. Each Round, Friendly Units with a combined Supply cost of 1 may be Deployed via this Entry Edge.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Zagara's Talons
+FOR -	8	Ground	4	3+	Light, Armoured	D3	2	
+Zagara's Acid Spines
+FOR -	14	Flying	8	3+	Light, Armoured	D3	1	
+Indomitable
+PASSIVE
+While Engaged, this Unit may target and be targeted by Unengaged Enemy Units. In both cases, the defending Unit gains an Evade Roll against those attacks.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (6) 3+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Talons
+FOR -	E	Ground	4	3+	-	-	1
+
+
+------------------------------------------------------------
+CARD: Zergling
+Core
+ID: zergling
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/8
+SPD
+4+
+EVA
+6+
+ARM
+1
+HP
+1
+SIZ
+SQUAD:
+1 - 6
+MODELS
+0
+SUPPLY
+7 - 12
+MODELS
+1
+SUPPLY
+13 - 18
+MODELS
+2
+SUPPLY
+PTS: 150/210
+TAGS: Biological, Light, Ground
+ABILITIES
+ ANY PHASE
+Squadron
+PASSIVE
+This Unit’s Horizontal Coherency is 4".
+ ASSAULT PHASE
+Metabolic Boost
+ACTIVE (1 BIOMASS)
+When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit’s Speed characteristic.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (1) 5+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Claws
+FOR -	E	Ground	2	4+	Light	D3	1	
+UPGRADES
+ MOVEMENT PHASE - UPGRADES
+Burrow Ambush PTS: 20/30
+PASSIVE
+When this Unit is nominated to deploy from the Reserves, it may resolve the PLACE (18) effect from the controlling player's Entry Edge. No model may be set Within 10" of any Enemy model. This Unit's Activation ends.
+ COMBAT PHASE - UPGRADES
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD	PTS
+Shredding Claws
+FOR Claws	E	Ground	2	4+	Light, Armoured	D3	1		10
+Adrenal Glands PTS: 20
+PASSIVE
+This Unit’s Claws and Shredding Claws weapons gain PRECISION (2).
+
+
+
+### TACTICAL CARDS (14)
+
+
+------------------------------------------------------------
+CARD: Accelerating Creep UNIQUE
+0 Gas
+ID: accelerating_creep
+------------------------------------------------------------
+ART PLACEHOLDER
+CARD ABILITIES
+ ANY PHASE
+Speed on Creep
+PASSIVE
+If the active Friendly Zerg Unit is ON CREEP, increase its Speed characteristic by 1.
+Living Glob of Tissue
+PASSIVE
+Creep Tumor tokens have STAY IN PLAY and DISPLACEMENT.
+Creep Removal
+PASSIVE
+If an Enemy Unit ends a Move, Deploy, Run, Charge or Disengage action Within 1" of a Friendly Creep Tumor token, remove that token from the battlefield.
+
+
+------------------------------------------------------------
+CARD: Cocoon UNIQUE
+30 Gas
+ID: cocoon
+------------------------------------------------------------
+ART PLACEHOLDER
+ELITE SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Spawn Larva
+ACTIVE
+The active Friendly non-Unique Biological Unit with a Size Characteristic of 1 resolves the RESPAWN (2) effect.
+Ravager Morph
+ACTIVE
+Once per Game. The active Friendly Roach Unit performs MORPH (Ravager) 1.
+
+
+------------------------------------------------------------
+CARD: Defiler Mound UNIQUE
+35 Gas
+ID: defiler_mound
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+ELITE SLOT
+1
+SUPPORT SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Poisonous Essence
+ACTIVE
+Set a Faction Indicator on the active Friendly Unit. At the end of the Assault Phase, all Biological Enemy Units Engaged with the marked Unit suffer NON-LETHAL DAMAGE (2).
+Tunnel Network
+ACTIVE
+The active, Unengaged Ground Unit is returned to Reserves instead of performing an action.
+
+
+------------------------------------------------------------
+CARD: Evolution Chamber
+25 Gas
+ID: evolution_chamber
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+CORE SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Carapace
+REACTION
+Use before a Friendly Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.
+ ASSAULT PHASE
+Extended Claws
+ACTIVE
+The active Unit gains a +1 Modifier to all IMPACT Hit Rolls.
+
+
+------------------------------------------------------------
+CARD: Hatchery
+30 Gas
+ID: hatchery
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+SUPPORT SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Lie in Wait
+ACTIVE
+The active, Unengaged Ground Unit gains the Burrowed Status.
+Creep Spread
+ACTIVE
+Set a Creep Tumor token on the battlefield Within 6" (Line of Sight is not required) of either a Friendly Entry Edge or an existing Friendly Creep Tumor token.
+
+
+------------------------------------------------------------
+CARD: Hydralisk Den
+30 Gas
+ID: hydralisk_den
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+ELITE SLOT
+2
+CARD ABILITIES
+ ASSAULT PHASE
+Missile Attacks
+ACTIVE
+The active Unit’s first Ranged Weapon used gains PRECISION (1).
+
+
+------------------------------------------------------------
+CARD: Lair UNIQUE
+35 Gas
+ID: lair
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+ELITE SLOT
+1
+CORE SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Predation
+ACTIVE
+The active Unit’s Close Combat Weapons gain INSTANT.
+ MOVEMENT PHASE
+Creep Spread
+ACTIVE
+Set a Creep Tumor token on the battlefield Within 6" (Line of Sight is not required) of either a Friendly Entry Edge or an existing Friendly Creep Tumor token.
+
+
+------------------------------------------------------------
+CARD: Malignant Creep UNIQUE
+10 Gas
+ID: malignant_creep
+------------------------------------------------------------
+ART PLACEHOLDER
+CARD ABILITIES
+ ANY PHASE
+Living Glob of Tissue
+PASSIVE
+Creep Tumor tokens have STAY IN PLAY and DISPLACEMENT.
+Creep Removal
+PASSIVE
+If an Enemy Unit ends a Move, Deploy, Run, Charge or Disengage action Within 1" of a Friendly Creep Tumor token, remove that token from the battlefield.
+ ASSAULT PHASE
+Malevolent Matriarch
+PASSIVE
+If the active Friendly Zerg Unit declares a Charge action while ON CREEP, it gains +1 Modifier to IMPACT Hit Rolls.
+
+
+------------------------------------------------------------
+CARD: Overlord UNIQUE
+35 Gas
+ID: overlord
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+HERO SLOT
+1
+ELITE SLOT
+1
+CORE SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Ventral Sacs
+ACTIVE
+Set a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.
+ ASSAULT PHASE
+Excrete Creep
+ACTIVE
+Set a Creep Tumor token on the battlefield Within 6" (Line of Sight is not required) of either a Friendly Entry Edge or an existing Friendly Creep Tumor token.
+
+
+------------------------------------------------------------
+CARD: Overseer UNIQUE
+25 Gas
+ID: overseer
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+SUPPORT SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Oversight Mode
+ACTIVE
+Set a Faction Indicator anywhere on the battlefield. While Enemy Units are Within 6" of this Faction Indicator, they lose HIDDEN Status.
+ ASSAULT PHASE
+Pneumatized Carapace
+REACTION
+Use after a Friendly Unit rolls a D6 for Charge Distance. Roll an additional D6 and use the higher result to calculate the total Charge Distance.
+
+
+------------------------------------------------------------
+CARD: Reactive Creep UNIQUE
+10 Gas
+ID: reactive_creep
+------------------------------------------------------------
+ART PLACEHOLDER
+CARD ABILITIES
+ ANY PHASE
+Reactive Tissue
+PASSIVE
+While a Friendly Zerg Unit is ON CREEP, it gains DODGE (1) against any attacks targeting it.
+Living Glob of Tissue
+PASSIVE
+Creep Tumor tokens have STAY IN PLAY and DISPLACEMENT.
+Creep Removal
+PASSIVE
+If an Enemy Unit ends a Move, Deploy, Run, Charge or Disengage action Within 1" of a Friendly Creep Tumor token, remove that token from the battlefield.
+
+
+------------------------------------------------------------
+CARD: Roach Warren
+25 Gas
+ID: roach_warren
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+CORE SLOT
+1
+CARD ABILITIES
+ ASSAULT PHASE
+Nasty Surprise
+ACTIVE
+The active Ground Unit loses the Burrowed Status.
+
+
+------------------------------------------------------------
+CARD: Spawning Pool
+25 Gas
+ID: spawning_pool
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 BM
+CORE SLOT
+1
+CARD ABILITIES
+ COMBAT PHASE
+Feral Rage
+ACTIVE
+The active Unit’s first Close Combat Weapon used gains PRECISION (2).
+
+
+------------------------------------------------------------
+CARD: Spawning Pool (Six Pool) UNIQUE
+35 Gas
+ID: spawning_pool__six_pool_
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++2 BM
+CORE SLOT
+2
+CARD ABILITIES
+ MOVEMENT PHASE
+Timing Push
+ACTIVE
+The active Zergling Unit Deploys from any table edge that is not a Player’s Entry Edge. This action must end more than 10" away from any Enemy model.
+ COMBAT PHASE
+Feral Rage
+ACTIVE
+The active Unit’s first Close Combat Weapon used gains PRECISION (2).
+
+
+======================================================================
+FACTION: TERRAN
+======================================================================
+
+
+### FACTION CARDS (3)
+
+
+------------------------------------------------------------
+CARD: Nova Covert Ops UNIQUE
+Faction Card
+ID: nova_covert_ops
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+HERO SLOT
+1
+ELITE SLOT
+1
+CORE SLOT
+3
+SUPPORT SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Griffin Support
+ACTIVE
+Set a Friendly Sabotage Drone Unit Within 12" of a Friendly Unit, more than 1" away from any Enemy model. Remove this Unit at the End of the Round.
+Mark for Death
+ACTIVE
+Target an Enemy Unit on the battlefield. When a Friendly Unit makes an Attack targeting that Unit, its first Melee or Ranged Weapon used gains CRITICAL HIT (1) and PRECISION (1).
+
+
+------------------------------------------------------------
+CARD: Raynor's Raiders UNIQUE
+Faction Card
+ID: raynor_s_raiders
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+HERO SLOT
+1
+CORE SLOT
+3
+SUPPORT SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Rapid Ingress
+ACTIVE
+Set a Friendly Point Defence Drone Unit anywhere on the battlefield, more than 1" away from any Enemy model. Remove this Unit at the End of the Round.
+Ready for Pickup?
+ACTIVE
+Once per Game. The active Unit resolves the PLACE (12) effect. Models set by this effect cannot be set up Within the Engagement Range of any Enemy Unit. This resolves instead of performing a standard action.
+
+
+------------------------------------------------------------
+CARD: Terran Armed Forces UNIQUE
+Faction Card
+ID: terran_armed_forces
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+ELITE SLOT
+1
+CORE SLOT
+3
+SUPPORT SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Tactical Retreat
+ACTIVE
+The active Unit ignores the Disengage penalty for the remainder of the Round.
+Terran Tenacity
+ACTIVE
+Once per Game. Immediately claim the First Player Marker. No other player may claim the First Player Marker for the remainder of this Phase.
+
+
+
+### UNIT CARDS (15)
+
+
+------------------------------------------------------------
+CARD: Auto-Turret
+Other
+ID: auto_turret
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+-
+SPD
+-
+EVA
+5+
+ARM
+3
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+0
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 0
+TAGS: Armoured, Mechanical, Ground
+ABILITIES
+ ANY PHASE
+Timed Life
+PASSIVE
+Remove this Unit at the End of the Round.
+Structure
+PASSIVE
+This Unit cannot be Activated in any Phase and cannot perform actions. Additionally, its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers, ignoring the standard Zero Supply Exception. This Unit cannot be a target of an ability, unless stated otherwise.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Gauss Cannon	8''	All	6	3+	-	-	1	PINPOINT
+Overwatch
+REACTION (0 COMMAND POINT)
+Use when an Enemy Unit ends its Activation Within 8" of this Unit. This Unit immediately performs a Ranged Attack against that Enemy Unit.
+
+
+------------------------------------------------------------
+CARD: Goliath
+Elite
+ID: goliath
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+7
+SPD
+-
+EVA
+4+
+ARM
+10
+HP
+3
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+2
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 180/0
+TAGS: Armoured, Mechanical, Ground
+ABILITIES
+ MOVEMENT PHASE
+Target Lock
+ACTIVE (1 COMMAND POINT)
+Select one Enemy Unit Within 12". Whenever a Friendly Goliath Unit targets that enemy with an Autocannon, that weapon gains Surge Type: Light, Armoured, and S Dice: D3+1.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Autocannon
+FOR -	12	Ground	9	4+	-	-	1	LONG RANGE (18")
+Underbelly Machine Gun
+FOR -	8	Ground	6	3+	Light	D3	1	PINPOINT, SIDEARM
+Hellfire Missiles
+FOR -	16	Flying	6	3+	Light	D3	1	ANTI-EVADE (1), SIDEARM
+Indomitable
+PASSIVE
+While Engaged, this Unit may target and be targeted by Unengaged Enemy Units. In both cases, the defending Unit gains an Evade Roll against those attacks.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 3+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Stomp
+FOR -	E	Ground	4	5+	-	-	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Ares-Class Targeting System PTS: 20
+PASSIVE
+This Unit’s Autocannon and Underbelly Machine Gun weapons gain PRECISION (1).
+ ASSAULT PHASE - UPGRADES
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD	PTS
+Scatter Missiles
+FOR Hellfire Missiles	18	Ground	6	5+	Light	D3	1	INDIRECT FIRE, LOCKED IN (6), LONG RANGE (24"), SIDEARM	30
+Haywire Missiles
+FOR Hellfire Missiles	12	Ground	3	3+	Armoured	D3	1	PIERCE Armoured (3), SIDEARM	40
+
+
+------------------------------------------------------------
+CARD: Holo Decoy
+Other
+ID: holo_decoy
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+7
+SPD
+6+
+EVA
+6+
+ARM
+1
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1-1
+MODELS
+0
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 0
+TAGS: Biological, Psionic, Ground
+ABILITIES
+ ANY PHASE
+Lethal Hologram
+PASSIVE
+All Weapons of Friendly Units targeting an Enemy Unit Within 4" of this Unit gain PRECISION (1).
+Timed Life
+PASSIVE
+Remove this Unit at the End of the Round.
+Decoy
+PASSIVE
+This Unit is never Engaged. It cannot Engage Enemy Units, cannot be Engaged by Enemy Units and cannot perform a Charge Action. This Unit cannot be the target of an ability, unless stated otherwise. It can never Control or Contest Mission Markers.
+Surprise!
+PASSIVE
+At the End of the Round, you can set a Friendly Nova Stealth Mode or Nova Assault Mode in Coherency with this Unit.
+
+
+------------------------------------------------------------
+CARD: Jim Raynor UNIQUE
+Hero
+ID: jim_raynor
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+7
+SPD
+5+
+EVA
+4+
+ARM
+8
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 280/0
+TAGS: Biological, Ground, Unique
+ABILITIES
+ ANY PHASE
+Commander
+PASSIVE
+Treat this Unit’s Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks.
+Freedom Fighters
+PASSIVE
+The Supply Value of all Friendly Units Within 8" of this Unit cannot be reduced below 1 for Contesting Mission Markers and completing objectives.
+ MOVEMENT PHASE
+Orders
+ACTIVE (X COMMAND POINT)
+REPEATABLE. Select another Friendly Biological Unit Within 8", spend CP and apply one of the following effects: 1 CP: That Unit’s first used weapon gains the CRITICAL HIT (2). 1 CP: That Unit ignores the Disengage penalty for the remainder of the Round. 2 CP: Remove the Activation Marker from that Unit.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Commando Rifle
+FOR -	18	All	3	3+	Armoured	D3	1	BULKY, PIERCE Armoured (3)
+C-14 Rifle
+FOR Commando Rifle	12	All	6	3+	Light	D3+1	1	BURST FIRE 8" (3)
+“Justice” Revolver
+FOR -	6	Ground	2	3+	-	-	2	ANTI-EVADE (2), SIDEARM, PINPOINT
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Bayonet
+FOR -	E	Ground	2	4+	Light	D3	1
+
+
+------------------------------------------------------------
+CARD: Marauder
+Core
+ID: marauder
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/7
+SPD
+6+
+EVA
+4+
+ARM
+5
+HP
+2
+SIZ
+SQUAD:
+1 - 1
+MODELS
+0
+SUPPLY
+2 - 2
+MODELS
+1
+SUPPLY
+3 - 4
+MODELS
+2
+SUPPLY
+PTS: 160/290
+TAGS: Armoured, Biological, Ground
+ABILITIES
+ MOVEMENT PHASE
+Stimpack
+ACTIVE (1 COMMAND POINT)
+This Unit suffers NON-LETHAL DAMAGE (2). This Unit gains BUFF Speed (3). Additionally, its Quad K12 and all Close Combat Weapons gain PRECISION (2).
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Quad K12
+FOR -	12	Ground	3	3+	Armoured	D3	1	PIERCE Armoured (2)
+Concussive Shells
+REACTION (1 COMMAND POINT)
+When an Enemy declares a Charge against a Friendly Unit Within 8", that Enemy gains DEBUFF Speed (2).
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Strike
+FOR -	E	Ground	2	4+	-	-	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Veteran of Tarsonis PTS: 20/40
+PASSIVE
+While this Unit is Within 3" of a Mission Marker, its Armour characteristic is increased by 1.
+Kinetic Foam PTS: 20/40
+PASSIVE
+Increase this Unit's Hit Points characteristic by 1.
+ ASSAULT PHASE - UPGRADES
+Laser Targeting Systems PTS: 20/40
+PASSIVE
+This Unit’s Quad K12 weapon gains LONG RANGE (16").
+
+
+------------------------------------------------------------
+CARD: Marine
+Core
+ID: marine
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/7
+SPD
+5+
+EVA
+5+
+ARM
+2
+HP
+2
+SIZ
+SQUAD:
+1 - 3
+MODELS
+0
+SUPPLY
+4 - 6
+MODELS
+1
+SUPPLY
+7 - 9
+MODELS
+2
+SUPPLY
+PTS: 170/220
+TAGS: Biological, Light, Ground
+ABILITIES
+ MOVEMENT PHASE
+Stimpack
+ACTIVE (1 COMMAND POINT)
+This Unit suffers NON-LETHAL DAMAGE (2). This Unit gains BUFF Speed (3). Additionally, its C-14 Rifle and all Close Combat Weapons gain PRECISION (3).
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+C-14 rifle
+FOR -	12	All	2	3+	Light	D3	1	
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Strike
+FOR -	E	Ground	1	5+	-	-	1	
+UPGRADES
+ MOVEMENT PHASE - UPGRADES
+Combat Shield PTS: 20/30
+ACTIVE (1 COMMAND POINT)
+This Unit is always eligible to make an Evade Roll against any Close Combat Attack targeting it and any Damage from an Enemy Special Ability.
+ ASSAULT PHASE - UPGRADES
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD	PTS
+AGG-12
+FOR C-14 Rifle	12	Ground	2	3+	Armoured	D3	1	LONG RANGE (18"), SPECIALIST	10
+Rocket Launcher
+FOR -	12	Ground	4	3+	-	-	1	INDIRECT FIRE, LONG RANGE (18"), SIDEARM, SPECIALIST	40
+Slugthrower PTS: 10/20
+PASSIVE
+When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8", that weapon gains ANTI-EVADE (1).
+Grenades - Frag PTS: 10
+PASSIVE
+When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8", that weapon’s S Dice is replaced by D6.
+ COMBAT PHASE - UPGRADES
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD	PTS
+Bayonet
+FOR Strike	E	Ground	2	5+	-	-	1		20/30
+
+
+------------------------------------------------------------
+CARD: Medic
+Support
+ID: medic
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/7
+SPD
+5+
+EVA
+5+
+ARM
+2
+HP
+2
+SIZ
+SQUAD:
+1 - 1
+MODELS
+0
+SUPPLY
+2 - 3
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 120/0
+TAGS: Biological, Light, Ground
+ABILITIES
+ ANY PHASE
+Life Support
+REACTION (1 COMMAND POINT)
+Use when another Friendly Biological Unit suffers Damage Within 4". Reduce the Total Damage before allocation by 1 for each model in this Unit that is Within 4" of the damaged Unit.
+Restoration
+REACTION (1 COMMAND POINT)
+Use when a Friendly Unit Within 4" receives a DEBUFF. Remove all DEBUFFS from it.
+ MOVEMENT PHASE
+Medpack
+ACTIVE (1 COMMAND POINT)
+Select another Friendly Biological Unit Within 4". Resolve the HEAL (X) effect for the targeted Unit, where X is the number of models in this Unit that are Within 4" of the target Unit.
+Optical Flare
+ACTIVE (2 COMMAND POINT)
+Select one Enemy Unit Within 12". Until the End of the Round, apply DEBUFF Range (4) to that Unit’s Ranged Weapons. That Unit cannot benefit from LONG RANGE.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Strike
+FOR -	E	Ground	1	5+	-	-	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Advanced Medic Facilities PTS: 60
+PASSIVE
+This Unit’s Supply Value counts as 0 when calculating the Supply Pool.
+A-13 Flash Grenade Launcher PTS: 20
+PASSIVE
+Increase the Optical Flare special ability's Range to 16".
+Stabilizer Medpacks PTS: 20
+PASSIVE
+When this Unit resolves a Life Support or Medpack ability, treat it as having 1 additional model Within Range for calculating that ability's effects.
+
+
+------------------------------------------------------------
+CARD: Nova Assault Mode UNIQUE
+Hero
+ID: nova_assault_mode
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+7
+SPD
+5+
+EVA
+5+
+ARM
+8
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 260/0
+TAGS: Biological, Psionic, Ground, Unique
+ABILITIES
+ ANY PHASE
+Battle Preparation
+PASSIVE
+During Army Building, your army cannot include both the Nova Assault Mode Unit and the Nova Stealth Mode Unit.
+Ghost Visor
+PASSIVE
+While Enemy Units are Within 6" of this Unit, they lose the HIDDEN Status.
+ MOVEMENT PHASE
+Holo Decoy
+ACTIVE (1 COMMAND POINT)
+Resolve the SUMMON (Holo Decoy) effect. Then, Holo Decoy may immediately perform a Move action.
+Super Stimpack
+ACTIVE (1 COMMAND POINT)
+This Unit gains BUFF Speed (2). Additionally, all its Weapons gain PRECISION (2).
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Hellfire Shotgun
+FOR -	8	Ground	3	4+	Light	D3	2	ANTI-EVADE (1), BURST FIRE 4" (3)
+Phase Reactor Suit
+ACTIVE (1 COMMAND POINT)
+If Unengaged, resolve the PLACE (6) effect.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 4+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Monomolecular Blade	E	Ground	8	3+	Light, Armoured	D6	1
+
+
+------------------------------------------------------------
+CARD: Nova Stealth Mode UNIQUE
+Hero
+ID: nova_stealth_mode
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+7
+SPD
+5+
+EVA
+5+
+ARM
+8
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 240/0
+TAGS: Biological, Psionic, Ground, Unique
+ABILITIES
+ ANY PHASE
+Battle Preparation
+PASSIVE
+During Army Building, your army cannot include both the Nova Assault Mode Unit and the Nova Stealth Mode Unit.
+Tactical Stealth Suit
+PASSIVE
+After this Unit fully resolves an Action, it gains the HIDDEN Status.
+Ghost Visor
+PASSIVE
+While Enemy Units are Within 6" of this Unit, they lose the HIDDEN Status.
+ MOVEMENT PHASE
+Super Stimpack
+ACTIVE (1 COMMAND POINT)
+This Unit gains BUFF Speed (2). Additionally, all its Weapons gain PRECISION (2).
+Holo Decoy
+ACTIVE (1 COMMAND POINT)
+Resolve the SUMMON (Holo Decoy) effect. Then, Holo Decoy may immediately perform a Move action.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+C-20A Canister Rifle
+FOR -	12	All	4	3+	-	-	2	CRITICAL HIT (2), LONG RANGE (18")
+Operational Efficiency
+PASSIVE
+After this Unit fully resolves a Ranged Attack with its C-20A Canister Rifle, if the target Enemy Unit was Destroyed or its Current Supply Value was reduced, the active player may return one of their Exhausted non-Unique Tactical Cards to its Ready state.
+Head Shot
+REACTION (1 COMMAND POINT)
+Once Per Game. While this Unit is Unengaged and has the Stationary Status, when it makes a Ranged Attack with its C-20A Canister Rifle, treat that weapon's Damage characteristic as 3, and it gains CONCENTRATED FIRE (1).
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Combat Knife
+FOR -	E	Ground	3	5+	-	-	1	-
+
+
+------------------------------------------------------------
+CARD: Point Defense Drone
+Other
+ID: point_defense_drone
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+-
+SPD
+6+
+EVA
+6+
+ARM
+3
+HP
+-
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+0
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 0
+TAGS: Raynor's Raiders, Armoured, Flying, Mechanical
+ABILITIES
+ ANY PHASE
+Point Defense Laser
+PASSIVE
+When another Friendly Unit Within 4" is targeted by a Ranged Attack without the INSTANT keyword, remove up to 2 dice from the Attack Pool. Then remove this Unit from the battlefield.
+Gliding
+PASSIVE
+This model has DISPLACEMENT.
+Structure
+PASSIVE
+This Unit cannot be Activated in any Phase and cannot perform actions. Additionally, its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers, ignoring the standard Zero Supply Exception. This Unit cannot be a target of an ability, unless stated otherwise.
+
+
+------------------------------------------------------------
+CARD: Raven
+Support
+ID: raven
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+7
+SPD
+6+
+EVA
+5+
+ARM
+8
+HP
+-
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 170/0
+TAGS: Light, Mechanical, Flying
+ABILITIES
+ ANY PHASE
+Detection
+PASSIVE
+While Enemy Units are Within 6" of this Unit, they lose the HIDDEN Status.
+ MOVEMENT PHASE
+Deploy Auto-Turret
+ACTIVE (1 COMMAND POINT)
+Set a Friendly Auto-Turret Unit Within 6", and not Within the Engagement Range of any Enemy Unit.
+Anti-Armour Missile
+ACTIVE (1 COMMAND POINT)
+Select one Enemy Unit Within 12". Apply DEBUFF Armour (1).
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Railguns	12''	Ground	4	3+	-	-	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Corvid Reactor PTS: 30
+PASSIVE
+This Unit may resolve its first Special Ability with the CP cost reduced by 1 if it targets the closest Enemy Unit.
+ MOVEMENT PHASE - UPGRADES
+Internal Tech Module PTS: 20
+PASSIVE
+When this Unit is nominated to deploy from Reserves, it may Deploy from any table edge that is not a player's Entry Edge. This Unit cannot be set Within 8" of any Enemy model.
+Seeker Missile PTS: 20
+ACTIVE (1 COMMAND POINT)
+Select one Enemy Unit Within 12". At the End of the Assault Phase, if that Enemy Unit has the Stationary Status or it is Within 8'' of this Unit, it suffers HITS 4 (2). If that Unit is Engaged, it is eligible to make an Evade Roll against these hits.
+ ASSAULT PHASE - UPGRADES
+Explosive Shrapnel Shells PTS: 10
+PASSIVE
+The Gauss Cannon of the Auto-Turret set by this Unit gains Surge Type: Light and S-Dice: D3+1.
+
+
+------------------------------------------------------------
+CARD: Raynor's Raider (Marine)
+Core
+ID: raynor_s_raider__marine_
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/7
+SPD
+5+
+EVA
+5+
+ARM
+2
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 6
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 230/0
+TAGS: Raynor's Raiders, Biological, Light, Ground
+ABILITIES
+ MOVEMENT PHASE
+Stimpack
+ACTIVE (1 COMMAND POINT)
+This Unit suffers NON-LETHAL DAMAGE (2). This Unit gains BUFF Speed (3). Additionally, its C-14 Rifle and all Close Combat Weapons gain PRECISION (3).
+Raiders Roll!
+PASSIVE
+When this Unit is nominated to deploy from Reserves, it may resolve its Stimpack ability with the CP cost reduced by 1 (to a minimum of 0).
+Rapid Reinforcements
+PASSIVE
+When this Unit is nominated to deploy from Reserves, it may resolve the PLACE (10) effect from another Friendly Unit. No model may be set Within 8" of any Enemy model. This Unit's Activation ends.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+C-14 rifle
+FOR -	12	All	2	3+	Light	D3	1	
+Slugthrower
+PASSIVE
+When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8", that weapon gains ANTI-EVADE (1).
+Grenades - Frag
+PASSIVE
+When this Unit makes a Ranged Attack with a C-14 Rifle and the target is Within 8", that weapon’s S Dice is replaced by D6.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Bayonet
+FOR -	E	Ground	2	5+	-	-	1
+
+
+------------------------------------------------------------
+CARD: Sabotage Drone
+Other
+ID: sabotage_drone
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+-
+SPD
+6+
+EVA
+6+
+ARM
+3
+HP
+1
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1-1
+MODELS
+0
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 0
+TAGS: Armoured, Mechanical, Ground
+ABILITIES
+ ANY PHASE
+Structure
+PASSIVE
+This Unit cannot be Activated in any Phase and cannot perform actions. Additionally, its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers, ignoring the standard Zero Supply Exception. This Unit cannot be a target of an ability, unless stated otherwise.
+ ASSAULT PHASE
+Have a Nice Day
+PASSIVE
+At the End of the Assault Phase, target each Unit Within 3" of this Unit (including Units with the Structure ability) suffers HITS 5 (1). If an affected Unit has the Structure ability, that Unit suffers an additional HITS 5 (1).
+
+
+------------------------------------------------------------
+CARD: Siege Tank
+Elite
+ID: siege_tank
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+7
+SPD
+-
+EVA
+5+
+ARM
+14
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+2
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 220/0
+TAGS: Armoured, Mechanical, Ground
+ABILITIES
+ ANY PHASE
+Large
+PASSIVE
+When this Unit's Leading Model moves, it cannot pass through physical gaps smaller than 3" wide, regardless of its size. If the Leading Model's path of travel passes through, or any model in this Unit ends its movement on a Size 0 or Size 1 Impassible Terrain piece (excluding Tokens) during any movement action, that terrain piece is immediately removed from the game.
+Heavy Plating
+PASSIVE
+When this Unit resolves an Armour Roll, it gains TOUGH (1), provided it does not currently have the SIEGE MODE Status.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Twin Cannon
+FOR -	12	Ground	8	3+	Armoured	D6	1	PIERCE Armoured (2)
+Shock Cannon
+FOR -	18	Ground	BT+4	4+	Light, Armoured	BT	1	SIEGE MODE Status
+Indomitable
+PASSIVE
+While Engaged, this Unit may target and be targeted by Unengaged Enemy Units. In both cases, the defending Unit gains an Evade Roll against those attacks.
+Point Blank
+PASSIVE
+While this Unit has the SIEGE MODE Status, it cannot target Enemy Units it is Engaged with.
+Aftershock Rounds
+PASSIVE
+When this Unit has the SIEGE MODE Status, its Damage characteristic is treated as equal to the Size characteristic of the current target Unit (to a minimum of 1).
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 3+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Rolling Over
+FOR -	E	Ground	2	2+	-	-	1	
+UPGRADES
+ MOVEMENT PHASE - UPGRADES
+Mode Transformation PTS: 20
+ACTIVE (1 COMMAND POINT)
+The active Unit gains or loses the SIEGE MODE Status. While this Unit has the SIEGE MODE Status, its Size characteristic is treated as if it was 3.
+Coordinated Strike PTS: 20
+ACTIVE (0 COMMAND POINT)
+Target a Friendly Non-Engaged Unit on the battlefield (Line of Sight is not required). When this Unit resolves a Ranged Attack using the Shock Cannon weapon profile this Round, it may choose to ignore the weapon's standard Range characteristic. If it does, it may target an Enemy Unit that is Within 8" of, and Visible to, a model of the selected Friendly Unit, treating that model as the acting model.
+ ASSAULT PHASE - UPGRADES
+Shaped Blast PTS: 10
+REACTION (0 COMMAND POINT)
+Once per Game. When this Unit declares a Ranged Attack action. If this Unit has SIEGE MODE Status, its weapon gains PINPOINT and LOCKED IN (4).
+Smart Shells PTS: 10
+REACTION (0 COMMAND POINT)
+Once per Game. When this Unit declares a Ranged Attack action. If this Unit has SIEGE MODE Status, its weapon gains INDIRECT FIRE and LONG RANGE (24).
+
+
+------------------------------------------------------------
+CARD: Spec Ops Marauder (Marauder)
+Core
+ID: spec_ops_marauder__marauder_
+------------------------------------------------------------
+ART PLACEHOLDER
+-
+SHLD
+4/7
+SPD
+6+
+EVA
+4+
+ARM
+5
+HP
+2
+SIZ
+SQUAD:
+1 - 1
+MODELS
+0
+SUPPLY
+2 - 2
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 230/0
+TAGS: Terran, Nova Covert Ops, Armoured, Biological, Ground
+ABILITIES
+ ANY PHASE
+Spec Ops Armour
+ACTIVE (1 COMMAND POINT)
+This Unit gains the HIDDEN Status until it performs another action.
+ MOVEMENT PHASE
+Commando Stimpack
+ACTIVE (1 COMMAND POINT)
+This Unit gains BUFF Speed (3). Additionally, its Quad K12 and all Close Combat Weapons gain PRECISION (2).
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Quad K12
+FOR -	12	Ground	3	3+	Armoured	D3	1	LONG RANGE (16"), PIERCE Armoured (2)
+Magrail Munitions
+PASSIVE
+This Unit's first Attack in the game with its Quad K12 gains PIERCE Armoured (3).
+Suppression Shells
+REACTION (1 COMMAND POINT)
+When an Enemy declares a Charge against a Friendly Unit Within 8", that Enemy gains DEBUFF Speed (3).
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Strike
+FOR -	E	Ground	3	4+	-	-	1
+
+
+
+### TACTICAL CARDS (12)
+
+
+------------------------------------------------------------
+CARD: Academy UNIQUE
+40 Gas
+ID: academy
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+SUPPORT SLOT
+2
+CARD ABILITIES
+ ANY PHASE
+Advanced Training
+REACTION
+Once per Round, when a Friendly Support Unit activates a Special Ability that costs CP, resolve that ability with its CP cost reduced by 1 (to a minimum of 0). Do not Exhaust this card.
+
+
+------------------------------------------------------------
+CARD: Armory
+30 Gas
+ID: armory
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+ELITE SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Vehicle Plating
+REACTION
+Use before a Friendly Mechanical Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.
+ ASSAULT PHASE
+Vehicle Weapons
+ACTIVE
+The active Mechanical Unit’s first Ranged Weapon used gain CRITICAL HIT (1).
+
+
+------------------------------------------------------------
+CARD: Barracks
+30 Gas
+ID: barracks
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+CORE SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Go! Go! Go!
+ACTIVE
+The active Biological Unit performs a 2" Move action. This does not count towards its action limit.
+
+
+------------------------------------------------------------
+CARD: Barracks (Proxy) UNIQUE
+40 Gas
+ID: barracks__proxy_
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++2 CP
+CORE SLOT
+2
+CARD ABILITIES
+ MOVEMENT PHASE
+Go! Go! Go!
+ACTIVE
+The active Biological Unit performs a 2" Move action. This does not count towards its action limit.
+Armed and Ready
+ACTIVE
+The active Biological Unit Deploys from any table edge that is not a player's Entry Edge. No model may be set up Within 10" of any Enemy model. This ability cannot be used if another Friendly Biological Unit has already been Deployed this Round.
+
+
+------------------------------------------------------------
+CARD: Barracks (Tech Lab) UNIQUE
+40 Gas
+ID: barracks__tech_lab_
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++2 CP
+ELITE SLOT
+1
+CORE SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Go! Go! Go!
+ACTIVE
+The active Biological Unit performs a 2" Move action. This does not count towards its action limit.
+ ASSAULT PHASE
+Let's Have a Blast!
+ACTIVE
+The active Biological Unit’s first Ranged Weapon used gain ANTI-EVADE (1).
+
+
+------------------------------------------------------------
+CARD: Dropship UNIQUE
+35 Gas
+ID: dropship
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+CORE SLOT
+1
+SUPPORT SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Strap in!
+ACTIVE
+The active, Unengaged Ground Unit is returned to Reserves instead of performing an action.
+Ready For Dust-off
+ACTIVE
+Set a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.
+
+
+------------------------------------------------------------
+CARD: Engineering Bay
+25 Gas
+ID: engineering_bay
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+CORE SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Infantry Armor
+REACTION
+Use before a Friendly Biological Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.
+ ASSAULT PHASE
+Infantry Weapons
+ACTIVE
+The active Biological Unit’s first Ranged Weapon used gains CRITICAL HIT (1).
+
+
+------------------------------------------------------------
+CARD: Factory
+35 Gas
+ID: factory
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+ELITE SLOT
+2
+CARD ABILITIES
+ MOVEMENT PHASE
+Field Repair
+ACTIVE
+The active Mechanical Unit resolves the HEAL (2) effect.
+
+
+------------------------------------------------------------
+CARD: Factory (Tech Lab) UNIQUE
+40 Gas
+ID: factory__tech_lab_
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+ELITE SLOT
+2
+CARD ABILITIES
+ MOVEMENT PHASE
+Field Repair
+ACTIVE
+The active Mechanical Unit resolves the HEAL (2) effect.
+ ASSAULT PHASE
+Pound 'em Flat!
+ACTIVE
+If the active Mechanical Unit has the Stationary Status, its first Ranged Weapon used gains PRECISION (2).
+
+
+------------------------------------------------------------
+CARD: Orbital Command UNIQUE
+25 Gas
+ID: orbital_command
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+CORE SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+ComSat Station
+ACTIVE
+Select one table edge that is not a player’s Entry Edge. Until the End of the Round, Enemy Units cannot Deploy from that edge.
+Scanner Sweep
+ACTIVE
+Set a Faction Indicator anywhere on the battlefield. While Enemy Units are Within 6" of this Faction Indicator, they lose HIDDEN Status.
+
+
+------------------------------------------------------------
+CARD: Supply Depot UNIQUE
+40 Gas
+ID: supply_depot
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+HERO SLOT
+1
+ELITE SLOT
+1
+CORE SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Additional Supply Depots
+ACTIVE
+The active Unit’s Supply Value is improved by 1 for Controlling and Contesting Mission Markers and completing objectives.
+
+
+------------------------------------------------------------
+CARD: Vanadium Plating
+25 Gas
+ID: vanadium_plating
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 CP
+SUPPORT SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Crystalline Alloy
+REACTION
+Use before a Friendly Mechanical Unit makes an Armour Roll. That Unit gains DODGE (2) for this roll.
+
+
+======================================================================
+FACTION: PROTOSS
+======================================================================
+
+
+### FACTION CARDS (4)
+
+
+------------------------------------------------------------
+CARD: Daelaam UNIQUE
+Faction Card
+ID: daelaam
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+ELITE SLOT
+1
+CORE SLOT
+3
+SUPPORT SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Dae’Uhl
+REACTION
+When a Friendly Unit receives Damage, reduce the Total Damage by 2 (to a minimum of 1).
+ MOVEMENT PHASE
+Mass Recall
+ACTIVE
+Once per Game. Set a Faction Indicator anywhere on the battlefield. All Friendly Protoss Units Within 6" of this Faction Indicator are removed from the battlefield and returned to Reserves.
+
+
+------------------------------------------------------------
+CARD: Khalai UNIQUE
+Faction Card
+ID: khalai
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+HERO SLOT
+1
+ELITE SLOT
+2
+CORE SLOT
+3
+CARD ABILITIES
+ MOVEMENT PHASE
+Pylon Warp-In
+ACTIVE
+If there is no Friendly Pylon on the battlefield, set a Friendly Pylon Unit anywhere on the GROUND LEVEL of the battlefield more than 10" away from any Enemy model. This Round, the Pylon is not eligible to use its Special Abilities (excluding Structure).
+Bound by the Khala
+ACTIVE
+At the end of the active Unit’s Activation, select one other Friendly Unit eligible to Activate in the current Phase. Immediately Activate that Unit.
+
+
+------------------------------------------------------------
+CARD: Nerazim UNIQUE
+Faction Card
+ID: nerazim
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+HERO SLOT
+1
+ELITE SLOT
+3
+CORE SLOT
+2
+CARD ABILITIES
+ ANY PHASE
+Might Of The Nerazim
+REACTION
+If a Friendly Unit loses the HIDDEN Status, it gains Buff Speed (2) and its first Weapon used CRITICAL HIT (2).
+ MOVEMENT PHASE
+Darkness Descends
+ACTIVE
+The active Biological Unit gains the HIDDEN Status until the End of the Round.
+
+
+------------------------------------------------------------
+CARD: Templar Caste UNIQUE
+Faction Card
+ID: templar_caste
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+HERO SLOT
+1
+CORE SLOT
+3
+SUPPORT SLOT
+2
+CARD ABILITIES
+ ANY PHASE
+Our Duty is Unending
+ACTIVE
+Once per Game. Select up to two of your Exhausted Tactical Cards. Return them to the Ready state.
+Khassar de Templari
+ACTIVE
+Instead of performing an action, select one other Friendly Biological Unit that has already been Activated this Phase. That Unit immediately performs one action available in the current Phase, then suffers NON-LETHAL DAMAGE (3).
+
+
+
+### UNIT CARDS (13)
+
+
+------------------------------------------------------------
+CARD: Adept
+Core
+ID: adept
+------------------------------------------------------------
+ART PLACEHOLDER
+2
+SHLD
+5/8
+SPD
+5+
+EVA
+5+
+ARM
+3
+HP
+2
+SIZ
+SQUAD:
+1 - 2
+MODELS
+0
+SUPPLY
+3 - 4
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 160/0
+TAGS: Biological, Light, Ground
+ABILITIES
+ ANY PHASE
+Psionic Presence
+PASSIVE
+All Weapons of Friendly Units targeting an Enemy Unit Within 4" of this Unit’s Shade token gain PRECISION (1).
+ MOVEMENT PHASE
+Psionic Transfer
+ACTIVE (1 PSIONIC ENERGY)
+Set a Shade token Wholly Within 12" of any model in this Unit. At the End of the Round, the controlling player may set all models of this Unit In Coherency, treating the Shade token as the Leading Model. The Shade token has DISPLACEMENT.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Glaive Cannon
+FOR -	8	All	2	3+	Light	D3+1	1	ANTI-EVADE (1)
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Strike
+FOR -	E	Ground	1	4+	-	-	1	
+UPGRADES
+ ASSAULT PHASE - UPGRADES
+Resonating Glaives PTS: 20
+ACTIVE (1 PSIONIC ENERGY)
+This Unit's Glaive Cannon gains BUFF RoA (1).
+Guidance PTS: 10
+PASSIVE
+This Unit's Glaive Cannon Ranged weapon gains ANTI-EVADE (2).
+ COMBAT PHASE - UPGRADES
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD	PTS
+Glaive Strike
+FOR Strike	E	Ground	1	4+	Light	D3	1	PIERCE Light (2)	20
+
+
+------------------------------------------------------------
+CARD: Artanis UNIQUE
+Hero
+ID: artanis
+------------------------------------------------------------
+ART PLACEHOLDER
+4
+SHLD
+7
+SPD
+5+
+EVA
+4+
+ARM
+8
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 270/0
+TAGS: Biological, Psionic, Ground, Unique
+ABILITIES
+ ANY PHASE
+Commander
+PASSIVE
+Treat this Unit’s Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks.
+ MOVEMENT PHASE
+Phase Prism
+PASSIVE
+When Artanis is nominated to deploy from Reserves, it may resolve the PLACE (0) effect from another Friendly Unit. That Friendly Unit is removed from the battlefield and returned to Reserves. Artanis' Activation ends.
+ ASSAULT PHASE
+Hierarch’s Stand
+REACTION (1 PSIONIC ENERGY)
+When another Friendly Unit Within 8" is declared as the target of a Ranged Attack and this Unit is a valid target, redirect the attack to this Unit. This Unit is eligible to make an Evade Roll against the redirected attack. This Special Ability remains active until the End of the current Activation.
+Lightning Dash
+REACTION (1 PSIONIC ENERGY)
+After this Unit resolves a successful Charge action, it may declare a second Charge action against a different Enemy Unit, ignoring the restriction on Charging while Engaged. The Devastating Charge ability does not trigger a second time.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (6) 4+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Twilight Blades Strike
+FOR -	E	Ground	2	2+	Armoured	D3	3	
+Twilight Blades Sweep
+FOR -	E	Ground	6	2+	Light	D3+1	1
+
+
+------------------------------------------------------------
+CARD: High Templar
+Support
+ID: high_templar
+------------------------------------------------------------
+ART PLACEHOLDER
+3
+SHLD
+4/7
+SPD
+6+
+EVA
+5+
+ARM
+3
+HP
+2
+SIZ
+SQUAD:
+1 - 1
+MODELS
+0
+SUPPLY
+2 - 2
+MODELS
+1
+SUPPLY
+3 - 4
+MODELS
+2
+SUPPLY
+PTS: 130/200
+TAGS: Biological, Light, Psionic, Ground
+ABILITIES
+ ANY PHASE
+Our Minds as One
+PASSIVE
+While this Unit's Current Supply Value is 2, it gains the following effects: The first Special Ability resolved by this Unit each Round has its PE cost reduced by 1 (to a minimum of 0). Apply a +1 Modifier to the dice rolled for its Psionic Storm Special Ability.
+ MOVEMENT PHASE
+Feedback
+ACTIVE (1 PSIONIC ENERGY)
+Target one Enemy Mechanical or Psionic Unit Within 8". Until the End of the Round, after that Unit resolves an Active or Reaction Special Ability (excluding abilities granted by a Tactical Card or Faction Card), it suffers NON-LETHAL DAMAGE (3).
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Psi Blast	8	All	1	3+	Light	D3	2	INSTANT
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Strike
+FOR -	E	Ground	1	4+	-	-	1	
+UPGRADES
+ MOVEMENT PHASE - UPGRADES
+Psionic Storm PTS: 20/30
+ACTIVE (2 PSIONIC ENERGY)
+Set a Psionic Storm token Within 10" and Line of Sight of this Unit. This token is not removed if this Unit is Destroyed. At the End of each Phase, set a Psionic Storm Blast Template on the centre of this token. For each Unit that has at least one model whose base is partially covered by the template, roll 3 dice, plus 1 additional die for each model in that Unit whose base is partially covered. For each result of 5+, that Unit suffers an effect depending on the current Phase: Movement Phase: NON-LETHAL DAMAGE (1). Assault Phase: 1 Damage. If multiple effects trigger at the End of the Assault Phase, resolve them in the order specified in Part 8.9.4.
+Farsight PTS: 20
+ACTIVE (1 PSIONIC ENERGY)
+Target one Friendly Unit Within 12". Until the End of the Round, that Unit is eligible to make an Evade Roll against any attacks targeting it.
+
+
+------------------------------------------------------------
+CARD: Immortal
+Elite
+ID: immortal
+------------------------------------------------------------
+ART PLACEHOLDER
+6
+SHLD
+7
+SPD
+-
+EVA
+4+
+ARM
+8
+HP
+3
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+2
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 280/0
+TAGS: Armoured, Mechanical, Ground
+ABILITIES
+ ANY PHASE
+Improved Barrier
+REACTION (0 PSIONIC ENERGY)
+Use when this Unit is selected as the target of an attack. If this Unit has the Shielded Status, the Damage characteristic of the attacking weapon is treated as a maximum of 1 for this attack.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Left Photon Disruptor	12	Ground	4	3+	Armoured	D3	2	CONCENTRATED FIRE (1), LONG RANGE (16")
+Right Photon Disruptor	12	Ground	4	3+	Armoured	D3	2	CONCENTRATED FIRE (1), LONG RANGE (16"), SIDEARM
+Indomitable
+PASSIVE
+While Engaged, this Unit may target and be targeted by Unengaged Enemy Units. In both cases, the defending Unit gains an Evade Roll against those attacks.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 3+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Stomp
+FOR -	E	Ground	3	3+	-	-	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Shield Overcharge PTS: 20
+REACTION (1 PSIONIC ENERGY)
+Use before this Unit makes an Armour Roll. If this Unit has the Shielded Status, It gains TOUGH (2) for this roll.
+ ASSAULT PHASE - UPGRADES
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD	PTS
+Left Phase Disruptor
+FOR Left Photon Disruptor	12	Ground	4	3+	Armoured	D3	1	PIERCE Armoured (3)	20
+Right Phase Disruptor
+FOR Right Photon Disruptor	12	Ground	4	3+	Armoured	D3	1	PIERCE Armoured (3), SIDEARM	20
+Fury Unyielding PTS: 20
+PASSIVE
+While this Unit is Within 3" of a Mission Marker, its Ranged Weapons gain CRITICAL HIT (1) when targeting an Enemy Unit that is also Within 3" of that same Mission Marker.
+For the Ancients PTS: 20
+PASSIVE
+When this Unit makes a Ranged Attack, if the target Unit is more than 8" away, the attacking weapons gain PRECISION (1).
+
+
+------------------------------------------------------------
+CARD: Nerazim Watchers (Adept)
+Core
+ID: nerazim_watchers__adept_
+------------------------------------------------------------
+ART PLACEHOLDER
+2
+SHLD
+5/8
+SPD
+5+
+EVA
+5+
+ARM
+3
+HP
+2
+SIZ
+SQUAD:
+1 - 2
+MODELS
+0
+SUPPLY
+3 - 4
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 210/0
+TAGS: Protoss, Nerazim, Biological, Light, Ground
+ABILITIES
+ ANY PHASE
+Path of Shadows
+ACTIVE (1 PSIONIC ENERGY)
+This Unit gains HIDDEN Status until it performs another action.
+Nerazim Farsight
+PASSIVE
+While Enemy Units are Within 6" of this Unit's Shade token, they lose HIDDEN Status.
+ MOVEMENT PHASE
+Psionic Transfer
+ACTIVE (1 PSIONIC ENERGY)
+Set a Shade token Wholly Within 12" of any model in this Unit. At the End of the Round, the controlling player may set all models of this Unit in Coherency, treating the Shade token as the Leading Model. The Shade token has DISPLACEMENT.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Glaive Cannon
+FOR -	8	All	3	3+	Light	D3+1	1	ANTI-EVADE (1), PINPOINT
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Strike
+FOR -	E	Ground	1	5+	-	-	1
+
+
+------------------------------------------------------------
+CARD: Praetor Guard (Zealot) UNIQUE
+Elite
+ID: praetor_guard__zealot_
+------------------------------------------------------------
+ART PLACEHOLDER
+3
+SHLD
+4/7
+SPD
+5+
+EVA
+5+
+ARM
+4
+HP
+2
+SIZ
+SQUAD:
+1 - 1
+MODELS
+1
+SUPPLY
+2 - 3
+MODELS
+2
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 260/0
+TAGS: Khalai, Biological, Light, Ground, Unique
+ABILITIES
+ ANY PHASE
+Shield Overcharge
+PASSIVE
+This Unit gains TOUGH (2) on the first Armour Roll each Round.
+ MOVEMENT PHASE
+Leg Enhancements
+ACTIVE (1 PSIONIC ENERGY)
+This Unit performs a 2" Move action. This does not count towards its action limit.
+ ASSAULT PHASE
+Charge
+ACTIVE (1 PSIONIC ENERGY)
+When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit’s Speed characteristic.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (3) 4+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Psi Blades
+FOR -	E	Ground	4	3+	Light	D3	1	
+Titan Killers
+PASSIVE
+When this Unit makes a Close Combat Attack, and the target is Size 3 or larger, the weapon’s Damage characteristic is treated as 2.
+Precognition
+PASSIVE
+This Unit is eligible to make an Evade roll against all attacks targeting it.
+
+
+------------------------------------------------------------
+CARD: Pylon
+Other
+ID: pylon
+------------------------------------------------------------
+ART PLACEHOLDER
+2
+SHLD
+-
+SPD
+-
+EVA
+5+
+ARM
+8
+HP
+3
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+0
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 0
+TAGS: Khalai, Armored, Ground
+ABILITIES
+ ANY PHASE
+Structure
+PASSIVE
+This Unit cannot be Activated in any Phase and cannot perform actions. Additionally, its Current Supply Value is treated as 0, and it can never Control or Contest Mission Markers, ignoring the standard Zero Supply Exception. This Unit cannot be a target of an ability, unless stated otherwise.
+Khalai Ingenuity
+PASSIVE
+Once per Round, when a Friendly Unit Within 4" of this Pylon uses a Special Ability that costs Psionic Energy, that ability’s PE cost is reduced by 1.
+ MOVEMENT PHASE
+Warp Conduit
+PASSIVE
+Once per Round, the controlling player may deploy a Ground Unit from Reserves using this Pylon base as the Entry Edge. This Unit's Activation ends.
+
+
+------------------------------------------------------------
+CARD: Sentry
+Support
+ID: sentry
+------------------------------------------------------------
+ART PLACEHOLDER
+2
+SHLD
+4/7
+SPD
+6+
+EVA
+5+
+ARM
+4
+HP
+1
+SIZ
+SQUAD:
+1 - 1
+MODELS
+0
+SUPPLY
+2 - 2
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 130/0
+TAGS: Light, Mechanical, Psionic, Ground
+ABILITIES
+ ANY PHASE
+Restoration
+REACTION (1 PSIONIC ENERGY)
+Use when a Friendly Unit Within 4" receives a DEBUFF. Remove all DEBUFFS from it.
+ MOVEMENT PHASE
+Force Field
+ACTIVE (1 PSIONIC ENERGY)
+Set a Force Field token Within 8" in an unoccupied space. Units of Size 2 or lower cannot move across Force Fields. Models of Size 3 or more can move over it, and it's then removed.
+Guardian Shield
+ACTIVE (1 PSIONIC ENERGY)
+All Ranged Attacks targeting a Friendly Unit Within 4" (Line of Sight is not required) are made with 1 fewer die in the Attack Pool.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Disruption Beam
+FOR -	8	All	2	2+	-	-	1	INSTANT
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Beam
+FOR -	E	Ground	2	3+	-	-	1	
+UPGRADES
+ MOVEMENT PHASE - UPGRADES
+Solid-Field Projectors PTS: 10
+ACTIVE (1 PSIONIC ENERGY)
+Set a Force Field token Within 8" in an unoccupied space. Units of Size 2 or lower cannot move across Force Fields. Models of Size 3 or more can move over it, and it's then removed.
+ ASSAULT PHASE - UPGRADES
+Hallucination PTS: 20
+REACTION (0 PSIONIC ENERGY)
+When an Enemy Unit declares a Ranged Attack against a Friendly Unit Within 4", the targeted Friendly Unit is eligible to make an Evade Roll against that attack.
+
+
+------------------------------------------------------------
+CARD: Stalker
+Elite
+ID: stalker
+------------------------------------------------------------
+ART PLACEHOLDER
+3
+SHLD
+4/8
+SPD
+6+
+EVA
+4+
+ARM
+6
+HP
+3
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+2 - 2
+MODELS
+2
+SUPPLY
+PTS: 160/270
+TAGS: Armoured, Mechanical, Ground
+ABILITIES
+ ANY PHASE
+Squadron
+PASSIVE
+This Unit’s Horizontal Coherency is 4".
+ MOVEMENT PHASE
+Blink
+ACTIVE (1 PSIONIC ENERGY)
+Resolve the PLACE (6) effect. Models set by this effect cannot be set up Within the Engagement Range of any Enemy Unit.
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Particle Disruptors
+FOR -	12	All	4	3+	Armoured	D3	2	
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Stomp
+FOR -	E	Ground	2	5+	-	-	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+Path of Shadows PTS: 20/40
+ACTIVE (1 PSIONIC ENERGY)
+This Unit gains HIDDEN Status until it performs another action.
+ ASSAULT PHASE - UPGRADES
+Fury of the Nerazim PTS: 20/30
+PASSIVE
+When this Unit attacks an Enemy Unit that has already been Activated during this Phase, its Particle Disruptors gain INSTANT for that attack.
+
+
+------------------------------------------------------------
+CARD: Tassadar UNIQUE
+Hero
+ID: tassadar
+------------------------------------------------------------
+ART PLACEHOLDER
+3
+SHLD
+7
+SPD
+5+
+EVA
+5+
+ARM
+6
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 230/0
+TAGS: Biological, Psionic, Ground, Unique
+ABILITIES
+ ANY PHASE
+Commander
+PASSIVE
+Treat this Unit’s Supply characteristic as increased by 1 for Controlling and Contesting Mission Markers, completing objectives, and resolving Disengage checks.
+ MOVEMENT PHASE
+Force Wall
+ACTIVE (1 PSIONIC ENERGY)
+Set two Force Wall tokens Wholly Within 8" in an unoccupied space. Units of Size 2 or lower cannot move across the Force Wall. Models of Size 3 or more can move over it, and it's then removed.
+Executor's Will
+ACTIVE (1 PSIONIC ENERGY)
+Target two Enemy Units on the battlefield (Line of Sight is not required) and place a Faction Indicator next to each of them. During the next Assault Phase, if either of these Units ends its Activation while its Faction Indicator remains on the battlefield, you may Activate two Friendly Units consecutively. Remove both Faction Indicators after any Enemy Unit completes its Activation in the following Assault Phase.
+Khala's Gift
+ACTIVE (0 PSIONIC ENERGY)
+Target another Friendly Biological Unit Within 12". Until the End of the Round, that Unit resolves its first Special Ability with the cost reduced by 1 (to a minimum of 0).
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Resonance Beam	12	All	6	3+	Armoured	D3	1	INSTANT
+Telekinetic Push
+ACTIVE (1 PSIONIC ENERGY)
+Set each Friendly Force Wall token Wholly Within 6" of its current position.
+Psi Lightning
+ACTIVE (0 PSIONIC ENERGY)
+Each Unit Within 2" of one or more Friendly Force Wall tokens suffers 1 Damage.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Strike	E	Ground	6	4+	-	-	1
+
+
+------------------------------------------------------------
+CARD: Twilight Templar (High Templar) UNIQUE
+Support
+ID: twilight_templar__high_templar_
+------------------------------------------------------------
+ART PLACEHOLDER
+3
+SHLD
+4/7
+SPD
+6+
+EVA
+5+
+ARM
+3
+HP
+2
+SIZ
+SQUAD:
+1 - 1
+MODELS
+0
+SUPPLY
+2 - 2
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 230/0
+TAGS: Protoss, Templar Caste, Biological, Light, Psionic, Ground, Unique
+ABILITIES
+ ANY PHASE
+Bound by the Khala
+REACTION (0 PSIONIC ENERGY)
+Use when the Current Supply Value of another Friendly Unit Within 8" of this Unit is reduced. Return one Non-Unique Exhausted Tactical Card to the Ready state.
+ MOVEMENT PHASE
+Warp-In
+ACTIVE (1 PSIONIC ENERGY)
+Resolve the PLACE (6) effect.
+Psionic Gale
+ACTIVE (2 PSIONIC ENERGY)
+Set a Psionic Storm token Within 10" and Line of Sight of this Unit. This token is not removed if this Unit is Destroyed. At the End of each Phase, set a Psionic Storm Blast Template on the centre of this token. For each Unit that has at least one model whose base is partially covered by the template, roll 3 dice, plus 1 additional die for each model in that Unit whose base is partially covered. For each result of 4+, that Unit suffers an effect depending on the current Phase: Movement Phase: NON-LETHAL DAMAGE (1). Assault Phase: 1 Damage. If multiple effects trigger at the End of the Assault Phase, resolve them in the order specified in Part 8.9.4.
+Feedback
+ACTIVE (1 PSIONIC ENERGY)
+Target one Enemy Mechanical or Psionic Unit Within 8". Until the End of the Round, after that Unit resolves an Active or Reaction Special Ability (excluding abilities granted by a Tactical Card or Faction Card), it suffers NON-LETHAL DAMAGE (3).
+ ASSAULT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Psi Blast	8	All	2	3+	Light	D3	2	INSTANT
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Strike
+FOR -	E	Ground	1	4+	-	-	1
+
+
+------------------------------------------------------------
+CARD: Zealot
+Core
+ID: zealot
+------------------------------------------------------------
+ART PLACEHOLDER
+3
+SHLD
+4/7
+SPD
+5+
+EVA
+5+
+ARM
+4
+HP
+2
+SIZ
+SQUAD:
+1 - 1
+MODELS
+1
+SUPPLY
+2 - 3
+MODELS
+2
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 170/0
+TAGS: Biological, Light, Ground
+ABILITIES
+ ASSAULT PHASE
+Charge
+ACTIVE (1 PSIONIC ENERGY)
+When determining Charge Distance for this Unit, roll 2D6 instead of D6 and use the higher result to add to the Unit’s Speed characteristic.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (3) 4+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Psi Blades
+FOR -	E	Ground	4	3+	Light	D3	1	
+UPGRADES
+ ANY PHASE - UPGRADES
+My Life for Aiur PTS: 10
+PASSIVE
+When this Unit resolves IMPACT, each eligible model generates 1 additional IMPACT die.
+ MOVEMENT PHASE - UPGRADES
+Leg Enhancements PTS: 20
+ACTIVE (1 PSIONIC ENERGY)
+This Unit performs a 2" Move action. This does not count towards its action limit.
+ ASSAULT PHASE - UPGRADES
+Zealous Round PTS: 10
+REACTION (0 PSIONIC ENERGY)
+When this Unit is not Activated and receives Damage, the controlling player may count this Unit as Activated in this Phase (flip its Activation Marker) to reduce the Total Damage by 2.
+ COMBAT PHASE - UPGRADES
+We Stand as One PTS: 20
+PASSIVE
+When this Unit makes a Close Combat Attack, if the target is Engaged with at least 1 other Friendly Unit, this Unit's Close Combat Weapon gains PRECISION (2).
+
+
+------------------------------------------------------------
+CARD: Zeratul UNIQUE
+Hero
+ID: zeratul
+------------------------------------------------------------
+ART PLACEHOLDER
+3
+SHLD
+7
+SPD
+5+
+EVA
+5+
+ARM
+5
+HP
+2
+SIZ
+SQUAD:
+-
+MODELS
+0
+SUPPLY
+1 - 1
+MODELS
+1
+SUPPLY
+-
+MODELS
+0
+SUPPLY
+PTS: 230/0
+TAGS: Biological, Psionic, Ground, Unique
+ABILITIES
+ ANY PHASE
+One With the Shadows
+PASSIVE
+After this Unit fully resolves an Action, it gains the HIDDEN Status.
+Prophetic Vision
+REACTION (1 PSIONIC ENERGY)
+REPEATABLE. Use when this Unit is selected as the target of an attack. This Unit's Evade characteristic is treated as 4+ against this attack and cannot be modified.
+ MOVEMENT PHASE
+Sentenced to Death
+ACTIVE (1 PSIONIC ENERGY)
+Target Enemy Unit on the battlefield. Whenever Zeratul makes a Close Combat Attack targeting the selected Unit, its weapon gains CRITICAL HIT (2).
+Void Prison
+ACTIVE (1 PSIONIC ENERGY)
+Set a Faction Indicator on the battlefield Within 8" of this Unit. While Enemy Units are Within 2" of this Faction Indicator they suffer DEBUFF Speed (2).
+ ASSAULT PHASE
+Void Blink
+ACTIVE (1 PSIONIC ENERGY)
+If Unengaged, resolve the PLACE (6) effect.
+Devastating Charge
+PASSIVE
+Immediately after this Unit completes a successful Charge, resolve the IMPACT (4) 4+ effect.
+ COMBAT PHASE
+NAME	RNG	TGT	RoA	HIT	SURGE	S.DIE	DMG	KEYWORD
+Master Warp Blade
+FOR -	E	Ground	4	3+	Light, Armoured	D3	2	INSTANT
+Shadow Strike
+ACTIVE (1 PSIONIC ENERGY)
+All Enemy Units Engaged with this Unit suffer HITS 4 (1).
+
+
+
+### TACTICAL CARDS (13)
+
+
+------------------------------------------------------------
+CARD: Forge
+30 Gas
+ID: forge
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+ELITE SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Ground Armor
+REACTION
+Use before a Friendly Ground Unit makes an Armour Roll. That Unit gains TOUGH (1) for this roll.
+ ASSAULT PHASE
+Ground Weapons
+ACTIVE
+The active Ground Unit’s first Ranged Weapon used gains CRITICAL HIT (1).
+
+
+------------------------------------------------------------
+CARD: Gate Chronoboosted UNIQUE
+35 Gas
+ID: gate_chronoboosted
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+ELITE SLOT
+1
+CORE SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Zealous Charge
+ACTIVE
+The active Unit gains BUFF Speed (2).
+ COMBAT PHASE
+Quick Strikes
+ACTIVE
+The active Unit’s first Close Combat Weapon used gains PRECISION (2).
+
+
+------------------------------------------------------------
+CARD: Gateway
+25 Gas
+ID: gateway
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+CORE SLOT
+1
+CARD ABILITIES
+ COMBAT PHASE
+Quick Strikes
+ACTIVE
+The active Unit’s first Close Combat Weapon used gains PRECISION (2).
+
+
+------------------------------------------------------------
+CARD: Nexus UNIQUE
+40 Gas
+ID: nexus
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+CORE SLOT
+2
+CARD ABILITIES
+ ANY PHASE
+Ancient Pride
+ACTIVE
+The active Unit’s first Weapon used gains INSTANT.
+ MOVEMENT PHASE
+Strategic Recall
+ACTIVE
+The active, Unengaged Ground Unit is returned to Reserves instead of performing an action.
+
+
+------------------------------------------------------------
+CARD: Observer UNIQUE
+25 Gas
+ID: observer
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+SUPPORT SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Surveillance
+ACTIVE
+Set a Faction Indicator anywhere on the battlefield. While Enemy Units are Within 6" of this Faction Indicator, they lose HIDDEN Status.
+ ASSAULT PHASE
+Gravitic Boosters
+REACTION
+Use after a Friendly Unit rolls a D6 for Charge Distance. Add 1 to the Charge Distance for this Unit.
+
+
+------------------------------------------------------------
+CARD: Overcharged Nexus UNIQUE
+35 Gas
+ID: overcharged_nexus
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+ELITE SLOT
+1
+CORE SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Photon Overcharge
+REACTION
+Use when an Enemy Unit enters the battlefield from Reserves via a location other than its own Entry Edge. That Unit immediately suffers HITS 3 (1).
+ MOVEMENT PHASE
+Strategic Recall
+ACTIVE
+The active, Unengaged Ground Unit is returned to Reserves instead of performing an action.
+
+
+------------------------------------------------------------
+CARD: Power Field UNIQUE
+40 Gas
+ID: power_field
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+HERO SLOT
+1
+ELITE SLOT
+1
+CORE SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Guardian Shell
+REACTION
+Use before a Friendly Ground Unit makes an Armour Roll. That Unit gains DODGE (2) for this roll.
+
+
+------------------------------------------------------------
+CARD: Robotics Facility
+35 Gas
+ID: robotics_facility
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+ELITE SLOT
+2
+CARD ABILITIES
+ ANY PHASE
+Plasma Shields
+REACTION
+Use before a Friendly Mechanical Ground Unit makes an Armour Roll. If this Unit has the Shielded Status, it gains TOUGH (1) and DODGE (1) for this roll.
+
+
+------------------------------------------------------------
+CARD: Templar Archives UNIQUE
+40 Gas
+ID: templar_archives
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+SUPPORT SLOT
+2
+CARD ABILITIES
+ ANY PHASE
+Ancestral Wisdom
+REACTION
+Once per Round, when a Friendly Support Unit activates a Special Ability that costs PE, resolve that ability with its PE cost reduced by 1 (to a minimum of 0). Do not Exhaust this card.
+
+
+------------------------------------------------------------
+CARD: Twilight Council UNIQUE
+40 Gas
+ID: twilight_council
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+ELITE SLOT
+1
+SUPPORT SLOT
+1
+CARD ABILITIES
+ ANY PHASE
+Veil of Shadows
+REACTION
+Use after a Friendly Unit resolves a PLACE effect. That Unit immediately resolves the HEAL (2) effect.
+ ASSAULT PHASE
+Weapons of the Firstborn
+ACTIVE
+The active Ground Unit’s first Ranged Weapon used gains BUFF Range (4).
+
+
+------------------------------------------------------------
+CARD: Void Seeker UNIQUE
+40 Gas
+ID: void_seeker
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+CORE SLOT
+1
+CARD ABILITIES
+ MOVEMENT PHASE
+Personal Transport
+ACTIVE
+Instead of performing an action, the active, Unengaged Ground Unit is returned to Reserves. Then, it performs a Deploy action.
+Anakh Su'n
+ACTIVE
+This Unit gains the HIDDEN Status until it performs another action.
+
+
+------------------------------------------------------------
+CARD: Warp Gate UNIQUE
+40 Gas
+ID: warp_gate
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+CORE SLOT
+2
+CARD ABILITIES
+ MOVEMENT PHASE
+Warp In
+ACTIVE
+The active Ground Unit Deploys from any table edge that is not a player’s Entry Edge. This deployment must end more than 10" away from any Enemy model. The controlling player cannot use this ability if another Friendly Ground Unit has already Deployed this Round.
+ COMBAT PHASE
+Quick Strikes
+ACTIVE
+The active Unit’s first Close Combat Weapon used gains PRECISION (2).
+
+
+------------------------------------------------------------
+CARD: Warp Prism UNIQUE
+35 Gas
+ID: warp_prism
+------------------------------------------------------------
+ART PLACEHOLDER
+RESOURCE
++1 EN
+CORE SLOT
+2
+CARD ABILITIES
+ MOVEMENT PHASE
+Phase
+ACTIVE
+The active Unit resolves the PLACE (3) effect.
+Warp Conduit
+ACTIVE
+Set a Faction Indicator anywhere on the battlefield more than 10" away from any Enemy model. At the End of the Round, the controlling player may Deploy one Ground Unit from Reserves in base-to-base contact with this Faction Indicator.
